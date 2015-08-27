@@ -1,0 +1,435 @@
+#+PROPERTY:  header-args :session *R* :tangle /home/oscar/R/spacetimeVis/choropleth.R :eval no-export
+#+OPTIONS: ^:nil
+#+BIND: org-latex-image-default-height  "0.45\\textheight"
+
+#+begin_src R :exports none
+  ##################################################################
+  ## Source code for the book: "Displaying time series, spatial and
+  ## space-time data with R"
+  
+  ## Copyright (C) 2013-2012 Oscar Perpiñán Lamigueiro
+  
+  ## This program is free software you can redistribute it and/or modify
+  ## it under the terms of the GNU General Public License as published
+  ## by the Free Software Foundation; either version 2 of the License,
+  ## or (at your option) any later version.
+   
+  ## This program is distributed in the hope that it will be useful, but
+  ## WITHOUT ANY WARRANTY; without even the implied warranty of
+  ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  ## General Public License for more details.
+   
+  ## You should have received a copy of the GNU General Public License
+  ## along with this program; if not, write to the Free Software
+  ## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+  ## 02111-1307, USA.
+  ####################################################################
+#+end_src
+
+#+begin_src R :exports none :tangle no
+  setwd('~/Dropbox/chapman/book/')
+#+end_src
+
+#+begin_src R :exports none  
+  ##################################################################
+  ## Initial configuration
+  ##################################################################
+  ## Clone or download the repository and set the working directory
+  ## with setwd to the folder where the repository is located.
+  
+  library(lattice)
+  library(ggplot2)
+  library(latticeExtra)
+  
+  myTheme <- custom.theme.2(pch=19, cex=0.7,
+                            region=rev(brewer.pal(9, 'YlOrRd')),
+                            symbol = brewer.pal(n=8, name = "Dark2"))
+  myTheme$strip.background$col='transparent'
+  myTheme$strip.shingle$col='transparent'
+  myTheme$strip.border$col='transparent'
+  
+  xscale.components.custom <- function(...){
+      ans <- xscale.components.default(...)
+      ans$top=FALSE
+      ans}
+  yscale.components.custom <- function(...){
+      ans <- yscale.components.default(...)
+      ans$right=FALSE
+      ans}
+  myArgs <- list(as.table=TRUE,
+                 between=list(x=0.5, y=0.2),
+                 xscale.components = xscale.components.custom,
+                 yscale.components = yscale.components.custom)
+  defaultArgs <- lattice.options()$default.args
+  
+  lattice.options(default.theme = myTheme,
+                  default.args = modifyList(defaultArgs, myArgs))
+  
+#+end_src
+
+
+* Choropleth Maps
+\label{sec:multiChoropleth}
+#+begin_src R :exports none
+  ##################################################################
+  ## Choropleth maps
+  ##################################################################
+#+end_src
+
+A choropleth map shades regions according to the measurement of a
+variable displayed on the map. The choropleth map is an appropiate
+tool to visualize a variable uniformly distributed within each
+region, changing only at the region boundaries. This method
+performs correctly with homogeneous regions, both in size and
+shape.  
+
+This section details how to create a multivariate choropleth map to
+show the results of the 2011 Spanish general elections. It is inspired
+by the infographic from the /New York Times[fn:3]/, a multivariate
+choropleth map of the inmigration behavior in the United States.
+
+#+begin_src R 
+  votes2011 <- read.csv('data/votes2011.csv',
+                        colClasses=c('factor', 'factor', 'numeric', 'numeric'))
+#+end_src
+
+The next section describes how to define a =SpatialPolygonsDataFrame=
+with the data from this =data.frame= and the spatial information of
+the administrative boundaries from a shapefile. You can skip it for
+later reading if you are not interested in this procedure and jump to
+the section [[sec:map]] where the maps are produced.
+
+** \floweroneleft Administrative Boundaries
+
+#+begin_src R :exports none
+  ##################################################################
+  ## Administrative boundaries
+  ##################################################################
+#+end_src
+
+The Spanish administrative boundaries are available as shapefiles at
+the INE (Instituto Nacional de Estadística) webpage[fn:7]. Both the
+municipalities, =espMap=, and province boundaries, =provinces=, are
+read as =SpatialPolygonsDataFrame= with =readShapePoly=.
+
+#+BEGIN_LaTeX
+\index{Packages!maps@\texttt{maps}}
+\index{Packages!maptools@\texttt{maptools}}
+\index{Packages!rgeos@\texttt{rgeos}}
+\index{Packages!sp@\texttt{sp}}
+\index{Packages!latticeExtra@\texttt{latticeExtra}}
+#+END_LaTeX
+
+#+begin_src R
+  library(sp)
+  library(maptools)
+#+end_src
+
+#+BEGIN_LaTeX
+\index{INE}
+\index{readShapePoly@\texttt{readShapePoly}}
+\index{Encoding@\texttt{Encoding}}
+#+END_LaTeX
+
+#+begin_src R :eval no-export
+  old <- setwd(tempdir())
+  download.file('http://goo.gl/TIvr4', 'mapas_completo_municipal.rar')
+  system2('unrar', c('e', 'mapas_completo_municipal.rar'))
+  espMap <- readShapePoly(fn="esp_muni_0109")
+  Encoding(levels(espMap$NOMBRE)) <- "latin1"
+  
+  provinces <- readShapePoly(fn="spain_provinces_ag_2")
+  setwd(old)
+#+end_src
+
+#+begin_src R :exports none :tangle no
+  espMap <- readShapePoly(fn="~/Datos/mapas_completo_municipal/esp_muni_0109")
+  Encoding(levels(espMap$NOMBRE)) <- "latin1"
+  
+  provinces <- readShapePoly(fn="~/Datos/mapas_completo_municipal/spain_provinces_ag_2")
+#+end_src  
+
+Some of the polygons are repeated and can be dissolved with
+=unionSpatialPolygons= (the =rgeos= package must be installed).
+#+BEGIN_LaTeX
+\index{unionSpatialPolygons@\texttt{unionSpatialPolygons}}
+#+END_LaTeX
+#+begin_src R 
+  ## dissolve repeated polygons
+  espPols <- unionSpatialPolygons(espMap, espMap$PROVMUN) 
+#+end_src
+
+Spanish maps are commonly displayed with the Canarian islands next
+to the peninsula. First we have to extract the polygons of the
+islands and the polygons of the peninsula, and then shift the
+coordinates of the islands with =elide=. Finally, a new
+=SpatialPolygons= object binds the shifted islands with the
+peninsula.
+
+#+begin_src R
+  ## Extract Canarias islands from the SpatialPolygons object
+  canarias <-  sapply(espPols@polygons, function(x)substr(x@ID, 1, 2) %in% c("35",  "38"))
+  peninsulaPols <- espPols[!canarias]
+  islandPols <- espPols[canarias]
+  
+  ## Shift the island extent box to position them at the bottom right corner
+  dy <- bbox(peninsulaPols)[2,1] - bbox(islandPols)[2,1]
+  dx <- bbox(peninsulaPols)[1,2] - bbox(islandPols)[1,2]
+  islandPols2 <- elide(islandPols, shift=c(dx, dy))
+  bbIslands <- bbox(islandPols2)
+  
+  ## Bind Peninsula (without islands) with shifted islands
+  espPols <- rbind(peninsulaPols, islandPols2)
+#+end_src
+
+The final step is to link the data with the polygons. The =ID= slot of
+each polygon is the key to find the correspondent registry in the
+=votes2011= dataset.
+#+begin_src R
+  ## Match polygons and data using ID slot and PROVMUN column
+  IDs <- sapply(espPols@polygons, function(x)x@ID)
+  idx <- match(IDs, votes2011$PROVMUN)
+  
+  ##Places without information
+  idxNA <- which(is.na(idx))
+  
+  ##Information to be added to the SpatialPolygons object
+  dat2add <- votes2011[idx, ]
+  
+  ## SpatialPolygonsDataFrame uses row names to match polygons with data
+  row.names(dat2add) <- IDs
+  espMapVotes <- SpatialPolygonsDataFrame(espPols, dat2add)
+  
+  ## Drop those places without information
+  espMapVotes <- espMapVotes[-idxNA, ]
+#+end_src
+
+** Map
+<<sec:map>>
+#+begin_src R :exports none
+  ##################################################################
+  ## Map
+  ##################################################################
+#+end_src
+
+The =SpatialPolygonsDataFrame= constructed in the previous section
+contains two main variables: =whichMax=, the name of the predominant
+political option, and =pcMax=, the percentage of votes obtained by
+this political option.
+
+=whichMax= is a categorical value with four levels: the two main
+parties (=PP= and =PSOE=), the abstention results (=ABS=), and the
+rest of the parties (=OTH=). Figure [[fig:whichMax]] encodes these levels
+with a qualitative palette with constant hues and varying chroma and
+luminance for each class using the package =colorspace=
+\cite{Zeileis.Hornik.ea2009}. In order to improve the color
+discrimination, hues are equally spaced along the HCL (Hue, Chroma,
+Luminance) based color wheel.
+
+#+BEGIN_LaTeX
+\index{Packages!colorspace@\texttt{colorspace}}
+\index{rainbow_hcl@\texttt{rainbow\_hcl}}
+#+END_LaTeX
+#+begin_src R 
+  library(colorspace)  
+  
+  classes <- levels(factor(espMapVotes$whichMax))
+  nClasses <- length(classes)
+  
+  qualPal <- rainbow_hcl(nClasses, start=30, end=300)
+#+end_src
+
+For the definition of a combined palette in the next section, it is
+interesting to note that the colors provided by =rainbow_hcl= can be
+obtained with the following code where the distances between hues and
+their values are computed explicitly.
+#+BEGIN_LaTeX
+\index{hcl@\texttt{hcl}}
+#+END_LaTeX
+#+begin_src R 
+  ## distance between hues
+  step <- 360/nClasses 
+  ## hues equally spaced
+  hue = (30 + step*(seq_len(nClasses)-1))%%360 
+  qualPal <- hcl(hue, c=50, l=70)
+#+end_src
+
+#+begin_src R :results output graphics :exports both :file figs/whichMax.pdf
+  spplot(espMapVotes["whichMax"], col='transparent', col.regions=qualPal)
+#+end_src
+
+#+CAPTION: Categorical choropleth map displaying the name of the predominant political option in each municipality in the 2011 Spanish general elections.
+#+LABEL: fig:whichMax
+#+RESULTS:
+[[file:figs/whichMax.pdf]]
+
+On the other hand, =pcMax= is a quantitative variable that can be
+adequately displayed with a sequential palette (Figure [[fig:pcMax]]).
+#+begin_src R :results output graphics :exports both :file figs/pcMax.pdf
+  quantPal <- rev(heat_hcl(16))
+  spplot(espMapVotes["pcMax"], col='transparent', col.regions=quantPal)
+#+end_src
+
+#+CAPTION: Quantitative choropleth map displaying the percentage of votes obtained by the predominant political option in each municipality in the 2011 Spanish general elections.
+#+LABEL: fig:pcMax
+#+RESULTS:
+[[file:figs/pcMax.pdf]]
+
+** \floweroneleft Categorical and Quantitative Variables Combined in a Multivariate Choropleth Map
+#+begin_src R :exports none
+##################################################################
+## Categorical and quantitative variables combined in a multivariate choropleth map
+##################################################################
+#+end_src
+
+Following the inspiring example of the infographic from the /New
+York Times/, we will combine both choropleth maps to produce a
+multivariate map: the hue of each polygon will be determined by
+the name of the predominant option (=whichMax=) but the chroma and
+luminance will vary according to the percentage of votes
+(=pcMax=). Hues are computed with the same method as in Figure
+[[fig:whichMax]], while the corresponding values of chroma and
+luminance are calculated with the =sequential_hcl= function.
+
+#+BEGIN_LaTeX
+\index{sequential_hcl@\texttt{sequential\_hcl}}
+#+END_LaTeX
+#+begin_src R
+  classes <- levels(factor(espMapVotes$whichMax))
+  nClasses <- length(classes)
+  step <- 360/nClasses
+  multiPal <- lapply(1:nClasses, function(i){
+      rev(sequential_hcl(16, h = (30 + step*(i-1))%%360))
+      })
+#+end_src
+
+With this multivariate palette we can produce a list of maps
+extracting the polygons according to each class and filling with
+the appropiate color from this palette. The resulting list of
+=trellis= objects can be combined with =Reduce= and the
+=+.trellis= function of the =latticeExtra= and produce a =trellis=
+object.
+
+It is important to note that, to ensure the legend's homogeneity, the
+breakpoints defined by the =at= argument are the same for all the
+individual maps.
+
+#+BEGIN_LaTeX
+\index{Reduce@\texttt{Reduce}} \index{spplot@\texttt{spplot}}
+#+END_LaTeX
+#+begin_src R 
+  pList <- lapply(1:nClasses, function(i){
+      ## Only those polygons corresponding to a level are selected
+      mapClass <- espMapVotes[espMapVotes$whichMax==classes[i],]
+      pClass <- spplot(mapClass['pcMax'], col.regions=multiPal[[i]],
+                       col='transparent',
+                       ## labels only needed in the last legend
+                       colorkey=(if (i==nClasses) TRUE else list(labels=rep('', 6))),
+                       at = seq(0, 100, by=20))
+  })
+  
+  p <- Reduce('+', pList)
+#+end_src
+
+The legend of this =trellis= object must be defined
+manually. The main operation is to merge the legends from the
+components of the list of maps to obtain a bivariate
+legend. 
+
+The first step is to add a title to each individual legend.  This is a
+little complex because =levelplot= (the engine under the =spplot=
+method) does not include a title in its color key. The solution is to
+define a function to add the title and include it as an argument to
+the legend component of each =trellis= object. The =print.trellis=
+method will process this function when displaying the =trellis=
+object. The =frameGrob= and =packGrob= of the =grid= package will do
+the main work inside this function.
+
+#+BEGIN_LaTeX
+\index{textGrob@\texttt{textGrob}}
+\index{packGrob@\texttt{packGrob}}
+\index{Packages!grid@\texttt{grid}}
+#+END_LaTeX
+#+begin_src R
+  ## Function to add a title to a legend
+  addTitle <- function(legend, title){
+    titleGrob <- textGrob(title, gp=gpar(fontsize=8), hjust=1, vjust=1)
+    ## retrieve the legend from the trellis object
+    legendGrob <- eval(as.call(c(as.symbol(legend$fun), legend$args)))
+    ## Layout of the legend WITH the title
+    ly <- grid.layout(ncol=1, nrow=2,
+                      widths=unit(0.9, 'grobwidth', data=legendGrob))
+    ## Create a frame to host the original legend and the title
+    fg <- frameGrob(ly, name=paste('legendTitle', title, sep='_'))
+    ## Add the grobs to the frame
+    pg <- packGrob(fg, titleGrob, row=2)
+    pg <- packGrob(pg, legendGrob, row=1)
+    }
+  
+  ## Access each trellis object from pList...
+  for (i in seq_along(classes)){
+    ## extract the legend (automatically created by spplot)...
+    lg <- pList[[i]]$legend$right
+    ## ... and add the addTitle function to the legend component of each trellis object
+    pList[[i]]$legend$right <- list(fun='addTitle',
+                                    args=list(legend=lg, title=classes[i]))
+  }
+#+end_src
+
+Now that every component of =pList= includes a legend with a title,
+the legend of the =p= trellis object can be modified to store the
+merged legends from the set of components of =pList=.
+
+#+begin_src R
+  ## List of legends
+  legendList <- lapply(pList, function(x){
+    lg <- x$legend$right
+    clKey <- eval(as.call(c(as.symbol(lg$fun), lg$args)))
+    clKey
+  })
+  
+  ## Function to pack the list of legends in a unique legend
+  ## Adapted from latticeExtra::: mergedTrellisLegendGrob
+  packLegend <- function(legendList){
+    N <- length(legendList)
+    ly <- grid.layout(nrow = 1,  ncol = N)
+    g <- frameGrob(layout = ly, name = "mergedLegend")
+    for (i in 1:N) g <- packGrob(g, legendList[[i]], col = i)
+    g
+  }
+  
+  ## The legend of p will include all the legends
+  p$legend$right <- list(fun = 'packLegend',  args = list(legendList = legendList))
+  
+#+end_src
+
+Figure [[fig:mapLegends]] displays the result with the province boundaries
+superposed (only for the peninsula due to a problem with the
+definition of boundaries the Canarian islands in the file) and a
+rectangle to separate the Canarian islands from the remainder of the
+map.
+
+#+begin_src R :results output graphics :exports both :file figs/mapLegends.png
+  canarias <- provinces$PROV %in% c(35, 38)
+  peninsulaLines <- provinces[!canarias,]
+  
+  p +
+    layer(sp.polygons(peninsulaLines,  lwd = 0.1)) +
+    layer(grid.rect(x=bbIslands[1,1], y=bbIslands[2,1],
+                    width=diff(bbIslands[1,]),
+                    height=diff(bbIslands[2,]),
+                    default.units='native', just=c('left', 'bottom'),
+                    gp=gpar(lwd=0.5, fill='transparent')))
+#+end_src
+
+#+CAPTION: Spanish general elections results. The map shows the result of the most voted option in each municipality.
+#+LABEL: fig:mapLegends
+#+RESULTS:
+[[file:figs/mapLegends.png]]
+
+* Footnotes
+
+[fn:3] [[http://www.nytimes.com/interactive/2009/03/10/us/20090310-immigration-explorer.html]]
+
+[fn:7] [[http://www.ine.es/]] > Products and services > Publications > Download the PC-Axis program > Municipal maps
+

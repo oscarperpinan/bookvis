@@ -1,0 +1,143 @@
+#+PROPERTY:  session *R*
+#+PROPERTY:  tangle yes
+
+#+begin_src R :exports none
+  ##################################################################
+  ## Source code for the book: "Displaying time series, spatial and
+  ## space-time data with R: stories of space and time"
+  
+  ## Copyright (C) 2012 Oscar Perpiñán Lamigueiro
+  
+  ## This program is free software you can redistribute it and/or modify
+  ## it under the terms of the GNU General Public License as published
+  ## by the Free Software Foundation; either version 2 of the License,
+  ## or (at your option) any later version.
+   
+  ## This program is distributed in the hope that it will be useful, but
+  ## WITHOUT ANY WARRANTY; without even the implied warranty of
+  ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  ## General Public License for more details.
+   
+  ## You should have received a copy of the GNU General Public License
+  ## along with this program; if not, write to the Free Software
+  ## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+  ## 02111-1307, USA.
+  ####################################################################
+  
+  setwd('~/Dropbox/chapman/book/')
+#+end_src
+
+** greatCircle
+
+Recently I found a post at [[http://flowingdata.com/2011/05/11/how-to-map-connections-with-great-circles/][FlowingData]] with a detailed tutorial to
+map connections with [[http://en.wikipedia.org/wiki/Great_circle][great circles]] with R. I really liked the maps
+of Facebook but, unfortunately, the code was not available.  The
+tutorial of FlowingData is excellent, but I feel more comfortable
+with the [[http://cran.r-project.org/web/packages/sp][sp]] classes and methods, and with the [[http://lattice.r-forge.r-project.org/][lattice]] and
+[[http://latticeextra.r-forge.r-project.org/][latticeExtra]] packages.  Besides, I want to use the free spatial
+data available from the [[http://www.diva-gis.org/Data][DIVA-GIS]] project, from the developer of
+the [[http://cran.r-project.org/web/packages/raster][raster]] and the [[http://cran.r-project.org/web/packages/geosphere/][geosphere]] packages.
+
+Here is what I have got.
+
+First, let's load the packages.
+
+#+BEGIN_SRC R
+  library(lattice)
+  library(latticeExtra)
+  library(maps)
+  library(geosphere)
+  library(sp)
+  library(maptools)
+  library(raster)
+  library(rasterVis)
+#+END_SRC
+
+Now it's time to get the data. First, airports and flights:
+
+#+begin_src R
+  airports <- read.csv("data/airports.csv", header=TRUE)
+  flights <- read.csv("data/flights.csv", header=TRUE, as.is=TRUE)
+#+end_src
+
+With this information, following the code from the FlowingData
+post, let's define a list of =SpatialLines=.  The =makeLines=
+function defines a =SpatialLines= for each connection, and stores
+the number of flights in the ID slot.  The =linesAA= is a list
+with the result of =makeLines= over =flightsAA= with the =apply=
+function.  Previously, the =flightsAA= data.frame has been ordered by
+=cnt=, as the FlowingData post teaches.
+
+#+begin_src r
+  makeLines <- function(x){
+    start <- airports[airports$iata == x[2],]##start
+    end <- airports[airports$iata == x[3],]##end
+    inter <- gcIntermediate(start[1, c('long', 'lat')],
+                            end[1, c('long', 'lat')],
+                            n=100,
+                            sp=TRUE, addStartEnd=TRUE)
+    inter@lines[[1]]@ID <- paste(x[2], x[3], sep='_')
+    inter@lines[[1]]
+  }
+  
+  
+  flightsAA <- flights[flights$airline == "AA",]
+  flightsAA <- flightsAA[order(flightsAA$cnt),]
+  linesAA <- apply(flightsAA, 1, makeLines)
+  
+  linesAA <- SpatialLines(linesAA)
+  linesAA <- SpatialLinesDataFrame(linesAA, flightsAA, match.ID=FALSE)
+  
+#+end_src
+
+Let's get the elevation data and the boundaries:
+
+#+begin_src R :eval no-export
+  old <- setwd(tempdir())
+  download.file('http://www.diva-gis.org/data/msk_alt/USA_msk_alt.zip', 'USA_msk_alt.zip')
+  unzip('USA_msk_alt.zip')
+  download.file('http://www.gadm.org/data/shp/USA_adm.zip', 'USA_adm.zip')
+  unzip('USA_adm.zip')
+  
+  prj <- CRS("+proj=longlat +datum=WGS84")
+  
+  demUSA <- raster('USA1_msk_alt.grd', projection=prj) ## Mainland
+  mapUSA <- readShapeLines('USA_adm1.shp', proj4string=prj)
+  
+  setwd(old)
+  
+#+end_src
+
+#+begin_src R :exports none
+  prj <- CRS("+proj=longlat +datum=WGS84")
+  
+  demUSA <- raster('~/Datos/USA_msk_alt/USA1_msk_alt.grd', projection=prj)##mainland
+  mapUSA <- readShapeLines('~/Datos/USA_adm/USA_adm1.shp', proj4string=prj)
+    
+#+end_src
+
+Now it's time for joining all together. I use the =layer= function from =latticeExtra= to draw the boundaries (with =sp.lines=) and the list of lines (with =lapply= and =makePlot=).
+
+#+CAPTION: xyplotSISav
+#+LABEL: fig:greatCircle
+#+begin_src R :results output graphics :exports both :file figs/greatCircle.pdf
+  library(colorspace)
+  demTheme <- GrTheme()
+  demTheme$panel.background$col <- 'black'
+  
+  palLines <- colorRampPalette(brewer.pal(n=9, 'Reds'))(30)
+  
+  levelplot(demUSA,
+            par.settings=demTheme,
+            margin=FALSE, colorkey=FALSE) +
+    layer({
+      ## sp.lines(mapUSA, col.line='black', lwd=0.5)
+      sp.points(airports[,c('long', 'lat')], pch=19, cex=0.3, col='midnightblue')
+    }) +
+    spplot(linesAA["cnt"], col.regions=palLines, lwd=1.5, alpha=0.5)
+  
+#+end_src
+
+#+RESULTS:
+[[file:figs/greatCircle.pdf]]
+

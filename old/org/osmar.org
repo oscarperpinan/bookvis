@@ -1,0 +1,330 @@
+#+PROPERTY:  session *R*
+#+PROPERTY:  tangle yes
+
+#+begin_src R :exports none
+  ##################################################################
+  ## Source code for the book: "Displaying time series, spatial and
+  ## space-time data with R: stories of space and time"
+  
+  ## Copyright (C) 2012 Oscar Perpiñán Lamigueiro
+  
+  ## This program is free software you can redistribute it and/or modify
+  ## it under the terms of the GNU General Public License as published
+  ## by the Free Software Foundation; either version 2 of the License,
+  ## or (at your option) any later version.
+   
+  ## This program is distributed in the hope that it will be useful, but
+  ## WITHOUT ANY WARRANTY; without even the implied warranty of
+  ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  ## General Public License for more details.
+   
+  ## You should have received a copy of the GNU General Public License
+  ## along with this program; if not, write to the Free Software
+  ## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+  ## 02111-1307, USA.
+  ####################################################################
+  
+  setwd('~/Dropbox/chapman/book/')
+  ## TODO: eliminar!!
+  source('~/Dropbox/R/label/pointLabel.R')
+#+end_src
+* Reference Maps
+
+** OpenStreetMap with Hill Shade layers
+
+Although I was born in Madrid, Galicia (north of Spain) is a very
+special region for me. More precisely, Cedeira and Valdoviño offer
+a wonderful combination of wild sea, secluded beaches and
+forests. I will show you a map of this marvelous places. 
+
+The first step is to acquire information from the OpenStreetMap
+project. There are several packages to extract data from this
+service but, while most of them only provide already rendered
+raster images, the =osmar= package enables the use of the raw data
+with classes from the packages =sp= and =igraph=.
+
+The =get_osm= function retrieves a region defined by =corner_bbox=
+using the OSM API.
+
+#+begin_src R 
+  library('osmar')
+  
+  api <- osmsource_api()
+  ymax <- 43.7031
+  ymin <- 43.6181
+  xmax <- -8.0224
+  xmin <- -8.0808
+  box <- corner_bbox(xmin, ymin, xmax, ymax)
+  cedeira <- get_osm(box, source=api, full=TRUE)
+#+end_src
+
+
+The =cedeira= object includes three main components: nodes, ways
+and relations. 
+  
+#+begin_src R 
+  summary(cedeira)
+  summary(cedeira$nodes)
+#+end_src  
+
+These components can be accessed with the functions =find=, =subset=, =way=,
+=node=, =relation= and =tags=. Thus, the different kinds of roads
+can be obtained using =way= and =tags= with the appropiate
+tag. 
+
+#+begin_src R 
+  idxHighways <- find(cedeira, way(tags(k=='highway')))
+  highways <- subset(cedeira, way_ids=idxHighways)
+  idxStreets <- find(highways, way(tags(v=='residential')))
+  idxPrimary <- find(highways, way(tags(v=='primary')))
+  idxSecondary <- find(highways, way(tags(v=='secondary')))
+  idxTertiary <- find(highways, way(tags(v=='tertiary')))
+  idxOther <- find(highways,
+                   way(tags(v=='unclassified' |
+                            v=='footway' |
+                            v=='steps')))
+#+end_src  
+
+The result of =find= is the index of each element. The
+correspondent spatial object is extracted with =find_down= and
+=subset=, and can be converted to a class defined by the =sp=
+package with =as_sp=. The next =spFromOSM= function encodes the
+procedure, and extracts the =SpatialLines= which represent each
+type of road.
+
+#+begin_src R 
+  spFromOSM <- function(source, index, type='lines'){
+    idx <- find_down(source, index)
+    obj <- subset(source, ids=idx)
+    objSP <- as_sp(obj, type)
+    }
+  
+  streets <- spFromOSM(cedeira, way(idxStreets))
+  primary <- spFromOSM(cedeira, way(idxPrimary))
+  secondary <- spFromOSM(cedeira, way(idxSecondary))
+  tertiary <- spFromOSM(cedeira, way(idxTertiary))
+  other <- spFromOSM(cedeira, way(idxOther))
+#+end_src  
+  
+A similar procedure can be applied to construct a =SpatialPoints=
+object with the collection of places with name:
+#+begin_src R 
+  idxPlaces <- find(cedeira, node(tags(k=='name')))
+  places <- spFromOSM(cedeira, node(idxPlaces), 'points')
+  
+  nms <- subset(cedeira$nodes$tags, subset=(k=='name'), select=c('id', 'v'))
+  ord <- match(idxPlaces, nms$id)
+  nms <- nms[ord,]
+  places$name <- nms$v[ord]
+#+end_src  
+
+The second step is to produce a hill shade layer. This layer can
+be computed from the slope and aspect layers derived from a
+Digital Elevation Model. The DEM for this region is available at
+the Geonetwork-SECAD service from the Universidad de Extremadura
+and can be read with =raster=:
+#+begin_src R :eval no-export
+  library(raster)
+  library(rasterVis)
+  ## Galicia DEM
+  ## http://ide.unex.es/geonetwork/srv/es/main.search?any=MDE_Galicia
+  ## http://ide.unex.es:8180/geonetwork/srv/es/resources.get?id=21&fname=dem_gal.7z&access=private
+  
+  old <- tempdir()
+  download.file('http://ide.unex.es:8180/geonetwork/srv/es/resources.get?id=21&fname=dem_gal.7z&access=private', 'dem_gal.7z')
+  unzip('dem_gal.7z')
+  demGalicia <- raster('dem_gal.asc')
+  setwd(old)
+#+end_src
+
+#+begin_src R :exports none
+  library(raster)
+  library(rasterVis)
+  
+  demGalicia <- raster('~/Datos/DEM_Galicia/dem_gal.asc')
+#+end_src
+
+#+RESULTS:
+
+The =slope= and =aspect= layers are computed with the =terrain=
+function, and the hill shade layer is derived with these layers
+for a fixed sun position. Previously, the useful region of the DEM
+raster is extracted with the =crop= function:
+
+#+begin_src R 
+  cedeiraSP <- as_sp(cedeira, 'points')
+  projCedeira <- projection(cedeiraSP)
+  ##extCedeira <- bbox(cedeiraSP) 
+  ## or summary(cedeira$nodes)$bbox
+  extCedeira <- extent(-8.15, -7.95, 43.6, 43.75)
+  demCedeira <- crop(demGalicia, extCedeira)
+  projection(demCedeira) <- projCedeira
+  demCedeira[demCedeira <= 0] <- NA
+  
+  slope <- terrain(demCedeira, 'slope')
+  aspect <- terrain(demCedeira, 'aspect')
+  hsCedeira <- hillShade(slope=slope, aspect=aspect,
+                         angle=20, direction=30)
+    
+  
+#+end_src
+
+
+And finally, the third step is to display the different layers of
+information in correct order: the hill shade layer, the roads, and
+the places (points and labels).
+  
+#+begin_src R :results output graphics :exports both :file figs/cedeiraOsmar.pdf
+  ##Auxiliary function to display the roads. A thicker black line in
+  ##the background and a thinner one with an appropiate color.
+  sp.road <- function(line, lwd=5, blwd=7,
+                      col='indianred1', bcol='black'){
+    sp.lines(line, lwd=blwd, col=bcol)
+    sp.lines(line, lwd=lwd, col=col)
+  }
+  
+  ## The background color of the panel is set to blue to represent the sea
+  myTheme <- GrTheme()
+  myTheme$panel.background$col = 'skyblue3'
+  
+  
+  
+  levelplot(hsCedeira, par.settings=myTheme, margin=FALSE, colorkey=FALSE)+
+    layer(sp.road(streets, lwd=1, blwd=2, col='white')) +
+    layer(sp.road(other, lwd=2, blwd=3, col='white')) +
+    layer(sp.road(tertiary, lwd=3, blwd=4, col='palegreen')) +
+    layer(sp.road(secondary, lwd=4, blwd=6, col='midnightblue')) +
+    layer(sp.road(primary, col='indianred1')) +
+    layer(sp.points(places, pch=19, col='black', cex=0.6, alpha=0.5)) +
+    layer(sp.pointLabel(places, labels=places$name,
+                        fontfamily = 'Palatino', 
+                        cex=0.6, col='black'))
+#+end_src
+
+
+** Brazil
+
+#+begin_src R 
+  library(raster)
+  library(rasterVis)
+  library(maptools)
+  library(latticeExtra)
+  library(colorspace)
+#+end_src
+
+#+begin_src R :eval no-export
+  old <- setwd(tempdir())
+  download.file('http://www.gadm.org/data/shp/BRA_adm.zip', 'BRA_adm.zip')
+  unzip('BRA_adm.zip')
+  download.file('http://www.diva-gis.org/data/msk_alt/BRA_msk_alt.zip', 'BRA_msk_alt.zip')
+  unzip('BRA_msk_alt.zip')
+  download.file('http://www.diva-gis.org/data/alt/BRA_alt.zip', 'BRA_alt.zip')
+  unzip('BRA_alt.zip')
+  download.file('http://www.diva-gis.org/data/wat/BRA_wat.zip', 'BRA_wat.zip')
+  unzip('BRA_wat.zip')
+  
+  
+  proj <- CRS(' +proj=longlat +ellps=WGS84')
+  brazilAdm <- readShapePoly('BRA_adm1.shp', proj4string=proj)
+  Encoding(levels(brazilAdm$NAME_1)) <- 'latin1'
+  centroids <- coordinates(brazilAdm)
+  xyBrazil <- apply(centroids, 2, mean)
+  
+  brazilWat <- readShapeLines('BRA_water_lines_dcw.shp', proj4string=proj)
+  Encoding(levels(brazilWat$NAM)) <- 'latin1'
+  brazilAlt <- raster('BRA_alt')
+  brazilMskAlt <- raster('BRA_msk_alt')
+  brazilWatArea <- readShapePoly('BRA_water_areas_dcw.shp', proj4string=proj)
+  setwd(old)
+  
+#+end_src
+
+#+begin_src R :exports none
+  proj <- CRS(' +proj=longlat +ellps=WGS84')
+  brazilAdm <- readShapePoly('~/Datos/BRA_adm/BRA_adm1.shp', proj4string=proj)
+  Encoding(levels(brazilAdm$NAME_1)) <- 'latin1'
+  centroids <- coordinates(brazilAdm)
+  xyBrazil <- apply(centroids, 2, mean)
+  
+  brazilWat <- readShapeLines('~/Datos/BRA_wat/BRA_water_lines_dcw.shp', proj4string=proj)
+  Encoding(levels(brazilWat$NAM)) <- 'latin1'
+  brazilAlt <- raster('~/Datos/BRA_alt/BRA_alt')
+  brazilWatArea <- readShapePoly('~/Datos/BRA_wat/BRA_water_areas_dcw.shp', proj4string=proj)
+#+end_src
+
+#+begin_src R 
+  river <- subset(brazilWat,
+                  subset=brazilWat$HYC_DESCRI=='Perennial/Permanent' & brazilWat$NAM!='UNK')
+
+  waterArea <- subset(brazilWatArea,
+                  subset=brazilWatArea$HYC_DESCRI=='Perennial/Permanent' & brazilWatArea$NAME!='UNK')
+#+end_src
+
+#+begin_src R 
+  polygonLabel <- function(polygon, labels,
+                           cex=0.5, col='black',
+                           fontfamily='Palatino', lineheight=.8,
+                           fill='lightgray', alpha=0.5)
+  {
+    xy <- xy.coords(coordinates(polygon))
+  
+    gp <- gpar(cex=cex, col=col,
+               fontfamily=fontfamily,
+               lineheight=lineheight, alpha=alpha)
+  
+  
+    widthOriginal <-  sapply(labels, function(s){
+      tg <- textGrob(s, gp=gp)
+      gw <- grobWidth(tg);
+      convertWidth(gw, 'native', valueOnly=TRUE)
+    })
+  
+    heightOriginal <-  sapply(labels, function(s){
+      tg <- textGrob(s, gp=gp)
+      gh <- grobHeight(tg);
+      convertHeight(gh, 'native', valueOnly=TRUE)
+    })
+    
+    rg <- rectGrob(x=xy$x, y=xy$y,
+                   width=widthOriginal, height=heightOriginal * 1.1,
+                   default.units='native',
+                   gp=gpar(fill=fill, col='transparent', alpha=alpha))
+    grid.draw(rg)
+    
+    tg <- textGrob(x=xy$x, y=xy$y, label=labels,
+                   default.units='native', gp=gp)
+    grid.draw(tg)
+  }
+  
+#+end_src
+
+#+begin_src R 
+  admNames <- strsplit(as.character(brazilAdm$NAME_1), ' ')
+  
+  admNames <- sapply(admNames,
+                   FUN=function(s){
+                     sep=if (length(s)>2) '\n' else  ' '
+                     paste(s, collapse=sep)
+                     })
+#+end_src
+
+#+begin_src R :results output graphics :exports both :file figs/brazil.pdf
+  terrainTheme <- rasterTheme(region=terrain_hcl(15))
+  terrainTheme$panel.background$col = 'skyblue3'
+  
+  levelplot(brazilAlt, par.settings=terrainTheme) +
+    layer(sp.polygons(brazilAdm, col='black', lwd=0.6)) +
+  ##  layer(sp.lines(river, col='blue', lwd=0.6)) +
+    layer(sp.polygons(waterArea, col='darkblue', fill='blue', lwd=0.6)) +
+    layer(polygonLabel(brazilAdm, labels=admNames)) +
+    layer(panel.text(xyBrazil[1], xyBrazil[2], labels='BRAZIL',
+                     cex=2, fontfamily = 'Palatino'))
+  
+#+end_src
+
+#+RESULTS:
+[[file:figs/brazil.pdf]]
+
+
+
+

@@ -1,0 +1,103 @@
+#+PROPERTY:  session *R*
+#+PROPERTY:  tangle yes
+#+OPTIONS: ^:nil
+#+BIND: org-export-latex-image-default-option "width=0.8\\textwidth"
+#+BIND: org-latex-default-figure-position "h!"
+
+#+begin_src R :exports none
+  ##################################################################
+  ## Source code for the book: "Displaying time series, spatial and
+  ## space-time data with R: stories of space and time"
+  
+  ## Copyright (C) 2013-2012 Oscar Perpiñán Lamigueiro
+  
+  ## This program is free software you can redistribute it and/or modify
+  ## it under the terms of the GNU General Public License as published
+  ## by the Free Software Foundation; either version 2 of the License,
+  ## or (at your option) any later version.
+   
+  ## This program is distributed in the hope that it will be useful, but
+  ## WITHOUT ANY WARRANTY; without even the implied warranty of
+  ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  ## General Public License for more details.
+   
+  ## You should have received a copy of the GNU General Public License
+  ## along with this program; if not, write to the Free Software
+  ## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+  ## 02111-1307, USA.
+  ####################################################################
+#+end_src
+
+#+begin_src R :exports none
+  ## Set folder to where the local copy of github repository can be found
+  setwd('~/Dropbox/chapman/book/')
+  
+  library(lattice)
+  library(ggplot2)
+  library(latticeExtra)
+  
+  myTheme <- custom.theme.2(pch=19, cex=0.7,
+                            region=rev(brewer.pal(9, 'YlOrRd')),
+                            symbol = brewer.pal(n=8, name = "Dark2"))
+  myTheme$strip.background$col='transparent'
+  myTheme$strip.shingle$col='transparent'
+  myTheme$strip.border$col='transparent'
+  
+  xscale.components.custom <- function(...){
+      ans <- xscale.components.default(...)
+      ans$top=FALSE
+      ans}
+  yscale.components.custom <- function(...){
+      ans <- yscale.components.default(...)
+      ans$right=FALSE
+      ans}
+  myArgs <- list(as.table=TRUE,
+                 between=list(x=0.5, y=0.2),
+                 xscale.components = xscale.components.custom,
+                 yscale.components = yscale.components.custom)
+  defaultArgs <- lattice.options()$default.args
+  
+  lattice.options(default.theme = myTheme,
+                  default.args = modifyList(defaultArgs, myArgs))
+  
+#+end_src
+
+* Thematic Maps
+\label{sec:thematicMaps}
+#+begin_src R :exports none
+  ##################################################################
+  ## Thematic maps
+  ##################################################################
+#+end_src
+
+A thematic map focuses on a specific theme or variable commonly
+using geographic data such as coastlines, boundaries and places,
+as points of reference for the variable being mapped. These maps
+provide specific information about particular locations or areas
+(proportional symbol mapping and choropleth maps) and information
+about spatial patterns (isarithmic and raster maps).
+
+* Footnotes
+
+[fn:1] [[http://www.madrid.org/nomecalles/Callejero_madrid.icm]]
+
+[fn:2] The =sp= package includes the =bubble= function to produce proportional symbol maps. However, for a better control of the result we will write our own code.
+
+[fn:3]
+  [[http://www.nytimes.com/interactive/2009/03/10/us/20090310-immigration-explorer.html]]. Several
+  infographics of this newspaper can be found at [[http://www.smallmeans.com/new-york-times-infographics/]].
+
+[fn:5] [[http://www.infoelectoral.mir.es/docxl/04_201105_1.zip]]
+
+[fn:7] [[http://www.ine.es]]
+
+[fn:4] A more detailed analysis of this dataset can be found at
+  [[http://prezi.com/fipcfjen_fck/pongamos-que-hablo-del-aire-de-madrid/]]
+  (in Spanish).
+
+[fn:6] http://craigsworks.com/projects/qtip2/
+
+[fn:8] [[http://jquery.com/]]
+
+[fn:9] You should read the Google Maps Terms of Service before
+  using their data for your project.

@@ -1,0 +1,75 @@
+#+PROPERTY:  session *R*
+#+PROPERTY:  tangle yes
+#+OPTIONS: ^:nil
+#+begin_src R :exports none
+  ##################################################################
+  ## Source code for the book: "Displaying time series, spatial and
+  ## space-time data with R: stories of space and time"
+  
+  ## Copyright (C) 2012 Oscar Perpiñán Lamigueiro
+  
+  ## This program is free software you can redistribute it and/or modify
+  ## it under the terms of the GNU General Public License as published
+  ## by the Free Software Foundation; either version 2 of the License,
+  ## or (at your option) any later version.
+   
+  ## This program is distributed in the hope that it will be useful, but
+  ## WITHOUT ANY WARRANTY; without even the implied warranty of
+  ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  ## General Public License for more details.
+   
+  ## You should have received a copy of the GNU General Public License
+  ## along with this program; if not, write to the Free Software
+  ## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+  ## 02111-1307, USA.
+  ####################################################################
+#+end_src
+
+#+begin_src R :exports none
+  ## Set folder to where the local copy of github repository can be found
+  setwd('~/Dropbox/chapman/book/')
+#+end_src
+
+* Reference and Physical Maps
+\label{sec:referenceMaps}
+
+#+begin_src R
+##################################################################
+## Reference and Physical Maps
+##################################################################
+#+end_src R
+
+A reference map focuses on the geographic location of features. In
+these maps cities are named and major transport routes are
+identified. Besides, natural features such as rivers and mountains are
+named, and elevation is shown using a simple colour shading.  
+
+A physical map shows the physical landscape features of a
+place. Mountains and elevation changes are usually shown with
+different colors and shades to show relief, using green to show
+lower elevations and browns for high elevations.
+
+This section details how to create a reference map of a northern
+region of Spain using data from OpenStreetMap, and a physical map
+of Brazil with data from different sources.
+
+
+* Footnotes
+
+[fn:1] http://en.wikipedia.org/wiki/Brazil
+
+[fn:2] http://en.wikipedia.org/wiki/Megadiverse_countries
+
+[fn:3] http://www.diva-gis.org/Data
+
+[fn:4] http://gadm.org/
+
+[fn:5] http://www.naturalearthdata.com/
+
+[fn:6] Its webpage [[http://osmar.r-forge.r-project.org/]] proposes
+  two interesting demos.
+
+
+
+
+

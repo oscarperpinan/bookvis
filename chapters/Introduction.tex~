@@ -1,0 +1,477 @@
+\chapter{Introduction}
+
+\section{What This Book Is About}
+\label{sec:thisBook}
+
+A data graphic is not only a static image but also tells a story about
+the data. It activates cognitive processes that are able to detect
+patterns and discover information not readily available with the raw
+data. This is particularly true for time series, spatial, and
+space-time datasets.
+
+There are several excellent books about data graphics and visual
+perception theory, with guidelines and advice for displaying
+information, including visual examples. Let's mention \emph{The
+  Elements of Graphical Data} \cite{Cleveland1994} and
+\emph{Visualizing Data} \cite{Cleveland1993} by W. S. Cleveland,
+\emph{Envisioning Information} \cite{Tufte1990} and \emph{The Visual
+  Display of Quantitative Information} \cite{Tufte2001} by E. Tufte,
+\emph{The Functional Art} by A. Cairo \cite{Cairo2012}, and
+\emph{Visual Thinking for Design} by C. Ware \cite{Ware2008}.
+Ordinarily, they do not include the code or software tools to produce
+those graphics.
+
+On the other hand, there is a collection of books that provides code
+and detailed information about the graphical tools available with
+\textsf{R}. Commonly they do not use real data in the examples and do
+not provide advice for improving graphics according to visualization
+theory. Three books are the unquestioned representatives of this
+group: \emph{R Graphics} by P. Murrell \cite{Murrell2011},
+\emph{Lattice: Multivariate Data Visualization with R} by D. Sarkar
+\cite{Sarkar2010}, and \emph{ggplot2: Elegant Graphics for Data Analysis} by
+H. Wickham \cite{Wickham2009}.
+
+This book proposes methods to display time series, spatial, and
+space-time data using \textsf{R}, and aims to be a synthesis of both
+groups providing code and detailed information to produce high-quality
+graphics with practical examples.
+
+\section{What You Will \emph{Not} Find in This Book}
+\label{sec:thisBookIsNot}
+
+\begin{itemize}
+\item \textbf{This is not a book to learn \textsf{R}}. 
+
+  Readers should have a fair knowledge of programming with \textsf{R}
+  to understand the book. In addition, previous experience with the
+  \texttt{zoo}, \texttt{sp}, \texttt{raster}, \texttt{lattice},
+  \texttt{ggplot2}, and \texttt{grid} packages is helpful.
+
+  If you need to improve your \textsf{R} skills, consider these
+  information sources:
+
+  \begin{itemize}
+  \item Introduction to \textsf{R}\footnote{\url{http://cran.r-project.org/doc/manuals/R-intro.html}}
+  \item Official manuals\footnote{\url{http://cran.r-project.org/manuals.html}}
+  \item Contributed documents\footnote{\url{http://cran.r-project.org/other-docs.html}}
+  \item Mailing lists\footnote{\url{http://www.r-project.org/mail.html}}
+  \item R-bloggers\footnote{\url{http://www.r-bloggers.com}}
+  \item Books related to
+    \textsf{R}\footnote{\url{http://www.r-project.org/doc/bib/R-books.html}},
+    and particularly \emph{Software for Data Analysis} by John
+    M. Chambers \cite{Chambers2008}.
+  \end{itemize}
+
+
+\item \textbf{This book does not provide an exhaustive collection of
+  visualization methods.}
+
+Instead, it illustrates what I found to be the most useful and
+effective methods. Notwithstanding, each part includes a section
+titled ``Further Reading'' with bibliographic proposals for additional
+information.
+
+
+\item \textbf{This book does not include a complete review or
+    discussion of \textsf{R} packages.}
+
+  Their most useful functions, classes, and methods regarding data and
+  graphics are outlined in the introductory chapter of each part, and
+  conveniently illustrated with the help of examples. However, if you
+  need detailed information about a certain aspect of a package, you
+  should read the correspondent package manual or vignette. Moreover,
+  if you want to know additional alternatives, you can navigate through
+  the CRAN Task Views about Time
+  Series\footnote{\url{http://cran.r-project.org/web/views/TimeSeries.html}},
+  Spatial
+  Data\footnote{\url{http://cran.r-project.org/web/views/Spatial.html}},
+  Spatiotemporal
+  Data\footnote{\url{http://cran.r-project.org/web/views/SpatioTemporal.html}},
+  and
+  Graphics\footnote{\url{http://cran.r-project.org/web/views/Graphics.html}}.
+
+
+\item \textbf{Finally, this book is not a handbook of data analysis,
+    geostatistics, point pattern analysis, or time series theory.}
+
+  Instead, this book is focused on the exploration of data with visual
+  methods, so it may be framed in the Exploratory Data Analysis
+  approach. Therefore, this book may be a useful complement for superb
+  bibliographic references where you will find plenty of information
+  about those subjects. For example, \cite{Chatfield2003},
+  \cite{Cressie.Wikle2011}, \cite{Slocum.McMaster.ea2005} and
+  \cite{Bivand.Pebesma.ea2008}.
+
+\end{itemize}
+
+
+\section{How to Read This Book}
+\label{sec:how-read}
+
+This book is organized into three parts, each devoted to different
+types of data. Each part comprises several chapters according to the
+various visualization methods or data characteristics. The chapters
+are structured as independent units so readers can jump directly to
+a certain chapter according to their needs. Of course, there are
+several dependencies and redundancies between the sets of chapters
+that have been conveniently signaled with cross-references.
+
+The content of each chapter illustrates how to display a dataset
+starting with an easy and direct approach. Often this first result
+is not entirely satisfactory so additional improvements are
+progressively added. Each step involves additional complexity
+which, in some cases, can be overwhelming during a first
+reading. Thus, some sections, marked with the sign \floweroneleft,
+can be safely skipped for later reading.
+
+Although I have done my best to help readers understand the methods
+and code, you should not expect to understand it after one
+reading. The key is practical experience, and the best way is to try
+out the code with the provided data \textbf{and} modify it to suit
+your needs with your own data. There is a website and a code
+repository to help you in this task.
+
+\subsection{Website and Code Repository}
+\label{sec:github}
+
+The book website with the main graphics of this book is located at
+
+\begin{center}
+  \url{http://oscarperpinan.github.com/spacetime-vis/}
+\end{center}
+
+The full code is freely available from the repository:
+
+\begin{center}
+  \url{https://github.com/oscarperpinan/spacetime-vis}
+\end{center}
+
+On the other hand, the datasets used in the examples are either
+available at the repository or can be freely obtained from other
+websites. It must be underlined that the combination of code and data
+freely available allows this book to be fully reproducible.
+
+I have chosen the datasets according to two main criteria:
+\begin{enumerate}
+\item They are freely available without restrictions for public use.
+\item They cover different scientific and professional fields
+  (meteorology and climate research, economy and social sciences,
+  energy and engineering, environmental research, epidemiology, etc.).
+\end{enumerate}
+
+The repository and the website can be downloaded as compressed files
+\footnote{Repository:
+  \url{https://github.com/oscarperpinan/spacetime-vis/archive/master.zip}, 
+  Website: \url{https://github.com/oscarperpinan/spacetime-vis/archive/gh-pages.zip}},
+and if you use \texttt{git}, you can clone the repository with
+
+\lstset{language=bash,numbers=none}
+\begin{lstlisting}
+git clone https://github.com/oscarperpinan/spacetime-vis.git
+\end{lstlisting}
+
+
+
+\section{\textsf{R} Graphics}
+\label{sec:r-graphics}
+
+\index{Packages!grid@\texttt{grid}}
+There are two distinct graphics systems built into \textsf{R},
+referred to as traditional and grid graphics. Grid graphics are
+produced with the \texttt{grid} package \cite{Murrell2011}, a flexible
+low-level graphics toolbox. Compared with the traditional graphics
+model, it provides more flexibility to modify or add content to an
+existent graphical output, better support for combining different
+outputs easily, and more possibilities for interaction. All the
+graphics in this book have been produced with the grid graphics model.
+
+Other packages are constructed over it to provide high-level
+functions, most notably the \texttt{lattice} and \texttt{ggplot2}
+packages.
+
+\subsection{lattice}
+\label{sec:lattice}
+
+\index{Packages!lattice@\texttt{lattice}}
+
+The \texttt{lattice} package \cite{Sarkar2010} is an independent
+implementation of Trellis graphics, which were mostly influenced by
+\emph{The Elements of Graphing Data} \cite{Cleveland1994}. Trellis
+graphics often consist of a rectangular array of panels. The
+\texttt{lattice} package uses a \emph{formula} interface to define the
+structure of the array of panels with the specification of the
+variables involved in the plot. The result of a \texttt{lattice}
+high-level function is a \texttt{trellis} object.
+
+For bivariate graphics, the formula is generally of the form
+\lstinline{y ~ x} representing a single panel plot with \texttt{y} versus
+\texttt{x}. This formula can also involve expressions. The main
+function for bivariate graphics is \texttt{xyplot}.
+
+Optionally, the formula may be \lstinline{y ~ x | g1 * g2} and \texttt{y}
+is represented against \texttt{x} conditional on the variables
+\texttt{g1} and \texttt{g2}. Each unique combination of the levels of
+these conditioning variables determines a subset of the variables
+\texttt{x} and \texttt{y}. Each subset provides the data for a single
+panel in the Trellis display, an array of panels laid out in columns,
+rows, and pages.
+
+For example, in the following code, the variable \texttt{wt} of the
+dataset \texttt{mtcars} is represented against the \texttt{mpg}, with
+a panel for each level of the categorical variable \texttt{am}. The
+points are grouped by the values of the \texttt{cyl} variable.
+
+\lstset{language=R,numbers=none}
+\begin{lstlisting} 
+xyplot(wt ~ mpg | am, data = mtcars, groups = cyl)
+\end{lstlisting}
+
+For trivariate graphics, the formula is of the form 
+\lstinline{z ~ x * y}, where \texttt{z} is a numeric response, 
+and \texttt{x} and \texttt{y} are numeric values evaluated on a
+rectangular grid. Once again, the formula may include conditioning
+variables, for example \lstinline{z ~ x * y | g1 * g2}. The main
+function for these graphics is \texttt{levelplot}.
+
+The plotting of each panel is performed by the panel function, specified in
+a high-level function call as the \texttt{panel} argument. Each
+high-level \texttt{lattice} function has a default panel function,
+although the user can create new Trellis displays with custom panel
+functions.
+
+\texttt{lattice} is a member of the recommended packages list so it is
+commonly distributed with \textsf{R} itself. There are more than 250
+packages depending on it, and the most important packages for our
+purposes (\texttt{zoo}, \texttt{sp}, and \texttt{raster}) define
+methods to display their classes using \texttt{lattice}.
+
+\index{Packages!latticeExtra@\texttt{latticeExtra}} 
+
+On the other hand, the \texttt{latticeExtra} package
+\cite{Sarkar.Andrews2012} provides additional flexibility for the
+somewhat rigid structure of the Trellis framework implemented in
+\texttt{lattice}. This package complements the \texttt{lattice} with
+the implementation of layers via the \texttt{layer} function, and
+superposition of \texttt{trellis} objects and layers with the
+\lstinline{+.trellis} function. Using both packages, you can define a
+graphic with the formula interface (under the \texttt{lattice} model)
+and overlay additional content as layers (following the
+\texttt{ggplot2} model).
+
+\subsection{ggplot2}
+\label{sec:ggplot2}
+
+\index{Packages!ggplot2@\texttt{ggplot2}} 
+
+The \texttt{ggplot2} package \cite{Wickham2009} is an implementation
+of the system proposed in \emph{The Grammar of Graphics}
+\cite{Wilkinson1999}, a general scheme for data visualization that
+breaks up graphs into semantic components such as scales and
+layers. Under this framework, the definition of the graphic with
+\texttt{ggplot2} is done with a combination of several functions
+that provides the components, instead of the formula interface of
+\texttt{lattice}.
+
+With \texttt{ggplot2}, a graphic is composed of
+\begin{itemize}
+\item A dataset, \texttt{data}, and a set of mappings from variables
+  to aesthetics, \texttt{aes}.
+\item One or more layers, each composed of: a geometric object,
+  \texttt{geom\_*}, to control the type of plot you create (points,
+  lines, etc.); a statistical transformation, \texttt{stat\_*}; and a
+  position adjustment (and optionally, additional dataset and
+  aesthetic mappings).
+\item A scale, \texttt{scale\_*}, to control the mapping from data to
+  aesthetic attributes. Scales are common across layers to ensure a
+  consistent mapping from data to aesthetics.
+\item A coordinate system, \texttt{coords\_*}.
+\item Optionally, a faceting specification, \texttt{facet\_*}, the
+  equivalent of Trellis graphics with panels.
+\end{itemize}
+
+The function \texttt{ggplot} is typically used to construct a plot
+incrementally, using the \texttt{+} operator to add layers to the
+existing ggplot object.  For instance, the following code (equivalent to
+the previous \texttt{lattice} example) uses \texttt{mtcars} as
+the dataset, and maps the \texttt{mpg} variable on the x-axis and the
+\texttt{wt} variable on the y-axis. The geometric object is the point
+using the \texttt{cyl} variable to control the color. Finally, the
+levels of the \texttt{am} variable define the panels of the graphic.
+
+\lstset{language=R,numbers=none}
+\begin{lstlisting}
+ggplot(mtcars, aes(mpg, wt)) +
+    geom_point(aes(colour=factor(cyl))) +
+    facet_grid(. ~ am)
+\end{lstlisting}
+ 
+This package is increasingly popular, with a list of more than ninety
+packages depending on it. On the other hand, few packages provide
+method definitions based on \texttt{ggplot2} to display their
+classes. In our context, only the \texttt{zoo} package defines the
+\texttt{autoplot} function based on it.
+
+\subsection{Comparison between lattice and ggplot2}
+\label{sec:comparison}
+
+Which package to choose is, for a wide range of datasets, a question
+of personal preferences. You may be interested in a comparison
+between them published in a series of blog
+posts\footnote{http://learnr.wordpress.com/2009/06/28/ggplot2-version-of-figures-in-lattice-multivariate-data-visualization-with-r-part-1/}.
+However, the major drawback of \texttt{ggplot2} is its considerably
+slower speed when dealing with large datasets\footnote{Take a look at
+  the time comparison published as the final result of the previous
+  series of blog posts,
+  http://learnr.files.wordpress.com/2009/08/latbook.pdf}, so you
+should be cautious with large spatial and spatiotemporal data.
+
+Consequently, most of the code in Part \ref{part:Time} contains
+alternatives defined both with \texttt{lattice} and with
+\texttt{ggplot2}. However, because of the speed problem and the
+absence of \texttt{ggplot2} functions in the corresponding packages,
+only a minor fraction of the code in Parts \ref{cha:Spatial} and
+\ref{cha:Spatio-Time} contains graphics defined with \texttt{ggplot2}.
+  
+
+\section{Packages}
+\label{sec:introduction-packages}
+
+Throughout the book, several \textsf{R} packages are used. All of them
+are available from \textsf{CRAN}, and you must install them before
+using the code. Most of them are loaded at the start of the code of
+each chapter, although some of them are loaded later if they are used
+only inside optional sections (marked with \floweroneleft). You should
+install the last version available at \textsf{CRAN} to ensure correct
+functioning of the code.
+
+Although the introductory chapter of each part includes a section with
+an outline of the most relevant packages, some of them deserve to be
+highlighted here:
+
+\begin{itemize}
+
+\item \texttt{zoo} \cite{Zeileis.Grothendieck2005} provides
+  infrastructure for time series using arbitrary classes for the time
+  stamps (Section \ref{sec:zoo}).
+
+\item \texttt{sp} \cite{Pebesma2012} provides a coherent set of
+  classes and methods for the major spatial data types: points, lines,
+  polygons, and grids (Section \ref{sec:sp}). \texttt{spacetime}
+  \cite{Pebesma2012} defines classes and methods for spatiotemporal
+  data, and methods for plotting data as map sequences or multiple
+  time series (Section \ref{sec:spacetime}).
+
+\item \texttt{raster} \cite{Hijmans2013} is a major extension of
+  gridded spatial data classes. It provides a unified access method to
+  different raster formats, permitting large objects to be analyzed
+  with the definition of basic and high-level processing functions
+  (Sections \ref{sec:raster} and \ref{sec:rasterST}). \texttt{rasterVis}
+  \cite{Perpinan.Hijmans2013} provides enhanced visualization of
+  raster data with methods for spatiotemporal rasters (Sections
+  \ref{sec:rasterVis} and \ref{sec:rastervisST}).
+
+\item \texttt{gridSVG} \cite{Murrell.Potter2013} converts any grid
+  scene to an \textsf{SVG} document. The \lstinline{grid.hyperlink}
+  function allows a hyperlink to be associated with any component of
+  the scene, the \lstinline{grid.animate} function can be used to
+  animate any component of a scene, and the \lstinline{grid.garnish}
+  function can be used to add \textsf{SVG} attributes to the
+  components of a scene. By setting event handler attributes on a
+  component, plus possibly using the \lstinline{grid.script} function
+  to add \textsf{JavaScript} to the scene, it is possible to make the
+  component respond to user input such as mouse clicks.
+
+\end{itemize}
+
+
+
+\section{Software Used to Write This Book}
+\label{sec:software-book}
+
+This book has been written using different computers running Debian
+GNU Linux and using several gems of open-source software:
+\begin{itemize}
+\item \textsf{org-mode} for authoring text and code
+  \cite{Schulte.Davison.ea2012}.
+\item \textsf{R} \cite{RDevelopmentCoreTeam2013} with \textsf{Emacs
+    Speaks Statistics} \cite{Rossini.Heiberger.ea2004}.
+\item \LaTeX{} with AUC\TeX{} to produce the final document.
+\item \textsf{GNU Emacs} as development environment.
+\end{itemize}
+
+\section{About the Author}
+\label{sec:aboutMe}
+
+During the past 15 years, my main area of expertise has been
+photovoltaic solar energy systems, with a special interest in solar
+radiation.
+
+Initially I worked as an engineer for a private company and I was
+involved in several commercial and research projects. The project
+teams were partly integrated by people with low technical skills who
+relied on the input from engineers to complete their work. I learned
+how a good visualization output eased the communication process.
+
+Now I work as a professor and researcher at the university. Data
+visualization is one of the most important tools I have available. It
+helps me embrace and share the steps, methods, and results of my
+research. With students, it is an inestimable partner in helping them
+understand complex concepts.
+
+I have been using \textsf{R} to simulate the performance of
+photovoltaic energy systems and to analyze solar radiation data,
+both as time series and spatial data. As a result, I have
+developed packages that include several graphical methods to deal
+with multivariate time series (namely, \texttt{solaR}
+\cite{Perpinan2012b}) and space-time data (\texttt{rasterVis}).
+
+\section{Acknowledgments}
+\label{sec:acknow}
+
+Writing a book is often described as a solitary activity. It is
+certainly difficult to write when you are with friends or spending
+time with your family,... although with three little children at home
+I have learned to write prose and code while my baby wants to learn
+typing and my daughters need help to share a family of dinosaurs.
+
+Seriously speaking, solitude is the best partner of a writer. But when
+I am writing or coding I feel I am immersed in a huge collaborative
+network of past and present contributors. Piotr Kropotkin described it
+with the following words \cite{Kropotkin1906}:
+
+\begin{quote}
+  Thousands of writers, of poets, of scholars, have laboured to
+  increase knowledge, to dissipate error, and to create that
+  atmosphere of scientific thought, without which the marvels of our
+  century could never have appeared. And these thousands of
+  philosophers, of poets, of scholars, of inventors, have themselves
+  been supported by the labour of past centuries. They have been
+  upheld and nourished through life, both physically and mentally, by
+  legions of workers and craftsmen of all sorts.
+\end{quote}
+
+And Lewis Mumford claimed \cite{Mumford1934}:
+
+\begin{quote}
+  Socialize Creation! What we need is the realization that the
+  creative life, in all its manifestations, is necessarily a social
+  product.
+\end{quote}
+
+I want to express my deepest gratitude and respect to all those women
+and men who have contributed and contribute to strengthening the
+communities of free software, open data, and open science. My special
+thanks go to the people of the \textsf{R} community: users, members
+of the \textsf{R} Core Development Team, and package developers.
+
+With regard to this book in particular, I would like to thank John
+Kimmel for his constant support, guidance, and patience.
+
+Last, and most importantly, thanks to Candela, Marina, and Javi, my
+crazy little shorties, my permanent source of happiness, imagination, and
+love. Thanks to María, \emph{mi amor, mi cómplice y todo}.
+
+%%% Local Variables:
+%%% mode: LaTex
+%%% TeX-master: "../main.tex"
+%%% End: 

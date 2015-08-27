@@ -1,0 +1,559 @@
+#+PROPERTY:  session *R*
+#+PROPERTY:  tangle yes
+#+OPTIONS: ^:nil
+#+begin_src R :exports none
+  ##################################################################
+  ## Source code for the book: "Displaying time series, spatial and
+  ## space-time data with R: stories of space and time"
+  
+  ## Copyright (C) 2012 Oscar Perpiñán Lamigueiro
+  
+  ## This program is free software you can redistribute it and/or modify
+  ## it under the terms of the GNU General Public License as published
+  ## by the Free Software Foundation; either version 2 of the License,
+  ## or (at your option) any later version.
+   
+  ## This program is distributed in the hope that it will be useful, but
+  ## WITHOUT ANY WARRANTY; without even the implied warranty of
+  ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  ## General Public License for more details.
+   
+  ## You should have received a copy of the GNU General Public License
+  ## along with this program; if not, write to the Free Software
+  ## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+  ## 02111-1307, USA.
+  ####################################################################
+#+end_src
+
+#+begin_src R :exports none
+  ## Set folder to where the local copy of github repository can be found
+  setwd('~/Dropbox/chapman/book/')
+#+end_src
+
+* Reference and Physical Maps
+\label{sec:referenceMaps}
+
+#+begin_src R
+##################################################################
+## Reference and Physical Maps
+##################################################################
+#+end_src R
+
+A reference map focuses on the geographic location of features. In
+these maps cities are named and major transport routes are
+identified. Besides, natural features such as rivers and mountains are
+named, and elevation is shown using a simple colour shading.  
+
+A physical map shows the physical landscape features of a
+place. Mountains and elevation changes are usually shown with
+different colors and shades to show relief, using green to show
+lower elevations and browns for high elevations.
+
+This section details how to create a reference map of a northern
+region of Spain using data from OpenStreetMap, and a physical map
+of Brazil with data from different sources.
+
+
+** Physical maps
+
+#+begin_src R
+##################################################################
+## Physical maps
+##################################################################
+#+end_src R
+
+Brazil[fn:1], the world's fifth largest country, is one of the 17
+megadiverse countries[fn:2], home to diverse wildlife, natural
+environments, and extensive natural resources in a variety of
+protected habitats. Throughout this section we will create a physical
+map of this exceptional country using data from the
+DIVA-GIS[fn:3], GADM[fn:4] and Natural Earth Data[fn:5] projects.
+
+\index{Packages!raster@\texttt{raster}}  
+\index{Packages!rasterVis@\texttt{rasterVis}}  
+\index{Packages!sp@\texttt{sp}}  
+\index{Packages!maptools@\texttt{maptools}}  
+\index{Packages!colorspace@\texttt{colorspace}}  
+#+begin_src R 
+  library(raster)
+  library(rasterVis)
+  library(maptools)
+  library(latticeExtra)
+  library(colorspace)
+#+end_src
+
+\index{CRS@\texttt{CRS}}
+\index{download.file@\texttt{download.file}}
+\index{readShapePoly@\texttt{readShapePoly}}
+\index{readShapeLines@\texttt{readShapeLines}}
+\index{Encoding@\texttt{Encoding}}
+\index{raster@\texttt{raster}}
+\index{Data!GADM}
+\index{Data!DIVA-GIS}
+\index{Data!Natura Earth Data}
+#+begin_src R :eval no-export
+  old <- setwd(tempdir())
+    
+  ## Longitude-Latitude projection
+  proj <- CRS(' +proj=longlat +ellps=WGS84')
+    
+  ## Administrative boundaries (GADM)
+  download.file('http://www.gadm.org/data/shp/BRA_adm.zip', 'BRA_adm.zip')
+  unzip('BRA_adm.zip')
+  brazilAdm <- readShapePoly('BRA_adm1.shp', proj4string=proj)
+  Encoding(levels(brazilAdm$NAME_1)) <- 'latin1'
+  
+  ## Altitude raster (DIVA-GIS)
+  download.file('http://www.diva-gis.org/data/alt/BRA_alt.zip', 'BRA_alt.zip')
+  unzip('BRA_alt.zip')
+  brazilAlt <- raster('BRA_alt')
+  
+  ## World Water lines (Natural Earth)
+  download.file('http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/physical/ne_10m_rivers_lake_centerlines.zip', 'neRivers.zip')
+  unzip('neRivers.zip')
+  worldlRiv <- readShapeLines('ne_10m_rivers_lake_centerlines', proj4string = proj)
+  
+  ## Sea depth (Natural Earth)
+  download.file('http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/raster/OB_LR.zip', 'neSea.zip')
+  unzip('neSea.zip')
+  worldSea <- raster('OB_LR.tif')
+  brazilSea <- crop(worldSea, brazilAlt)
+  
+  setwd(old)  
+#+end_src
+
+The rivers and lakes database from Natural Earth Data comprises
+all the world extent. With a helper function, the extent of each
+line is calculated and compared with the =brazilAlt= raster
+extent. Those lines contained in this extent are included in a new
+=brazilRiv= object. 
+\index{intersect@\texttt{intersect}}
+\index{extent@\texttt{extent}}
+\index{lapply@\texttt{lapply}}
+#+begin_src R :eval no-export
+  ## only those features labelled as "River" are needed
+  worlRiv<- worlRiv[worlRiv$featurecla=='River',]
+  
+  ## Helper function that calculates the extent of a line to crop it
+  ## with an extent object using intersect
+  extentLine <- function(line){
+    bb <- bbox(line)
+    e <- extent(c(bb[1,1], bb[1,2], bb[2,1], bb[2,2]))
+    e
+  }
+  
+  extBrazil <- extent(brazilAlt)
+  ## For each line test if it is inside Brazil
+  intersectBrazil <- lapply(worlRiv@lines, function(line){
+    extLine <- extentLine(line)
+    int <- intersect(extentLine(line), extBrazil)
+  })
+  
+  inBrazil <- which(sapply(intersectBrazil, function(x)!is.null(x)))
+  ## Extract rivers from the world database
+  brazilRiv <- worlRiv[inBrazil,]
+  ## and specially the famous Amazonas River
+  amazonas <- brazilRiv[brazilRiv$name=='Amazonas',]
+#+end_src
+
+#+begin_src R :exports none :tangle no
+  proj <- CRS(' +proj=longlat +ellps=WGS84')
+  
+  brazilAdm <- readShapePoly('~/Datos/BRA_adm/BRA_adm1.shp', proj4string=proj)
+  Encoding(levels(brazilAdm$NAME_1)) <- 'latin1'
+  
+  brazilAlt <- raster('~/Datos/BRA_alt/BRA_alt')
+  
+  worldSea <- raster('~/Datos/NaturalEarth/OB_LR.tif')
+  brazilSea <- crop(worldSea, brazilAlt)
+  
+  worldRiv <- readShapeLines('~/Datos/NaturalEarth/ne_10m_rivers_lake_centerlines', proj4string = proj)
+  worldRiv<- worldRiv[worldRiv$featurecla=='River',]
+  
+  extentLine <- function(line){
+    bb <- bbox(line)
+    e <- extent(c(bb[1,1], bb[1,2], bb[2,1], bb[2,2]))
+    e
+  }
+  
+  extBrazil <- extent(brazilAlt)
+  intersectBrazil <- lapply(worldRiv@lines, function(line){
+    extLine <- extentLine(line)
+    int <- intersect(extentLine(line), extBrazil)
+  })
+  
+  inBrazil <- which(sapply(intersectBrazil, function(x)!is.null(x)))
+  
+  brazilRiv <- worldRiv[inBrazil,]
+  
+  amazonas <- brazilRiv[brazilRiv$name=='Amazonas',]
+#+end_src
+
+Each region of Brazil will be labelled with the name of its
+correspondent polygon. The locations of the labels are defined by the
+centroid of each polygon, easily computed with the =coordinates=
+method. Besides, a larger label with the name of the country will be
+placed in the average centroid.
+
+\index{coordinates@\texttt{coordinates}}
+\index{apply@\texttt{apply}}
+#+begin_src R
+  ## Locations of labels of each polygon
+  centroids <- coordinates(brazilAdm)
+  ## Location of the "Brazil" label (average of the set of polygons centroids)
+  xyBrazil <- apply(centroids, 2, mean)
+#+end_src
+
+Some region names are too long to be displayed in one line. Thus, a
+previous step is to split the string if it comprises more than 2
+words.
+\index{sapply@\texttt{sapply}}
+\index{strsplit@\texttt{strsplit}}
+#+begin_src R 
+  admNames <- strsplit(as.character(brazilAdm$NAME_1), ' ')
+  
+  admNames <- sapply(admNames,
+                   FUN=function(s){
+                     sep=if (length(s)>2) '\n' else  ' '
+                     paste(s, collapse=sep)
+                     })
+#+end_src
+
+Therefore, the physical map (figure \ref{fig:brazil} is composed
+of four layers: 
+
+- The sea depth raster displayed with the =levelplot= method of
+  the =rasterVis= package. For this layer the =Blues= palette
+  produced with =brewer.pal= is chosen.
+
+\index{rasterTheme@\texttt{rasterTheme}}
+\index{brewer.pal@\texttt{brewer.pal}}
+#+begin_src R
+  blueTheme <- rasterTheme(region=brewer.pal(n=9, 'Blues'))
+#+end_src
+
+- The altitude raster layer with a terrain colors palette, as the
+  one produced by the =terrain_hcl= function from the =colorspace=
+  package.
+
+\index{rasterTheme@\texttt{rasterTheme}}
+\index{terrain_hcl@\texttt{terrain\_hcl}}
+#+begin_src R
+  terrainTheme <- rasterTheme(region=terrain_hcl(15))
+#+end_src
+
+- The rivers represented by a =SpatialLines= object. The Amazonas
+  river is labelled with =sp.lineLabel= and printed with a thicker
+  line.
+
+- The administrative boundaries represented by an =SpatialPolygons=
+  object with their labels printed with the =panel.text= function.
+
+
+\index{levelplot@\texttt{levelplot}}
+\index{sp.lines@\texttt{sp.lines}}
+\index{sp.lineLabel@\texttt{sp.lineLabel}}
+\index{sp.polygons@\texttt{sp.polygons}}
+\index{panel.text@\texttt{panel.text}}
+\index{layer@\texttt{layer}}
+\index{brewer.pal@\texttt{brewer.pal}}
+#+CAPTION: Physical map of Brazil. Main administrative regions and the Amazonas river are labelled.
+#+LABEL: fig:brazil
+#+begin_src R :results output graphics :exports both :file figs/brazil.pdf
+  labs <- label(amazonas, 'Amazonas')
+  
+  seaPlot <- levelplot(brazilSea, par.settings=blueTheme,
+                       maxpixels=1e6, panel=panel.levelplot.raster,
+                       margin=FALSE, colorkey=FALSE)
+  
+  altPlot <- levelplot(brazilAlt, par.settings=terrainTheme,
+                       maxpixels=1e6, panel=panel.levelplot.raster,
+                       margin=FALSE, colorkey=FALSE)
+  
+  seaPlot + altPlot + layer({
+    sp.lines(brazilRiv, col='darkblue', lwd=0.3)
+      
+    sp.lineLabel(amazonas, labs, 
+                 lwd=1.3, col='darkblue', col.line='darkblue',
+                 cex=0.5, fontfamily='Palatino')
+                 
+    
+    sp.polygons(brazilAdm, col='black', lwd=0.5)
+    panel.text(coordinates(brazilAdm), labels=admNames,
+               cex=0.5, fontfamily='Courier', lineheight=.8)
+    
+    panel.text(xyBrazil[1], xyBrazil[2], labels='B R A Z I L',
+               cex=1.5, fontfamily = 'Palatino', fontface=2)
+    })
+#+end_src
+
+#+RESULTS:
+[[file:figs/brazil.pdf]]
+
+** \floweroneleft OpenStreetMap with Hill Shade layers
+#+begin_src R
+##################################################################
+## OpenStreetMap with Hill Shade layers
+##################################################################
+#+end_src R
+
+Although I was born in Madrid, Galicia (north of Spain) is a very
+special region for me. More precisely, Cedeira and Valdoviño
+regions offer a wonderful combination of wild sea, secluded
+beaches and forests. I will show you a map of these marvelous
+places.
+
+The first step is to acquire information from the OpenStreetMap
+project. There are several packages to extract data from this
+service but, while most of them only provide already rendered
+raster images, the =osmar= package[fn:6] enables the use of the raw data
+with classes from the packages =sp= and =igraph=.
+
+The =get_osm= function retrieves a region defined by =corner_bbox=
+using the OSM API.
+
+\index{Data!OpenStreetMap}
+\index{Packages!osmar@\texttt{osmar}}
+\index{osmsource_api@\texttt{osmsource\_api}}
+\index{get_osm@\texttt{get\_osm}}
+#+begin_src R :results output :exports both
+  library('osmar')
+  
+  api <- osmsource_api()
+  ymax <- 43.7031
+  ymin <- 43.6181
+  xmax <- -8.0224
+  xmin <- -8.0808
+  box <- corner_bbox(xmin, ymin, xmax, ymax)
+  cedeira <- get_osm(box, source=api, full=TRUE)
+  summary(cedeira)
+#+end_src
+
+The =cedeira= object includes three main components: nodes, ways
+and relations. 
+  
+#+begin_src R :results output :exports both
+  summary(cedeira$nodes)
+#+end_src  
+
+These components can be accessed with the functions =find=, =subset=, =way=,
+=node=, =relation= and =tags=. Thus, the different kinds of roads
+can be obtained using =way= and =tags= with the appropiate
+tag. 
+
+\index{find@\texttt{find}}
+\index{subset@\texttt{subset}}
+\index{way@\texttt{way}}
+#+begin_src R 
+  idxHighways <- find(cedeira, way(tags(k=='highway')))
+  highways <- subset(cedeira, way_ids=idxHighways)
+  idxStreets <- find(highways, way(tags(v=='residential')))
+  idxPrimary <- find(highways, way(tags(v=='primary')))
+  idxSecondary <- find(highways, way(tags(v=='secondary')))
+  idxTertiary <- find(highways, way(tags(v=='tertiary')))
+  idxOther <- find(highways,
+                   way(tags(v=='unclassified' |
+                            v=='footway' |
+                            v=='steps')))
+#+end_src  
+
+The result of =find= is the index of each element. The
+correspondent spatial object is extracted with =find_down= and
+=subset=, and can be converted to a class defined by the =sp=
+package with =as_sp=. The next =spFromOSM= function encodes the
+procedure, and extracts the =SpatialLines= which represent each
+type of road.
+
+\index{as_sp@\texttt{as\_sp}}
+\index{find_down@\texttt{find\_down}}
+#+begin_src R 
+  spFromOSM <- function(source, index, type='lines'){
+    idx <- find_down(source, index)
+    obj <- subset(source, ids=idx)
+    objSP <- as_sp(obj, type)
+    }
+  
+  streets <- spFromOSM(cedeira, way(idxStreets))
+  primary <- spFromOSM(cedeira, way(idxPrimary))
+  secondary <- spFromOSM(cedeira, way(idxSecondary))
+  tertiary <- spFromOSM(cedeira, way(idxTertiary))
+  other <- spFromOSM(cedeira, way(idxOther))
+#+end_src  
+  
+A similar procedure can be applied to construct a =SpatialPoints=
+object with the collection of places with name:
+
+\index{match\texttt{match}}
+#+begin_src R 
+  idxPlaces <- find(cedeira, node(tags(k=='name')))
+  places <- spFromOSM(cedeira, node(idxPlaces), 'points')
+  
+  nms <- subset(cedeira$nodes$tags, subset=(k=='name'), select=c('id', 'v'))
+  ord <- match(idxPlaces, nms$id)
+  nms <- nms[ord,]
+  places$name <- nms$v[ord]
+  
+  ## Cedeira town will be printed differently
+  idxCedeira <- which(nms$v=='Cedeira') ##Main town
+  cedeiraCoords <- coordinates(places[idxCedeira,])
+  places <- places[-idxCedeira,]
+  
+#+end_src  
+
+\index{Hill shading}
+
+The second step is to produce layers to display the topography. A
+suitable method is the shaded relief or hill shading. This
+technique simulate the cast shadow thrown from a light source upon
+a raised relief map. The hill shade layer can be computed from the
+slope and aspect layers derived from a Digital Elevation
+Model. This layer will underlay the DEM raster, which will be printed
+using semitransparency.  
+
+The DEM for this region is available at
+the Geonetwork-SECAD service from the Universidad de Extremadura
+and can be read with =raster=:
+
+\index{Packages!raster@\texttt{raster}}
+\index{Packages!rasterVis@\texttt{rasterVis}}
+\index{Data!Geonetwork}
+#+begin_src R :eval no-export
+  library(raster)
+  ## Galicia DEM
+  ## http://ide.unex.es/geonetwork/srv/es/main.search?any=MDE_Galicia
+  ## http://ide.unex.es:8180/geonetwork/srv/es/resources.get?id=21&fname=dem_gal.7z&access=private
+  
+  old <- tempdir()
+  download.file('http://ide.unex.es:8180/geonetwork/srv/es/resources.get?id=21&fname=dem_gal.7z&access=private', 'dem_gal.7z')
+  unzip('dem_gal.7z')
+  demGalicia <- raster('dem_gal.asc')
+  setwd(old)
+#+end_src
+
+#+begin_src R :exports none :tangle no
+  library(raster)
+  
+  demGalicia <- raster('~/Datos/DEM_Galicia/dem_gal.asc')
+#+end_src
+
+#+RESULTS:
+
+The =slope= and =aspect= layers are computed with the =terrain=
+function, and the hill shade layer is derived with these layers
+for a fixed sun position. Previously, the useful region of the DEM
+raster is extracted with the =crop= function:
+
+\index{terrain@\texttt{terrain}}
+\index{crop@\texttt{crop}}
+\index{hillShade@\texttt{hillShade}}
+\index{Hill shading}
+#+begin_src R 
+  cedeiraSP <- as_sp(cedeira, 'points')
+  projCedeira <- projection(cedeiraSP)
+  ##extCedeira <- bbox(cedeiraSP) 
+  ## or summary(cedeira$nodes)$bbox
+  extCedeira <- extent(-8.15, -7.95, 43.6, 43.75)
+  demCedeira <- crop(demGalicia, extCedeira)
+  projection(demCedeira) <- projCedeira
+  demCedeira[demCedeira <= 0] <- NA
+  
+  slope <- terrain(demCedeira, 'slope')
+  aspect <- terrain(demCedeira, 'aspect')
+  hsCedeira <- hillShade(slope=slope, aspect=aspect,
+                         angle=20, direction=30)
+#+end_src
+
+And finally, the third step is to display the different layers of
+information in correct order (figure \ref{fig:cedeiraOsmar}):
+
+- The hill shade layer is created with the =levelplot= method for
+  =Raster= objects defined in the =rasterVis= package. The
+  =GrTheme= is modified to display the sea region with blue color.
+
+- The DEM raster is printed with terrain colors and
+  semitransparency over the hill shade layer.
+
+- The roads are displayed with an auxiliary function (=sp.road=)
+  which produces a colored line over a thicker black line. 
+
+- The places are represented with =sp.points= and labelled with
+  the =sp.pointLabel= method, a modification of the =pointLabel=
+  function for =base= graphics, both defined in the =maptools=
+  package. These functions use optimization routines to find good
+  locations for point labels without overlaps. 
+
+\index{Packages!maptools@\texttt{maptools}}  
+\index{Packages!sp@\texttt{sp}}  
+\index{Packages!latticeExtra@\texttt{latticeExtra}}  
+\index{Packages!colorspace@\texttt{colorspace}}  
+\index{sp.lines@\texttt{sp.lines}}
+\index{sp.lines@\texttt{sp.points}}
+\index{sp.lines@\texttt{sp.pointLabel}}
+#+CAPTION: Main roads near Cedeira, Galicia. Local topography is displayed with the hill shading technique. Some places are highlighted.
+#+LABEL: fig:cedeiraOsmar
+#+begin_src R :results output graphics :exports both :file figs/cedeiraOsmar.pdf
+  library(maptools) ##0.8-21 install.packages("maptools", repos="http://R-Forge.R-project.org")
+  library(latticeExtra)
+  library(colorspace)
+  library(rasterVis)
+  
+  ##Auxiliary function to display the roads. A thicker black line in
+  ##the background and a thinner one with an appropiate color.
+  sp.road <- function(line, lwd=5, blwd=7,
+                      col='indianred1', bcol='black'){
+    sp.lines(line, lwd=blwd, col=bcol)
+    sp.lines(line, lwd=lwd, col=col)
+  }
+  
+  ## The background color of the panel is set to blue to represent the sea
+  hsTheme <- modifyList(GrTheme(), list(panel.background=list(col='skyblue3')))
+  ## DEM with terrain colors and semitransparency
+  terrainTheme <- modifyList(rasterTheme(region=terrain_hcl(n=15)),
+                                  list(regions=list(alpha=0.6)))
+  ## Hill shade and DEM overlaid
+  levelplot(hsCedeira, maxpixels=ncell(hsCedeira),
+            par.settings=hsTheme, margin=FALSE, colorkey=FALSE) +
+    levelplot(demCedeira, maxpixels=ncell(demCedeira),
+              par.settings=terrainTheme) +
+    ## Roads and places
+    layer({
+      ## Street and roads
+      sp.road(streets, lwd=1, blwd=2, col='white')
+      sp.road(other, lwd=2, blwd=3, col='white')
+      sp.road(tertiary, lwd=3, blwd=4, col='palegreen')
+      sp.road(secondary, lwd=4, blwd=6, col='midnightblue')
+      sp.road(primary, col='indianred1')
+      ## Places except Cedeira town
+      sp.points(places, pch=19, col='black', cex=0.4, alpha=0.8)
+      sp.pointLabel(places, labels=places$name,
+                        fontfamily = 'Palatino', 
+                        cex=0.6, col='black')
+      ## Cedeira town
+      panel.points(cedeiraCoords, pch=18, col='black', cex=1)
+      panel.text(cedeiraCoords, labels='Cedeira', pos=2, offset=1)
+      })
+#+end_src
+
+#+RESULTS:
+[[file:figs/cedeiraOsmar.pdf]]
+
+
+* Footnotes
+
+[fn:1] http://en.wikipedia.org/wiki/Brazil
+
+[fn:2] http://en.wikipedia.org/wiki/Megadiverse_countries
+
+[fn:3] http://www.diva-gis.org/Data
+
+[fn:4] http://gadm.org/
+
+[fn:5] http://www.naturalearthdata.com/
+
+[fn:6] Its webpage [[http://osmar.r-forge.r-project.org/]] proposes
+  two interesting demos.
+
+
+
+
+

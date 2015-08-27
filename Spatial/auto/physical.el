@@ -1,0 +1,37 @@
+(TeX-add-style-hook "physical"
+ (lambda ()
+    (LaTeX-add-index-entries
+     "Packages!raster@\\texttt{raster}"
+     "Packages!rasterVis@\\texttt{rasterVis}"
+     "Packages!sp@\\texttt{sp}"
+     "Packages!maptools@\\texttt{maptools}"
+     "Packages!colorspace@\\texttt{colorspace}"
+     "CRS@\\texttt{CRS}"
+     "download.file@\\texttt{download.file}"
+     "readShapePoly@\\texttt{readShapePoly}"
+     "readShapeLines@\\texttt{readShapeLines}"
+     "Encoding@\\texttt{Encoding}"
+     "raster@\\texttt{raster}"
+     "Data!GADM"
+     "Data!DIVA-GIS"
+     "Data!Natura Earth Data"
+     "intersect@\\texttt{intersect}"
+     "extent@\\texttt{extent}"
+     "lapply@\\texttt{lapply}"
+     "coordinates@\\texttt{coordinates}"
+     "apply@\\texttt{apply}"
+     "sapply@\\texttt{sapply}"
+     "strsplit@\\texttt{strsplit}"
+     "rasterTheme@\\texttt{rasterTheme}"
+     "brewer.pal@\\texttt{brewer.pal}"
+     "terrain_hcl@\\texttt{terrain\\_hcl}"
+     "levelplot@\\texttt{levelplot}"
+     "sp.lines@\\texttt{sp.lines}"
+     "sp.lineLabel@\\texttt{sp.lineLabel}"
+     "sp.polygons@\\texttt{sp.polygons}"
+     "panel.text@\\texttt{panel.text}"
+     "layer@\\texttt{layer}")
+    (LaTeX-add-labels
+     "sec-1"
+     "fig:brazil")))
+

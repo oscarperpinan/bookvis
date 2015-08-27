@@ -1,0 +1,11 @@
+$(document).ready(function () {
+    $('[id*="points.panel"]').qtip({
+   	position: {at:'center'},
+	hide: {
+	    delay: 1500,
+	    distance: 15},
+	style: {
+		classes: 'qtip-dark'
+	}
+    });
+});

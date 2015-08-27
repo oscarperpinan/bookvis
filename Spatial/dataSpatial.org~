@@ -1,0 +1,422 @@
+#+PROPERTY:  header-args :session *R* :tangle /home/oscar/R/spacetimeVis/dataSpatial.R :eval no-export
+#+OPTIONS: ^:nil
+
+#+begin_src R :exports none
+  ##################################################################
+  ## Source code for the book: "Displaying time series, spatial and
+  ## space-time data with R"
+  
+  ## Copyright (C) 2013-2012 Oscar Perpiñán Lamigueiro
+  
+  ## This program is free software you can redistribute it and/or modify
+  ## it under the terms of the GNU General Public License as published
+  ## by the Free Software Foundation; either version 2 of the License,
+  ## or (at your option) any later version.
+   
+  ## This program is distributed in the hope that it will be useful, but
+  ## WITHOUT ANY WARRANTY; without even the implied warranty of
+  ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  ## General Public License for more details.
+   
+  ## You should have received a copy of the GNU General Public License
+  ## along with this program; if not, write to the Free Software
+  ## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+  ## 02111-1307, USA.
+  ####################################################################
+#+end_src
+
+#+begin_src R :exports none :tangle no
+  setwd('~/Dropbox/chapman/book/')
+#+end_src
+
+#+begin_src R :exports none  
+  ##################################################################
+  ## Initial configuration
+  ##################################################################
+  ## Clone or download the repository and set the working directory
+  ## with setwd to the folder where the repository is located.
+#+end_src
+
+* Air Quality in Madrid
+\label{sec:airQualityData}
+
+#+begin_src R :exports none
+  ##################################################################
+  ## Air Quality in Madrid
+  ##################################################################
+#+end_src
+
+Air pollution is harmful to health and contributes to respiratory and
+cardiac diseases, and has a negative impact on natural ecosystems,
+agriculture, and the built environment. In Spain, the principal
+pollutants are particulate matter (PM), tropospheric ozone, nitrogen
+dioxide, and environmental noise[fn:1].
+
+The surveillance system of the Integrated Air Quality system of the
+Madrid City Council consists of twenty-four remote stations, equipped
+with analyzers for gases (NO_{X}, CO, ozone, BT_{X}, HCs, SO_{2}) and
+particles (PM10, PM2.5), which measure pollution in different areas of
+the urban environment. In addition, many of the stations also include
+sensors to provide meteorological data.
+
+The detailed information of each measuring station can be retrieved
+from its own webpage defined by its station code.
+#+begin_src R 
+  ## codeStations.csv is extracted from the document
+  ## http://www.mambiente.munimadrid.es/opencms/export/sites/default/calaire/Anexos/INTPHORA-DIA.pdf,
+  ## table of page 3.
+  
+  codEstaciones <- read.csv2('data/codeStations.csv')
+  codURL <- as.numeric(substr(codEstaciones$Codigo, 7, 8))
+  
+  ## The information of each measuring station is available at its own webpage, defined by codURL
+  URLs <- paste('http://www.mambiente.munimadrid.es/opencms/opencms/calaire/contenidos/estaciones/estacion', codURL, '.html', sep='')
+#+end_src
+
+** \floweroneleft Data Arrangement
+#+begin_src R :exports none
+##################################################################
+## Data arrangement
+##################################################################
+#+end_src
+The station webpage includes several tables that can be extracted with
+the =readHTMLTable= function of the =XML= package.  The longitude and
+latitude are included in the second table. The =ub2dms= function
+cleans this table and converts the strings to the =DMS= class defined
+by the =sp= package to represent degrees, minutes, and decimal
+seconds.
+
+#+BEGIN_LaTeX
+\index{Web scraping}
+\index{Packages!XML@\texttt{XML}}
+\index{Packages!sp@\texttt{sp}}
+\index{readHTMLTable@\texttt{readHTMLTable}}
+\index{lapply@\texttt{lapply}}
+\index{char2dms@\texttt{char2dms}}
+#+END_LaTeX
+
+#+begin_src R
+  library(XML)
+  library(sp)
+  
+  ## Access each webpage, retrieve tables and extract long/lat data
+  coords <- lapply(URLs, function(est){
+    tables <- readHTMLTable(est)
+    location <- tables[[2]]
+    ## Clean the table content and convert to dms format
+    ub2dms <- function(x){
+      ch <- as.character(x)
+      ch <- sub(',', '.', ch) 
+      ch <- sub('O', 'W', ch) ## Some stations use "O" instead of "W"
+      as.numeric(char2dms(ch, "º", "'", "'' "))
+    }
+    long <- ub2dms(location[2,1])
+    lat <- ub2dms(location[2,2])
+    alt <- as.numeric(sub(' m.', '', location[2, 3]))
+  
+    coords <- data.frame(long=long, lat=lat, alt=alt)
+  
+    coords
+  })
+  
+  airStations <- cbind(codEstaciones, do.call(rbind, coords))
+  
+  ## The longitude of "El Pardo" station is wrong (positive instead of negative)
+  airStations$long[22] <- -airStations$long[22]
+  
+  write.csv2(airStations, file='data/airStations.csv')
+#+end_src
+
+The 2011 air pollution data are available upon request from the Madrid
+City Council webpage[fn:2] and at the =data= folder of the book
+repository. The structure of the file is documented in the
+INTPHORA-DIA document[fn:3]. The =readLines= function reads the file
+and a =lapply= loop processes each line. The result is stored in the
+file =airQuality.csv=
+
+#+BEGIN_LaTeX
+\index{String manipulation}
+\index{readLines@\texttt{readLines}}
+\index{lapply@\texttt{lapply}}
+\index{do.call@\texttt{do.call}}
+\index{substr@\texttt{substr}}
+\index{gregexpr@\texttt{gregexpr}}
+\index{strsplit@\texttt{strsplit}}
+\index{gsub@\texttt{gsub}}
+#+END_LaTeX
+
+#+begin_src R 
+  ## Fill in the form at
+  ## http://www.mambiente.munimadrid.es/opencms/opencms/calaire/consulta/descarga.html
+  ## to receive the Diarios11.zip file.
+  unzip('data/Diarios11.zip')
+  rawData <- readLines('data/Datos11.txt')
+  ## This loop reads each line and extracts fields as defined by the
+  ## INTPHORA file:
+  ## http://www.mambiente.munimadrid.es/opencms/export/sites/default/calaire/Anexos/INTPHORA-DIA.pdf
+  datos11 <- lapply(rawData, function(x){
+    codEst <- substr(x, 1, 8)
+    codParam <- substr(x, 9, 10)
+    codTec <- substr(x, 11, 12)
+    codPeriod <- substr(x, 13, 14)
+    month <- substr(x, 17, 18)
+    dat <- substr(x, 19, nchar(x))
+    ## "N" used for impossible days (31st April)
+    idxN <- gregexpr('N', dat)[[1]]
+    if (idxN==-1) idxN <- numeric(0)
+    nZeroDays <- length(idxN)
+    day <- seq(1, 31-nZeroDays)
+    ## Substitute V and N with ";" to split data from different days
+    dat <- gsub('[VN]+', ';', dat)
+    dat <- as.numeric(strsplit(dat, ';')[[1]])
+    ## Only data from valid days
+    dat <- dat[day]
+    res <- data.frame(codEst, codParam, ##codTec, codPeriod,
+                      month, day, year=2011,
+                      dat)
+    })
+  datos11 <- do.call(rbind, datos11)
+  write.csv2(datos11, 'data/airQuality.csv')
+#+end_src
+
+** Combine Data and Spatial Locations
+#+begin_src R :exports none
+##################################################################
+## Combine data and spatial locations
+##################################################################
+#+end_src
+Our next step is to combine the data and spatial information. The
+locations are contained in =airStations=, a =data.frame= that is
+converted to an =SpatialPointsDataFrame= object with the =coordinates=
+method.
+
+#+BEGIN_LaTeX
+\index{Data!Air quality in Madrid}
+\index{Packages!sp@\texttt{sp}}
+\index{read.csv2@\texttt{read.csv2}}
+#+END_LaTeX
+
+#+begin_src R 
+  library(sp)
+  
+  ## Spatial location of stations
+  airStations <- read.csv2('data/airStations.csv')
+  coordinates(airStations) <- ~ long + lat
+  ## Geographical projection
+  proj4string(airStations) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
+#+end_src
+
+On the other hand, the =airQuality= =data.frame= comprises the air
+quality daily measurements. We will retain only the $NO_2$ time
+series.
+#+begin_src R
+  ## Measurements data
+  airQuality <- read.csv2('data/airQuality.csv')
+  ## Only interested in NO2 
+  NO2 <- airQuality[airQuality$codParam==8, ]
+#+end_src
+
+We will represent each station using aggregated values (mean, median,
+and standard deviation) computed with =aggregate=:
+
+#+BEGIN_LaTeX
+\index{aggregate@\texttt{aggregate}}
+#+END_LaTeX
+
+#+begin_src R 
+  NO2agg <- aggregate(dat ~ codEst, data=NO2,
+                      FUN = function(x) {
+                          c(mean=signif(mean(x), 3),
+                            median=median(x),
+                            sd=signif(sd(x), 3))
+                          })
+  NO2agg <- do.call(cbind, NO2agg)
+  NO2agg <- as.data.frame(NO2agg)
+#+end_src
+
+The aggregated values (a =data.frame=) and the spatial information (a
+=SpatialPointsDataFrame=) are combined with the =spCbind= method from
+the =maptools= package to create a new
+=SpatialPointsDataFrame=. Previously, the =data.frame= is reordered by
+matching against the shared key column (=airStations$Codigo= and
+=NO2agg$codEst=):
+
+#+BEGIN_LaTeX
+\index{Packages!maptools@\texttt{maptools}}
+\index{aggregate@\texttt{aggregate}} \index{match@\texttt{match}}
+\index{spCbind@\texttt{spCbind}}
+#+END_LaTeX
+
+#+begin_src R
+  library(maptools)
+  ## Link aggregated data with stations to obtain a SpatialPointsDataFrame.
+  ## Codigo and codEst are the stations codes
+  idxNO2 <- match(airStations$Codigo, NO2agg$codEst)
+  NO2sp <- spCbind(airStations[, c('Nombre', 'alt')], NO2agg[idxNO2, ])
+  save(NO2sp, file='data/NO2sp.RData')
+#+end_src
+
+
+* Spanish General Elections
+#+begin_src R :exports none
+  ##################################################################
+  ## Spanish General Elections
+  ##################################################################
+#+end_src
+
+The results from the 2011 Spanish general elections[fn:9] are
+available from the Ministry webpage[fn:10] and at the =data= folder of
+the book repository. Each region of the map will represent the
+percentage of votes (=pcMax=) obtained by the predominant political
+option (=whichMax=) at the corresponding municipality.  Only four
+groups are considered: the two main parties (=PP= and =PSOE=), the
+abstention results (=ABS=), and the remaining parties (=OTH=). Each
+region will be identified by the =PROVMUN= code.
+
+#+BEGIN_LaTeX
+\index{apply@\texttt{apply}}
+\index{sprintf@\texttt{sprintf}}
+#+END_LaTeX
+
+#+begin_src R 
+  dat2011 <- read.csv('data/GeneralSpanishElections2011.gz')
+  
+  census <- dat2011$Total.censo.electoral
+  validVotes <- dat2011$Votos.válidos
+  ## Election results per political party and municipality
+  votesData <- dat2011[, 12:1023]
+  ## Abstention as an additional party
+  votesData$ABS <- census - validVotes
+  ## Winner party at each municipality
+  whichMax <- apply(votesData,  1, function(x)names(votesData)[which.max(x)])
+  ## Results of the winner party at each municipality
+  Max <- apply(votesData, 1, max)
+  ## OTH for everything but PP, PSOE and ABS
+  whichMax[!(whichMax %in% c('PP',  'PSOE', 'ABS'))] <- 'OTH'
+  ## Percentage of votes with the electoral census
+  pcMax <- Max/census * 100
+  
+  ## Province-Municipality code. sprintf formats a number with leading zeros.
+  PROVMUN <- with(dat2011, paste(sprintf('%02d', Código.de.Provincia),
+                                 sprintf('%03d', Código.de.Municipio),
+                                 sep=""))
+  
+  votes2011 <- data.frame(PROVMUN, whichMax, Max, pcMax)
+  write.csv(votes2011, 'data/votes2011.csv', row.names=FALSE)
+#+end_src
+
+
+* CM SAF
+\label{sec:CMSAF}
+
+#+begin_src R :exports none
+  ##################################################################
+  ## CM SAF
+  ##################################################################
+#+end_src
+
+The Satellite Application Facility on Climate Monitoring (CM SAF) is a
+joint venture of the Royal Netherlands Meteorological Institute, the
+Swedish Meteorological and Hydrological Institute, the Royal
+Meteorological Institute of Belgium, the Finnish Meteorological
+Institute, the Deutscher Wetterdienst, Meteoswiss, and the UK
+MetOffice, along with collaboration of the European Organization for
+the Exploitation of Meteorological Satellites (EUMETSAT)
+\cite{CMSAF}. The CM-SAF was funded in 1992 to generate and store
+monthly and daily averages of meteorological data measured in a
+continuous way with a spatial resolution of $\ang{0.03}$ (15
+kilometers). The CM SAF provides two categories of data: operational
+products and climate data. The operational products are built on data
+that are validated with on-ground stations and then is provided in
+near-real-time to develop variability studies in diurnal and seasonal
+time scales. However, climate data are long-term data series to assess
+inter-annual variability \cite{Posselt.Mueller.ea2012}.
+
+In this chapter we will display the annual average of the shortwave
+incoming solar radiation product (SIS) incident over Spain during
+2008, computed from the monthly means of this variable. SIS collates
+shortwave radiation ($0.2$ to $\SI{4}{\micro\meter}$ wavelength range)
+reaching a horizontal unit Earth surface obtained by processing
+information from geostationary satellites (METEOSAT) and also from
+polar satellites (MetOp and NOAA) \cite{Schulz.Albert.ea2009} and then
+validated with high-quality on-ground measurements from the Baseline
+Surface Radiation Network (BSRN)[fn:4].
+
+The monthly means of SIS are available upon request from the CM SAF
+webpage \cite{Posselt.Muller.ea2011} and at the =data= folder of the
+book repository. Data from CM-SAF is published as raster files. The
+=raster= package provides the =stack= function to read a set of files
+and create a =RasterStack= object, where each layer stores the content
+of a file. Therefore, the twelve raster files of monthly averages
+produce a =RasterStack= with twelve layers.
+
+#+BEGIN_LaTeX
+\index{Packages!raster@\texttt{raster}}
+\index{stack@\texttt{stack}}
+#+END_LaTeX
+
+#+begin_src R
+  library(raster)
+  
+  tmp <- tempdir()
+  unzip('data/SISmm2008_CMSAF.zip', exdir=tmp)
+  filesCMSAF <- dir(tmp, pattern='SISmm')
+  SISmm <- stack(paste(tmp, filesCMSAF, sep='/'))
+  ## CM-SAF data is average daily irradiance (W/m2). Multiply by 24
+  ## hours to obtain daily irradiation (Wh/m2)
+  SISmm <- SISmm * 24
+#+end_src
+
+The =RasterLayer= object with annual averages is computed from the
+monthly means and stored using the native format of the =raster=
+package.
+#+begin_src R 
+  ## Monthly irradiation: each month by the corresponding number of days
+  daysMonth <- c(31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+  SISm <- SISmm * daysMonth / 1000 ## kWh/m2
+  ## Annual average
+  SISav <- sum(SISm)/sum(daysMonth)
+  writeRaster(SISav, file='SISav')
+#+end_src
+
+
+* Land cover and population rasters
+
+  The NASA's Earth Observing System (EOS)[fn:5] is a coordinated
+  series of polar-orbiting and low-inclination satellites for
+  long-term global observations of the land surface, biosphere, solid
+  Earth, atmosphere, and oceans. NEO-NASA[fn:6], one of projects
+  included in EOS, provides a repository of global data imagery. We
+  use the population density and land cover classification
+  rasters. Both rasters must be downloaded from their respective
+  webpages as Geo-TIFF files.
+
+  #+begin_src R
+ library(raster)
+ ## http://neo.sci.gsfc.nasa.gov/Search.html?group=64
+ pop <- raster('875430rgb-167772161.0.FLOAT.TIFF')
+ ## http://neo.sci.gsfc.nasa.gov/Search.html?group=20
+ landClass <- raster('241243rgb-167772161.0.TIFF')
+  #+end_src
+
+
+* Footnotes
+
+[fn:1] [[http://www.eea.europa.eu/soer/countries/es/]]
+
+[fn:2] [[http://www.mambiente.munimadrid.es/opencms/opencms/calaire/consulta/descarga.html]]
+
+[fn:3] [[http://www.mambiente.munimadrid.es/opencms/export/sites/default/calaire/Anexos/INTPHORA-DIA.pdf]]
+
+[fn:4] [[http://www.bsrn.awi.de/en/home/]]
+
+[fn:5] [[http://eospso.gsfc.nasa.gov/]]
+
+[fn:6] [[http://neo.sci.gsfc.nasa.gov]]
+
+[fn:9] [[http://en.wikipedia.org/wiki/Spanish_general_election_2011]]
+
+[fn:10] [[http://www.infoelectoral.mir.es/docxl/04_201105_1.zip]]
+
+
+

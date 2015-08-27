@@ -1,0 +1,200 @@
+\part{Space-Time Data}
+\label{cha:Spatio-Time}
+
+\chapter{Displaying Spatiotemporal Data: Introduction}
+\label{cha:introductionST}
+
+Space-time datasets are indexed both in space and in time. The
+data may consist of a spatial vector object (for example, points
+or polygons) or raster data at different times. The first case is
+representative of data from fixed sensors providing measurements
+abundant in time but sparse in space. The second case is the
+typical format of satellite imagery, which produces high spatial
+resolution data sparse in time \cite{Pebesma2012}.
+
+There are several visualization approaches of space-time data
+trying to cope with the four dimensions of the data
+\cite{Cressie.Wikle2011}. 
+
+On the one hand, the data can be conceived as a collection of
+snapshots at different times. These snapshots can be displayed as a
+sequence of frames to produce an animation, or can be printed on one
+page with different panels for each snapshot using the small-multiple
+technique described repeatedly in previous chapters.
+
+On the other hand, one of the two spatial dimensions can be collapsed
+through an appropriate statistic (for example, mean or standard
+deviation) to produce a space-time plot (also known as a Hovmöller
+diagram). The axes of this graphic are typically longitude or latitude
+as the x-axis, and time as the y-axis, with the value of the
+spatial-averaged value of the raster data represented with color.
+
+Finally, the space-time object can be reduced to a multivariate
+time series (where each location is a variable or column of the
+time series) and displayed with the time series visualization
+techniques described in the Part \ref{part:Time}. This
+approach is directly applicable to space-time data sparse in space
+(for example, point measurements at different times). However, it is
+mandatory to use aggregation in the case of raster data. In this
+case, the multivariate time series is composed of the evolution of
+the raster data averaged along a certain direction.
+ 
+The next chapters, focused on raster space-time data (Chapter
+\ref{cha:rasterST}) and point space-time data (Chapter
+\ref{cha:pointsST}), illustrate with examples how to produce
+animations, multipanel graphics, hovmöller diagrams, and
+time-series with \textsf{R}.
+
+% \hline 
+\section{Packages}
+\label{sec:spacetime-packages}
+
+The CRAN Tasks View ``Handling and Analyzing Spatio-Temporal
+Data''\footnote{\url{http://cran.r-project.org/web/views/SpatioTemporal.html}}
+summarizes the packages for reading, vizualizing, and analyzing
+space-time data. This section provides a brief introduction to the
+\texttt{spacetime}, \texttt{raster}, and \texttt{rasterVis}
+packages. Most of the information has been extracted from their
+vignettes, webpages, and help pages. You should read them for detailed
+information.
+
+\subsection{spacetime}
+\label{sec:spacetime}
+\index{Packages!spacetime@\texttt{spacetime}} The \texttt{spacetime}
+package \cite{Pebesma2012} is built upon the classes and methods for
+spatial data from the \texttt{sp} package , and for time series data
+from the \texttt{xts} package. It defines classes to represent four
+space-time layouts:
+\begin{enumerate}
+\item \texttt{STF}, \texttt{STFDF}: full space-time grid of
+  observations for spatial features and observation time, with all
+  space-time combinations.
+\item \texttt{STS}, \texttt{STSDF}: sparse grid layout, stores only
+  the non-missing space-time combinations on a lattice
+\item \texttt{STI}, \texttt{STIDF}: irregular layout, time and space
+  points of measured values have no apparent organisation.
+\item \texttt{STT}, \texttt{STTDF}: simple trajectories.
+\end{enumerate}
+
+Moreover, \texttt{spacetime} provides several methods for the
+following classes:
+\begin{itemize}
+\item \texttt{stConstruct}, \texttt{STFDF}, and \texttt{STIDF} create
+  objects from single or multiple tables.
+\item \texttt{as} coerces to other spatio-temporal objects, xts,
+  Spatial, matrix, or data.frame.
+\item \texttt{[[} selects or replaces data values.
+\item \texttt{[} selects spatial or temporal subsets, and data
+  variables.
+\item \texttt{over} retrieves index or data values of one object at the
+  locations and times of another.
+\item \texttt{aggregate} aggregates data values over particular
+  spatial, temporal, or spatio-temporal domains.
+\item \texttt{stplot} creates spatiotemporal plots. It is able to
+  produce multi-panel plots, space-time plots, animations, and time
+  series plots.
+\end{itemize}
+
+
+\subsection{raster}
+\label{sec:rasterST}
+\index{Packages!raster@\texttt{raster}}
+
+The \texttt{raster} package \cite{Hijmans2013} is able to add time
+information associated with layers of a \texttt{RasterStack} or
+\texttt{RasterBrick} object with the \texttt{setZ} function. This
+information can be extracted with \texttt{getZ}.
+
+If a \texttt{Raster*} object includes this information, the
+\texttt{zApply} function can be used to apply a function over a time
+series of layers of the object.
+
+
+\subsection{rasterVis}
+\label{sec:rastervisST}
+\index{Packages!rasterVis@\texttt{rasterVis}}
+
+\texttt{rasterVis} \cite{Perpinan.Hijmans2013} provides three methods
+to display spatiotemporal rasters:
+\begin{enumerate}
+\item \texttt{hovmoller} produces Hovmöller diagrams
+  \cite{Hovmoeller1949a}. The axes of this kind of diagram are
+  typically longitude or latitude (x-axis) and time (ordinate or
+  y-axis) with the value of some aggregated field represented through
+  color. However, the user can define the direction with
+  \texttt{dirXY} and the summary function with \texttt{FUN}.
+\item \texttt{horizonplot} creates horizon graphs \cite{Few2008}, with
+  many time series displayed in parallel by cutting the vertical range
+  into segments and overplotting them with color representing the
+  magnitude and direction of deviation. Each time series corresponds
+  to a geographical zone defined with \texttt{dirXY} and averaged with
+  \texttt{zonal}.
+\item \texttt{xyplot} displays conventional time series plots. Each
+  time series corresponds to a geographical zone defined with
+  \texttt{dirXY} and aggregated with \texttt{zonal}.
+\end{enumerate}
+
+On the other hand, the \texttt{histogram}, \texttt{densityplot}, and
+\texttt{bwplot} methods accept a \texttt{FUN} argument to be applied
+to the \texttt{z} slot of \texttt{Raster*} object (defined by
+\texttt{setZ}). The result of this function is used as the grouping
+variable of the plot to create different panels.
+
+\section{Further Reading}
+\label{cha:further-reading-spatiotime}
+
+\begin{itemize}
+
+\item \cite{Cressie.Wikle2011} is a systematic approach to key
+  quantitative techniques on statistics for spatiotemporal data.
+  The book begins with separate treatments of temporal data and
+  spatial data, and later combines these concepts to discuss
+  spatio-temporal statistical methods. There is a chapter devoted
+  to exploratory methods, including visualization techniques.
+
+\item \cite{Pebesma2012} presents the \texttt{spacetime} package, which
+  implements a set of classes for spatiotemporal data. This paper
+  includes examples that illustrate how to import, subset, coerce, and
+  export spatio-temporal data, proposes several visualization methods,
+  and discusses spatiotemporal geostatistical interpolation.
+
+\item \cite{Slocum.McMaster.ea2005} (previously cited in Chapter
+  \ref{cha:further-reading-spatial}) includes a chapter about map
+  animation, discussing several approaches for displaying
+  spatio-temporal data.
+
+\item \cite{Hengl2009} (previously cited in Chapter
+  \ref{cha:further-reading-spatial}) includes a working example
+  with spatiotemporal data to illustrate space-time variograms
+  and interpolation.
+
+\item \cite{Harrower.Fabrikant2008} explore the role of animation in
+  geographic visualization and outline the challenges, both conceptual
+  and technical, involved in the creation and use of animated maps.
+
+\item The CRAN Tasks View ``Handling and Analyzing Spatio-Temporal
+  Data''
+  \footnote{\url{http://cran.r-project.org/web/views/SpatioTemporal.html}}
+  summarizes the packages for reading, vizualizing, and analyzing
+  space-time data.  The R-SIG-Geo mailing
+  list\footnote{\url{https://stat.ethz.ch/mailman/listinfo/R-SIG-Geo/}}
+  is a powerful resource for obtaining help.
+
+\end{itemize}
+
+
+
+\chapter{Spatiotemporal Raster Data}
+\label{cha:rasterST}
+
+\input{SpatioTime/rasterST}
+
+\chapter{Spatiotemporal Point Observations}
+\label{cha:pointsST}
+
+\input{SpatioTime/pointsST}
+
+
+%%% Local Variables:
+%%% TeX-master: "../main.tex"
+%%% End:

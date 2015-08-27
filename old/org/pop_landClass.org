@@ -1,0 +1,178 @@
+#+PROPERTY:  session *R*
+#+PROPERTY:  tangle yes
+
+#+begin_src R :exports none
+  ##################################################################
+  ## Source code for the book: "Displaying time series, spatial and
+  ## space-time data with R: stories of space and time"
+  
+  ## Copyright (C) 2012 Oscar Perpiñán Lamigueiro
+  
+  ## This program is free software you can redistribute it and/or modify
+  ## it under the terms of the GNU General Public License as published
+  ## by the Free Software Foundation; either version 2 of the License,
+  ## or (at your option) any later version.
+   
+  ## This program is distributed in the hope that it will be useful, but
+  ## WITHOUT ANY WARRANTY; without even the implied warranty of
+  ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  ## General Public License for more details.
+   
+  ## You should have received a copy of the GNU General Public License
+  ## along with this program; if not, write to the Free Software
+  ## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+  ## 02111-1307, USA.
+  ####################################################################
+  
+  setwd('~/Dropbox/chapman/book/')
+#+end_src
+
+In my [[http://procomun.wordpress.com/2012/02/18/maps_with_r_1/][my last post]] I described how to produce a multivariate
+choropleth map with R.  Now I will show how to create a map from
+raster files. One of them is a factor which will group the values of
+the other one. Thus, once again, I will superpose several groups in
+the same map.
+
+First let's load the packages.
+
+#+begin_src R
+library(raster)
+library(rasterVis)
+library(colorspace)
+#+end_src
+
+Now, I define the geographical extent to be analyzed (approximately India and China).
+#+begin_src R
+  ext <- extent(65, 135, 5, 55)
+#+end_src
+
+The first raster file is the population density in our planet,
+available at this [[http://neo.sci.gsfc.nasa.gov/Search.html?group%3D64][NEO-NASA webpage]] (choose the Geo-TIFF floating
+option, ~25Mb).  After reading the data with =raster= I subset the
+geographical extent and replace the 99999 with =NA=.
+#+begin_src R :exports none
+  pop <- raster('~/Datos/Nasa/875430rgb-167772161.0.FLOAT.TIFF')
+  pop <- crop(pop, ext)
+  pop[pop==99999] <- NA
+  
+#+end_src
+
+#+begin_src R :eval no-export
+  pop <- raster('875430rgb-167772161.0.FLOAT.TIFF')
+  pop <- crop(pop, ext)
+  pop[pop==99999] <- NA
+#+end_src
+
+#+begin_src R :results output graphics :exports both :file figs/populationNASA.pdf
+  pTotal <- levelplot(pop, zscaleLog=10, par.settings=BTCTheme)
+  pTotal
+#+end_src
+
+The second raster file is the land cover classification (available at this [[http://neo.sci.gsfc.nasa.gov/Search.html?group%3D20%20][NEO-NASA webpage]])
+
+#+begin_src R :exports none
+  landClass <- raster('~/Datos/Nasa/241243rgb-167772161.0.TIFF')
+  landClass <- crop(landClass, ext)
+#+end_src
+
+#+begin_src R :eval no-export
+  landClass <- raster('241243rgb-167772161.0.TIFF')
+  landClass <- crop(landClass, ext)
+#+end_src
+
+The codes of the classification are described [[http://eoimages.gsfc.nasa.gov/images/news/NasaNews/ReleaseImages/LCC/Images/lcc_key.jpg][here]]. In summary, the
+sea is labeled with 0, forests with 1 to 5, shrublands, grasslands and
+wetlands with 6 to 11, agriculture and urban lands with 12 to 14, and
+snow and barren with 15 and 16.  This four groups (sea is replaced
+=NA=) will be the levels of the factor.
+
+#+begin_src R
+  landClass[landClass %in% c(0, 254)] <- NA
+  landClass <- cut(landClass, c(0, 5, 11, 14, 16))
+  landClass <- ratify(landClass)
+  rat <- levels(landClass)[[1]]
+  rat$classes <- c('Forest', 'Land', 'Urban', 'Snow')
+  levels(landClass) <- rat
+#+end_src
+
+#+begin_src R 
+  myTheme <- modifyList(rasterTheme(),# Blue background
+                        list(panel.background = list(col='lightskyblue1')))
+  
+  pal <- c('palegreen4', # Forest
+           'lightgoldenrod',              # Land
+           'indianred4',                  # Urban
+           'snow3')                       # Snow
+  
+  ## pals <- cbind(brewer.pal(n=9, 'Greens'),
+  ##               brewer.pal(n=9, 'Oranges'),
+  ##               brewer.pal(n=9, 'Greys'),
+  ##               brewer.pal(n=9, 'Purples'))
+#+end_src
+
+#+begin_src R :results output graphics :exports both :file figs/landClass.pdf
+  levelplot(landClass, maxpixels=3.5e5,
+            par.settings=myTheme,
+            col.regions=pal)
+#+end_src
+
+This histogram shows the distribution of the population density in each land class.
+
+#+begin_src R :results output graphics :exports both :file figs/histogramLandClass.pdf
+  s <- stack(pop, landClass)
+  layerNames(s) <- c('pop', 'landClass')
+  histogram(~log10(pop)|landClass, data=s,
+              scales=list(relation='free'))
+#+end_src
+
+Everything is ready for the map. I will create a list of =trellis=
+objects with four elements (one for each level of the factor). Each of
+these objects is the representation of the population density in a
+particular land class.  I use the same scale for all of them to allow
+for comparisons. The =at= argument of levelplot receives the
+correspondent =at= values from the /global/ map.
+
+#+begin_src R 
+  col2hcl <- function(col){
+    rgb <- t(col2rgb(col))/256
+    luv <- convertColor(rgb, 'sRGB', 'Luv')
+    coords <- as(LUV(luv), 'polarLUV')@coords
+    coords
+    }
+#+end_src
+
+#+begin_src R
+  at <- pTotal$legend$bottom$args$key$at
+  nClasses <- length(rat$classes)
+  
+  pList <- lapply(1:nClasses, function(i){
+    landSub <- landClass
+    landSub[!(landClass==i)] <- NA
+    popSub <- mask(pop, landSub)
+  
+  ##  cols <- colorRampPalette(c('white', pal[i]),  space='Lab')(100)
+    hclPal <- col2hcl(pal[i])
+    cols <- rev(sequential_hcl(100, h=hclPal[1], c=c(hclPal[2], 0), l=c(hclPal[3], 90)))
+  
+    pClass <- levelplot(popSub, zscaleLog=10, at=at, maxpixels=3.5e5,
+                        col.regions=cols, margin=FALSE)
+  })
+#+end_src
+
+#+begin_src R  :results output graphics :exports both :file figs/pop_landClass_panels.pdf
+  m <- matrix(1:nClasses, nrow=2)
+  for (i in 1:nClasses){
+      print(update(pList[[i]], main=rat$classes[i]),
+            split=c(col(m)[i], row(m)[i], 2, 2),
+            more=(i<nClasses))
+    }
+#+end_src
+
+And that's all. The rest of the code is exactly the same as in [[http://procomun.wordpress.com/2012/02/18/maps_with_r_1/][the
+previous post]]. If you execute it you will get this image (click on it
+for higher resolution).
+
+
+
+
+

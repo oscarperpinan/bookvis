@@ -1,0 +1,406 @@
+\part{Spatial Data}
+\label{cha:Spatial}
+
+\chapter{Displaying Spatial Data: Introduction}
+\label{cha:spatialIntro}
+
+Spatial data (also known as geospatial data) are directly or
+indirectly referenced to a location on the surface of the Earth. Their
+spatial reference is composed of coordinate values and a system of
+reference for these coordinates. Spatial data are often accessed,
+manipulated, or analyzed through Geographic Information Systems (GIS).
+
+Real objects represented by GIS data can be divided into two
+abstractions: discrete objects (e.g., a road or a river)
+represented with vector data (points, lines, and polygons), and
+continuous fields (such as elevation or solar radiation)
+represented with raster data. The \texttt{sp} package is the
+preferred option to use vector data in \textsf{R}, and the
+\texttt{raster} package is the choice for raster
+data\footnote{Although \texttt{sp} and \texttt{raster} are the
+  most important packages, there are an increasing number of
+  packages designed to work with spatial data. They are summarized
+  in the corresponding CRAN Task View. Read Section
+  \ref{cha:further-reading-spatial} for details.}.
+
+This part exposes several examples where vector and raster data
+are displayed to show geographic location of features and physical
+landscape features of a place (reference and physical maps,
+Chapter \ref{cha:refer-phys-maps}) or a specific variable in the
+context of a geographic reference (thematic maps, Chapter
+\ref{cha:thematicMaps}). These examples make use of several datasets
+(available at the book website) described in Chapter
+\ref{cha:dataSpatial}.
+
+
+\section{Packages}
+\label{sec:spatial-packages}
+
+The CRAN Tasks View ``Analysis of Spatial
+Data''\footnote{\url{http://CRAN.R-project.org/view=Spatial}}
+summarizes the packages for reading, vizualizing, and analyzing
+spatial data. This section provides a brief introduction to
+\texttt{sp}, \texttt{raster}, \texttt{rasterVis}, \texttt{maptools},
+\texttt{rgdal}, \texttt{gstat}, and \texttt{maps}. Most of the
+information has been extracted from their vignettes, webpages, and help
+pages. You should read them for detailed information.
+
+\subsection{sp}
+\label{sec:sp}
+
+\index{Packages!sp@\texttt{sp}}
+
+The \texttt{sp} package \cite{Pebesma.Bivand2005} provides classes and
+methods for dealing with spatial data in \textsf{R}. The spatial data
+classes implemented are points (\texttt{SpatialPoints}), grids
+(\texttt{SpatialPixels} and \texttt{SpatialGrid}), lines
+(\texttt{Line}, \texttt{Lines} and \texttt{SpatialLines}), rings, and
+polygons (\texttt{Polygon}, \texttt{Polygons}, and
+\texttt{SpatialPolygons}), each of them without data or with data (for
+example, \texttt{SpatialPointsDataFrame} or
+\texttt{SpatialLinesDataFrame}).
+
+Selecting, retrieving, or replacing certain attributes in spatial
+objects with data is done using standard methods:
+\begin{itemize}
+\item \texttt{[} selects rows (items) and columns in the
+  \texttt{data.frame}.
+\item \texttt{[[} selects a column from the \texttt{data.frame}
+\item \texttt{[[<-} assigns or replaces values to a column in the
+  \texttt{data.frame}.
+\end{itemize}
+
+A number of spatial methods are available for the classes in \texttt{sp}:
+\begin{itemize}
+\item \texttt{coordinates(object) <- value} sets spatial coordinates
+  to create spatial data. It promotes a \texttt{data.frame} into a
+  \texttt{SpatialPointsDataFrame}. \emph{value} may be specified by a
+  formula, a character vector, or a numeric matrix or
+  \texttt{data.frame} with the actual coordinates.
+\item \texttt{coordinates(object, ...)} returns a matrix with the
+  spatial coordinates. If used with \texttt{SpatialPolygons} it
+  returns a matrix with the centroids of the polygons.
+\item \texttt{bbox} returns a matrix with the coordinates bounding
+  box.
+\item \texttt{proj4string(object)} and \texttt{proj4string(object) <-
+    value} retrieve or set projection attributes on spatial classes.
+\item \texttt{spTransform} transforms from one coordinate reference
+  system (geographic projection) to another (requires package
+  \texttt{rgdal}).
+\item \texttt{spplot} plots attributes combined with spatial data:
+  Points, lines, grids, polygons.
+\end{itemize}
+
+\subsection{raster}
+\label{sec:raster}
+
+\index{Packages!raster@\texttt{raster}}
+
+The \texttt{raster} package \cite{Hijmans2013} has functions for
+creating, reading, manipulating, and writing raster data. The package
+provides general raster data manipulation functions. The package also
+implements raster algebra and most functions for raster data
+manipulation that are common in Geographic Information Systems (GIS).
+
+The raster package can work with raster datasets stored on disk if
+they are too large to be loaded into memory. The package can work with
+large files because the objects it creates from these files only
+contain information about the structure of the data, such as the
+number of rows and columns, the spatial extent, and the filename, but
+it does not attempt to read all the cell values in memory. In
+computations with these objects, the data are processed in chunks.
+
+The package defines a number of \texttt{S4}
+classes. \texttt{RasterLayer}, \texttt{RasterBrick}, and
+\texttt{RasterStack} are the most important:
+\begin{itemize}
+\item A \texttt{RasterLayer} object represents single-layer (variable)
+  raster data. It can be created with the function
+  \texttt{raster}. This function is able to create a
+  \texttt{RasterLayer} from another object, including another
+  \texttt{Raster*} object, or from a \texttt{SpatialPixels*} and
+  \texttt{SpatialGrid*} object, or even a matrix. In addition, it can
+  create a \texttt{RasterLayer} reading data from a file. The
+  \texttt{raster} package can use raster files in several formats,
+  some of them via the \texttt{rgdal} package. Supported formats for
+  reading include GeoTIFF, ESRI, ENVI, and ERDAS.
+
+\item \texttt{RasterBrick} and \texttt{RasterStack} are classes for
+  multilayer data. A \texttt{RasterStack} is a list of
+  \texttt{RasterLayer} objects with the same spatial extent and
+  resolution. It can be formed with a collection of files in different
+  locations or even mixed with \texttt{RasterLayer} objects that only
+  exist in memory.  A \texttt{RasterBrick} is truly a multilayered
+  object, and processing it can be more efficient than processing a
+  \texttt{RasterStack} representing the same data.
+
+\end{itemize}
+
+The \texttt{raster} package defines a number of methods for raster
+algebra with \texttt{Raster*} objects: arithmetic operators, logical
+operators, and functions such as \texttt{abs}, \texttt{round},
+\texttt{ceiling}, \texttt{floor}, \texttt{trunc}, \texttt{sqrt},
+\texttt{log}, \texttt{log10}, \texttt{exp}, \texttt{cos},
+\texttt{sin}, \texttt{max}, \texttt{min}, \texttt{range},
+\texttt{prod}, \texttt{sum}, \texttt{any}, and \texttt{all}. In these
+functions, \texttt{Raster*} objects can be mixed with numbers.
+
+There are several functions to modify the content or the spatial
+extent of \texttt{Raster*} objects, or to combine \texttt{Raster*}
+objects:
+\begin{itemize}
+\item The \texttt{crop} function takes a geographic subset of a larger
+  \texttt{Raster*} object. \texttt{trim} crops a \texttt{RasterLayer}
+  by removing the outer rows and columns that only contain \texttt{NA}
+  values. \texttt{extend} adds new rows and/or columns with
+  \texttt{NA} values.
+\item The \texttt{merge} function merges two or more \texttt{Raster*}
+  objects into a single new object.
+\item \texttt{projectRaster} transforms values of a \texttt{Raster*}
+  object to a new object with a different coordinate reference system.
+\item With \texttt{overlay}, multiple \texttt{Raster*} objects can be
+  combined (for example, multiply them).
+\item \texttt{mask} removes all values from one layer that are
+  \texttt{NA} in another layer, and \texttt{cover} combines two layers
+  by taking the values of the first layer except where these are
+  \texttt{NA}.
+\item \texttt{calc} computes a function for a \texttt{Raster*}
+  object. With \texttt{RasterLayer} objects, another
+  \texttt{RasterLayer} is returned. With multilayer objects the result
+  depends on the function: With a summary function (\texttt{sum},
+  \texttt{max}, etc.),  \texttt{calc} returns a \texttt{RasterLayer}
+  object, and a \texttt{RasterBrick} object otherwise.
+\item \texttt{stackApply} computes summary layers for subsets of a
+  \texttt{RasterStack} or \texttt{RasterBrick}.
+\item \texttt{cut} and \texttt{reclassify} replace ranges of values
+  with single values.
+\item \texttt{zonal} computes zonal statistics, that is, summarizes a
+  \texttt{Raster*} object using zones (areas with the same integer
+  number) defined by another \texttt{RasterLayer}.
+\end{itemize}
+
+
+\subsection{rasterVis}
+\label{sec:rasterVis}
+\index{Packages!rasterVis@\texttt{rasterVis}}
+
+The \texttt{rasterVis} package \cite{Perpinan.Hijmans2013} complements
+the \texttt{raster} package, providing a set of methods for enhanced
+visualization and interaction. This package defines visualization
+methods (\texttt{levelplot}) for quantitative data and categorical
+data, both for univariate and multivariate rasters.
+
+It also includes several methods in the frame of the Exploratory Data
+Analysis approach: scatterplots with \texttt{xyplot}, histograms and
+density plots with \texttt{histogram} and \texttt{densityplot}, violin
+and boxplots with \texttt{bwplot}, and a matrix of scatterplots with
+\texttt{splom}.
+
+On the other hand, this package is able to display vector fields using
+arrows, \texttt{vectorplot}, or with streamlines
+\cite{Wegenkittl.Groeller1997}, \texttt{streamplot}. In this last
+method, for each point, \emph{droplet}, of a jittered regular grid, a
+short streamline portion, \emph{streamlet}, is calculated by
+integrating the underlying vector field at that point. The main color
+of each streamlet indicates local vector magnitude (slope). Streamlets
+are composed of points whose sizes, positions, and color degradation
+encode the local vector direction (aspect).
+
+
+\subsection{maptools}
+\label{sec:maptools}
+\index{Packages!maptools@\texttt{maptools}}
+
+The \texttt{maptools} package \cite{Bivand.Lewin-Koh2013} provides a
+set of tools for manipulating and reading geographic data, in
+particular ESRI (Environmental Systems Research Institute)
+shapefiles. The package also provides interface wrappers for
+exchanging spatial objects with packages such as PBSmapping, spatstat,
+maps, RArcInfo, Stata tmap, WinBUGS, Mondrian, and others. The main
+functions in the context of this book are
+
+\begin{itemize}
+
+\item \texttt{readShapePoints} reads data from a points shapefile into
+  a \texttt{SpatialPointsDataFrame} object.
+
+\item \texttt{writePointsShape} writes data from a
+  \texttt{SpatialPointsDataFrame} object to a shapefile.
+
+\item \texttt{readShapeLines} reads data from a line shapefile
+  into a \texttt{SpatialLinesDataFrame} object.
+
+\item \texttt{writeLinesShape} writes data from a
+  \texttt{SpatialLinesDataFrame} object to a shapefile.
+
+\item \texttt{readShapePoly} reads data from a polygon shapefile into
+  a \texttt{SpatialPolygonsDataFrame} object.
+
+\item \texttt{writePolyShape} writes data from a
+  \texttt{SpatialPolygonsDataFrame} object to a shapefile.
+
+\item \texttt{map2SpatialPolygons} and \texttt{map2SpatialLines} may
+  be used to convert map objects returned by the \texttt{map} function
+  in the \texttt{maps} package to the classes defined in the
+  \texttt{sp} package.
+
+\item \texttt{spCbind} provides cbind-like methods for
+  \texttt{Spatial*DataFrame} and \texttt{data.frame} objects.
+ 
+\end{itemize}
+
+The topology operations on geometries performed by this package (for
+example, \texttt{unionSpatialPolygons} ) use the package
+\texttt{rgeos}, an interface to the Geometry Engine Open Source
+(GEOS)\footnote{\url{http://trac.osgeo.org/geos/}}.
+
+
+\subsection{rgdal}
+\label{sec:rgdal}
+\index{Packages!rgdal@\texttt{rgdal}}
+
+The \texttt{rgdal} package \cite{Bivand.Keitt.ea2013} provides
+bindings to the Geospatial Data Abstraction Library
+(GDAL)\footnote{\url{http://www.gdal.org/}}. With \texttt{readOGR} and
+\texttt{readGDAL}, both GDAL raster and OGR vector map data can be
+imported into \textsf{R}, and GDAL raster data and OGR vector data can
+be exported with \texttt{writeGDAL} and \texttt{writeOGR}.
+
+In addition, this package provides access to projection and
+transformation operations from the PROJ.4
+library\footnote{\url{https://trac.osgeo.org/proj/}}. This package
+implements several \texttt{spTransform} methods providing
+transformation between datums and conversion between projections using
+PROJ.4 projection arguments.
+
+
+\subsection{gstat}
+\label{sec:gstat}
+\index{Packages!gstat@\texttt{gstat}}
+
+The \texttt{gstat} package \cite{Pebesma2004} provides functions for
+geostatistical modeling, prediction, and simulation, including
+variogram modeling and simple, ordinary, universal, and external drift
+kriging.
+
+Most of the functionality of this package is beyond the scope of this
+book. However, some functions must be mentioned:
+\begin{itemize}
+\item \texttt{variogram} calculates the sample variogram from data, or
+  for the residuals if a linear model is given. \texttt{vgm} generates
+  a variogram and \texttt{fit.variogram} fit ranges and/or sills from
+  a variogram model to a sample variogram.
+\item \texttt{krige} is the function for simple, ordinary or universal
+  kriging. \texttt{gstat} is the function for univariate or
+  multivariate geostatistical prediction.
+\end{itemize}
+
+\subsection{maps}
+\label{sec:maps}
+\index{Packages!maps@\texttt{maps}}
+\index{Packages!mapproj@\texttt{mapproj}}
+\index{Packages!mapdata@\texttt{mapdata}}
+
+The \texttt{maps} \cite{Becker.Wilks.ea2013}, \texttt{mapdata}
+\cite{Becker.Wilks.ea2013b}, and \texttt{mapproj}
+\cite{McIlroy.Brownrigg.ea2013} packages are useful to draw or create
+geographical maps. \texttt{mapdata} contains higher resolution
+databases, and \texttt{mapproj} converts latitude/longitude
+coordinates into projected coordinates.
+
+
+\section{Further Reading}
+\label{cha:further-reading-spatial}
+
+\begin{itemize}
+
+\item \cite{Slocum.McMaster.ea2005} and \cite{Dent.Torguson.ea2008}
+  are comprehensive books on thematic cartography and
+  geovisualization. They include chapters devoted to data
+  classification, scales, map projections, color theory, typography,
+  and proportional symbol, choropleth, dasymetric, isarithmic, and
+  multivariate mapping. Several resources are available at their
+  accompanying
+  websites\footnote{\url{http://www.pearsonhighered.com/slocum3e/} and
+    \url{http://highered.mcgraw-hill.com/sites/0072943823/}}.
+
+\item \cite{Bivand.Pebesma.ea2008} is the essential reference to work
+  with spatial data in \textsf{R}. R. Bivand and E. Pebesma are the
+  authors of the fundamental \texttt{sp} package, and they are the
+  authors or maintainers of several important packages such as
+  \texttt{gstat}, for geostatistical modeling, prediction, and
+  simulation, \texttt{rgdal}, \texttt{rgeos} and
+  \texttt{maptools}. Chapter 3 is devoted to the visualization of
+  spatial data. Code, figures, and data of the book are available at
+  the accompanying website\footnote{\url{http://www.asdar-book.org/}}.
+
+\item \cite{Hengl2009} is an open-access book with seven spatial
+  data analysis exercises. The author is the creator and
+  maintainer of the Spatial-Analyst
+  webpage\footnote{\url{http://spatial-analyst.net}}.
+
+\item The CRAN Tasks View ``Analysis of Spatial
+  Data''\footnote{\url{http://CRAN.R-project.org/view=Spatial}}
+  summarizes the packages for reading, vizualizing, and analyzing
+  spatial data.  The packages in development published at R-Forge are
+  listed in the ``Spatial Data \& Statistics'' topic
+  view\footnote{\url{http://r-forge.r-project.org/softwaremap/trove_list.php?form_cat=353}}.
+  The R-SIG-Geo mailing
+  list\footnote{\url{https://stat.ethz.ch/mailman/listinfo/R-SIG-Geo/}}
+  is a powerful resource for obtaining help.
+
+\item The ``Spatial
+  Analysis''\footnote{\url{http://spatialanalysis.co.uk/map-gallery/}}
+  and ``Kartograph''\footnote{\url{http://kartograph.org/}} webpages
+  publish a variety of beautiful visualization examples.
+
+\end{itemize}
+
+
+\chapter{Thematic Maps}
+\label{cha:thematicMaps}
+
+A thematic map focuses on a specific theme or variable, commonly using
+geographic data such as coastlines, boundaries, and places as points
+of reference for the variable being mapped. These maps provide
+specific information about particular locations or areas (proportional
+symbol mapping and choropleth maps) and information about spatial
+patterns (isarithmic and raster maps). The following sections illustrate
+the \textsf{R} code you need to produce these maps, with a final
+section devoted to the visualization of vector fields.
+
+\input{Spatial/bubble}
+\input{Spatial/choropleth}
+\input{Spatial/raster}
+\input{Spatial/vector}
+
+\chapter{Reference and Physical Maps}
+\label{cha:refer-phys-maps}
+
+A reference map focuses on the geographic location of features. In
+these maps, cities are named and major transport routes are
+identified. In addition, natural features such as rivers and mountains are
+named, and elevation is shown using a simple color shading.  
+
+A physical map shows the physical landscape features of a
+place. Mountains and elevation changes are usually shown with
+different colors and shades to show relief, using green to show
+lower elevations and browns for high elevations.
+
+This chapter details how to create a reference map of a northern
+region of Spain using data from OpenStreetMap and a physical map of
+Brazil with data from different sources.
+
+\input{Spatial/physical}
+\input{Spatial/osmar}
+
+\chapter{About the Data}
+\label{cha:dataSpatial}
+
+\input{Spatial/dataSpatial}
+
+
+
+%%% Local Variables:
+%%% TeX-master: "../main.tex"
+%%% End:

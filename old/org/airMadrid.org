@@ -1,0 +1,221 @@
+#+PROPERTY:  session *R*
+#+PROPERTY:  tangle yes
+
+#+begin_src R :exports none
+  ##################################################################
+  ## Source code for the book: "Displaying time series, spatial and
+  ## space-time data with R: stories of space and time"
+  
+  ## Copyright (C) 2012 Oscar Perpiñán Lamigueiro
+  
+  ## This program is free software you can redistribute it and/or modify
+  ## it under the terms of the GNU General Public License as published
+  ## by the Free Software Foundation; either version 2 of the License,
+  ## or (at your option) any later version.
+   
+  ## This program is distributed in the hope that it will be useful, but
+  ## WITHOUT ANY WARRANTY; without even the implied warranty of
+  ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  ## General Public License for more details.
+   
+  ## You should have received a copy of the GNU General Public License
+  ## along with this program; if not, write to the Free Software
+  ## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+  ## 02111-1307, USA.
+  ####################################################################
+  
+  setwd('~/Dropbox/chapman/book/')
+  
+  ## TODO: eliminar!!
+  source('~/Dropbox/R/label/pointLabel.R')
+#+end_src
+
+#+begin_src R 
+  library(colorspace)
+  library(classInt)
+  library(sp)
+  library(maptools)
+  library(rgdal)
+  
+  airStations <- read.csv2('data/airStations.csv')
+  coordinates(airStations) <- ~ long + lat
+  proj4string(airStations) <- CRS("+proj=longlat +ellps=WGS84")
+  
+  airQuality <- read.csv2('data/airQuality.csv')
+  
+  NO2 <- airQuality[airQuality$codParam==8, ]
+  
+  summarize <- function(formula, data,
+                        FUN=function(x)c(mean=mean(x), median=median(x), sd=sd(x)),
+                        ...){
+    agg <- aggregate(formula, data, FUN=FUN, ...)
+    data.frame(do.call(cbind, agg))
+  }
+    
+  NO2agg <- summarize(dat ~ codEst, data=NO2)
+  
+  idxNO2 <- match(airStations$Codigo, NO2agg$codEst)
+  airStations <- spCbind(airStations, NO2agg[idxNO2, ])
+  
+#+end_src
+
+#+begin_src R 
+  intervals <- classIntervals(NO2agg$mean, n=4, style='fisher')
+  nInt <- length(intervals$brks) - 1
+  
+  idx <- findCols(intervals)
+  size <- c(0.6, 1.5)
+  rval <- seq(1, 0, length=nInt)
+  pwr.size <- 0.8
+  cex.key <- size[2] - diff(size)*rval^pwr.size 
+  cex <- cex.key[idx]
+  
+  pal <- rev(heat.ob(n=nInt, beg=1, end=200))
+  col <- findColours(intervals, pal)
+  col.key=attr(col, 'palette')
+  
+  
+  tabInt <- getFromNamespace('tableClassIntervals', 'classInt')
+  op <- options(digits=2)
+  tab <- tabInt(cols = idx, brks = intervals$brks,
+                under = "under", over = "over", between = "-", 
+                cutlabels = TRUE,
+                intervalClosure = "left",
+                dataPrecision = NULL)
+  options(op)
+  
+  key <- list(x = 0.02, y = 0.02, corner = c(0, 0),
+              title=expression(NO[2]~~(paste(mu, plain(g))/m^3)),
+              cex.title=.75,
+              background='gray90', 
+              text=list(labels=names(tab), cex=0.85),
+              points=list(col=col.key, pch=19, cex=cex.key))
+  
+  
+#+end_src
+
+#+begin_src R 
+  longlatScales <- getFromNamespace('longlat.scales', 'sp')
+  bbExpand <- getFromNamespace('bbexpand', 'sp')
+  scales <- longlatScales(airStations,
+                          scales=list(draw = TRUE, cex=0.7),
+                          xlim = bbExpand(bbox(airStations)[1, ], 0.2),
+                          ylim = bbExpand(bbox(airStations)[2, ], 0.1))
+  
+  
+#+end_src
+
+#+begin_src R 
+  panel.bubbles <- function(x, y, col, radius, identifier,...){
+    colors <- col
+    radius <- unit(.05*radius, 'inch')
+    for (i in seq_along(x))
+    grid.circle(x[i], y[i], radius[i],
+                default.units='native',
+                name = paste('Station', identifier[i], sep='.'),
+                gp=gpar(col=colors[i],
+                  fill=adjustcolor(colors[i], alpha=.85),
+                  lwd=1, ...)
+                )
+    }
+  }
+  
+#+end_src
+
+#+begin_src R 
+  p <- xyplot(lat ~ long, data=as.data.frame(airStations),
+              xlab='', ylab='', main='',
+              cex=cex, col=col, radius=cex,
+              key=key, identifier = airStations$codEst,
+              asp=mapasp(airStations), scales=scales,
+              panel=panel.bubbles)
+  
+#+end_src
+
+#+begin_src R
+  library(gridSVG)
+  
+  print(p)
+  ## grid.script(filename='http://code.jquery.com/jquery-1.7.0.min.js')
+  grid.script(filename='https://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js')
+  grid.script(filename='http://jquery.com/dev/svn/trunk/plugins/tooltip/jquery.tooltip.js')
+  
+  ## grid.script('$(function(){("g").tooltip();})')
+  grid.script('$(function(){$(".station").tooltip();});')
+  
+  dat <- as.data.frame(airStations)
+  
+  for (i in 1:nrow(airStations)){
+    ## Information to be attached to each line
+    stats <- paste(c('Mean', 'Median', 'SD'),
+                   signif(dat[i, c('mean', 'median', 'sd')], 4),
+                   sep=' = ', collapse='&#10;')
+    
+    nameStation <- as.character(dat[i, "Nombre"])
+    info <- paste(nameStation, stats, sep=' - ')
+    idStation <- paste('Station', dat[i, "codEst"], sep='.')
+    ## attach SVG attributes
+    grid.garnish(idStation,
+                 title=info,
+                 class='station'
+                 )
+  
+    codURL <- as.numeric(substr(dat[i, "codEst"], 7, 8))
+    URL <- paste('http://www.mambiente.munimadrid.es/opencms/opencms/calaire/contenidos/estaciones/estacion', codURL, '.html', sep='')
+    grid.hyperlink(idStation, URL)
+  }
+  
+  
+  gridToSVG('figs/airMadrid.svg')
+  
+#+end_src
+
+#+begin_src R :eval no-export
+  ## nomecalles http://www.madrid.org/nomecalles/Callejero_madrid.icm
+  ## Form at http://www.madrid.org/nomecalles/DescargaBDTCorte.icm
+  
+  ## Distritos de Madrid
+  unzip('Distritos de Madrid.zip')
+  distritosMadrid <- readShapePoly('Distritos de Madrid/200001331')
+  proj4string(distritosMadrid) <- CRS("+proj=utm +zone=30")
+  distritosMadrid <- spTransform(distritosMadrid, CRS=CRS("+proj=longlat +ellps=WGS84"))
+  
+  ## Callejero: Ejes de viales
+  unzip('Callejero_ Ejes de viales.zip')
+  streets <- readShapeLines('Callejero_ Ejes de viales/call2011.shp')
+  streetsMadrid <- streets[streets$CMUN=='079',]
+  proj4string(streetsMadrid) <- CRS("+proj=utm +zone=30")
+  streetsMadrid <- spTransform(streetsMadrid, CRS=CRS("+proj=longlat +ellps=WGS84"))
+#+end_src
+
+#+begin_src R :exports none
+  distritosMadrid <- readShapePoly('~/Datos/nomecalles/Distritos de Madrid/200001331')
+  proj4string(distritosMadrid) <- CRS("+proj=utm +zone=30")
+  distritosMadrid <- spTransform(distritosMadrid, CRS=CRS("+proj=longlat +ellps=WGS84"))
+  
+  ## streets <- readShapeLines('~/Datos/nomecalles/Callejero_ Ejes de viales/call2011.shp')
+  ## streetsMadrid <- streets[streets$CMUN=='079',]
+  ## proj4string(streetsMadrid) <- CRS("+proj=utm +zone=30")
+  ## streetsMadrid <- spTransform(streetsMadrid, CRS=CRS("+proj=longlat +ellps=WGS84"))
+  ## writeLinesShape(streetsMadrid, '~/Datos/nomecalles/Callejero_ Ejes de viales/streetsMadrid')
+  
+  streetsMadrid <- readShapeLines('~/Datos/nomecalles/Callejero_ Ejes de viales/streetsMadrid.shp')
+  proj4string(streetsMadrid) <- CRS("+proj=longlat +ellps=WGS84")
+#+end_src
+
+#+begin_src R #+begin_src R :results output graphics :exports both :file figs/airMadrid.png :width 2000 :height 2000 :res 300
+  p +
+    layer_(sp.polygons(distritosMadrid, fill='gray92', lwd=0.3)) +
+    layer(sp.lines(streetsMadrid, lwd=0.05)) +
+    layer(sp.pointLabel(airStations, labels=airStations$Nombre,
+                        cex=0.6, fontfamily='Palatino'))
+  
+#+end_src
+
+
+
+#+RESULTS:
+[[file:figs/airMadrid.png]]
+
+
+

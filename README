@@ -1,0 +1,32 @@
+
+Usar \_ en \index{} dentro de \texttt{}.
+------------------------------------------------------------------
+
+Embed fonts:
+gs -dNOPAUSE -dBATCH -dPDFSETTINGS=/prepress -sDEVICE=pdfwrite -sOutputFile=withFonts.pdf withoutFonts.pdf 
+
+(comprobar con pdffonts)
+
+embedFonts('withoutFonts.pdf', outfile='withFonts.pdf', options='-dPDFSETTINGS=/prepress')
+
+Ver embedFonts.R
+
+------------------------------------------------------------------
+
+mogrify -density 150 -format png *.pdf
+
+mapLegends.pdf no funciona bien con convert. 
+
+------------------------------------------------------------------
+
+M-x org-publish  .... org
+
+Run conf.el before exporting
+
+------------------------------------------------------------------
+
+git status
+git add .
+git commit -m "bla bla"
+git push
+git push -f origin master:gh-pages

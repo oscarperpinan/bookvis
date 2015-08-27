@@ -1,0 +1,1450 @@
+
+
+
+
+
+
+\section{Thematic Maps}
+\label{sec-1}
+
+\label{sec:thematicMaps}
+
+
+A thematic map focuses on a specific theme or variable commonly
+using geographic data such as coastlines, boundaries and places,
+as points of reference for the variable being mapped. These maps
+provide specific information about particular locations or areas
+(proportional symbol mapping and choropleth maps) and information
+about spatial patterns (isarithmic and raster maps).
+\subsection{Choropleth maps}
+\label{sec-1-1}
+
+\label{sec:multiChoropleth}
+
+
+A choropleth map shades regions according to the measurement of a
+variable displayed on the map. The choropleth map is an appropiate
+tool to visualize a variable uniformly distributed within each
+region, changing only at the region boundaries. This methods
+performs correctly with homogeneous regions both in size and
+shape.  
+
+This section details how to create a multivariate choropleth map
+to show the results of the 2011 Spanish general elections. It is
+inspired by the infographic from the New York Times\footnote{\href{http://www.nytimes.com/interactive/2009/03/10/us/20090310-immigration-explorer.html}{http://www.nytimes.com/interactive/2009/03/10/us/20090310-immigration-explorer.html}. Several
+  infographics of this newspaper can be found at \href{http://www.smallmeans.com/new-york-times-infographics/}{http://www.smallmeans.com/new-york-times-infographics/}.
+ }, a
+multivariate choropleth map of the inmigration behaviour in the
+USA.
+
+
+\lstset{language=R}
+\begin{lstlisting}
+votes2011 <- read.csv('data/votes2011.csv',
+                      colClasses=c('factor', 'factor', 'numeric', 'numeric'))
+\end{lstlisting}
+
+Next section describes how to define a \texttt{SpatialPolygonsDataFrame}
+with the data from this \texttt{data.frame} and the spatial information
+of the administrative boundaries from a shapefile. You can skip it
+for a later reading if you are not interested in this procedure
+and jump to the section \ref{sec:map} where the maps are produced.
+\subsubsection{\floweroneleft Administrative boundaries}
+\label{sec-1-1-1}
+
+
+
+
+The Spanish administrative boundaries are available as shapefiles at
+the INE webpage\footnote{\href{http://www.ine.es}{http://www.ine.es}
+ }. Both the municipalities, \texttt{espMap}, and provinces
+boundaries, \texttt{provinces}, are read as \texttt{SpatialPolygonsDataFrame} with
+\texttt{readShapePoly}.
+
+\index{Packages!maps@\texttt{maps}}
+\index{Packages!maptools@\texttt{maptools}}
+\index{Packages!rgeos@\texttt{rgeos}}
+\index{Packages!sp@\texttt{sp}}
+\index{Packages!latticeExtra@\texttt{latticeExtra}}
+\index{Packages!colorspace@\texttt{colorspace}}
+
+\lstset{language=R}
+\begin{lstlisting}
+library(sp)
+library(maptools)
+\end{lstlisting}
+
+\index{INE}
+\index{readShapePoly@\texttt{readShapePoly}}
+\index{Encoding@\texttt{Encoding}}
+
+\lstset{language=R}
+\begin{lstlisting}
+old <- setwd(tempdir())
+download.file('http://goo.gl/TIvr4', 'mapas_completo_municipal.rar')
+system2('unrar', c('e', 'mapas_completo_municipal.rar'))
+espMap <- readShapePoly(fn="esp_muni_0109")
+Encoding(levels(espMap$NOMBRE)) <- "latin1"
+
+provinces <- readShapePoly(fn="spain_provinces_ag_2")
+setwd(old)
+\end{lstlisting}
+
+  
+
+Some of the polygons are repeated and can be dissolved with \texttt{unionSpatialPolygons}. 
+\index{unionSpatialPolygons@\texttt{unionSpatialPolygons}}
+
+\lstset{language=R}
+\begin{lstlisting}
+## dissolve repeated polygons
+espPols <- unionSpatialPolygons(espMap, espMap$PROVMUN)
+\end{lstlisting}
+
+Spanish maps are commonly displayed with the Canarian islands next
+to the peninsula. First we have to extract the polygons of the
+islands and the polygons of the peninsula, and then shift the
+coordinates of the islands with \texttt{elide}. Finally, a new
+\texttt{SpatialPolygons} object binds the shifted islands with the
+peninsula.
+
+
+\lstset{language=R}
+\begin{lstlisting}
+## Extract Canarias islands from the SpatialPolygons object
+canarias <-  sapply(espPols@polygons, function(x)substr(x@ID, 1, 2) %in% c("35",  "38"))
+peninsulaPols <- espPols[!canarias]
+islandPols <- espPols[canarias]
+
+## Shift the island extent box to position them at the bottom right corner
+dy <- bbox(peninsulaPols)[2,1] - bbox(islandPols)[2,1]
+dx <- bbox(peninsulaPols)[1,2] - bbox(islandPols)[1,2]
+islandPols2 <- elide(islandPols, shift=c(dx, dy))
+bbIslands <- bbox(islandPols2)
+
+## Bind Peninsula (without islands) with shifted islands
+espPols <- rbind(peninsulaPols, islandPols2)
+\end{lstlisting}
+
+Last step is to link the data with the polygons. The \texttt{ID} slot of
+each polygon is the key to find the correspondent registry in the
+\texttt{votes2011} dataset.
+
+\lstset{language=R}
+\begin{lstlisting}
+## Match polygons and data using ID slot and PROVMUN column
+IDs <- sapply(espPols@polygons, function(x)x@ID)
+idx <- match(IDs, votes2011$PROVMUN)
+
+##Places without information
+idxNA <- which(is.na(idx))
+
+##Information to be added to the SpatialPolygons object
+dat2add <- votes2011[idx, ]
+
+## SpatialPolygonsDataFrame uses row names to match polygons with data
+row.names(dat2add) <- IDs
+espMapVotes <- SpatialPolygonsDataFrame(espPols, dat2add)
+
+## Drop those places without information
+espMapVotes <- espMapVotes[-idxNA, ]
+\end{lstlisting}
+\subsubsection{Map}
+\label{sec-1-1-2}
+
+\label{sec:map}
+
+
+The \texttt{SpatialPolygonsDataFrame} constructed in the previous section
+contains two main variables: \texttt{whichMax}, the name of the
+predominant political option, and \texttt{pcMax}, percentage of votes
+obtained by this political option.
+
+\texttt{whichMax} is a categorical value with four levels: the two main
+parties (\texttt{PP} and \texttt{PSOE}), the abstention results (\texttt{ABS}), and the
+rest of parties (\texttt{OTH}). The figure \ref{fig:whichMax} encodes
+these levels with a qualitative palette with constant hues and
+varying chroma and luminance for each class. In order to improve
+the color discrimination, hues are equally spaced along the
+HCL-based color wheel.
+
+\index{rainbow_hcl@\texttt{rainbow\_hcl}}
+
+\lstset{language=R}
+\begin{lstlisting}
+library(colorspace)  
+
+classes <- levels(factor(espMapVotes$whichMax))
+nClasses <- length(classes)
+
+qualPal <- rainbow_hcl(nClasses, start=30, end=300)
+\end{lstlisting}
+
+For the definition of a combined palette in the next section, it
+is interesting to note that the colours provided by \texttt{rainbow\_hcl}
+can be obtained with the next code where the distances between
+hues and their values are computed explicitely.
+\index{hcl@\texttt{hcl}}
+
+\lstset{language=R}
+\begin{lstlisting}
+## distance between hues
+step <- 360/nClasses 
+## hues equally spaced
+hue = (30 + step*(seq_len(nClasses)-1))%%360 
+qualPal <- hcl(hue, c=50, l=70)
+\end{lstlisting}
+
+
+\lstset{language=R}
+\begin{lstlisting}
+spplot(espMapVotes["whichMax"], col='transparent', col.regions=qualPal)
+\end{lstlisting}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=.9\linewidth]{figs/whichMax.pdf}
+\caption{\label{fig:whichMax}Categorical choropleth map displaying the name of the predominant political option in each municipality in the 2011 Spanish General Elections.}
+\end{figure}
+
+On the other hand, \texttt{pcMax} is a quantitative variable which can be
+adequately displayed with a sequential palette (figure \ref{fig:pcMax}).
+
+\lstset{language=R}
+\begin{lstlisting}
+quantPal <- rev(heat_hcl(16))
+spplot(espMapVotes["pcMax"], col='transparent', col.regions=quantPal)
+\end{lstlisting}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=.9\linewidth]{figs/pcMax.pdf}
+\caption{\label{fig:pcMax}Quantitative choropleth map displaying the percentage of votes obtained by the predominant political option in each municipality in the 2011 Spanish General Elections.}
+\end{figure}
+\subsubsection{\floweroneleft Categorical and quantitative variables combined in a multivariate choropleth map}
+\label{sec-1-1-3}
+
+
+Following the inspiring example of the infographic from the New
+York Times, we will combine both choropleth maps to produce a
+multivariate map: the hue of each polygon will be determined by
+the name of the predominant option (\texttt{whichMax}) but the chroma and
+luminance will vary according to the percentage of votes
+(\texttt{pcMax}). Hues are computed with the same method as in the figure
+\ref{fig:whichMax}, while the correspondent values of chroma and
+luminance are calculated with the \texttt{sequential\_hcl} function.
+
+\index{sequential_hcl@\texttt{sequential\_hcl}}
+
+\lstset{language=R}
+\begin{lstlisting}
+classes <- levels(factor(espMapVotes$whichMax))
+nClasses <- length(classes)
+step <- 360/nClasses
+multiPal <- lapply(1:nClasses, function(i){
+    rev(sequential_hcl(16, h = (30 + step*(i-1))%%360))
+    })
+\end{lstlisting}
+
+With this multivariate palette we can produce a list of maps
+extracting the polygons according to each class and filling with
+the appropiate colour from this palette. The resulting list of
+\texttt{trellis} objects can be combined with \texttt{Reduce} and the
+\texttt{+.trellis} function of the \texttt{latticeExtra} and produce a \texttt{trellis}
+object.
+
+It is important to note that, to ensure the legends homogeneity,
+the breakpoints defined by the \texttt{at} argument are the same for all
+the individual maps.
+
+\index{Reduce@\texttt{Reduce}} \index{spplot@\texttt{spplot}}
+
+\lstset{language=R}
+\begin{lstlisting}
+pList <- lapply(1:nClasses, function(i){
+    ## Only those polygons corresponding to a level are selected
+    mapClass <- espMapVotes[espMapVotes$whichMax==classes[i],]
+    pClass <- spplot(mapClass['pcMax'], col.regions=multiPal[[i]],
+                     col='transparent',
+                     at = seq(0, 100, by=20))
+})
+
+p <- Reduce('+', pList)
+\end{lstlisting}
+
+The legend of this \texttt{trellis} object has to be defined
+manually. The main operation is to merge the legends from the
+components of the list of maps to obtain a bivariate
+legend. 
+
+The first step is to add a title to each individual legend.  This
+is a little complex because \texttt{levelplot} (the engine under the
+\texttt{spplot} method) does not include a title in their color key. The
+solution is to define a function to add the title and include it
+as an argument to the legend component of each \texttt{trellis}
+objet. The \texttt{print.trellis} method will process this function when
+displaying the \texttt{trellis} object. The \texttt{frameGrob} and \texttt{packGrob} of
+the \texttt{grid} package will do the main work inside this function.
+
+\index{textGrob@\texttt{textGrob}}
+\index{packGrob\texttt{packGrob}}
+\index{Packages!grid\texttt{grid}}
+
+\lstset{language=R}
+\begin{lstlisting}
+## Function to add a title to a legend
+addTitle <- function(legend, title){
+  titleGrob <- textGrob(title, gp=gpar(fontsize=8), hjust=1, vjust=1)
+  ## retrieve the legend from the trellis object
+  legendGrob <- eval(as.call(c(as.symbol(legend$fun), legend$args)))
+  ## Layout of the legend WITH the title
+  ly <- grid.layout(ncol=1, nrow=2,
+                    widths=unit(0.9, 'grobwidth', data=legendGrob))
+  ## Create a frame to host the original legend and the title
+  fg <- frameGrob(ly, name=paste('legendTitle', title, sep='_'))
+  ## Add the grobs to the frame
+  pg <- packGrob(fg, titleGrob, row=2)
+  pg <- packGrob(pg, legendGrob, row=1)
+  }
+
+## Access each trellis object from pList...
+for (i in seq_along(classes)){
+  ## extract the legend (automatically created by spplot)...
+  lg <- pList[[i]]$legend$right
+  ## ...supress labels except from the last legend...
+  lg$args$key$labels$cex=ifelse(i==nClasses, 0.8, 0) 
+  ## ... and add the addTitle function to the legend component of each trellis object
+  pList[[i]]$legend$right <- list(fun='addTitle',
+                                  args=list(legend=lg, title=classes[i]))
+}
+\end{lstlisting}
+
+Now that every component of \texttt{pList} includes a legend with a title
+the legend of the \texttt{p} trellis object can be modified to store the
+merged legends from the set of components of \texttt{pList}.
+
+
+\lstset{language=R}
+\begin{lstlisting}
+## List of legends
+legendList <- lapply(pList, function(x){
+  lg <- x$legend$right
+  clKey <- eval(as.call(c(as.symbol(lg$fun), lg$args)))
+  clKey
+})
+
+## Function to pack the list of legends in a unique legend
+## Adapted from latticeExtra::: mergedTrellisLegendGrob
+packLegend <- function(legendList){
+  N <- length(legendList)
+  ly <- grid.layout(nrow = 1,  ncol = N)
+  g <- frameGrob(layout = ly, name = "mergedLegend")
+  for (i in 1:N) g <- packGrob(g, legendList[[i]], col = i)
+  g
+}
+
+## The legend of p will include all the legends
+p$legend$right <- list(fun = 'packLegend',  args = list(legendList = legendList))
+\end{lstlisting}
+
+The figure \ref{fig:mapLegends} displays the result with the provinces
+boundaries superposed (only for the peninsula due to a problem with
+the definition of boundaries the Canarian islands in the file) and a
+rectangle to separate the Canarian islands from the rest of the map.
+
+
+\lstset{language=R}
+\begin{lstlisting}
+canarias <- provinces$PROV %in% c(35, 38)
+peninsulaLines <- provinces[!canarias,]
+
+p +
+  layer(sp.polygons(peninsulaLines,  lwd = 0.1)) +
+  layer(grid.rect(x=bbIslands[1,1], y=bbIslands[2,1],
+                  width=diff(bbIslands[1,]),
+                  height=diff(bbIslands[2,]),
+                  default.units='native', just=c('left', 'bottom'),
+                  gp=gpar(lwd=0.5, fill='transparent')))
+\end{lstlisting}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=.9\linewidth]{figs/mapLegends.pdf}
+\caption{\label{fig:mapLegends}Spanish General Elections results. The map shows the result of the most voted option in each municipality.}
+\end{figure}
+\subsection{Raster maps}
+\label{sec-1-2}
+
+
+
+A raster data structure is a matrix of cells organized into rows
+and columns where each cell contains a value representing
+information, such as temperature, altitude, population density,
+landuse, etc.  This section describes how to display a raster with
+two different examples: CM-SAF irradiation rasters will illustrate
+the use of diverging palettes; land cover and population data from
+the NEO-NASA project will exemplify the display of categorical
+data and multivariate rasters.
+\subsubsection{Diverging palettes}
+\label{sec-1-2-1}
+
+
+
+The \texttt{RasterLayer} object of annual averages of irradiation
+estimated by CM-SAF can be easily displayed with the \texttt{levelplot}
+method of the \texttt{rasterVis} package.
+
+\index{Packages!raster@\texttt{raster}}
+\index{Packages!rasterVis@\texttt{rasterVis}}
+\index{levelplot@\texttt{levelplot}}
+\index{rasterTheme@\texttt{rasterTheme}}
+
+\lstset{language=R}
+\begin{lstlisting}
+library(raster)
+library(rasterVis)
+SISav <- raster('data/SISav')
+levelplot(SISav)
+\end{lstlisting}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=.9\linewidth]{figs/leveplotSISavOrig.pdf}
+\caption{\label{fig:levelplotCMSAF}Annual average of solar radiation displayed with a sequential palette.}
+\end{figure}
+
+However, instead of displaying the absolute values of each cell we
+will analyze the differences between each cell and the global
+average value. This average is computed with the \texttt{cellStats}
+function and substracted from the original \texttt{RasterLayer}. The
+figure \ref{fig:xyplotSISav} displays the relation between these
+scaled values and latitude (\texttt{y}), with 5 different groups defined
+by the longitude (\texttt{cut(x, 5)}). It is evident that larger
+irradiation values are associated with lower latitudes. However,
+there is not such a clear relation between irradiation and
+longitude.
+
+\index{cellStats@\texttt{cellStats}}
+
+\lstset{language=R}
+\begin{lstlisting}
+meanRad <- cellStats(SISav, 'mean')
+SISav <- SISav - meanRad
+\end{lstlisting}
+
+\index{xyplot@\texttt{xyplot}}
+\index{rasterTheme@\texttt{rasterTheme}}
+\index{Packages!hexbin@\texttt{hexbin}}
+\index{plinrain@\texttt{plinrain}}
+
+\lstset{language=R}
+\begin{lstlisting}
+xyplot(layer ~ y, data = SISav,
+       groups=cut(x, 5),
+       par.settings=rasterTheme(symbol=plinrain(n=5, end=200)),
+       xlab = 'Latitude', ylab = 'Solar radiation (scaled)',  
+       auto.key=list(space='right', title='Longitude', cex.title=1.3))
+\end{lstlisting}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=.9\linewidth]{figs/xyplotSISav.png}
+\caption{\label{fig:xyplotSISav}Relation between scaled annual average radiation and latitude for several longitude groups.}
+\end{figure}
+
+Numerical information ranging in an interval including a neutral
+value is commonly displayed with diverging palettes. These
+palettes represent neutral classes with light colors, while low
+and high extremes of the data range are highlighted using dark
+colors with contrasting hues. I use the Purple-Orange palette from
+ColorBrewer with purple for positive values and orange for
+negative values. In order to underline the position of the
+interval containing zero, the center colour of this palette is
+substituted with pure white. The resulting palette is displayed in
+the figure \ref{fig:showDivPal} with the custom \texttt{showPal}
+function. The correspondent raster map produced with this palette
+is displayed in the figure \ref{fig:divPal_SISav_naive}.  Although
+extreme positive and negative values can be easily discriminated,
+the zero value is not associated with white because the data range
+is not symmetrical around zero.
+
+\index{Package!RColorBrewer@\texttt{RColorBrewer}}
+\index{brewer.pal@\texttt{brewer.pal}}
+
+\lstset{language=R}
+\begin{lstlisting}
+divPal <- brewer.pal(n=9, 'PuOr')
+divPal[5] <- "#FFFFFF"
+
+showPal <- function(pal, labs=pal, cex=0.6, ...){
+  barplot(rep(1, length(pal)), col=pal,
+          names.arg=labs, cex.names=cex,
+          axes=FALSE, ...)
+}
+
+showPal(divPal)
+\end{lstlisting}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.35\textwidth]{figs/showDivPal.pdf}
+\caption{\label{fig:showDivPal}Purple-Orange diverging palette using white as middle color.}
+\end{figure}
+
+
+
+\lstset{language=R}
+\begin{lstlisting}
+divTheme <- rasterTheme(region=divPal)
+
+levelplot(SISav, contour=TRUE, par.settings=divTheme)
+\end{lstlisting}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=.9\linewidth]{figs/divPal_SISav_naive.pdf}
+\caption{\label{fig:divPal_SISav_naive}Asymmetric raster data (scaled annual average irradiation) displayed with a symmetric diverging palette.}
+\end{figure}
+
+The solution is to connect the symmetrical colour palette with the
+asymmetrical data range. The first step is to create a set of
+breaks such that the zero value is the center of one of the
+intervals.
+
+\lstset{language=R}
+\begin{lstlisting}
+rng <- range(SISav[])
+## Number of desired intervals
+nInt <- 15
+## Increment correspondent to the range and nInt
+inc0 <- diff(rng)/nInt
+## Number of intervals from the negative extreme to zero
+n0 <- floor(abs(rng[1])/inc0)
+## Update the increment adding 1/2 to position zero in the center of an interval
+inc <- abs(rng[1])/(n0 + 1/2)
+## Number of intervals from zero to the positive extreme
+n1 <- ceiling((rng[2]/inc - 1/2) + 1)
+## Collection of breaks
+breaks <- seq(rng[1], by=inc, length= n0 + 1 + n1)
+\end{lstlisting}
+
+Next step is to compute the midpoints of each interval. These
+points represent the data belonging to each interval and their
+value will be connected with a color of the palette.
+\index{findInterval@\texttt{findInterval}}
+\index{tapply@\texttt{tapply}}
+
+\lstset{language=R}
+\begin{lstlisting}
+## Midpoints computed with the median of each interval
+idx <- findInterval(SISav[], breaks, rightmost.closed=TRUE)
+mids <- tapply(SISav[], idx, median)
+## Maximum of the absolute value both limits
+mx <- max(abs(breaks))
+mids
+\end{lstlisting}
+
+A simple method to relate the palette and the intervals is with a
+straight line such that a point is defined by the absolute maximum
+value, (\texttt{(mx, 1)}), and another point by zero, (\texttt{(0, 0.5)}).  Why
+are we using the interval [0, 1] as the \texttt{y} coordinate of this
+line, and why is 0.5 the result of zero? The reason is that the
+input of the \texttt{break2pal} function will be the result of
+\texttt{colorRamp}, a function that creates another interpolating
+function that maps colors with values between 0 and 1. Therefore,
+a new palette is created extracting colors from the original
+palette, such that the central color (white) is associated with
+the interval containing zero. This palette is displayed in the
+figure \ref{fig:showBreak2Pal}.
+
+The raster map produced with this new palette is displayed in the
+figure \ref{fig:divPalSISav}. Now zero is clearly associated with the
+white color.
+\index{colorRamp\texttt{colorRamp}}
+\index{rgb@\texttt{rgb}}
+
+\lstset{language=R}
+\begin{lstlisting}
+break2pal <- function(x, mx, pal){
+  ## x = mx gives y = 1
+  ## x = 0 gives y = 0.5
+  y <- 1/2*(x/mx + 1)
+  rgb(pal(y), maxColorValue=255)
+}
+
+## Interpolating function that maps colors with [0, 1]
+## rgb(divRamp(0.5), maxColorValue=255) gives "#FFFFFF" (white)
+divRamp <- colorRamp(divPal)
+## Diverging palette where white is associated with the interval
+## containing the zero
+pal <- break2pal(mids, mx, divRamp)
+showPal(pal, round(mids, 1))
+\end{lstlisting}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.5\textwidth]{figs/showBreak2Pal.pdf}
+\caption{\label{fig:showBreak2Pal}Modified diverging palette related with the asymmetrical raster data.}
+\end{figure}
+
+
+
+\lstset{language=R}
+\begin{lstlisting}
+levelplot(SISav, par.settings=rasterTheme(region=pal),
+          at=breaks, contour=TRUE)
+\end{lstlisting}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=.9\linewidth]{figs/divPalSISav.pdf}
+\caption{\label{fig:divPalSISav}Asymmetric raster data (scaled annual average irradiation) displayed with a modified diverging palette.}
+\end{figure}
+
+
+It is interesting to note two operations carried out internally by
+the \texttt{lattice} package. First, the \texttt{custom.theme} function (used by
+\texttt{rasterTheme}) creates a new palette with 100 colours using
+\texttt{colorRampPalette} to interpolate the palette passed as an
+argument. Second, the \texttt{level.colors} function makes the
+arrangement between intervals and colors. If this function
+receives more colors than intervals, it chooses a subset of the
+palette disregarding some of the intermediate colors. Therefore,
+since this function will receive 100 colors from \texttt{par.settings} it
+is difficult to control exactly which colors of our original
+palette will be represented.
+
+An alternative way for finer control is to fill with our palette
+the \texttt{regions\$col} component of the theme after it has been
+created.
+
+
+\lstset{language=R}
+\begin{lstlisting}
+divTheme <- rasterTheme()
+
+divTheme$regions$col <- pal
+levelplot(SISav, par.settings=divTheme, at=breaks, contour=TRUE)
+\end{lstlisting}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=.9\linewidth]{figs/divPalSISav_regions.pdf}
+\caption{\label{fig:divPal_SISav_regions}Same as figure \ref{fig:divPalSISav} but colors are assigned directly to the \texttt{regions\$col} component of the theme.}
+\end{figure}
+
+A final improvement to this map is to compute the intervals using
+a classification algorithm with the \texttt{classInt} package. With this
+approach it is likely that zero will not be perfectly centered in
+its correspondent interval. The rest of the code is exactly the
+same as above replacing the \texttt{breaks} vector with the result of the
+\texttt{classIntervals} function. The figure
+\ref{fig:divPalSISav_classInt} displays the result.
+
+\index{Packages!classInt@\texttt{classInt}}
+\index{classIntervals@\texttt{classIntervals}}
+
+\lstset{language=R}
+\begin{lstlisting}
+library(classInt)
+
+cl <- classIntervals(SISav[],
+                     ## n=15, style='equal')
+                     ## style='hclust')
+                     ## style='sd')
+                     style='kmeans')
+                     ## style='quantile')
+cl
+breaks <- cl$brks
+\end{lstlisting}
+
+
+\lstset{language=R}
+\begin{lstlisting}
+idx <- findInterval(SISav[], breaks, rightmost.closed=TRUE)
+mids <- tapply(SISav[], idx, median)
+mids
+mx <- max(abs(breaks))
+pal <- break2pal(mids, mx, divRamp)
+divTheme$regions$col <- pal
+levelplot(SISav, par.settings=divTheme, at=breaks, contour=TRUE)
+\end{lstlisting}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=.9\linewidth]{figs/divPalSISav_classInt.pdf}
+\caption{\label{fig:divPalSISav_classInt}Same as figure \ref{fig:divPal_SISav_regions} but defining intervals with the optimal classification method.}
+\end{figure}
+\subsubsection{Categorical data and multivariate rasters}
+\label{sec-1-2-2}
+
+
+
+Land cover is the observed physical cover on the earth's
+surface. A set of 17 different categories is commonly used. Using
+satellite observations, it is possible to map where on Earth each of
+these 17 land surface categories can be found and how these land
+covers change over time. This raster is a typical example of
+categorical data. 
+
+This section illustrates how to read and display rasters with
+categorical information using information from the NEO-NASA
+project. After the land cover and population density files have
+been downloaded, two \texttt{RasterLayers} can be created with the
+\texttt{raster} package. Both files are read, their geographical extent
+reduced to the area of India and China, and cleaned (99999 cells
+are replaced with \texttt{NA}).
+
+\index{Packages!raster@\texttt{raster}}
+\index{extent@\texttt{extent}}
+\index{crop@\texttt{crop}}
+
+\lstset{language=R}
+\begin{lstlisting}
+library(raster)
+## China and India  
+ext <- extent(65, 135, 5, 55)
+
+pop <- raster('875430rgb-167772161.0.FLOAT.TIFF')
+pop <- crop(pop, ext)
+pop[pop==99999] <- NA
+
+landClass <- raster('241243rgb-167772161.0.TIFF')
+landClass <- crop(landClass, ext)
+\end{lstlisting}
+
+
+
+The codes of the classification are graphically described in the
+figure \ref{fig:lccKey}. In summary, the sea is labeled with 0,
+forests with 1 to 5, shrublands, grasslands and wetlands with 6 to
+11, agriculture and urban lands with 12 to 14, and snow and barren
+with 15 and 16.  These four groups (sea is replaced \texttt{NA}) will be
+the levels of the categorical raster. The \texttt{raster} package
+includes the \texttt{ratify} method to define a layer as categorical data
+filling it with integer values associated to a Raster Attribute
+Table (RAT).
+
+\begin{figure}
+\includegraphics[width=0.3\textwidth]{figs/lcc_key.jpg}
+\caption{\label{fig:lccKey}Codes of land cover classification}
+\end{figure}
+
+\index{ratify@\texttt{ratify}}
+\index{cut@\texttt{cut}}
+
+\lstset{language=R}
+\begin{lstlisting}
+landClass[landClass %in% c(0, 254)] <- NA
+## Only four groups are needed:
+## Forests: 1:5
+## Shublands, etc: 6:11
+## Agricultural/Urban: 12:14
+## Snow: 15:16
+landClass <- cut(landClass, c(0, 5, 11, 14, 16))
+## Add a Raster Atribute Table and define the raster as categorical data
+landClass <- ratify(landClass)
+## Configure the RAT: first create a RAT data.frame using the
+## levels method; second, set the values for each class (to be
+## used by levelplot); third, assign this RAT to the raster
+## using again levels
+rat <- levels(landClass)[[1]]
+rat$classes <- c('Forest', 'Land', 'Urban', 'Snow')
+levels(landClass) <- rat
+\end{lstlisting}
+
+This categorical raster can be easily displayed with the
+\texttt{levelplot} method of the \texttt{rasterVis} package. Previously, a theme
+is defined with the background color set to \texttt{lightskyblue1} to
+display the sea areas (filled with \texttt{NA} values), and the region
+palette is defined with adequate colors.
+
+\index{Packages!rasterVis@\texttt{rasterVis}}
+\index{levelplot@\texttt{levelplot}}
+\index{modifyList@\texttt{modifyList}}
+\index{rasterTheme@\texttt{rasterTheme}}
+
+\lstset{language=R}
+\begin{lstlisting}
+library(rasterVis)
+
+pal <- c('palegreen4', # Forest
+         'lightgoldenrod', # Land
+         'indianred4', # Urban
+         'snow3')      # Snow
+
+catTheme <- modifyList(rasterTheme(),
+                       list(panel.background = list(col='lightskyblue1'),
+                            regions = list(col= pal)))
+
+levelplot(landClass, maxpixels=3.5e5, par.settings=catTheme,
+          panel=panel.levelplot.raster)
+\end{lstlisting}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=.9\linewidth]{figs/landClass.pdf}
+\caption{\label{fig:landClass}Land cover raster (categorical data).}
+\end{figure}
+
+Let's explore the relation between the land cover and population
+density rasters. Figure \ref{fig:populationNASA} displays this
+last raster using a logarithmic scale.
+
+
+\lstset{language=R}
+\begin{lstlisting}
+pPop <- levelplot(pop, zscaleLog=10, par.settings=BTCTheme,
+                  maxpixels=3.5e5, panel=panel.levelplot.raster)
+pPop
+\end{lstlisting}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=.9\linewidth]{figs/populationNASA.pdf}
+\caption{\label{fig:populationNASA}Population density raster.}
+\end{figure}
+
+Both rasters can be joined together with the \texttt{stack} method to
+create a new \texttt{RasterStack} object. Figure
+\ref{fig:histogramLandClass} displays the distribution of the
+logarithm of the population density associated to each land class.
+
+\index{stack@\texttt{stack}}
+\index{histogram@\texttt{histogram}}
+
+\lstset{language=R}
+\begin{lstlisting}
+s <- stack(pop, landClass)
+names(s) <- c('pop', 'landClass')
+histogram(~log10(pop)|landClass, data=s,
+          scales=list(relation='free'))
+\end{lstlisting}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=.9\linewidth]{figs/histogramLandClass.pdf}
+\caption{\label{fig:histogramLandClass}Distribution of the logarithm of the population density associated to each land class.}
+\end{figure}
+
+We can reproduce the code used to create the multivariate
+choropleth (section \ref{sec:multiChoropleth}) using the
+\texttt{levelplot} function from the \texttt{rasterVis} package. Again, the
+result is a list of \texttt{trellis} objects. Each of these objects is
+the representation of the population density in a particular land
+class. The \texttt{+.trellis} function of the \texttt{latticeExtra} package with
+\texttt{Reduce} superposes the elements of this list and produce a
+\texttt{trellis} object. Figure \ref{fig:popLandClass} displays the
+result.
+
+  
+
+
+
+\lstset{language=R}
+\begin{lstlisting}
+## at for each sub-levelplot is obtained from the global levelplot
+at <- pPop$legend$bottom$args$key$at
+classes <- rat$classes
+nClasses <- length(classes)
+
+pList <- lapply(1:nClasses, function(i){
+  landSub <- landClass
+  ## Those cells from a different land class are set to NA...
+  landSub[!(landClass==i)] <- NA
+  ## ... and the resulting raster mask the population raster
+  popSub <- mask(pop, landSub)
+  ## The HCL color wheel is divided in nClasses
+  step <- 360/nClasses
+  ## and a sequential palette is constructed with a hue from one
+  ## the color wheel parts
+  cols <- rev(sequential_hcl(16, h = (30 + step*(i-1))%%360))
+
+  pClass <- levelplot(popSub, zscaleLog=10, at=at, maxpixels=3.5e5,
+                      col.regions=cols, margin=FALSE)
+})
+\end{lstlisting}
+
+
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=.9\linewidth]{figs/popLandClass.png}
+\caption{\label{fig:popLandClass}Population density for each land class (multivariate raster).}
+\end{figure}
+\subsection{Proportional symbol mapping}
+\label{sec-1-3}
+
+
+   
+\subsubsection{Introduction}
+\label{sec-1-3-1}
+
+The proportional symbol technique uses symbols of different sizes
+to represent data associated with areas or point locations, with
+circles being the most frequently used geometric symbol. The data
+and the size of symbols can be related through different types of
+scaling: mathematical scaling sizes areas of point symbols in
+direct proportion to the data; perceptual scaling corrects the
+mathematical scaling to account for visual understimation of
+larger symbols; and range grading, where data is grouped, and each
+class is represented with a single symbol size. 
+
+In this section we display the air quality data with circles as
+proportional symbol\footnote{A more detailed analysis of this dataset can be found at
+  \href{http://prezi.com/fipcfjen_fck/pongamos-que-hablo-del-aire-de-madrid/}{http://prezi.com/fipcfjen\_fck/pongamos-que-hablo-del-aire-de-madrid/}
+  (in Spanish).
+ }, and range grading as scaling method. The
+objective when using range grading is to discriminate between
+classes instead of estimating an exact value from a perceived
+symbol size. However, because human perception of symbol size is
+limited, it is always recommendable to add a second perception
+channel to improve the discrimination task. Colours from a
+sequential palette will complement symbol size to encode the
+groups\footnote{The \texttt{sp} package includes the \texttt{bubble} function to produce proportional symbol maps. However, for a better control of the result we will write our own code.
+ }.
+\subsubsection{Combine data and spatial locations}
+\label{sec-1-3-2}
+
+
+Our starting point is to retrieve and combine the data and spatial
+information. The locations are contained in \texttt{airStations}, a
+\texttt{data.frame} which is converted to an \texttt{SpatialPointsDataFrame}
+object with the \texttt{coordinates} method. The \texttt{airQuality}
+\texttt{data.frame} comprises the air quality daily measurements acquired
+at each station during 2011. 
+
+On the other hand, we define a wrapper function, \texttt{summarize},
+which passes several statistical functions to \texttt{aggregate} and
+format the result adequately.  The results are included in the
+\texttt{SpatialPointsDataFrame} with the \texttt{spCbind} method. In the next
+section we will only display the $NO_2$ average values. The other
+statistics will be included in an SVG version of the graphic with
+tooltips to show additional information.
+
+\index{Data!Air quality in Madrid}
+\index{Packages!sp@\texttt{sp}}
+\index{Packages!maptools@\texttt{maptools}}
+\index{read.csv2@\texttt{read.csv2}}
+\index{aggregate@\texttt{aggregate}} \index{match@\texttt{match}}
+\index{spCbind@\texttt{spCbind}}
+
+\lstset{language=R}
+\begin{lstlisting}
+library(sp)
+library(maptools)
+
+## Spatial location of stations
+airStations <- read.csv2('data/airStations.csv')
+coordinates(airStations) <- ~ long + lat
+proj4string(airStations) <- CRS("+proj=longlat +ellps=WGS84")
+## Measurements data
+airQuality <- read.csv2('data/airQuality.csv')
+## Only interested in NO2 
+NO2 <- airQuality[airQuality$codParam==8, ]
+## Auxiliary function to calculate aggregate values
+summarize <- function(formula, data,
+                      FUN=function(x)c(mean=mean(x), median=median(x), sd=sd(x)),
+                      ...){
+  agg <- aggregate(formula, data, FUN=FUN, ...)
+  data.frame(do.call(cbind, agg))
+}
+
+NO2agg <- summarize(dat ~ codEst, data=NO2)
+
+## Link aggregate data with stations to obtain a SpatialPointsDataFrame.
+## Codigo and codEst are the stations codes
+idxNO2 <- match(airStations$Codigo, NO2agg$codEst)
+airStations <- spCbind(airStations, NO2agg[idxNO2, ])
+\end{lstlisting}
+\subsubsection{Proportional symbol with \texttt{spplot}}
+\label{sec-1-3-3}
+
+
+The \texttt{airStations} \texttt{SpatialPointsDataFrame} can be easily displayed
+with two functions provided by the \texttt{sp} package, \texttt{bubble} and
+\texttt{spplot}, both of them based on \texttt{xyplot} from the \texttt{lattice}
+package. The figure \ref{airMadrid_combo} compares the use of
+sizes (\texttt{bubble}) and colours (\texttt{spplot}) to represent the classes
+of the variable.
+
+
+\lstset{language=R}
+\begin{lstlisting}
+bb <- bubble(airStations, zcol='mean',
+             col='chocolate4', pch=19,
+             key.space='bottom', main='bubble')
+
+## hexbin provides the LinOCS palette
+library(hexbin)
+## Colours order is reversed to link larger values with darker
+## colors. Palette tails are suppressed.
+airPal <- LinOCS(n=5, beg=200, end=50)
+
+spp <- spplot(airStations, zcol='mean', cex=2, main='spplot',
+              col.regions=airPal, pch=19)
+
+print(bb, split=c(1, 1, 2, 1), more=TRUE)
+print(spp, split=c(2, 1, 2, 1))
+\end{lstlisting}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=.9\linewidth]{figs/airMadrid_combo.pdf}
+\caption{\label{fig:airMadrid_combo}Annual average of $NO_2$ measurements in Madrid. Values are shown with the \texttt{bubble} function (different symbols sizes for each class) and with \texttt{spplot} (different colors for each class).}
+\end{figure}
+
+Both results can be combined in a unique graphical output because
+\texttt{spplot} accepts both colours and sizes (figure
+\ref{airMadrid_spplot}). 
+
+
+\lstset{language=R}
+\begin{lstlisting}
+spplot(airStations["mean"], col.regions=airPal, cex=sqrt(1:5),
+       edge.col='black', alpha=0.8, scales=list(draw=TRUE),
+       key.space='right')
+\end{lstlisting}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=.9\linewidth]{figs/airMadrid_spplot.pdf}
+\caption{\label{fig:airMadrid_spplot}Annual average of $NO_2$ measurements in Madrid. Values are shown with different symbols sizes and  colors for each class with the \texttt{spplot} function.}
+\end{figure}
+\subsubsection{Optimal classification and sizes to improve discrimination}
+\label{sec-1-3-4}
+
+
+Two main improvements can be added to the figure
+\ref{airMadrid_spplot}:
+
+\begin{itemize}
+\item Define classes dependent on the data structure (instead of the
+  uniform distribution assumed with \texttt{cut}): the \texttt{classInterval}
+  function of the \texttt{classInt} package implements the Fisher-Jenks
+  optimal classification algorithm. The number of classes is
+  chosen between the Sturges and the Scott rules.
+\end{itemize}
+
+\index{Packages!classInt@\texttt{classInt}}
+\index{classIntervals@\texttt{classIntervals}}
+\index{findCols@\texttt{findCols}}
+\index{findColours@\texttt{findColours}}
+
+\lstset{language=R}
+\begin{lstlisting}
+library(classInt)
+nClasses <- 5
+intervals <- classIntervals(airStations$mean, n=nClasses, style='fisher')
+## Number of classes is not always the same as the proposed number
+nClasses <- length(intervals$brks) - 1
+\end{lstlisting}
+
+\begin{itemize}
+\item Encode each group with a symbol size (circle area) such that
+  visual discrimination among classes is enhanced. The next code
+  uses the set of radii proposed by Borden Dent as detailed in
+  \cite{Slocum.McMaster.ea2005}.
+\end{itemize}
+
+
+\lstset{language=R}
+\begin{lstlisting}
+## Complete Dent set of circle radii (mm)
+dent <- c(0.64, 1.14, 1.65, 2.79, 4.32, 6.22, 9.65, 12.95, 15.11)
+## Subset for our dataset
+dentAQ <- dent[seq_len(nClasses)]
+## Link Size and Class: findCols returns the class number of each
+## point; cex is the vector of sizes for each data point
+idx <- findCols(intervals)
+cex <- dentAQ[idx]
+\end{lstlisting}
+
+The variable to be represented is now a \texttt{factor} whose levels are
+the intervals previously computed with \texttt{classIntervals}.
+
+\lstset{language=R}
+\begin{lstlisting}
+op <- options(digits=4)
+tab <- print(intervals)
+options(op)
+airStations$classNO2 <- factor(names(tab)[idx])
+\end{lstlisting}
+
+These two enhancements are included in the figure
+\ref{fig:airMadrid_classes} (which uses an improved legend). You
+should note that now we are displaying the categorical variable
+\texttt{classNO2} (instead of \texttt{mean}).
+
+\lstset{language=R}
+\begin{lstlisting}
+NO2key <- list(x=0.02, y=0.02, corner=c(0, 0),
+              title=expression(NO[2]~~(paste(mu, plain(g))/m^3)),
+              cex.title=.95,
+              background='gray92')
+
+pNO2 <- spplot(airStations["classNO2"], col.regions=airPal, cex=dentAQ,
+               edge.col='black', alpha=0.8,
+               scales=list(draw=TRUE),
+               key.space=NO2key)
+pNO2
+\end{lstlisting}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=.9\linewidth]{figs/airMadrid_classes.pdf}
+\caption{\label{fig:airMadrid_classes}Annual average of $NO_2$ measurements in Madrid.}
+\end{figure}
+
+
+
+
+
+  
+
+
+  
+  
+
+  
+\subsubsection{Spatial context with underlying layers and labels}
+\label{sec-1-3-5}
+
+The spatial distribution of the stations is better understood if
+we add two underlying layers: 
+\begin{itemize}
+\item The district polygons and the streets lines, information
+  available from the nomecalles web service\footnote{\href{http://www.madrid.org/nomecalles/Callejero_madrid.icm}{http://www.madrid.org/nomecalles/Callejero\_madrid.icm}
+ }
+\end{itemize}
+
+\index{Data!nomecalles}
+\index{Madrid}
+\index{spTransform@\texttt{spTransform}}
+\index{readShapeLines@\texttt{readShapeLines}}
+\index{layer@\texttt{layer}}
+\index{+.trellis@\texttt{+.trellis}}
+\index{sp.polygons@\texttt{sp.polygons}}
+\index{sp.pointLabel@\texttt{sp.pointLabel}}
+\index{sp.lines@\texttt{sp.lines}}
+
+\lstset{language=R}
+\begin{lstlisting}
+## nomecalles http://www.madrid.org/nomecalles/Callejero_madrid.icm
+## Form at http://www.madrid.org/nomecalles/DescargaBDTCorte.icm
+
+## Madrid districts
+unzip('Distritos de Madrid.zip')
+distritosMadrid <- readShapePoly('Distritos de Madrid/200001331')
+proj4string(distritosMadrid) <- CRS("+proj=utm +zone=30")
+distritosMadrid <- spTransform(distritosMadrid, CRS=CRS("+proj=longlat +ellps=WGS84"))
+
+## Madrid streets
+unzip('Callejero_ Ejes de viales.zip')
+streets <- readShapeLines('Callejero_ Ejes de viales/call2011.shp')
+streetsMadrid <- streets[streets$CMUN=='079',]
+proj4string(streetsMadrid) <- CRS("+proj=utm +zone=30")
+streetsMadrid <- spTransform(streetsMadrid, CRS=CRS("+proj=longlat +ellps=WGS84"))
+\end{lstlisting}
+
+
+
+\begin{itemize}
+\item The stations names, placed with the \texttt{sp.pointLabel} function
+  from the \texttt{maptools} package.
+\end{itemize}
+
+These layers of information can be included in the plot (figure
+\ref{fig:airMadrid} displays the final result) with the
+\texttt{sp.layout} mechanism accepted by \texttt{spplot}:
+
+\lstset{language=R}
+\begin{lstlisting}
+spDistricts <- list('sp.polygons', distritosMadrid, fill='gray97', lwd=0.3)
+spStreets <- list('sp.lines', streetsMadrid, lwd=0.05)
+spNames <- list(sp.pointLabel, airStations, labels=airStations$Nombre,
+                cex=0.6, fontfamily='Palatino')
+
+spplot(airStations["classNO2"], col.regions=airPal, cex=dentAQ,
+       edge.col='black', alpha=0.8,
+       sp.layout=list(spDistricts, spStreets, spNames),
+       scales=list(draw=TRUE),
+       key.space=NO2key)
+\end{lstlisting}
+
+or with the \texttt{layer} and \texttt{+.trellis} functions from the
+\texttt{latticeExtra} package. 
+
+\lstset{language=R}
+\begin{lstlisting}
+pNO2 +
+    layer_({
+        sp.polygons(distritosMadrid, fill='gray97', lwd=0.3)
+        sp.lines(streetsMadrid, lwd=0.05)
+        sp.pointLabel(airStations, labels=airStations$Nombre,
+                      cex=0.6, fontfamily='Palatino')
+    })
+\end{lstlisting}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=.9\linewidth]{figs/airMadrid.png}
+\caption{\label{fig:airMadrid}Annual average of $NO_2$ measurements in Madrid. Values are shown with proportional symbol mapping.}
+\end{figure}
+\subsubsection{\floweroneleft Additional information with tooltips and hyperlinks}
+\label{sec-1-3-6}
+
+
+Now, let's suppose you need to know the median and standard deviation
+of the time series of that large brown station on the left. Moreover,
+you would like to watch a photography of that station, or even better,
+you wish to visit its webpage for additional information. A frequent
+solution is to produce interactive graphics with tooltips and
+hyperlinks.
+
+The \texttt{gridSVG} package is able to create an SVG graphic, where each
+component owns a \texttt{title} attribute: the content of this attribute
+is commonly displayed as a tooltip when the mouse hovers over the
+element. The content of this attribute can be modified thanks to
+the \texttt{grid.garnish} function. Moreover, the \texttt{grid.hyperlink}
+function can add the hyperlinks to the webpage of each station the
+correspondent graphical element. 
+
+The tooltips will display the photography of the station, the name
+of the station, and the statistics previously calculated with
+\texttt{aggregate} in the first step of this section.  The station images
+are downloaded from the Munimadrid webpage. The \texttt{htmlParse}
+function from the \texttt{XML} package parses each station page, and the
+station photograph is extracted with \texttt{getNodeSet} and \texttt{xmlAttrs}.
+
+\index{Packages!XML@\texttt{XML}}
+\index{htmlParse@\texttt{htmlParse}}
+\index{getNodeSet@\texttt{getNodeSet}}
+
+\lstset{language=R}
+\begin{lstlisting}
+library(XML)
+
+old <- setwd('images')
+for (i in 1:nrow(airStationsDF)){
+  codEst <- airStationsDF[i, "codEst"]
+  ## Webpage of each station
+  codURL <- as.numeric(substr(codEst, 7, 8))
+  rootURL <- 'http://www.mambiente.munimadrid.es'
+  stationURL <- paste(rootURL,
+                      '/opencms/opencms/calaire/contenidos/estaciones/estacion',
+                      codURL, '.html', sep='')
+  content <- htmlParse(stationURL, encoding='utf8')
+  ## Extracted with http://www.selectorgadget.com/
+  xPath <- '//*[contains(concat( " ", @class, " " ), concat( " ", "imagen_1", " " ))]'
+  imageStation <- getNodeSet(content, xPath)[[1]]
+  imageURL <- xmlAttrs(imageStation)[1]
+  imageURL <- paste(rootURL, imageURL, sep='')
+  download.file(imageURL, destfile=paste(codEst, '.jpg', sep=''))
+}
+setwd(old)
+\end{lstlisting}
+
+Next, we attach the hyperlink and the SVG information to each
+circle. 
+\index{Packages!gridSVG@\texttt{gridSVG}}
+\index{JavaScript}
+\index{grid.garnish@\texttt{grid.garnish}}
+\index{grid.hyperlink\texttt{grid.hyperlink}}
+\index{gridToSVG\texttt{gridToSVG}}
+
+\lstset{language=R}
+\begin{lstlisting}
+print(pNO2 + layer_(sp.polygons(distritosMadrid, fill='gray97', lwd=0.3)))
+\end{lstlisting}
+
+
+\lstset{language=R}
+\begin{lstlisting}
+library(gridSVG)
+
+airStationsDF <- as.data.frame(airStations)
+
+tooltips <- sapply(seq_len(nrow(airStationsDF)), function(i){
+  codEst <- airStationsDF[i, "codEst"]
+  ## Information to be attached to each line
+  stats <- paste(c('Mean', 'Median', 'SD'),
+                 signif(airStationsDF[i, c('mean', 'median', 'sd')], 4),
+                 sep=' = ', collapse='<br />')
+  ## Station photograph 
+  imageURL <- paste('images/', codEst, '.jpg', sep='')
+  imageInfo <- paste("<img src=", imageURL,
+                     " width='100' height='100' />", sep='')
+  ## Text to be included in the tooltip
+  nameStation <- paste('<b>', 
+                       as.character(airStationsDF[i, "Nombre"]),
+                       '</b>', sep='')
+  info <- paste(nameStation, stats, sep='<br />')
+  ## Tooltip includes the image and the text
+  paste(imageInfo, info, sep='<br />')
+})
+grid.garnish('points.panel', title=tooltips,  grep=TRUE, group=FALSE)
+\end{lstlisting}
+
+
+\lstset{language=R}
+\begin{lstlisting}
+## Webpage of each station
+rootURL <- 'http://www.mambiente.munimadrid.es'
+urlList <- sapply(seq_len(nrow(airStationsDF)), function(i){
+  codEst <- airStationsDF[i, "codEst"]
+  codURL <- as.numeric(substr(codEst, 7, 8))
+  stationURL <- paste(rootURL,
+                      '/opencms/opencms/calaire/contenidos/estaciones/estacion',
+                      codURL, '.html', sep='')
+  })
+
+grid.hyperlink('points.panel', urlList, grep=TRUE, group=FALSE)
+\end{lstlisting}
+
+The \texttt{title} attribute can be accessed with the JavaScript plugins
+jQuery\footnote{\href{http://jquery.com/}{http://jquery.com/}
+ } and qTip\footnote{http://craigsworks.com/projects/qtip2/
+ } to display tooltips when the mouse
+hovers over each station. The \texttt{grid.script} function creates
+objects containing links to these plugins. \texttt{gridToSVG} uses these
+objects to produce an SVG document with script elements.
+
+\index{jQuery} 
+\index{qTip}
+
+\lstset{language=R}
+\begin{lstlisting}
+grid.script(file='http://code.jquery.com/jquery-1.8.0.min.js')
+grid.script(file='js/jquery.qtip.js')
+## Simple JavaScript code to initialize the qTip plugin
+grid.script(file='js/myTooltip.js')
+## Produce the SVG graphic: the results of grid.garnish,
+## grid.hyperlink and grid.script are converted to SVG code
+gridToSVG('figs/airMadrid.svg')
+\end{lstlisting}
+
+These plugins will work only after the file \texttt{airMadrid.svg}
+created by \texttt{gridToSVG} is inserted in a HTML file with standard
+headers. Figure \ref{fig:airMadridTooltip} shows a capture of the
+result.
+
+\lstset{language=R}
+\begin{lstlisting}
+htmlBegin <- '<!DOCTYPE html>
+<html>
+<head>
+<title>Air Quality in Madrid</title>
+<link rel="stylesheet" type="text/css" href="stylesheets/jquery.qtip.css" />
+</head>
+<body>'
+
+htmlEnd <- '</body>
+</html>'
+
+svgText <- paste(readLines('figs/airMadrid.svg'), collapse='\n')
+
+writeLines(paste(htmlBegin, svgText, htmlEnd, sep='\n'),
+           'airMadrid.html')
+\end{lstlisting}
+
+
+\begin{figure}
+\includegraphics[width=0.9\textwidth]{figs/airMadridTooltip.png}
+\caption{\label{fig:airMadridTooltip}Tooltips generated with \texttt{gridSVG} using jQuery and qTip2}
+\end{figure}
+\subsection{Vector fields}
+\label{sec-1-4}
+
+
+
+\lstset{language=R}
+\begin{lstlisting}
+library(raster)
+library(rasterVis)
+\end{lstlisting}
+
+
+\lstset{language=R}
+\begin{lstlisting}
+old <- setwd(tempdir())
+download.file('ftp://tgftp.nws.noaa.gov/SL.us008001/ST.expr/DF.gr2/DC.ndfd/AR.conus/VP.001/ds.wdir.bin', 'windDir.bin')
+download.file('ftp://tgftp.nws.noaa.gov/SL.us008001/ST.expr/DF.gr2/DC.ndfd/AR.conus/VP.001/ds.wspd.bin', 'windSpeed.bin')
+
+wDir <- raster('windDir.bin')/180*pi
+wSpeed <- raster('windSpeed.bin')
+
+setwd(old)
+\end{lstlisting}
+
+
+
+
+\lstset{language=R}
+\begin{lstlisting}
+idxNA <- (wDir == 9999) | (wSpeed == 9999) | (wSpeed <= 0)
+
+wDir[idxNA] <- NA
+wSpeed[idxNA] <- NA
+\end{lstlisting}
+
+
+
+\lstset{language=R}
+\begin{lstlisting}
+wind <- stack(wSpeed, wDir)
+\end{lstlisting}
+
+
+\lstset{language=R}
+\begin{lstlisting}
+levelplot(wind, layers='windSpeed',
+          par.settings=BTCTheme(),
+          scales=list(draw=FALSE))
+\end{lstlisting}
+
+
+\lstset{language=R}
+\begin{lstlisting}
+library(car)
+
+boxCox <- function(x){
+  lambda <- powerTransform(x~1)
+  res <- bcPower(x, coef(lambda))
+  }
+
+wSpeed[] <- boxCox(wSpeed[])
+\end{lstlisting}
+
+
+\lstset{language=R}
+\begin{lstlisting}
+windField <- stack(wSpeed, wDir)
+names(windField) <- c('slope', 'aspect')
+\end{lstlisting}
+
+
+\lstset{language=R}
+\begin{lstlisting}
+vectorplot(windField, isField=TRUE, par.settings=BTCTheme(),
+           colorkey=FALSE, scales=list(draw=FALSE))
+\end{lstlisting}
+
+
+\lstset{language=R}
+\begin{lstlisting}
+streamplot(windField, isField=TRUE,
+           droplet=list(pc=.2), streamlet=list(L=25),
+           scales=list(draw=FALSE))
+\end{lstlisting}
+
+
+\lstset{language=R}
+\begin{lstlisting}
+altUSA <- raster('~/Datos/USA_msk_alt/USA1_msk_alt')
+\end{lstlisting}
+
+\lstset{language=R}
+\begin{lstlisting}
+levelplot(altUSA, par.settings=BTCTheme())
+\end{lstlisting}

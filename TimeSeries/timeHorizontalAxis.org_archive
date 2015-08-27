@@ -1,0 +1,202 @@
+#    -*- mode: org -*-
+
+
+Archived entries from file /home/oscar/Dropbox/chapman/book/TimeSeries/timeHorizontalAxis.org
+
+
+* \floweroneleft Annotations to Enhance the Time Graph
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2014-01-03 vie 08:33
+  :ARCHIVE_FILE: ~/Dropbox/chapman/book/TimeSeries/timeHorizontalAxis.org
+  :ARCHIVE_OLPATH: Time Graph of Different Meteorological Variables
+  :ARCHIVE_CATEGORY: timeHorizontalAxis
+  :END:
+
+#+begin_src R :exports none
+##################################################################
+## Annotations to enhance the time graph
+##################################################################
+#+end_src
+
+These first attempts can be improved with a custom panel function
+that generates the content of each panel using the information
+processed by =xyplot=, or overlaying additional layers with
+=autoplot=.  One of the main enhancements is to highlight certain time
+regions that fulfill certain conditions. The package =latticeExtra=
+provides a nice solution for =xyplot= with =panel.xblocks=. The result
+is displayed in Figure \ref{fig:aranjuezEnhanced}:
+ 
+- The label of each time series is displayed with text inside each
+  panel instead of using the strips mechanism. The =panel.text=
+  prints the name of each variable with the aid of =panel.number=.
+- The alternating of years is displayed with blocks of gray and
+  white color using the =panel.xblocks= function from
+  =latticeExtra=. The year is extracted (as character) from the
+  time index of the =zoo= object with =format.POSIXlt=.
+- Those values below the mean of each variable are highlighted
+  with short red color blocks at the bottom of each panel, again
+  with the =panel.xblocks= function.
+- The maxima and minima are highlighted with blue small triangles.
+
+Since the functions included in the panel function are executed
+consecutively, their order determines the superposition of
+graphical layers.
+#+BEGIN_LaTeX
+\index{Panel function}
+\index{panel.xblocks@\texttt{panel.xblocks}}
+\index{panel.text@\texttt{panel.text}}
+\index{panel.number@\texttt{panel.number}}
+\index{panel.points@\texttt{panel.points}}
+#+END_LaTeX
+
+#+begin_src R :exports none
+## lattice version
+#+end_src
+
+#+begin_src R :results output graphics :exports both :file figs/aranjuezXblocks.pdf
+  library(grid)
+  library(latticeExtra)
+  
+  ## Auxiliary function to extract the year value of a POSIXct time
+  ## index
+  Year <- function(x)format(x, "%Y")
+  
+  xyplot(aranjuez, layout=c(1, ncol(aranjuez)), strip=FALSE,
+         scales=list(y=list(cex=0.6, rot=0)),
+         panel=function(x, y, ...){
+           ## Alternation of years
+           panel.xblocks(x, Year,
+                         col = c("lightgray", "white"),
+                         border = "darkgray")
+           ## Values under the average highlighted with red regions
+           panel.xblocks(x, y<mean(y, na.rm=TRUE),
+                         col = "indianred1",
+                         height=unit(0.1, 'npc'))
+           ## Time series
+           panel.lines(x, y, col='royalblue4', lwd=0.5, ...)
+           ## Label of each time series
+           panel.text(x[1], min(y, na.rm=TRUE),
+                      names(aranjuez)[panel.number()],
+                      cex=0.6, adj=c(0, 0), srt=90, ...)
+           ## Trianges to point the maxima and minima 
+           idxMax <- which.max(y)
+           panel.points(x[idxMax], y[idxMax],
+                        col='black', fill='lightblue', pch=24)
+           idxMin <- which.min(y)
+           panel.points(x[idxMin], y[idxMin],
+                        col='black', fill='lightblue', pch=25)
+         })
+#+end_src
+
+#+CAPTION: Enhanced time plot of the collection of meteorological time series of the Aranjuez station.
+#+LABEL: fig:aranjuezEnhanced 
+#+RESULTS:
+[[file:figs/aranjuezXblocks.pdf]]
+
+#+begin_src R :exports none
+## ggplot2 version
+#+end_src
+
+There is not an equivalent =panel.xblocks= function to be used with
+=ggplot2=. Therefore, the =ggplot2= version has to explicitly compute
+the correspondent bands (years and regions below averaged values):
+
+- The first step to work with =ggplot= is to transform the =zoo=
+  object into a =data.frame= in long format. =fortify= returns a
+  =data.frame= with three columns: the time =Index=, a factor
+  indicating the =Series=, and the corresponding =Value=.
+#+begin_src R :eval no-export
+  timeIdx <- index(aranjuez)
+  
+  long <- fortify(aranjuez, melt=TRUE)
+#+end_src
+
+- The bands of values below the average can be easily extracted with
+  =scale= because these regions are negative when the =data.frame= is
+  centered.
+#+begin_src R :eval no-export
+  ## Values below mean are negative after being centered
+  scaled <- fortify(scale(aranjuez, scale=FALSE), melt=TRUE)
+  ## The 'scaled' column is the result of the centering. The new 'Value'
+  ## column store the original values.
+  scaled <- transform(scaled, scaled=Value, Value=long$Value)
+  underIdx <- which(scaled$scaled <= 0)
+  ## 'under' is the subset of values below the average
+  under <- scaled[underIdx,]
+#+end_src
+
+- The years bands are defined with the function =endpoints= from the
+  =xts= package:
+#+BEGIN_LaTeX
+  \index{Package!xts@\texttt{xts}}
+#+END_LaTeX
+#+begin_src R :eval no-export
+  library(xts)
+  ep <- endpoints(timeIdx, on='years')
+  N <- length(ep[-1])
+  ## 'tsp' is start and 'tep' is the end of each band
+  tep <- timeIdx[ep]
+  tsp <- timeIdx[ep[-(N+1)]+1]
+  ## 'cols' is a vector with the color of each band
+  cols <- rep_len(c('gray', 'white'), N)
+#+end_src
+- The minima and maxima points of each variable are extracted with
+  =apply=:
+#+begin_src R :eval no-export
+  minIdx <- timeIdx[apply(aranjuez, 2, which.min)]
+  minVals <- apply(aranjuez, 2, min, na.rm=TRUE)
+  mins <- data.frame(Index=minIdx,
+                     Value=minVals,
+                     Series=names(aranjuez))
+  
+  maxIdx <- timeIdx[apply(aranjuez, 2, which.max)]
+  maxVals <- apply(aranjuez, 2, max, na.rm=TRUE)
+  maxs <- data.frame(Index=maxIdx,
+                     Value=maxVals,
+                     Series=names(aranjuez))
+#+end_src
+
+- With =ggplot= we define the canvas and the layers of information are
+  added successively:
+#+begin_src R :eval no-export
+  ggplot(data=long, aes(Index, Value)) +
+      ## Time series of each variable
+      geom_line(colour = "royalblue4", lwd = 0.5) +
+      ## Year bands
+      annotate(geom='rect', ymin = -Inf, ymax = Inf,
+                xmin=tsp, xmax=tep,
+                fill = cols, alpha = 0.4) +
+      ## Values below average
+      geom_rug(data=under,
+               sides='b', col='indianred1') +
+      ## Minima
+      geom_point(data=mins, pch=25) +
+      ## Maxima
+      geom_point(data=maxs, pch=24) +
+      ## Axis labels and theme definition
+      labs(x='Time', y=NULL) +
+      theme_bw() +
+      ## Each series is displayed in a different panel with an
+      ## independent y scale
+      facet_free()
+#+end_src
+
+Some messages from the Figure [[fig:aranjuezEnhanced]]:
+- The radiation, temperature and evotranspiration are
+  quasi-periodic and are almost synchronized between them. Their
+  local maxima appear at summer and the local minima at
+  winter. Obviously, the summer values are higher than the
+  average.
+- The average humidity varies in oposition to the temperature and
+  radiation cycle, with local maxima located at winter.
+- The average and maximum wind speed, and rainfall vary in a more
+  erratic way and do not show the evident periodic behaviour of
+  the radiation and temperature.
+- The rainfall is different from year to year. The rest of the
+  variables do not show variations between years.
+- The fluctuations of the solar radiation are more apparent than
+  the temperature fluctuations. There is hardly any day with
+  temperatures below the average value during summer, while it is
+  not difficult to find days with radiation below the average
+  during this season.
+  

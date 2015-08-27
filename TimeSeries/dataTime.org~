@@ -1,0 +1,402 @@
+#+PROPERTY: header-args :session *R* :tangle /home/oscar/R/spacetimeVis/dataTime.R :eval no-export
+
+#+begin_src R :exports none
+  ##################################################################
+  ## Source code for the book: "Displaying time series, spatial and
+  ## space-time data with R"
+  
+  ## Copyright (C) 2012 Oscar Perpiñán Lamigueiro
+  
+  ## This program is free software you can redistribute it and/or modify
+  ## it under the terms of the GNU General Public License as published
+  ## by the Free Software Foundation; either version 2 of the License,
+  ## or (at your option) any later version.
+   
+  ## This program is distributed in the hope that it will be useful, but
+  ## WITHOUT ANY WARRANTY; without even the implied warranty of
+  ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  ## General Public License for more details.
+   
+  ## You should have received a copy of the GNU General Public License
+  ## along with this program; if not, write to the Free Software
+  ## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+  ## 02111-1307, USA.
+  ####################################################################
+  
+#+end_src
+
+#+begin_src R :exports none :tangle no
+  setwd('~/Dropbox/chapman/book/')
+#+end_src
+
+* SIAR
+#+begin_src R :exports none
+  ##################################################################
+  ## SIAR
+  ##################################################################
+#+end_src
+
+#+BEGIN_LaTeX
+\index{Data!SIAR}
+\index{Data!Meteorological variables}
+#+END_LaTeX
+
+The Agroclimatic Information System for Irrigation (SIAR)
+\cite{SIAR2011} is a free-download database operating since 1999,
+covering the majority of the irrigated area of Spain.  This network
+belongs to the Ministry of Agriculture, Food and Environment of Spain,
+as a tool to predict and study meteorological variables for
+agriculture. SIAR is composed of twelve regional centers and a
+national center, aiming to centralize and depurate measurements from
+the stations of the network. Figure \ref{fig:SIAR_map} displays the
+stations over an altitude map. Some stations from the complete network
+have been omitted, due to difficulties accessing to their coordinates
+or to incomplete or spurious data series[fn:1].
+#+BEGIN_LaTeX
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{figs/mapaSIAR_crop}
+  \caption{Meteorological stations of the SIAR network. The color key
+    indicates the altitude (meters).}
+  \label{fig:SIAR_map}
+\end{figure}
+#+END_LaTeX
+
+** Daily Data of Different Meteorological Variables 
+#+begin_src R :exports none
+  ##################################################################
+  ## Daily data of different meteorological variables 
+  ##################################################################
+#+end_src
+   
+As an example of multiple time series with different scales, we
+will use 8 years (from January 2004 to December 2011) of daily
+data corresponding to several meteorological variables measured at
+the SIAR station located at Aranjuez (Madrid, Spain) available on
+the SIAR webpage[fn:4]. The =aranjuez.gz= file, available in the
+=data= folder of the book repository, contains this information
+with several meteorological variables: average, maximum, and
+minimum ambient temperature; average and maximum humidity; average
+and maximum wind speed; rainfall; solar radiation on the
+horizontal plane; and evotranspiration.
+
+The =read.zoo= from the =zoo= package accepts this string and
+downloads the data to construct a =zoo= object. Several
+arguments are passed directly to =read.table= (=header=, =skip=,
+etc.) and are detailed conveniently on the help page of this
+function. The =index.column= is the number of the column with the
+time index, and =format= defines the date format of this index.
+
+#+BEGIN_LaTeX
+\index{Packages!zoo@\texttt{zoo}}
+\index{read.zoo@\texttt{read.zoo}}
+#+END_LaTeX
+
+#+begin_src R :results output :exports both
+  library(zoo)
+  
+  aranjuez <- read.zoo("data/aranjuez.gz",
+                       index.column = 3, format = "%d/%m/%Y",
+                       fileEncoding = 'UTF-16LE',
+                       header = TRUE, fill = TRUE,
+                       sep = ';', dec = ",", as.is = TRUE)
+  aranjuez <- aranjuez[, -c(1:4)]
+  
+  names(aranjuez) <- c('TempAvg', 'TempMax', 'TempMin',
+                       'HumidAvg', 'HumidMax',
+                       'WindAvg', 'WindMax',
+                       'Radiation', 'Rain', 'ET')
+  
+  
+  summary(aranjuez)
+#+end_src
+
+#+BEGIN_LaTeX
+\index{zoo@\texttt{zoo}}
+#+END_LaTeX
+
+From the summary it is clear that parts of these time series include erroneous outliers that can be
+safely removed:
+#+begin_src R
+  aranjuezClean <- within(as.data.frame(aranjuez),{
+    TempMin[TempMin>40] <- NA
+    HumidMax[HumidMax>100] <- NA
+    WindAvg[WindAvg>10] <- NA
+    WindMax[WindMax>10] <- NA
+  })
+  
+  aranjuez <- zoo(aranjuezClean, index(aranjuez))
+#+end_src
+
+
+#+begin_src R :exports none
+save(aranjuez, file='data/aranjuez.RData')
+#+end_src
+
+** Solar Radiation Measurements from Different Locations
+#+begin_src R :exports none
+  ##################################################################
+  ## Solar radiation measurements from different locations
+  ##################################################################
+#+end_src
+
+As an example of multiple time series with the same scale, we will use
+data of daily solar radiation measurements from different locations.
+
+#+BEGIN_LaTeX
+\index{Data!Solar radiation}
+\index{Data!SIAR}
+#+END_LaTeX
+
+Daily solar radiation incident on the horizontal plane is registered
+by meterological stations and estimated from satellite images. This
+meteorological variable is important for a wide variety of scientific
+disciplines and engineering applications. Its variations and trends,
+dependent on the location (mainly latitude, and also longitude and
+altitude) and on time (day of the year), have been analyzed and
+modeled in a huge collection of papers and reports. In this section
+we will focus our attention on the time evolution of the solar
+radiation. The spatial distribution and the spatio-time behavior will
+be the subject of later sections.
+
+The stations of the SIAR network include first-class pyranometers
+according to the World Meteorological Organization (WMO), whose
+absolute accuracy is within $\pm 5\%$ and is typically lower than $\pm
+3\%$. Solar irradiance is recorded every 15 minutes and then
+collated through a datalogger within the station to generate the daily
+irradiation, which is later sent to the regional and national centers.
+
+The file =navarra.RData= contains daily solar radiation data of 2011
+from the meteorological stations of Navarra, Spain. The names of the
+dataset are the abbreviations of each station name.
+
+# Let's download the solar radiation data of 2011 from the
+# meteorological stations of Navarra (Spain). For each station
+# (=navarraSIAR$N_Estacion=) =read.zoo= downloads data from the
+# corresponding internet direction (=URL=) and provides the
+# information as a =zoo= object. This is the same approach used with
+# the Aranjuez station. 
+# ##TODO: añadir referencias cruzadas de sección
+
+# The next code retrieves the daily irradiation of the whole set of
+# meteorological stations of Navarra with =lapply= and =read.zoo=. The
+# result is a list of =zoo= objects. Some stations do not provide data
+# for this time period and produce an error. Therefore =read.zoo= is
+# evaluated inside a =try= call to remove these stations from the
+# list. The functions =do.call= and =cbind= provide a =data.frame= only
+# with the useful stations and whose column names are the shortened form
+# of the original names of the stations.
+
+# \index{lapply@\texttt{lapply}}
+# \index{Packages!zoo@\texttt{zoo}}
+# \index{read.zoo@\texttt{read.zoo}}
+# \index{sapply@\texttt{sapply}}
+# \index{do.call@\texttt{do.call}}
+# #+begin_src R
+#   library(zoo)
+    
+#   SIAR <- read.csv('http://solar.r-forge.r-project.org/data/SIAR.csv')
+#   table(SIAR$Provincia)
+    
+#   prov=31 ##navarra
+#   navarraSIAR <- subset(SIAR, Provincia=='Navarra')
+#   start='01/01/2011'
+#   end='31/12/2011'
+  
+#   navarra <- lapply(navarraSIAR$N_Estacion, FUN=function(i){
+#     URL = paste("http://www.marm.es/siar/exportador.asp?T=DD&P=", 
+#       prov, "&E=", i, "&I=", start, "&F=", end, sep = "")
+#     dat <- try(read.zoo(URL, index.column = 1,
+#                         format = "%d/%m/%Y", 
+#                         header = TRUE, skip = 1, fill = TRUE,
+#                         dec = ",", as.is = TRUE))
+#     if (class(dat)=='try-error') NULL else dat$Radiacion
+#   })
+  
+#   names(navarra) <- make.names(abbreviate(navarraSIAR$Estacion))
+    
+#   ## Which stations are not accesible?
+#   err <- sapply(navarra, is.null)
+  
+#   navarra <- do.call(cbind, navarra[!err])
+# #+end_src
+
+
+# #+begin_src R :exports none
+#   save(navarra, file='data/navarra.RData')
+# #+end_src
+
+
+* Unemployment in the United States
+#+begin_src R :exports none
+  ##################################################################
+  ## Unemployment in the United States
+  ##################################################################
+#+end_src
+
+
+As an example of time series that can be displayed both in individual
+and in aggregate, we will use the unemployment data in the United
+States. The information of unemployed persons by industry
+and class of worker is available in the Table A-14 published by the
+Bureau of Labor Statistics[fn:2].
+
+The dataset arranges the information with a row for each category
+(=Series.ID=) and a column for each monthly value. In addition, there
+are columns with the annual summaries (=annualCols=). We rearrange
+this =data.frame=, dropping the =Series.ID= and the annual columns,
+and transpose the data.
+
+# ## http://www.bls.gov/webapps/legacy/cpsatab14.htm
+
+#+BEGIN_LaTeX
+\index{Data!Unemployment}
+#+END_LaTeX
+
+#+begin_src R 
+  unemployUSA <- read.csv('data/unemployUSA.csv')
+  nms <- unemployUSA$Series.ID
+  ##columns of annual summaries
+  annualCols <- 14 + 13*(0:12)
+  ## Transpose. Remove annual summaries
+  unemployUSA <- as.data.frame(t(unemployUSA[,-c(1, annualCols)]))
+  ## First 7 characters can be suppressed
+  names(unemployUSA) <- substring(nms, 7)
+  head(unemployUSA)
+#+end_src
+
+With the transpose, the column names of the original data set are
+now the row names of the =data.frame=. The =as.yearmon= function
+of the =zoo= package converts the character vector of names into a
+=yearmon= vector, a class for representing monthly data. With
+=Sys.setlocale("LC_TIME", 'C')= we ensure that month abbreviations
+(=%b=) are correctly interpreted in a non-English locale. This
+vector is the time index of a new =zoo= object. 
+
+#+BEGIN_LaTeX
+\index{Packages!zoo@\texttt{zoo}}
+\index{as.yearmon@\texttt{as.yearmon}}
+\index{apply@\texttt{apply}}
+\index{zoo@\texttt{zoo}}
+#+END_LaTeX
+
+#+begin_src R 
+  library(zoo)
+  
+  Sys.setlocale("LC_TIME", 'C')
+  idx <- as.yearmon(row.names(unemployUSA), format='%b.%Y')
+  unemployUSA <- zoo(unemployUSA, idx)
+#+end_src
+
+Finally, those rows with =NA= values are removed.
+#+begin_src R 
+  isNA <- apply(is.na(unemployUSA), 1, any)
+  unemployUSA <- unemployUSA[!isNA,]
+#+end_src
+
+#+begin_src R :exports none
+  save(unemployUSA, file='data/unemployUSA.RData')
+#+end_src
+
+* Gross National Income and $\mathrm{CO_2}$ Emissions
+#+begin_src R :exports none
+  ##################################################################
+  ## Gross National Income and $CO_2$ emissions
+  ##################################################################
+#+end_src
+
+The catalog data of the World Bank Open Data initiative includes a the
+World Development Indicators (WDI)[fn:3]. Among them we will analyze
+the evolution of the relationship between Gross National Income (GNI)
+and $CO_2$ emissions for a set of countries. The package =WDI= is able
+to search and download these data series.
+
+#+BEGIN_LaTeX
+\index{Data!World Bank} 
+\index{Data!CO2@$CO_2$}
+\index{Data!GNI}
+\index{Packages!WDI@\texttt{WDI}}
+#+END_LaTeX
+
+#+begin_src R
+  library(WDI)
+    
+  CO2data <- WDI(indicator=c('EN.ATM.CO2E.PC', 'EN.ATM.CO2E.PP.GD',
+                'NY.GNP.MKTP.PP.CD', 'NY.GNP.PCAP.PP.CD'),
+            start=2000, end=2011,
+            country=c('BR', 'CN', 'DE', 'ES',
+                'FI', 'FR', 'GR', 'IN', 'NO', 'US'))
+
+  names(CO2data) <- c('iso2c', 'Country.Name', 'Year',
+                      'CO2.capita', 'CO2.PPP',
+                      'GNI.PPP', 'GNI.capita')
+#+end_src
+
+Only two minor modifications are needed: Remove the missing values and
+convert the =Country.Name= column into a =factor=. This first
+modification will save problems when displaying the time series, and
+the =factor= conversion will be useful for grouping.
+#+begin_src R
+  isNA <- apply(is.na(CO2data), 1, any)
+  CO2data <- CO2data[!isNA, ]
+
+  CO2data$Country.Name <- factor(CO2data$Country.Name)
+#+end_src
+
+# Each year of the data is stored in a column of the =CO2 data.frame=,
+# and the country and indicator names are defined in their respective
+# columns.
+
+# #+begin_src R 
+#   CO2 <- read.csv('data/CO2_GNI_BM.csv')
+#   head(CO2)
+# #+end_src
+
+# Before using this dataset, we have to transform it in a way that
+# each indicator is stored in independent columns with the year and
+# country names in their own columns.  The first step is to reshape
+# it to the long format. After this, the =data.frame= shows the year
+# in its own column (=timevar=), but now the values of the
+# indicators are all mixed in a unique column (=v.names=).
+# \index{reshape@\texttt{reshape}}
+# #+begin_src R 
+#   CO2data <- reshape(CO2, varying=list(names(CO2)[5:16]),
+#                         timevar='Year', v.names='Value',
+#                         times=2000:2011,
+#                         direction='long')
+#   head(CO2data)
+# #+end_src
+# The second step is to transform the previous result to the wide
+# format. Now =reshape= keeps the columns of country names and years
+# (=idvar=), and add additional columns for each level of the
+# indicator vector (=timevar=).
+# #+begin_src R 
+#   CO2data <- CO2data[, c(1, 3, 5, 6)]
+#   CO2data <- reshape(CO2data, 
+#                      idvar=c('Country.Name','Year'),
+#                      timevar='Indicator.Name', direction='wide')
+    
+#   names(CO2data)[3:6] <- c('CO2.PPP', 'CO2.capita',
+#                            'GNI.PPP', 'GNI.capita')
+  
+#   isNA <- apply(is.na(CO2data), 1, any)
+#   CO2data <- CO2data[!isNA, ]
+  
+#   head(CO2data)
+# #+end_src
+
+#+begin_src R :exports none
+  save(CO2data, file='data/CO2.RData')
+#+end_src
+
+* Footnotes
+
+[fn:1] The name and location data of these stations are available at the [[https://github.com/oscarperpinan/CMSAF-SIAR/blob/master/data/SIAR.csv][GitHub repository]] of the paper \cite{Antonanzas-Torres.Canizares.ea2013}.
+
+[fn:2] http://www.bls.gov/webapps/legacy/cpsatab14.htm
+
+[fn:3] http://databank.worldbank.org/Data/Views/VariableSelection/SelectVariables.aspx
+
+[fn:4] [[http://eportal.magrama.gob.es/websiar]]
+
+
