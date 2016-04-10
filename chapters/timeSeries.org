@@ -1,0 +1,120 @@
+[part:Time]
+
+* Displaying Time Series: Introduction
+label:cha:timeIntro
+
+A time series is a sequence of observations registered at consecutive time instants. When these time instants are evenly spaced, the distance between them is called the sampling interval. The visualization of time series is intended to reveal changes of one or more quantitative variables through time, and to display the relationships between the variables and their evolution through time.
+
+The standard time series graph displays the time along the horizontal axis. Several variants of this approach can be found in Chapter ref:cha:timeHorizontalAxis. On the other hand, time can be conceived as a grouping or conditioning variable (Chapter ref:cha:timeGroupFactor). This solution allows several variables to be displayed together with a scatterplot, using different panels for subsets of the data (time as a conditioning variable) or using different attributes for groups of the data (time as a grouping variable). Moreover, time can be used as a complementary variable that adds information to a graph where several variables are confronted (Chapter ref:cha:timeComplementary).
+
+These chapters provide a variety of examples to illustrate a set of useful techniques. These examples make use of several datasets (available at the book website) described in Chapter ref:cha:dataTime.
+
+** Packages
+label:sec:time-series-packages
+
+The CRAN Tasks View "Time Series Analysis" [1] summarizes the packages for reading, vizualizing, and analyzing time series. This section provides a brief introduction to the =zoo= and =xts= packages. Most of the information has been extracted from their vignettes, webpages, and help pages. You should read them for detailed information.
+
+Both packages extensively use the time classes defined in =R=. The interested reader will find an overview of the different time classes in =R= in cite:Ripley.Hornik2001} and cite:Grothendieck.Petzoldt2004}.
+
+*** zoo
+label:sec:zoo
+
+\index{Packages!zoo@\texttt{zoo}}
+The =zoo= package cite:Zeileis.Grothendieck2005} provides an =S3= class with methods for indexed totally ordered observations. Its key design goals are independence of a particular index class and consistency with base =R= and the =ts= class for regular time series.
+
+\index{yearmon@\texttt{yearmon}}
+\index{yearqtr@\texttt{yearqtr}}
+
+Objects of class =zoo= are created by the function =zoo= from a numeric vector, matrix, or a factor that is totally ordered by some index vector. This index is usually a measure of time but every other numeric, character, or even more abstract vector that provides a total ordering of the observations is also suitable. It must be noted that this package defines two new index classes, =yearmon= and =yearqtr=, for representing monthly and quarterly data, respectively.
+
+The package defines several methods associated with standard generic functions such as =print=, =summary=, =str=, =head=, =tail=, and =[= (subsetting). In addition, standard mathematical operations can be performed with =zoo= objects, although only for the intersection of the indexes of the objects.
+
+On the other hand, the data stored in =zoo= objects can be extracted with =coredata=, which drops the index information, and can be replaced by =coredata<-=. The index can be extracted with =index= or =time=, and can be modified by =index<-=. Finally, the =window= and =window<-= methods extract or replace time windows of =zoo= objects.
+
+Two =zoo= objects can be merged by common indexes with =merge= and =cbind=. The =merge= method combines the columns of several objects along the union or the intersection of the indexes. The =rbind= method combines the indexes (rows) of the objects.
+
+The =aggregate= method splits a =zoo= object into subsets along a coarser index grid, computes a function (=sum= is the default) for each subset, and returns the aggregated =zoo= object.
+
+This package provides four methods for dealing with missing observations:
+
+1. =na.omit= removes incomplete observations.
+
+2. =na.contiguous= extracts the longest consecutive stretch of non-missing values.
+
+3. =na.approx= replaces missing values by linear interpolation.
+
+4. =na.locf= replaces missing observations by the most recent non-=NA= prior to it.
+
+The package defines interfaces to =read.table= and =write.table= for reading, =read.zoo=, and writing, =write.zoo=, =zoo= series from or to text files. The =read.zoo= function expects either a text file or connection as input or a =data.frame=. =write.zoo= first coerces its argument to a =data.frame=, adds a column with the index, and then calls =write.table=.
+
+*** xts
+label:sec:xts
+
+\index{Packages!xts@\texttt{xts}}
+
+The =xts= package cite:Ryan.Ulrich2013} extends the =zoo= class definition to provide a general time-series object. The index of an =xts= object must be of a time or date class: =Date=, =POSIXct=, =chron=, =yearmon=, =yearqtr=, or =timeDate=. With this restriction, the subset operator =[= is able to extract data using the ISO:8601 [2] time format notation =CCYY-MM-DD HH:MM:SS=. It is also possible to extract a range of times with a =from/to= notation, where both from and to are optional. If either side is missing, it is interpreted as a request to retrieve data from the beginning, or through the end of the data object.
+
+Furthermore, this package provides several time-based tools:
+
+-  =endpoints= identifies the endpoints with respect to time.
+
+-  =to.period= changes the periodicity to a coarser time index.
+
+- The functions =period.*= and =apply.*= evaluate a function over a set of non-overlapping time periods.
+
+** Further Reading
+label:cha:further-reading-time
+
+-  cite:Wills2011 provides a systematic analysis of the visualization of time series, and a section of cite:Heer.Bostock.ea2010 summarizes the main techniques to display time series.
+
+-  cite:Cleveland1994 includes a section about time series visualization with a detailed discussion of the banking to $\SI{45}{\degree}$ technique and the cut-and-stack method.  cite:Heer.Agrawala2006 propose the multi-scale banking, a technique to identify trends at various frequency scales.
+
+-  cite:Few2008,Heer.Kong.ea2009 explain in detail the foundations of the horizon graph (Section ref:cha:timeHorizontalAxis).
+
+-  The /small multiples/ concept (Sections ref:SEC:sameScale and ref:SEC:groupVariable) is illustrated in cite:Tufte2001,Tufte1990.
+
+-  Stacked graphs are analyzed in cite:Byron.Wattenberg2008, and the ThemeRiver technique is explained in cite:Havre.Hetzler.ea2002.
+
+-  cite:Cleveland1994,Friendly.Denis2005 study the scatterplot matrices (Section ref:SEC:groupVariable), and cite:Carr.Littlefield.ea1987 provide information about hexagonal binning.
+
+-  cite:Harrower.Fabrikant2008 discuss the use of animation for the visualization of data. cite:Few2007 exposes a software tool resembling the Trendalyzer.
+
+-  The =D3= gallery [3] shows several great examples of time-series visualizations using the JavaScript library =D3.js=.
+
+* Time on the Horizontal Axis
+label:cha:timeHorizontalAxis
+
+The most frequent visualization method of a time series uses the horizontal axis to depict the time index. This chapter illustrates several variants to display multivariate time series: multiple time series with different scales, variables with the same scale, and stacked graphs.
+
+#+INCLUDE: "TimeSeries/timeHorizontalAxis.tex" latex
+
+* Time as a Conditioning or Grouping Variable
+label:cha:timeGroupFactor
+
+In Section ref:sec:differentVariables we learned to display the time evolution of multiple time series with different scales. But, what if instead of displaying the time evolution we want to confront the variables between them? Section ref:SEC:groupVariable proposes the scatterplot matrix solution with time as a grouping variable. Section ref:SEC:conditionVariable uses an enhanced scatterplot with time as a conditioning variable. Section ref:SEC:hexbin includes a digression about the hexagonal binning for large datasets.
+
+#+INCLUDE: "TimeSeries/timeGroupFactor.tex" latex
+
+* Time as a Complementary Variable
+label:cha:timeComplementary
+
+Gapminder [4] is an independent foundation based in Stockholm, Sweden.  Its mission is "to debunk devastating myths about the world by offering free access to a fact-based world view." They provide free online tools, data, and videos "to better understand the changing world." The initial development of Gapminder was the Trendalyzer software, used by Hans Rosling in several sequences of his documentary "The Joy of Stats."
+
+The information visualization technique used by Trendalyzer is an interactive bubble chart. By default it shows five variables: two numeric variables on the vertical and horizontal axes, bubble size and color, and a time variable that may be manipulated with a slider. The software uses brushing and linking techniques for displaying the numeric value of a highlighted country.
+
+This software was acquired by Google^{} in 2007, and is now available as a Motion Chart gadget and as the Public Data Explorer.
+
+In this chapter, time will be used as a complementary variable which adds information to a graph where several variables are confronted. We will illustrate this approach with the evolution of the relationship between Gross National Income (GNI) and carbon dioxide ($CO_2$) emissions for a set of countries extracted from the database of the World Bank Open Data. We will try several solutions to display the relationship between $CO_2$ emissions and GNI over the years using time as a complementary variable. The final method will produce an animated plot resembling the Trendalyzer solution.
+
+#+INCLUDE: "TimeSeries/timeComplementary.tex" latex
+
+* About the Data
+label:cha:dataTime
+
+[1] [[http://CRAN.R-project.org/view=TimeSeries]]
+
+[2] [[http://en.wikipedia.org/wiki/ISO_8601]]
+
+[3] [[https://github.com/mbostock/d3/wiki/Gallery]]
+
+[4] [[http://www.gapminder.org/]]
