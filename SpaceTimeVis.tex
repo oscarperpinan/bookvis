@@ -1,0 +1,730 @@
+% Created 2016-04-11 lun 00:01
+\documentclass[smallroyalvopaper]{memoir}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fixltx2e}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{color}
+\usepackage{listings}
+\aliaspagestyle{title}{empty}
+\aliaspagestyle{part}{empty}
+\input{preamble.tex}
+\author{Oscar Perpiñán Lamigueiro}
+\date{}
+\title{Displaying Time Series, Spatial, and Space-Time Data with \texttt{R}}
+\hypersetup{
+ pdfauthor={Oscar Perpiñán Lamigueiro},
+ pdftitle={Displaying Time Series, Spatial, and Space-Time Data with \texttt{R}},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 24.5.1 (Org mode 8.3.4)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\frontmatter
+
+\cleardoublepage
+
+\setcounter{tocdepth}{1}
+\tableofcontents
+
+\mainmatter
+
+\chapter{Introduction}
+\label{sec:orgheadline13}
+
+\section{What This Book Is About}
+\label{sec:orgheadline1}
+\label{sec:thisBook}
+
+A data graphic is not only a static image but also tells a story about the data. It activates cognitive processes that are able to detect patterns and discover information not readily available with the raw data. This is particularly true for time series, spatial, and space-time datasets.
+
+There are several excellent books about data graphics and visual perception theory, with guidelines and advice for displaying information, including visual examples. Let's mention \emph{The Elements of Graphical Data} \cite{Cleveland1994} and \emph{Visualizing Data} \cite{Cleveland1993} by W. S. Cleveland, \emph{Envisioning Information} \cite{Tufte1990} and \emph{The Visual Display of Quantitative Information} \cite{Tufte2001} by E. Tufte, \emph{The Functional Art} by A. Cairo \cite{Cairo2012}, and \emph{Visual Thinking for Design} by C. Ware \cite{Ware2008}. Ordinarily, they do not include the code or software tools to produce those graphics.
+
+On the other hand, there is a collection of books that provides code and detailed information about the graphical tools available with \texttt{R}. Commonly they do not use real data in the examples and do not provide advice for improving graphics according to visualization theory. Three books are the unquestioned representatives of this group: \emph{R Graphics} by P. Murrell \cite{Murrell2011}, \emph{Lattice: Multivariate Data Visualization with R} by D. Sarkar \cite{Sarkar2010}, and \emph{ggplot2: Elegant Graphics for Data Analysis} by H. Wickham \cite{Wickham2009}.
+
+This book proposes methods to display time series, spatial, and space-time data using \textsf{R}, and aims to be a synthesis of both groups providing code and detailed information to produce high-quality graphics with practical examples.
+
+\section{What You Will \emph{Not} Find in This Book}
+\label{sec:orgheadline2}
+\label{sec:thisBookIsNot}
+
+\begin{itemize}
+\item \textbf{This is not a book to learn \texttt{R}}. 
+
+Readers should have a fair knowledge of programming with \texttt{R} to understand the book. In addition, previous experience with the \texttt{zoo}, \texttt{sp}, \texttt{raster}, \texttt{lattice}, \texttt{ggplot2}, and \texttt{grid} packages is helpful.
+
+If you need to improve your \textsf{R} skills, consider these information sources:
+
+\begin{itemize}
+\item Introduction to \texttt{R}\footnote{\url{http://cran.r-project.org/doc/manuals/R-intro.html}}.
+\item Official manuals\footnote{\url{http://cran.r-project.org/manuals.html}}.
+\item Contributed documents\footnote{\url{http://cran.r-project.org/other-docs.html}}.
+\item Mailing lists\footnote{\url{http://www.r-project.org/mail.html}}.
+\item R-bloggers\footnote{\url{http://www.r-bloggers.com}}.
+\item Books related to \texttt{R}\footnote{\url{http://www.r-project.org/doc/bib/R-books.html}} and particularly \emph{Software for Data Analysis} by John M. Chambers \cite{Chambers2008}.
+\end{itemize}
+
+\item \textbf{This book does not provide an exhaustive collection of visualization methods}.
+
+Instead, it illustrates what I found to be the most useful and effective methods. Notwithstanding, each part includes a section titled ``Further Reading'' with bibliographic proposals for additional information.
+\end{itemize}
+
+
+\begin{itemize}
+\item \textbf{This book does not include a complete review or discussion of \texttt{R} packages}.
+
+Their most useful functions, classes, and methods regarding data and graphics are outlined in the introductory chapter of each part, and   conveniently illustrated with the help of examples. However, if you need detailed information about a certain aspect of a package, you should read the correspondent package manual or vignette. Moreover, if you want to know additional alternatives, you can navigate through the CRAN Task Views about Time Series\footnote{\url{http://cran.r-project.org/web/views/TimeSeries.html}}, Spatial Data\footnote{\url{http://cran.r-project.org/web/views/Spatial.html}}, Spatiotemporal  Data\footnote{\url{http://cran.r-project.org/web/views/SpatioTemporal.html}}, and Graphics\footnote{\url{http://cran.r-project.org/web/views/Graphics.html}}.
+\end{itemize}
+
+
+\begin{itemize}
+\item \textbf{Finally, this book is not a handbook of data analysis, geostatistics, point pattern analysis, or time series theory}.
+
+Instead, this book is focused on the exploration of data with visual methods, so it may be framed in the Exploratory Data Analysis approach. Therefore, this book may be a useful complement for superb bibliographic references where you will find plenty of information about those subjects. For example, \cite{Chatfield2003}, \cite{Cressie.Wikle2011}, \cite{Slocum.McMaster.ea2005} and \cite{Bivand.Pebesma.ea2008}.
+\end{itemize}
+
+\section{How to Read This Book}
+\label{sec:orgheadline4}
+\label{sec:how-read}
+
+This book is organized into three parts, each devoted to different types of data. Each part comprises several chapters according to the various visualization methods or data characteristics. The chapters are structured as independent units so readers can jump directly to a certain chapter according to their needs. Of course, there are several dependencies and redundancies between the sets of chapters that have been conveniently signaled with cross-references. 
+
+The content of each chapter illustrates how to display a dataset starting with an easy and direct approach. Often this first result is not entirely satisfactory so additional improvements are progressively added. Each step involves additional complexity which, in some cases, can be overwhelming during a first reading. Thus, some sections, marked with the sign \floweroneleft, can be safely skipped for later reading.
+
+Although I have done my best to help readers understand the methods and code, you should not expect to understand it after one reading. The key is practical experience, and the best way is to try out the code with the provided data \textbf{and} modify it to suit your needs with your own data. There is a website and a code repository to help you in this task.
+
+\subsection{Website and Code Repository}
+\label{sec:orgheadline3}
+\label{sec:github}
+
+The book website with the main graphics of this book is located at
+\begin{center}
+\url{http://oscarperpinan.github.com/spacetime-vis/}
+\end{center}
+The full code is freely available from the repository:
+\begin{center}
+\url{https://github.com/oscarperpinan/spacetime-vis}
+\end{center}
+
+On the other hand, the datasets used in the examples are either available at the repository or can be freely obtained from other websites. It must be underlined that the combination of code and data freely available allows this book to be fully reproducible.
+
+I have chosen the datasets according to two main criteria: 
+\begin{itemize}
+\item They are freely available without restrictions for public use.
+\item They cover different scientific and professional fields (meteorology and climate research, economy and social sciences,
+energy and engineering, environmental research, epidemiology, etc.).
+\end{itemize}
+
+The repository and the website can be downloaded as compressed files\footnote{Repository: \url{https://github.com/oscarperpinan/spacetime-vis/archive/master.zip}, Website:  \url{https://github.com/oscarperpinan/spacetime-vis/archive/gh-pages.zip}}, and if you use \texttt{git}, you can clone the repository with
+
+\lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+git clone https://github.com/oscarperpinan/spacetime-vis.git
+\end{lstlisting}
+
+\section{\texttt{R} Graphics}
+\label{sec:orgheadline6}
+\label{sec:r-graphics}
+
+\index{Packages!grid@=grid}
+There are two distinct graphics systems built into \texttt{R}, referred to as traditional and grid graphics. Grid graphics are produced with the \texttt{grid} package \cite{Murrell2011}, a flexible low-level graphics toolbox. Compared with the traditional graphics model, it provides more flexibility to modify or add content to an existent graphical output, better support for combining different outputs easily, and more possibilities for interaction. All the graphics in this book have been produced with the grid graphics model.
+
+Other packages are constructed over it to provide high-level functions, most notably the \texttt{lattice} and \texttt{ggplot2} packages.
+
+\subsection{lattice}
+\label{sec:orgheadline5}
+\label{sec:lattice}
+
+\index{Packages!lattice@=lattice}
+
+The \texttt{lattice} package \cite{Sarkar2010} is an independent implementation of Trellis graphics, which were mostly influenced by \emph{The Elements of Graphing Data} \cite{Cleveland1994}. Trellis graphics often consist of a rectangular array of panels. The \texttt{lattice} package uses a \emph{formula} interface to define the structure of the array of panels with the specification of the variables involved in the plot. The result of a \texttt{lattice}
+high-level function is a \texttt{trellis} object.
+
+For bivariate graphics, the formula is generally of the form \texttt{y \textasciitilde{} x} representing a single panel plot with \texttt{y} versus \texttt{x}. This formula can also involve expressions. The main function for bivariate graphics is \texttt{xyplot}. 
+
+Optionally, the formula may be \texttt{y \textasciitilde{} x | g1 * g2} and \texttt{y} is represented against \texttt{x} conditional on the variables \texttt{g1} and \texttt{g2}. Each unique combination of the levels of these conditioning variables determines a subset of the variables \texttt{x} and \texttt{y}. Each subset provides the data for a single panel in the Trellis display, an array of panels laid out in columns, rows, and pages.
+
+For example, in the following code, the variable \texttt{wt} of the dataset \texttt{mtcars} is represented against the \texttt{mpg}, with a panel for each level of the categorical variable \texttt{am}. The points are grouped by the values of the \texttt{cyl} variable.
+
+\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+xyplot(wt ~ mpg | am, data = mtcars, groups = cyl)
+\end{lstlisting}
+
+
+For trivariate graphics, the formula is of the form \texttt{z \textasciitilde{} x * y}, where \texttt{z} is a numeric response, and \texttt{x} and \texttt{y} are numeric values evaluated on a rectangular grid. Once again, the formula may include conditioning variables, for example \texttt{z \textasciitilde{} x * y | g1 * g2}. The main function for these graphics is \texttt{levelplot}.
+
+The plotting of each panel is performed by the panel function, specified in a high-level function call as the \texttt{panel} argument. Each high-level \texttt{lattice} function has a default panel function, although the user can create new Trellis displays with custom panel functions.
+
+\texttt{lattice} is a member of the recommended packages list so it is commonly distributed with \textsf{R} itself. There are more than 250 packages depending on it, and the most important packages for our purposes (\texttt{zoo}, \texttt{sp}, and \texttt{raster}) define methods to display their classes using \texttt{lattice}.
+
+\index{Packages!latticeExtra@=latticeExtra}
+
+On the other hand, the \texttt{latticeExtra} package \cite{Sarkar.Andrews2012} provides additional flexibility for the somewhat rigid structure of the Trellis framework implemented in \texttt{lattice}. This package complements the \texttt{lattice} with the implementation of layers via the \texttt{layer} function, and
+superposition of \texttt{trellis} objects and layers with the \texttt{+.trellis} function. Using both packages, you can define a graphic with the formula interface (under the \texttt{lattice} model) and overlay additional content as layers (following the \texttt{ggplot2} model).
+
+\section{ggplot2}
+\label{sec:orgheadline8}
+\label{sec:ggplot2}
+
+\index{Packages!ggplot2@=ggplot2}
+
+The \texttt{ggplot2} package \cite{Wickham2009} is an implementation of the system proposed in \emph{The Grammar of Graphics} \cite{Wilkinson1999}, a general scheme for data visualization that breaks up graphs into semantic components such as scales and layers. Under this framework, the definition of the graphic with \texttt{ggplot2 is done with a combination of several functions that provides the components, instead of the formula interface of
+ =lattice}.
+
+With \texttt{ggplot2}, a graphic is composed of:
+
+\begin{itemize}
+\item A dataset, \texttt{data}, and a set of mappings from variables to aesthetics, \texttt{aes}.
+\item One or more layers, each composed of: a geometric object, \texttt{geom\textbackslash{}\_*}, to control the type of plot you create (points, lines, etc.); a statistical transformation, \texttt{stat\textbackslash{}\_*}; and a position adjustment (and optionally, additional dataset and aesthetic mappings).
+\item A scale, \texttt{scale\textbackslash{}\_*}, to control the mapping from data to aesthetic attributes. Scales are common across layers to ensure a consistent mapping from data to aesthetics.
+\item A coordinate system, \texttt{coords\textbackslash{}\_*}.
+\item Optionally, a faceting specification, \texttt{facet\textbackslash{}\_*}, the equivalent of Trellis graphics with panels.
+\end{itemize}
+
+The function \texttt{ggplot} is typically used to construct a plot incrementally, using the \texttt{+} operator to add layers to the existing ggplot object.  For instance, the following code (equivalent to the previous \texttt{lattice} example) uses \texttt{mtcars} as the dataset, and maps the \texttt{mpg} variable on the x-axis and the \texttt{wt} variable on the y-axis. The geometric object is the point using the \texttt{cyl} variable to control the color. Finally, the levels of the \texttt{am} variable define the panels of the graphic. 
+
+\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+ggplot(mtcars, aes(mpg, wt)) +
+    geom_point(aes(colour=factor(cyl))) +
+    facet_grid(. ~ am)
+\end{lstlisting}
+
+This package is increasingly popular, with a list of more than ninety packages depending on it. On the other hand, few packages provide
+method definitions based on \texttt{ggplot2} to display their classes. In our context, only the \texttt{zoo} package defines the \texttt{autoplot} function based on it.
+
+\subsection{Comparison between lattice and ggplot2}
+\label{sec:orgheadline7}
+\label{sec:comparison}
+
+Which package to choose is, for a wide range of datasets, a question of personal preferences. You may be interested in a comparison between them published in a series of blog posts\footnote{\url{http://learnr.wordpress.com/2009/06/28/ggplot2-version-of-figures-in-lattice-multivariate-data-visualization-with-r-part-1/}}.  However, the major drawback of \texttt{ggplot2} is its considerably slower speed when dealing with large datasets\footnote{Take a look at the time comparison published as the final result of the previous series of blog posts,
+\url{http://learnr.files.wordpress.com/2009/08/latbook.pdf}}, so you should be cautious with large spatial and spatiotemporal data.  Consequently, most of the code in Part \ref{part:Time} contains alternatives defined both with \texttt{lattice} and with \texttt{ggplot2}. However, because of the speed problem and the absence of \texttt{ggplot2} functions in the corresponding packages, only a minor fraction of the code in Parts \ref{cha:Spatial} and \ref{cha:Spatio-Time} contains graphics defined with \texttt{ggplot2}.
+
+
+\section{Packages}
+\label{sec:orgheadline9}
+\label{sec:introduction-packages}
+
+Throughout the book, several \textsf{R} packages are used. All of them are available from \textsf{CRAN}, and you must install them before
+using the code. Most of them are loaded at the start of the code of each chapter, although some of them are loaded later if they are used only inside optional sections (marked with \floweroneleft). You should install the last version available at \textsf{CRAN} to ensure correct functioning of the code.
+
+Although the introductory chapter of each part includes a section with an outline of the most relevant packages, some of them deserve to be
+highlighted here:
+
+\begin{itemize}
+\item \texttt{zoo} \cite{Zeileis.Grothendieck2005} provides infrastructure for time series using arbitrary classes for the time
+stamps (Section \ref{sec:zoo}).
+
+\item \texttt{sp} \cite{Pebesma2012} provides a coherent set of classes and methods for the major spatial data types: points, lines, polygons, and grids (Section \ref{sec:sp}). \texttt{spacetime} \cite{Pebesma2012} defines classes and methods for spatiotemporal  data, and methods for plotting data as map sequences or multiple time series (Section \ref{sec:spacetime}).
+
+\item \texttt{raster} \cite{Hijmans2013} is a major extension of gridded spatial data classes. It provides a unified access method to different raster formats, permitting large objects to be analyzed with the definition of basic and high-level processing functions (Sections \ref{sec:raster} and \ref{sec:rasterST}). \texttt{rasterVis} \cite{Perpinan.Hijmans2013} provides enhanced visualization of raster data with methods for spatiotemporal rasters (Sections \ref{sec:rasterVis} and \ref{sec:rastervisST}).
+
+\item \texttt{gridSVG} \cite{Murrell.Potter2013} converts any grid scene to an \textsf{SVG} document. The \texttt{grid.hyperlink} function allows a hyperlink to be associated with any component of the scene, the \texttt{grid.animate} function can be used to animate any component of a scene, and the \texttt{grid.garnish} function can be used to add \textsf{SVG} attributes to the components of a scene. By setting event handler attributes on a component, plus possibly using the \texttt{grid.script} function to add \textsf{JavaScript} to the scene, it is possible to make the component respond to user input such as mouse clicks.
+\end{itemize}
+
+
+\section{Software Used to Write This Book}
+\label{sec:orgheadline10}
+\label{sec:software-book}
+
+This book has been written using different computers running Debian GNU Linux and using several gems of open-source software: 
+\begin{itemize}
+\item \textsf{org-mode} for authoring text and code \cite{Schulte.Davison.ea2012}.
+\item \textsf{R} \cite{RDevelopmentCoreTeam2013} with \textsf{Emacs Speaks Statistics} \cite{Rossini.Heiberger.ea2004}.
+
+\item \textsf{GNU Emacs} as development environment.
+\end{itemize}
+
+\section{About the Author}
+\label{sec:orgheadline11}
+\label{sec:aboutMe}
+
+During the past 15 years, my main area of expertise has been photovoltaic solar energy systems, with a special interest in solar radiation.
+Initially I worked as an engineer for a private company and I was involved in several commercial and research projects. The project teams were partly integrated by people with low technical skills who relied on the input from engineers to complete their work. I learned how a good visualization output eased the communication process. 
+
+Now I work as a professor and researcher at the university. Data visualization is one of the most important tools I have available. It helps me embrace and share the steps, methods, and results of my research. With students, it is an inestimable partner in helping them understand complex concepts.
+
+I have been using \textsf{R} to simulate the performance of photovoltaic energy systems and to analyze solar radiation data, both as time series and spatial data. As a result, I have developed packages that include several graphical methods to deal with multivariate time series (namely, \texttt{solaR} \cite{Perpinan2012b}=) and space-time data (\texttt{rasterVis}). 
+
+\section{Acknowledgments}
+\label{sec:orgheadline12}
+\label{sec:acknow}
+
+Writing a book is often described as a solitary activity. It is certainly difficult to write when you are with friends or spending time with your family,\ldots{} although with three little children at home I have learned to write prose and code while my baby wants to learn typing and my daughters need help to share a family of dinosaurs. 
+
+Seriously speaking, solitude is the best partner of a writer. But when I am writing or coding I feel I am immersed in a huge collaborative network of past and present contributors. Piotr Kropotkin described it with the following words \cite{Kropotkin1906}:
+
+\begin{quote}
+Thousands of writers, of poets, of scholars, have laboured to increase knowledge, to dissipate error, and to create that atmosphere of scientific thought, without which the marvels of our century could never have appeared. And these thousands of philosophers, of poets, of scholars, of inventors, have themselves been supported by the labour of past centuries. They have been upheld and nourished through life, both physically and mentally, by legions of workers and craftsmen of all sorts.
+\end{quote}
+
+And Lewis Mumford claimed \cite{Mumford1934}:
+
+\begin{quote}
+Socialize Creation! What we need is the realization that the creative life, in all its manifestations, is necessarily a social product.
+\end{quote}
+
+I want to express my deepest gratitude and respect to all those women and men who have contributed and contribute to strengthening the communities of free software, open data, and open science. My special thanks go to the people of the \textsf{R} community: users, members of the \textsf{R} Core Development Team, and package developers.
+
+With regard to this book in particular, I would like to thank John Kimmel for his constant support, guidance, and patience.
+
+Last, and most importantly, thanks to Candela, Marina, and Javi, my crazy little shorties, my permanent source of happiness, imagination, and love. Thanks to María, \emph{mi amor, mi cómplice y todo}.
+
+
+
+\part{Time Series}
+\label{sec:orgheadline23}
+
+\chapter{Displaying Time Series: Introduction}
+\label{sec:orgheadline18}
+\label{cha:timeIntro}
+
+A time series is a sequence of observations registered at consecutive time instants. When these time instants are evenly spaced, the distance between them is called the sampling interval. The visualization of time series is intended to reveal changes of one or more quantitative variables through time, and to display the relationships between the variables and their evolution through time.
+
+The standard time series graph displays the time along the horizontal axis. Several variants of this approach can be found in Chapter \ref{cha:timeHorizontalAxis}. On the other hand, time can be conceived as a grouping or conditioning variable (Chapter \ref{cha:timeGroupFactor}). This solution allows several variables to be displayed together with a scatterplot, using different panels for subsets of the data (time as a conditioning variable) or using different attributes for groups of the data (time as a grouping variable). Moreover, time can be used as a complementary variable that adds information to a graph where several variables are confronted (Chapter \ref{cha:timeComplementary}).
+
+These chapters provide a variety of examples to illustrate a set of useful techniques. These examples make use of several datasets (available at the book website) described in Chapter \ref{cha:dataTime}.
+
+\section{Packages}
+\label{sec:orgheadline16}
+\label{sec:time-series-packages}
+
+The CRAN Tasks View ``Time Series Analysis'' \footnote{\url{http://CRAN.R-project.org/view=TimeSeries}} summarizes the packages for reading, vizualizing, and analyzing time series. This section provides a brief introduction to the \texttt{zoo} and \texttt{xts} packages. Most of the information has been extracted from their vignettes, webpages, and help pages. You should read them for detailed information.
+
+Both packages extensively use the time classes defined in \texttt{R}. The interested reader will find an overview of the different time classes in \texttt{R} in \cite{Ripley.Hornik2001} and \cite{Grothendieck.Petzoldt2004}.
+
+\subsection{zoo}
+\label{sec:orgheadline14}
+\label{sec:zoo}
+
+\index{Packages!zoo@\texttt{zoo}}
+The \texttt{zoo} package \cite{Zeileis.Grothendieck2005} provides an \texttt{S3} class with methods for indexed totally ordered observations. Its key design goals are independence of a particular index class and consistency with base \texttt{R} and the \texttt{ts} class for regular time series.
+
+\index{yearmon@\texttt{yearmon}}
+\index{yearqtr@\texttt{yearqtr}}
+
+Objects of class \texttt{zoo} are created by the function \texttt{zoo} from a numeric vector, matrix, or a factor that is totally ordered by some index vector. This index is usually a measure of time but every other numeric, character, or even more abstract vector that provides a total ordering of the observations is also suitable. It must be noted that this package defines two new index classes, \texttt{yearmon} and \texttt{yearqtr}, for representing monthly and quarterly data, respectively.
+
+The package defines several methods associated with standard generic functions such as \texttt{print}, \texttt{summary}, \texttt{str}, \texttt{head}, \texttt{tail}, and \texttt{[} (subsetting). In addition, standard mathematical operations can be performed with \texttt{zoo} objects, although only for the intersection of the indexes of the objects.
+
+On the other hand, the data stored in \texttt{zoo} objects can be extracted with \texttt{coredata}, which drops the index information, and can be replaced by \texttt{coredata<-}. The index can be extracted with \texttt{index} or \texttt{time}, and can be modified by \texttt{index<-}. Finally, the \texttt{window} and \texttt{window<-} methods extract or replace time windows of \texttt{zoo} objects.
+
+Two \texttt{zoo} objects can be merged by common indexes with \texttt{merge} and \texttt{cbind}. The \texttt{merge} method combines the columns of several objects along the union or the intersection of the indexes. The \texttt{rbind} method combines the indexes (rows) of the objects.
+
+The \texttt{aggregate} method splits a \texttt{zoo} object into subsets along a coarser index grid, computes a function (\texttt{sum} is the default) for each subset, and returns the aggregated \texttt{zoo} object.
+
+This package provides four methods for dealing with missing observations:
+
+\begin{enumerate}
+\item \texttt{na.omit} removes incomplete observations.
+
+\item \texttt{na.contiguous} extracts the longest consecutive stretch of non-missing values.
+
+\item \texttt{na.approx} replaces missing values by linear interpolation.
+
+\item \texttt{na.locf} replaces missing observations by the most recent non-=NA= prior to it.
+\end{enumerate}
+
+The package defines interfaces to \texttt{read.table} and \texttt{write.table} for reading, \texttt{read.zoo}, and writing, \texttt{write.zoo}, \texttt{zoo} series from or to text files. The \texttt{read.zoo} function expects either a text file or connection as input or a \texttt{data.frame}. \texttt{write.zoo} first coerces its argument to a \texttt{data.frame}, adds a column with the index, and then calls \texttt{write.table}.
+
+\subsection{xts}
+\label{sec:orgheadline15}
+\label{sec:xts}
+
+\index{Packages!xts@\texttt{xts}}
+
+The \texttt{xts} package \cite{Ryan.Ulrich2013} extends the \texttt{zoo} class definition to provide a general time-series object. The index of an \texttt{xts} object must be of a time or date class: \texttt{Date}, \texttt{POSIXct}, \texttt{chron}, \texttt{yearmon}, \texttt{yearqtr}, or \texttt{timeDate}. With this restriction, the subset operator \texttt{[} is able to extract data using the ISO:8601 \footnote{\url{http://en.wikipedia.org/wiki/ISO_8601}} time format notation \texttt{CCYY-MM-DD HH:MM:SS}. It is also possible to extract a range of times with a \texttt{from/to} notation, where both from and to are optional. If either side is missing, it is interpreted as a request to retrieve data from the beginning, or through the end of the data object.
+
+Furthermore, this package provides several time-based tools:
+
+\begin{itemize}
+\item \texttt{endpoints} identifies the endpoints with respect to time.
+
+\item \texttt{to.period} changes the periodicity to a coarser time index.
+
+\item The functions \texttt{period.*} and \texttt{apply.*} evaluate a function over a set of non-overlapping time periods.
+\end{itemize}
+
+\section{Further Reading}
+\label{sec:orgheadline17}
+\label{cha:further-reading-time}
+
+\begin{itemize}
+\item \cite{Wills2011} provides a systematic analysis of the visualization of time series, and a section of \cite{Heer.Bostock.ea2010} summarizes the main techniques to display time series.
+
+\item \cite{Cleveland1994} includes a section about time series visualization with a detailed discussion of the banking to \(\SI{45}{\degree}\) technique and the cut-and-stack method.  \cite{Heer.Agrawala2006} propose the multi-scale banking, a technique to identify trends at various frequency scales.
+
+\item \cite{Few2008,Heer.Kong.ea2009} explain in detail the foundations of the horizon graph (Section \ref{cha:timeHorizontalAxis}).
+
+\item The \emph{small multiples} concept (Sections \ref{SEC:sameScale} and \ref{SEC:groupVariable}) is illustrated in \cite{Tufte2001,Tufte1990}.
+
+\item Stacked graphs are analyzed in \cite{Byron.Wattenberg2008}, and the ThemeRiver technique is explained in \cite{Havre.Hetzler.ea2002}.
+
+\item \cite{Cleveland1994,Friendly.Denis2005} study the scatterplot matrices (Section \ref{SEC:groupVariable}), and \cite{Carr.Littlefield.ea1987} provide information about hexagonal binning.
+
+\item \cite{Harrower.Fabrikant2008} discuss the use of animation for the visualization of data. \cite{Few2007} exposes a software tool resembling the Trendalyzer.
+
+\item The \texttt{D3} gallery \footnote{\url{https://github.com/mbostock/d3/wiki/Gallery}} shows several great examples of time-series visualizations using the JavaScript library \texttt{D3.js}.
+\end{itemize}
+
+\chapter{Time on the Horizontal Axis}
+\label{sec:orgheadline19}
+\label{cha:timeHorizontalAxis}
+
+The most frequent visualization method of a time series uses the horizontal axis to depict the time index. This chapter illustrates several variants to display multivariate time series: multiple time series with different scales, variables with the same scale, and stacked graphs.
+
+\chapter{Time as a Conditioning or Grouping Variable}
+\label{sec:orgheadline20}
+\label{cha:timeGroupFactor}
+
+In Section \ref{sec:differentVariables} we learned to display the time evolution of multiple time series with different scales. But, what if instead of displaying the time evolution we want to confront the variables between them? Section \ref{SEC:groupVariable} proposes the scatterplot matrix solution with time as a grouping variable. Section \ref{SEC:conditionVariable} uses an enhanced scatterplot with time as a conditioning variable. Section \ref{SEC:hexbin} includes a digression about the hexagonal binning for large datasets.
+
+\chapter{Time as a Complementary Variable}
+\label{sec:orgheadline21}
+\label{cha:timeComplementary}
+
+Gapminder \footnote{\url{http://www.gapminder.org/}} is an independent foundation based in Stockholm, Sweden.  Its mission is ``to debunk devastating myths about the world by offering free access to a fact-based world view.'' They provide free online tools, data, and videos ``to better understand the changing world.'' The initial development of Gapminder was the Trendalyzer software, used by Hans Rosling in several sequences of his documentary ``The Joy of Stats.''
+
+The information visualization technique used by Trendalyzer is an interactive bubble chart. By default it shows five variables: two numeric variables on the vertical and horizontal axes, bubble size and color, and a time variable that may be manipulated with a slider. The software uses brushing and linking techniques for displaying the numeric value of a highlighted country.
+
+This software was acquired by Google in 2007, and is now available as a Motion Chart gadget and as the Public Data Explorer.
+
+In this chapter, time will be used as a complementary variable which adds information to a graph where several variables are confronted. We will illustrate this approach with the evolution of the relationship between Gross National Income (GNI) and carbon dioxide (\(CO_2\)) emissions for a set of countries extracted from the database of the World Bank Open Data. We will try several solutions to display the relationship between \(CO_2\) emissions and GNI over the years using time as a complementary variable. The final method will produce an animated plot resembling the Trendalyzer solution.
+
+\chapter{About the Data}
+\label{sec:orgheadline22}
+\label{cha:dataTime}
+
+\part{Spatial Data}
+\label{sec:orgheadline37}
+
+\chapter{Displaying Spatial Data: Introduction}
+\label{sec:orgheadline33}
+\label{cha:spatialIntro}
+
+Spatial data (also known as geospatial data) are directly or indirectly referenced to a location on the surface of the Earth. Their spatial reference is composed of coordinate values and a system of reference for these coordinates. Spatial data are often accessed, manipulated, or analyzed through Geographic Information Systems (GIS).
+
+Real objects represented by GIS data can be divided into two abstractions: discrete objects (e.g., a road or a river) represented with vector data (points, lines, and polygons), and continuous fields (such as elevation or solar radiation) represented with raster data. The \texttt{sp} package is the preferred option to use vector data in \texttt{R}, and the \texttt{raster} package is the choice for raster data \footnote{Although \texttt{sp} and \texttt{raster} are the most important packages, there are an increasing number of packages designed to work with spatial data. They are summarized in the corresponding CRAN Task View. Read Section \ref{cha:further-reading-spatial} for details.}.
+
+This part exposes several examples where vector and raster data are displayed to show geographic location of features and physical landscape features of a place (reference and physical maps, Chapter \ref{cha:refer-phys-maps}) or a specific variable in the context of a geographic reference (thematic maps, Chapter \ref{cha:thematicMaps}). These examples make use of several datasets (available at the book website) described in Chapter \ref{cha:dataSpatial}.
+
+\section{Packages}
+\label{sec:orgheadline31}
+\label{sec:spatial-packages}
+
+The CRAN Tasks View ``Analysis of Spatial Data'' \footnote{\url{http://CRAN.R-project.org/view=Spatial}} summarizes the packages for reading, vizualizing, and analyzing spatial data. This section provides a brief introduction to \texttt{sp}, \texttt{raster}, \texttt{rasterVis}, \texttt{maptools}, \texttt{rgdal}, \texttt{gstat}, and \texttt{maps}. Most of the information has been extracted from their vignettes, webpages, and help pages. You should read them for detailed information.
+
+\subsection{sp}
+\label{sec:orgheadline24}
+\label{sec:sp}
+
+\index{Packages!sp@\texttt{sp}}
+
+The \texttt{sp} package \cite{Pebesma.Bivand2005} provides classes and methods for dealing with spatial data in \texttt{R}. The spatial data classes implemented are points (\texttt{SpatialPoints}), grids (\texttt{SpatialPixels} and \texttt{SpatialGrid}), lines (\texttt{Line}, \texttt{Lines} and \texttt{SpatialLines}), rings, and polygons (\texttt{Polygon}, \texttt{Polygons}, and \texttt{SpatialPolygons}), each of them without data or with data (for example, \texttt{SpatialPointsDataFrame} or \texttt{SpatialLinesDataFrame}).
+
+Selecting, retrieving, or replacing certain attributes in spatial objects with data is done using standard methods:
+
+\begin{itemize}
+\item \texttt{[} selects rows (items) and columns in the \texttt{data.frame}.
+
+\item \texttt{[[} selects a column from the \texttt{data.frame}
+
+\item \texttt{[[<-} assigns or replaces values to a column in the \texttt{data.frame}.
+\end{itemize}
+
+A number of spatial methods are available for the classes in \texttt{sp}:
+
+\begin{itemize}
+\item \texttt{coordinates(object) <- value} sets spatial coordinates to create spatial data. It promotes a \texttt{data.frame} into a \texttt{SpatialPointsDataFrame}. \emph{value} may be specified by a formula, a character vector, or a numeric matrix or \texttt{data.frame} with the actual coordinates.
+
+\item \texttt{coordinates(object, ...)} returns a matrix with the spatial coordinates. If used with \texttt{SpatialPolygons} it returns a matrix with the centroids of the polygons.
+
+\item \texttt{bbox} returns a matrix with the coordinates bounding box.
+
+\item \texttt{proj4string(object)} and \texttt{proj4string(object) <- value} retrieve or set projection attributes on spatial classes.
+
+\item \texttt{spTransform} transforms from one coordinate reference system (geographic projection) to another (requires package \texttt{rgdal}).
+
+\item \texttt{spplot} plots attributes combined with spatial data: Points, lines, grids, polygons.
+\end{itemize}
+
+\subsection{raster}
+\label{sec:orgheadline25}
+\label{sec:raster}
+
+\index{Packages!raster@\texttt{raster}}
+
+The \texttt{raster} package \cite{Hijmans2013} has functions for creating, reading, manipulating, and writing raster data. The package provides general raster data manipulation functions. The package also implements raster algebra and most functions for raster data manipulation that are common in Geographic Information Systems (GIS).
+
+The raster package can work with raster datasets stored on disk if they are too large to be loaded into memory. The package can work with large files because the objects it creates from these files only contain information about the structure of the data, such as the number of rows and columns, the spatial extent, and the filename, but it does not attempt to read all the cell values in memory. In computations with these objects, the data are processed in chunks.
+
+The package defines a number of \texttt{S4} classes. \texttt{RasterLayer}, \texttt{RasterBrick}, and \texttt{RasterStack} are the most important:
+
+\begin{itemize}
+\item A \texttt{RasterLayer} object represents single-layer (variable) raster
+data. It can be created with the function \texttt{raster}. This function is able to create a \texttt{RasterLayer} from another object, including another \texttt{Raster*} object, or from a \texttt{SpatialPixels*} and \texttt{SpatialGrid*} object, or even a matrix. In addition, it can create a \texttt{RasterLayer} reading data from a file. The \texttt{raster} package can use raster files in several formats, some of them via the \texttt{rgdal} package. Supported formats for reading include GeoTIFF, ESRI, ENVI, and ERDAS.
+
+\item \texttt{RasterBrick} and \texttt{RasterStack} are classes for multilayer data. A
+\texttt{RasterStack} is a list of \texttt{RasterLayer} objects with the same spatial extent and resolution. It can be formed with a collection of files in different locations or even mixed with \texttt{RasterLayer} objects that only exist in memory. A \texttt{RasterBrick} is truly a multilayered object, and processing it can be more efficient than processing a \texttt{RasterStack} representing the same data.
+\end{itemize}
+
+The \texttt{raster} package defines a number of methods for raster algebra with \texttt{Raster*} objects: arithmetic operators, logical operators, and functions such as \texttt{abs}, \texttt{round}, \texttt{ceiling}, \texttt{floor}, \texttt{trunc}, \texttt{sqrt}, \texttt{log}, \texttt{log10}, \texttt{exp}, \texttt{cos}, \texttt{sin}, \texttt{max}, \texttt{min}, \texttt{range}, \texttt{prod}, \texttt{sum}, \texttt{any}, and \texttt{all}. In these functions, \texttt{Raster*} objects can be mixed with numbers.
+
+There are several functions to modify the content or the spatial extent of \texttt{Raster*} objects, or to combine \texttt{Raster*} objects:
+
+\begin{itemize}
+\item The \texttt{crop} function takes a geographic subset of a larger \texttt{Raster*} object. \texttt{trim} crops a \texttt{RasterLayer} by removing the outer rows and columns that only contain \texttt{NA} values. \texttt{extend} adds new rows and/or columns with \texttt{NA} values.
+
+\item The \texttt{merge} function merges two or more \texttt{Raster*} objects into a single new object.
+
+\item \texttt{projectRaster} transforms values of a \texttt{Raster*} object to a new object with a different coordinate reference system.
+
+\item With \texttt{overlay}, multiple \texttt{Raster*} objects can be combined (for example, multiply them).
+
+\item \texttt{mask} removes all values from one layer that are \texttt{NA} in another layer, and \texttt{cover} combines two layers by taking the values of the first layer except where these are \texttt{NA}.
+
+\item \texttt{calc} computes a function for a \texttt{Raster*} object. With \texttt{RasterLayer} objects, another \texttt{RasterLayer} is returned. With multilayer objects the result depends on the function: With a summary function (\texttt{sum}, \texttt{max}, etc.), \texttt{calc} returns a \texttt{RasterLayer} object, and a \texttt{RasterBrick} object otherwise.
+
+\item \texttt{stackApply} computes summary layers for subsets of a \texttt{RasterStack} or \texttt{RasterBrick}.
+
+\item \texttt{cut} and \texttt{reclassify} replace ranges of values with single values.
+
+\item \texttt{zonal} computes zonal statistics, that is, summarizes a \texttt{Raster*} object using zones (areas with the same integer number) defined by another \texttt{RasterLayer}.
+\end{itemize}
+
+\subsection{rasterVis}
+\label{sec:orgheadline26}
+\label{sec:rasterVis}
+\index{Packages!rasterVis@\texttt{rasterVis}}
+
+The \texttt{rasterVis} package \cite{Perpinan.Hijmans2013} complements the \texttt{raster} package, providing a set of methods for enhanced visualization and interaction. This package defines visualization methods (\texttt{levelplot}) for quantitative data and categorical data, both for univariate and multivariate rasters.
+
+It also includes several methods in the frame of the Exploratory Data Analysis approach: scatterplots with \texttt{xyplot}, histograms and density plots with \texttt{histogram} and \texttt{densityplot}, violin and boxplots with \texttt{bwplot}, and a matrix of scatterplots with \texttt{splom}.
+
+On the other hand, this package is able to display vector fields using arrows, \texttt{vectorplot}, or with streamlines \cite{Wegenkittl.Groeller1997}, \texttt{streamplot}. In this last method, for each point, \emph{droplet}, of a jittered regular grid, a short streamline portion, \emph{streamlet}, is calculated by integrating the underlying vector field at that point. The main color of each streamlet indicates local vector magnitude (slope). Streamlets are composed of points whose sizes, positions, and color degradation encode the local vector direction (aspect).
+
+\subsection{maptools}
+\label{sec:orgheadline27}
+\label{sec:maptools}
+\index{Packages!maptools@\texttt{maptools}}
+
+The \texttt{maptools} package \cite{Bivand.Lewin-Koh2013} provides a set of tools for manipulating and reading geographic data, in particular ESRI (Environmental Systems Research Institute) shapefiles. The package also provides interface wrappers for exchanging spatial objects with packages such as PBSmapping, spatstat, maps, RArcInfo, Stata tmap, WinBUGS, Mondrian, and others. The main functions in the context of this book are
+
+\begin{itemize}
+\item \texttt{readShapePoints} reads data from a points shapefile into a \texttt{SpatialPointsDataFrame} object.
+
+\item \texttt{writePointsShape} writes data from a \texttt{SpatialPointsDataFrame} object to a shapefile.
+
+\item \texttt{readShapeLines} reads data from a line shapefile into a \texttt{SpatialLinesDataFrame} object.
+
+\item \texttt{writeLinesShape} writes data from a \texttt{SpatialLinesDataFrame} object to a shapefile.
+
+\item \texttt{readShapePoly} reads data from a polygon shapefile into a \texttt{SpatialPolygonsDataFrame} object.
+
+\item \texttt{writePolyShape} writes data from a \texttt{SpatialPolygonsDataFrame} object to a shapefile.
+
+\item \texttt{map2SpatialPolygons} and \texttt{map2SpatialLines} may be used to convert map objects returned by the \texttt{map} function in the \texttt{maps} package to the classes defined in the \texttt{sp} package.
+
+\item \texttt{spCbind} provides cbind-like methods for \texttt{Spatial*DataFrame} and \texttt{data.frame} objects.
+\end{itemize}
+
+The topology operations on geometries performed by this package (for example, \texttt{unionSpatialPolygons} ) use the package \texttt{rgeos}, an interface to the Geometry Engine Open Source (GEOS) \footnote{\url{http://trac.osgeo.org/geos/}}.
+
+\subsection{rgdal}
+\label{sec:orgheadline28}
+\label{sec:rgdal}
+\index{Packages!rgdal@\texttt{rgdal}}
+
+The \texttt{rgdal} package \cite{Bivand.Keitt.ea2013} provides bindings to the Geospatial Data Abstraction Library (GDAL) \footnote{\url{http://www.gdal.org/}}. With \texttt{readOGR} and \texttt{readGDAL}, both GDAL raster and OGR vector map data can be imported into \texttt{R}, and GDAL raster data and OGR vector data can be exported with \texttt{writeGDAL} and \texttt{writeOGR}.
+
+In addition, this package provides access to projection and transformation operations from the PROJ.4 library \footnote{\url{https://trac.osgeo.org/proj/}}. This package implements several \texttt{spTransform} methods providing transformation between datums and conversion between projections using PROJ.4 projection arguments.
+
+\subsection{gstat}
+\label{sec:orgheadline29}
+\label{sec:gstat}
+\index{Packages!gstat@\texttt{gstat}}
+
+The \texttt{gstat} package \cite{Pebesma2004} provides functions for geostatistical modeling, prediction, and simulation, including variogram modeling and simple, ordinary, universal, and external drift kriging.
+
+Most of the functionality of this package is beyond the scope of this book. However, some functions must be mentioned:
+
+\begin{itemize}
+\item \texttt{variogram} calculates the sample variogram from data, or for the residuals if a linear model is given. \texttt{vgm} generates a variogram and \texttt{fit.variogram} fit ranges and/or sills from a variogram model to a sample variogram.
+
+\item \texttt{krige} is the function for simple, ordinary or universal kriging.  \texttt{gstat} is the function for univariate or multivariate geostatistical prediction.
+\end{itemize}
+
+\subsection{maps}
+\label{sec:orgheadline30}
+\label{sec:maps}
+\index{Packages!maps@\texttt{maps}}
+\index{Packages!mapproj@\texttt{mapproj}}
+\index{Packages!mapdata@\texttt{mapdata}}
+
+The \texttt{maps} \cite{Becker.Wilks.ea2013}, \texttt{mapdata} \cite{Becker.Wilks.ea2013b}, and \texttt{mapproj} \cite{McIlroy.Brownrigg.ea2013} packages are useful to draw or create geographical maps. \texttt{mapdata} contains higher resolution databases, and \texttt{mapproj} converts latitude/longitude coordinates into projected coordinates.
+
+\section{Further Reading}
+\label{sec:orgheadline32}
+\label{cha:further-reading-spatial}
+
+\begin{itemize}
+\item \cite{Slocum.McMaster.ea2005} and \cite{Dent.Torguson.ea2008} are comprehensive books on thematic cartography and geovisualization.  They include chapters devoted to data classification, scales, map projections, color theory, typography, and proportional symbol, choropleth, dasymetric, isarithmic, and multivariate mapping. Several resources are available at their accompanying websites \footnote{\url{http://www.pearsonhighered.com/slocum3e/} and
+\url{http://highered.mcgraw-hill.com/sites/0072943823/}}.
+
+\item \cite{Bivand.Pebesma.ea2008} is the essential reference to work with spatial data in \texttt{R}. R. Bivand and E. Pebesma are the authors of the fundamental \texttt{sp} package, and they are the authors or maintainers of several important packages such as \texttt{gstat}, for geostatistical modeling, prediction, and simulation, \texttt{rgdal}, \texttt{rgeos} and \texttt{maptools}. Chapter 3 is devoted to the visualization of spatial data. Code, figures, and data of the book are available at the accompanying website \footnote{\url{http://www.asdar-book.org/}}.
+
+\item \cite{Hengl2009} is an open-access book with seven spatial data analysis exercises. The author is the creator and maintainer of the Spatial-Analyst webpage \footnote{\url{http://spatial-analyst.net}}.
+
+\item The CRAN Tasks View ``Analysis of Spatial Data'' \footnote{\url{http://CRAN.R-project.org/view=Spatial}} summarizes the packages for reading, vizualizing, and analyzing spatial data. The packages in development published at R-Forge are listed in the ``Spatial Data \& Statistics'' topic view \footnote{\url{http://r-forge.r-project.org/softwaremap/trove_list.php?form_cat=353}}. The R-SIG-Geo mailing list \footnote{\url{https://stat.ethz.ch/mailman/listinfo/R-SIG-Geo/}} is a powerful resource for obtaining help.
+
+\item The ``Spatial Analysis'' \footnote{\url{http://spatialanalysis.co.uk/map-gallery/}} and ``Kartograph'' \footnote{\url{http://kartograph.org/}} webpages publish a variety of beautiful visualization examples.
+\end{itemize}
+
+\chapter{Thematic Maps}
+\label{sec:orgheadline34}
+\label{cha:thematicMaps}
+
+A thematic map focuses on a specific theme or variable, commonly using geographic data such as coastlines, boundaries, and places as points of reference for the variable being mapped. These maps provide specific information about particular locations or areas (proportional symbol mapping and choropleth maps) and information about spatial patterns (isarithmic and raster maps). The following sections illustrate the code you need to produce these maps, with a final section devoted to the visualization of vector fields.
+
+\chapter{Reference and Physical Maps}
+\label{sec:orgheadline35}
+\label{cha:refer-phys-maps}
+
+A reference map focuses on the geographic location of features. In these maps, cities are named and major transport routes are identified. In addition, natural features such as rivers and mountains are named, and elevation is shown using a simple color shading.
+A physical map shows the physical landscape features of a place.  Mountains and elevation changes are usually shown with different colors and shades to show relief, using green to show lower elevations and browns for high elevations.
+
+This chapter details how to create a reference map of a northern region of Spain using data from OpenStreetMap and a physical map of Brazil with data from different sources.
+
+\chapter{About the Data}
+\label{sec:orgheadline36}
+\label{cha:dataSpatial}
+
+\part{Space-Time Data}
+\label{sec:orgheadline46}
+
+\chapter{Displaying Spatiotemporal Data: Introduction}
+\label{sec:orgheadline43}
+\label{cha:introductionST}
+
+Space-time datasets are indexed both in space and in time. The data may consist of a spatial vector object (for example, points or polygons) or raster data at different times. The first case is representative of data from fixed sensors providing measurements abundant in time but sparse in space. The second case is the typical format of satellite imagery, which produces high spatial resolution data sparse in time \cite{Pebesma2012}.
+
+There are several visualization approaches of space-time data trying to cope with the four dimensions of the data \cite{Cressie.Wikle2011}.
+
+On the one hand, the data can be conceived as a collection of snapshots at different times. These snapshots can be displayed as a sequence of frames to produce an animation, or can be printed on one page with different panels for each snapshot using the small-multiple technique described repeatedly in previous chapters.
+
+On the other hand, one of the two spatial dimensions can be collapsed through an appropriate statistic (for example, mean or standard deviation) to produce a space-time plot (also known as a Hovmöller diagram). The axes of this graphic are typically longitude or latitude as the x-axis, and time as the y-axis, with the value of the spatial-averaged value of the raster data represented with color.
+
+Finally, the space-time object can be reduced to a multivariate time series (where each location is a variable or column of the time series) and displayed with the time series visualization techniques described in the Part \ref{part:Time}. This approach is directly applicable to space-time data sparse in space (for example, point measurements at different times). However, it is mandatory to use aggregation in the case of raster data. In this case, the multivariate time series is composed of the evolution of the raster data averaged along a certain direction.
+
+The next chapters, focused on raster space-time data (Chapter \ref{cha:rasterST}) and point space-time data (Chapter \ref{cha:pointsST}), illustrate with examples how to produce animations, multipanel graphics, hovmöller diagrams, and time-series with \texttt{R}.
+
+\section{Packages}
+\label{sec:orgheadline41}
+\label{sec:spacetime-packages}
+
+The CRAN Tasks View ``Handling and Analyzing Spatiotemporal Data'' \footnote{\url{http://cran.r-project.org/web/views/SpatioTemporal.html}} summarizes the packages for reading, vizualizing, and analyzing space-time data. This section provides a brief introduction to the \texttt{spacetime}, \texttt{raster}, and \texttt{rasterVis} packages. Most of the information has been extracted from their vignettes, webpages, and help pages. You should read them for detailed information.
+
+\subsection{spacetime}
+\label{sec:orgheadline38}
+\label{sec:spacetime}
+\index{Packages!spacetime@\texttt{spacetime}}
+
+The \texttt{spacetime} package \cite{Pebesma2012} is built upon the classes and methods for spatial data from the \texttt{sp} package , and for time series data from the \texttt{xts} package. It defines classes to represent four space-time layouts:
+
+\begin{enumerate}
+\item \texttt{STF}, \texttt{STFDF}: full space-time grid of observations for spatial features and observation time, with all space-time combinations.
+
+\item \texttt{STS}, \texttt{STSDF}: sparse grid layout, stores only the non-missing space-time combinations on a lattice
+
+\item \texttt{STI}, \texttt{STIDF}: irregular layout, time and space points of measured values have no apparent organisation.
+
+\item \texttt{STT}, \texttt{STTDF}: simple trajectories.
+\end{enumerate}
+
+Moreover, \texttt{spacetime} provides several methods for the following classes:
+
+\begin{itemize}
+\item \texttt{stConstruct}, \texttt{STFDF}, and \texttt{STIDF} create objects from single or multiple tables.
+
+\item \texttt{as} coerces to other spatiotemporal objects, xts, Spatial, matrix, or data.frame.
+
+\item \texttt{[[} selects or replaces data values.
+
+\item \texttt{[} selects spatial or temporal subsets, and data variables.
+
+\item \texttt{over} retrieves index or data values of one object at the locations and times of another.
+
+\item \texttt{aggregate} aggregates data values over particular spatial, temporal, or spatiotemporal domains.
+
+\item \texttt{stplot} creates spatiotemporal plots. It is able to produce multi-panel plots, space-time plots, animations, and time series plots.
+\end{itemize}
+
+\subsection{raster}
+\label{sec:orgheadline39}
+\label{sec:rasterST}
+\index{Packages!raster@\texttt{raster}}
+
+The \texttt{raster} package \cite{Hijmans2013} is able to add time information associated with layers of a \texttt{RasterStack} or \texttt{RasterBrick} object with the \texttt{setZ} function. This information can be extracted with \texttt{getZ}.
+
+If a \texttt{Raster*} object includes this information, the \texttt{zApply} function can be used to apply a function over a time series of layers of the object.
+
+\subsection{rasterVis}
+\label{sec:orgheadline40}
+\label{sec:rastervisST}
+\index{Packages!rasterVis@\texttt{rasterVis}}
+
+\texttt{rasterVis} \cite{Perpinan.Hijmans2013} provides three methods to display spatiotemporal rasters:
+
+\begin{enumerate}
+\item \texttt{hovmoller} produces Hovmöller diagrams \cite{Hovmoeller1949a}. The axes of this kind of diagram are typically longitude or latitude (x-axis) and time (ordinate or y-axis) with the value of some aggregated field represented through color. However, the user can define the direction with \texttt{dirXY} and the summary function with \texttt{FUN}.
+
+\item \texttt{horizonplot} creates horizon graphs \cite{Few2008}, with many time series displayed in parallel by cutting the vertical range into segments and overplotting them with color representing the magnitude and direction of deviation. Each time series corresponds to a geographical zone defined with \texttt{dirXY} and averaged with \texttt{zonal}.
+
+\item \texttt{xyplot} displays conventional time series plots. Each time series corresponds to a geographical zone defined with \texttt{dirXY} and aggregated with \texttt{zonal}.
+\end{enumerate}
+
+On the other hand, the \texttt{histogram}, \texttt{densityplot}, and \texttt{bwplot} methods accept a \texttt{FUN} argument to be applied to the \texttt{z} slot of \texttt{Raster*} object (defined by \texttt{setZ}). The result of this function is used as the grouping variable of the plot to create different panels.
+
+\section{Further Reading}
+\label{sec:orgheadline42}
+\label{cha:further-reading-spatiotime}
+
+\begin{itemize}
+\item \cite{Cressie.Wikle2011} is a systematic approach to key quantitative techniques on statistics for spatiotemporal data. The book begins with separate treatments of temporal data and spatial data, and later combines these concepts to discuss spatiotemporal statistical methods. There is a chapter devoted to exploratory methods, including visualization techniques.
+
+\item \cite{Pebesma2012} presents the \texttt{spacetime} package, which implements a set of classes for spatiotemporal data. This paper includes examples that illustrate how to import, subset, coerce, and export spatiotemporal data, proposes several visualization methods, and discusses spatiotemporal geostatistical interpolation.
+
+\item \cite{Slocum.McMaster.ea2005} (previously cited in Chapter \ref{cha:further-reading-spatial}) includes a chapter about map animation, discussing several approaches for displaying spatiotemporal data.
+
+\item \cite{Hengl2009} (previously cited in Chapter \ref{cha:further-reading-spatial}) includes a working example with spatiotemporal data to illustrate space-time variograms and interpolation.
+
+\item \cite{Harrower.Fabrikant2008} explore the role of animation in geographic visualization and outline the challenges, both conceptual and technical, involved in the creation and use of animated maps.
+
+\item The CRAN Tasks View ``Handling and Analyzing Spatiotemporal Data'' \footnote{\url{http://cran.r-project.org/web/views/SpatioTemporal.html}} summarizes the packages for reading, vizualizing, and analyzing space-time data. The R-SIG-Geo mailing list \footnote{\url{https://stat.ethz.ch/mailman/listinfo/R-SIG-Geo/}} is a powerful resource for obtaining help.
+\end{itemize}
+
+\chapter{Spatiotemporal Raster Data}
+\label{sec:orgheadline44}
+\label{cha:rasterST}
+
+\chapter{Spatiotemporal Point Observations}
+\label{sec:orgheadline45}
+\label{cha:pointsST}
+
+\backmatter
+
+\printbibliography
+\end{document}

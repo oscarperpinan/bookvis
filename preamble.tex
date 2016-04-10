@@ -1,0 +1,170 @@
+% \documentclass[smallroyalvopaper]{memoir}
+\settypeblocksize{6.5in}{4.5in}{*}
+\setlrmargins{*}{*}{1}
+\checkandfixthelayout
+
+\usepackage[english]{babel}
+\usepackage[citestyle=authoryear,bibstyle=authoryear,doi=true,url=true]{biblatex}
+\let\cite\parencite
+\addbibresource{stBib.bib}
+
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[noprefix]{nomencl}
+\usepackage{url}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{makeidx}
+\usepackage{pifont}
+\usepackage{fourier}
+\usepackage{siunitx}
+\usepackage{textcomp}
+
+%% Requirement from C&H
+\copypagestyle{RuledCH}{Ruled}
+\makepsmarks {RuledCH}{
+  \nouppercaseheads
+  \createmark {chapter} {both} {shownumber} {} {\ }
+  \createmark {section} {right} {shownumber} {} {\ }
+}
+\pagestyle{RuledCH}
+
+
+\captionnamefont{\scshape}
+\usepackage{mathpazo}
+
+\usepackage{memhfixc}
+\usepackage{mempatch}
+\raggedbottom
+\sloppybottom
+\clubpenalty=10000
+\widowpenalty=10000
+\feetbelowfloat
+
+\chapterstyle{ger}
+
+\setlength{\afterchapskip}{35pt}
+\maxtocdepth{section}
+\setsecnumdepth{subsubsection}
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.5}
+\renewcommand{\textfraction}{0.15}
+\renewcommand{\floatpagefraction}{0.7}
+
+
+\usepackage{hyperref}
+\hypersetup{
+    bookmarks=true,         % show bookmarks bar?
+    bookmarksnumbered=false,
+    bookmarksopen=false,
+    breaklinks=true,
+    backref=true,
+    pdftoolbar=true,        % show Acrobat’s toolbar?
+    pdfmenubar=true,        % show Acrobat’s menu?
+    pdffitwindow=false,     % window fit to page when opened
+    pdfstartview={FitH},    % fits the width of the page to the window
+    pdftitle={Displaying time series, spatial and space-time data with R},    % title
+    pdfauthor={Oscar Perpiñán Lamigueiro},     % author
+    pdfcreator={Emacs},   % creator of the document
+    pdfproducer={org}, % producer of the document
+    pdfnewwindow=true,      % links in new window
+    pdfborder={0 0 0},
+    colorlinks=true,       % false: boxed links; true: colored links
+    linkcolor=black,          % color of internal links
+    citecolor=black,        % color of links to bibliography
+    filecolor=black,      % color of file links
+    urlcolor=Blue           % color of external links 
+}
+\usepackage{breakurl}
+
+%Centra las figuras en los flotantes y los enmarca
+\makeatletter
+\renewenvironment{figure}[1][]{%
+     	\@float{figure}%
+		\precaption{\rule{\linewidth}{0.4pt}\par}%En las figuras el caption va debajo
+		\centering
+		  }{%
+    	\end@float	
+}
+\makeatother
+
+\makeatletter
+\renewenvironment{table}[1][]{%
+      	\@float{table}%
+		\postcaption{\rule{\linewidth}{0.4pt}\par}%En las tablas el caption va encima
+		\centering
+		  }{%
+    	\end@float	
+}
+\makeatother
+
+\renewcommand{\textfloatsep}{10pt}%Espacio entre el flotante y el texto
+
+\usepackage{listings}
+
+\lstset{
+  %keywordstyle=\color{Blue},
+  commentstyle=\color{gray!90},
+  % stringstyle=\color{OliveGreen},
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  breaklines=true,
+  linewidth=\textwidth,
+  backgroundcolor=\color{gray!10},
+  basewidth={0.5em,0.4em},
+%  frame=single,
+  literate={á}{{\'a}}1 {ñ}{{\~n}}1 {é}{{\'e}}1 {ó}{{\'o}}1 {º}{{\textordmasculine}}1
+}
+\renewcommand{\lstlistingname}{Code}
+
+\usepackage{fancyvrb}
+\DefineVerbatimEnvironment{verbatim}{Verbatim}{%
+  fontsize=\small,
+  formatcom = {\color{gray!97}}}
+
+
+\pretitle{\vfill\begin{flushright}\bfseries\scshape\HUGE\color{BrickRed}}
+\posttitle{\par\end{flushright}}
+
+\preauthor{\begin{flushright}\large\scshape}
+\postauthor{\par\end{flushright}}
+
+\predate{\vfill\begin{flushright}\large\scshape}
+\postdate{\par\end{flushright}\vfill}
+
+\makeindex
+
+%% Hyphenation rules for code inside texttt
+\usepackage[htt]{hyphenat}
+\hyphenation{Spatial-Points}
+\hyphenation{Spatial-Pixels}
+\hyphenation{Spatial-Grid}
+\hyphenation{Spatial-Lines}
+\hyphenation{Spatial-Polygons}
+
+\hyphenation{Spatial-Points-Data-Frame}
+\hyphenation{Spatial-Lines-Data-Frame}
+\hyphenation{Spatial-Polygons-Data-Frame}
+
+\hyphenation{Raster-Layer}
+\hyphenation{Raster-Stack}
+\hyphenation{Raster-Brick}
+
+\hyphenation{read-Shape-Poly}
+\hyphenation{read-Shape-Points}
+\hyphenation{read-Shape-Lines}
+\hyphenation{write-Points-Shape}
+\hyphenation{write-Lines-Shape}
+\hyphenation{write-Poly-Shape}
+\hyphenation{union-Spatial-Polygons}
+
+\hyphenation{Open-Street-Maps}
+
+\hyphenation{Java-Script}
+
+\hyphenation{space-time}
+
+%% Requirement from C&H
+\setcounter{page}{5}
