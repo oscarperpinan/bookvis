@@ -134,16 +134,16 @@ xyplot(wt ~ mpg | am, data = mtcars, groups = cyl)
 
 #+INDEX: Packages!ggplot2@=ggplot2
 
- The =ggplot2= package cite:Wickham2009 is an implementation of the system proposed in /The Grammar of Graphics/ cite:Wilkinson1999, a general scheme for data visualization that breaks up graphs into semantic components such as scales and layers. Under this framework, the definition of the graphic with =ggplot2 is done with a combination of several functions that provides the components, instead of the formula interface of
+ The =ggplot2= package cite:Wickham2009 is an implementation of the system proposed in /The Grammar of Graphics/ cite:Wilkinson1999, a general scheme for data visualization that breaks up graphs into semantic components such as scales and layers. Under this framework, the definition of the graphic with =ggplot2= is done with a combination of several functions that provides the components, instead of the formula interface of
  =lattice=.
 
  With =ggplot2=, a graphic is composed of:
 
  - A dataset, =data=, and a set of mappings from variables to aesthetics, =aes=.
- - One or more layers, each composed of: a geometric object, =geom\_*=, to control the type of plot you create (points, lines, etc.); a statistical transformation, =stat\_*=; and a position adjustment (and optionally, additional dataset and aesthetic mappings).
- - A scale, =scale\_*=, to control the mapping from data to aesthetic attributes. Scales are common across layers to ensure a consistent mapping from data to aesthetics. 
- - A coordinate system, =coords\_*=.
- - Optionally, a faceting specification, =facet\_*=, the equivalent of Trellis graphics with panels.
+ - One or more layers, each composed of: a geometric object, =geom_*=, to control the type of plot you create (points, lines, etc.); a statistical transformation, =stat_*=; and a position adjustment (and optionally, additional dataset and aesthetic mappings).
+ - A scale, =scale_*=, to control the mapping from data to aesthetic attributes. Scales are common across layers to ensure a consistent mapping from data to aesthetics. 
+ - A coordinate system, =coords_*=.
+ - Optionally, a faceting specification, =facet_*=, the equivalent of Trellis graphics with panels.
 
  The function =ggplot= is typically used to construct a plot incrementally, using the =+= operator to add layers to the existing ggplot object.  For instance, the following code (equivalent to the previous =lattice= example) uses =mtcars= as the dataset, and maps the =mpg= variable on the x-axis and the =wt= variable on the y-axis. The geometric object is the point using the =cyl= variable to control the color. Finally, the levels of the =am= variable define the panels of the graphic. 
 
@@ -185,9 +185,8 @@ Which package to choose is, for a wide range of datasets, a question of personal
  label:sec:software-book
 
  This book has been written using different computers running Debian GNU Linux and using several gems of open-source software: 
- - \textsf{org-mode} for authoring text and code cite:Schulte.Davison.ea2012.
+ - \textsf{org-mode} cite:Schulte.Davison.ea2012, \LaTeX{}, and AUC\TeX{}, for authoring text and code.
  - \textsf{R} cite:RDevelopmentCoreTeam2013 with \textsf{Emacs Speaks Statistics} cite:Rossini.Heiberger.ea2004.
- # - \LaTeX{} with AUC\TeX{} to produce the final document.
  - \textsf{GNU Emacs} as development environment.
 
 *** About the Author
@@ -198,7 +197,7 @@ Which package to choose is, for a wide range of datasets, a question of personal
 
  Now I work as a professor and researcher at the university. Data visualization is one of the most important tools I have available. It helps me embrace and share the steps, methods, and results of my research. With students, it is an inestimable partner in helping them understand complex concepts.
 
- I have been using \textsf{R} to simulate the performance of photovoltaic energy systems and to analyze solar radiation data, both as time series and spatial data. As a result, I have developed packages that include several graphical methods to deal with multivariate time series (namely, =solaR= cite:Perpinan2012b=) and space-time data (=rasterVis=). 
+ I have been using \textsf{R} to simulate the performance of photovoltaic energy systems and to analyze solar radiation data, both as time series and spatial data. As a result, I have developed packages that include several graphical methods to deal with multivariate time series (namely, =solaR= cite:Perpinan2012b) and space-time data (=rasterVis=). 
 
 *** Acknowledgments
  label:sec:acknow

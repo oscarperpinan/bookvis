@@ -1,4 +1,4 @@
-% Created 2016-04-11 lun 18:02
+% Created 2016-04-11 lun 18:16
 \documentclass[smallroyalvopaper]{memoir}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -181,17 +181,17 @@ superposition of \texttt{trellis} objects and layers with the \texttt{+.trellis}
 
 \index{Packages!ggplot2@=ggplot2}
 
-The \texttt{ggplot2} package \cite{Wickham2009} is an implementation of the system proposed in \emph{The Grammar of Graphics} \cite{Wilkinson1999}, a general scheme for data visualization that breaks up graphs into semantic components such as scales and layers. Under this framework, the definition of the graphic with \texttt{ggplot2 is done with a combination of several functions that provides the components, instead of the formula interface of
- =lattice}.
+The \texttt{ggplot2} package \cite{Wickham2009} is an implementation of the system proposed in \emph{The Grammar of Graphics} \cite{Wilkinson1999}, a general scheme for data visualization that breaks up graphs into semantic components such as scales and layers. Under this framework, the definition of the graphic with \texttt{ggplot2} is done with a combination of several functions that provides the components, instead of the formula interface of
+\texttt{lattice}.
 
 With \texttt{ggplot2}, a graphic is composed of:
 
 \begin{itemize}
 \item A dataset, \texttt{data}, and a set of mappings from variables to aesthetics, \texttt{aes}.
-\item One or more layers, each composed of: a geometric object, \texttt{geom\textbackslash{}\_*}, to control the type of plot you create (points, lines, etc.); a statistical transformation, \texttt{stat\textbackslash{}\_*}; and a position adjustment (and optionally, additional dataset and aesthetic mappings).
-\item A scale, \texttt{scale\textbackslash{}\_*}, to control the mapping from data to aesthetic attributes. Scales are common across layers to ensure a consistent mapping from data to aesthetics.
-\item A coordinate system, \texttt{coords\textbackslash{}\_*}.
-\item Optionally, a faceting specification, \texttt{facet\textbackslash{}\_*}, the equivalent of Trellis graphics with panels.
+\item One or more layers, each composed of: a geometric object, \texttt{geom\_*}, to control the type of plot you create (points, lines, etc.); a statistical transformation, \texttt{stat\_*}; and a position adjustment (and optionally, additional dataset and aesthetic mappings).
+\item A scale, \texttt{scale\_*}, to control the mapping from data to aesthetic attributes. Scales are common across layers to ensure a consistent mapping from data to aesthetics.
+\item A coordinate system, \texttt{coords\_*}.
+\item Optionally, a faceting specification, \texttt{facet\_*}, the equivalent of Trellis graphics with panels.
 \end{itemize}
 
 The function \texttt{ggplot} is typically used to construct a plot incrementally, using the \texttt{+} operator to add layers to the existing ggplot object.  For instance, the following code (equivalent to the previous \texttt{lattice} example) uses \texttt{mtcars} as the dataset, and maps the \texttt{mpg} variable on the x-axis and the \texttt{wt} variable on the y-axis. The geometric object is the point using the \texttt{cyl} variable to control the color. Finally, the levels of the \texttt{am} variable define the panels of the graphic. 
@@ -242,9 +242,8 @@ stamps (Section \ref{sec:zoo}).
 
 This book has been written using different computers running Debian GNU Linux and using several gems of open-source software: 
 \begin{itemize}
-\item \textsf{org-mode} for authoring text and code \cite{Schulte.Davison.ea2012}.
+\item \textsf{org-mode} \cite{Schulte.Davison.ea2012}, \LaTeX{}, and AUC\TeX{}, for authoring text and code.
 \item \textsf{R} \cite{RDevelopmentCoreTeam2013} with \textsf{Emacs Speaks Statistics} \cite{Rossini.Heiberger.ea2004}.
-
 \item \textsf{GNU Emacs} as development environment.
 \end{itemize}
 
@@ -257,7 +256,7 @@ Initially I worked as an engineer for a private company and I was involved in se
 
 Now I work as a professor and researcher at the university. Data visualization is one of the most important tools I have available. It helps me embrace and share the steps, methods, and results of my research. With students, it is an inestimable partner in helping them understand complex concepts.
 
-I have been using \textsf{R} to simulate the performance of photovoltaic energy systems and to analyze solar radiation data, both as time series and spatial data. As a result, I have developed packages that include several graphical methods to deal with multivariate time series (namely, \texttt{solaR} \cite{Perpinan2012b}=) and space-time data (\texttt{rasterVis}). 
+I have been using \textsf{R} to simulate the performance of photovoltaic energy systems and to analyze solar radiation data, both as time series and spatial data. As a result, I have developed packages that include several graphical methods to deal with multivariate time series (namely, \texttt{solaR} \cite{Perpinan2012b}) and space-time data (\texttt{rasterVis}). 
 
 \section{Acknowledgments}
 \label{sec:orgheadline12}
