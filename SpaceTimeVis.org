@@ -113,7 +113,7 @@ git clone https://github.com/oscarperpinan/spacetime-vis.git
 
  For example, in the following code, the variable =wt= of the dataset =mtcars= is represented against the =mpg=, with a panel for each level of the categorical variable =am=. The points are grouped by the values of the =cyl= variable.
 
- #+begin_src R
+ #+begin_src R :eval no
 xyplot(wt ~ mpg | am, data = mtcars, groups = cyl)
  #+end_src
 
@@ -128,7 +128,7 @@ xyplot(wt ~ mpg | am, data = mtcars, groups = cyl)
 
  On the other hand, the =latticeExtra= package cite:Sarkar.Andrews2012 provides additional flexibility for the somewhat rigid structure of the Trellis framework implemented in =lattice=. This package complements the =lattice= with the implementation of layers via the =layer= function, and
  superposition of =trellis= objects and layers with the =+.trellis= function. Using both packages, you can define a graphic with the formula interface (under the =lattice= model) and overlay additional content as layers (following the =ggplot2= model).
-
+ 
 *** ggplot2
  label:sec:ggplot2
 
@@ -147,11 +147,11 @@ xyplot(wt ~ mpg | am, data = mtcars, groups = cyl)
 
  The function =ggplot= is typically used to construct a plot incrementally, using the =+= operator to add layers to the existing ggplot object.  For instance, the following code (equivalent to the previous =lattice= example) uses =mtcars= as the dataset, and maps the =mpg= variable on the x-axis and the =wt= variable on the y-axis. The geometric object is the point using the =cyl= variable to control the color. Finally, the levels of the =am= variable define the panels of the graphic. 
 
- #+begin_src R
+#+begin_src R :eval no
 ggplot(mtcars, aes(mpg, wt)) +
     geom_point(aes(colour=factor(cyl))) +
     facet_grid(. ~ am)
- #+end_src
+#+end_src
  
  This package is increasingly popular, with a list of more than ninety packages depending on it. On the other hand, few packages provide
  method definitions based on =ggplot2= to display their classes. In our context, only the =zoo= package defines the =autoplot= function based on it.
@@ -313,14 +313,14 @@ Which package to choose is, for a wide range of datasets, a question of personal
 
  The most frequent visualization method of a time series uses the horizontal axis to depict the time index. This chapter illustrates several variants to display multivariate time series: multiple time series with different scales, variables with the same scale, and stacked graphs.
 
- # #+INCLUDE: "TimeSeries/timeHorizontalAxis.tex" latex
+#+INCLUDE: "TimeSeries/timeHorizontalAxis.tex" latex
 
 ** Time as a Conditioning or Grouping Variable
  label:cha:timeGroupFactor
 
  In Section ref:sec:differentVariables we learned to display the time evolution of multiple time series with different scales. But, what if instead of displaying the time evolution we want to confront the variables between them? Section ref:SEC:groupVariable proposes the scatterplot matrix solution with time as a grouping variable. Section ref:SEC:conditionVariable uses an enhanced scatterplot with time as a conditioning variable. Section ref:SEC:hexbin includes a digression about the hexagonal binning for large datasets.
 
-# #+INCLUDE: "TimeSeries/timeGroupFactor.tex" latex
+#+INCLUDE: "TimeSeries/timeGroupFactor.tex" latex
 
 ** Time as a Complementary Variable
  label:cha:timeComplementary
@@ -333,7 +333,7 @@ Which package to choose is, for a wide range of datasets, a question of personal
 
  In this chapter, time will be used as a complementary variable which adds information to a graph where several variables are confronted. We will illustrate this approach with the evolution of the relationship between Gross National Income (GNI) and carbon dioxide ($CO_2$) emissions for a set of countries extracted from the database of the World Bank Open Data. We will try several solutions to display the relationship between $CO_2$ emissions and GNI over the years using time as a complementary variable. The final method will produce an animated plot resembling the Trendalyzer solution.
 
- # #+INCLUDE: "TimeSeries/timeComplementary.tex" latex
+#+INCLUDE: "TimeSeries/timeComplementary.tex" latex
 
 ** About the Data
  label:cha:dataTime
@@ -501,10 +501,10 @@ Which package to choose is, for a wide range of datasets, a question of personal
  label:cha:thematicMaps
 
  A thematic map focuses on a specific theme or variable, commonly using geographic data such as coastlines, boundaries, and places as points of reference for the variable being mapped. These maps provide specific information about particular locations or areas (proportional symbol mapping and choropleth maps) and information about spatial patterns (isarithmic and raster maps). The following sections illustrate the code you need to produce these maps, with a final section devoted to the visualization of vector fields.
- # \input{Spatial/bubble}
- # \input{Spatial/choropleth}
- # \input{Spatial/raster}
- # \input{Spatial/vector}
+#+INCLUDE: "Spatial/bubble.tex" latex
+#+INCLUDE: "Spatial/choropleth.tex" latex
+#+INCLUDE: "Spatial/raster.tex" latex
+#+INCLUDE: "Spatial/vector.tex" latex
 
 ** Reference and Physical Maps
  label:cha:refer-phys-maps
@@ -513,13 +513,13 @@ Which package to choose is, for a wide range of datasets, a question of personal
  A physical map shows the physical landscape features of a place.  Mountains and elevation changes are usually shown with different colors and shades to show relief, using green to show lower elevations and browns for high elevations.
 
  This chapter details how to create a reference map of a northern region of Spain using data from OpenStreetMap and a physical map of Brazil with data from different sources.
- # \input{Spatial/physical}
- # \input{Spatial/osmar}
+#+INCLUDE: "Spatial/physical.tex" latex
+#+INCLUDE: "Spatial/osmar.tex" latex
 
 ** About the Data
  label:cha:dataSpatial
 
- # \input{Spatial/dataSpatial}
+#+INCLUDE: "Spatial/dataSpatial.tex" latex
 * Space-Time Data
 
 ** Displaying Spatiotemporal Data: Introduction
@@ -612,16 +612,20 @@ Which package to choose is, for a wide range of datasets, a question of personal
 ** Spatiotemporal Raster Data
  label:cha:rasterST
 
- # \input{SpatioTime/rasterST}
+#+INCLUDE: "SpatioTime/rasterST.tex" latex
 
 ** Spatiotemporal Point Observations
  label:cha:pointsST
 
- # \input{SpatioTime/pointsST}
+#+INCLUDE: "SpatioTime/pointsST.tex" latex
 
 \backmatter
 
 \printbibliography
+
+\clearpage
+
+\printindex
 
 * Footnotes
 
