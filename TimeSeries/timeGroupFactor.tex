@@ -1,7 +1,7 @@
 
 \section{Scatterplot Matrix: Time as a Grouping Variable}
-\label{sec:orgheadline2}
-\label{orgtarget1}
+\label{sec:orgcc24b3b}
+\label{org011a590}
 
 The scatterplot matrices are based on the technique of small multiples
 \cite{Tufte1990}: small, thumbnail-sized representations of multiple
@@ -22,11 +22,11 @@ twelve-color palette) to encode the month. The order of colors of
 this palette is chosen in order to display summer months with
 intense colors and to distinguish between the first and second
 half of the year with red and blue, respectively (Figure
-\ref{fig:orgparagraph1}).
+\ref{fig:orgd5154b6}).
 
 \index{splom@\texttt{splom}}
 
-\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
   load('data/aranjuez.RData')
   
@@ -44,15 +44,15 @@ half of the year with red and blue, respectively (Figure
               pch=19), cex=0.3, alpha=0.1)
 \end{lstlisting}
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/aranjuezSplom.png}
-\caption{\label{fig:orgparagraph1}
+\caption{\label{fig:orgd5154b6}
 Scatter plot matrix of the collection of meteorological time series of the Aranjuez station.}
 \end{figure}
 
 
-Let's explore Figure \ref{fig:orgparagraph1}. For example,
+Let's explore Figure \ref{fig:orgd5154b6}. For example,
 \begin{itemize}
 \item The highest values of ambient temperature (average, maximum, and
 mimimun), solar radiation, and evotranspiration can be found
@@ -76,7 +76,7 @@ points.
 \index{panel.link.splom@\texttt{panel.link.splom}}
 \index{trellis.focus@\texttt{trellis.focus}}
 
-\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 trellis.focus('panel', 1, 1)
 idx <- panel.link.splom(pch=13, cex=0.6, col='green')
@@ -85,8 +85,8 @@ aranjuez[idx,]
 
 
 \subsection{Hexagonal Binning}
-\label{sec:orgheadline1}
-\label{orgtarget2}
+\label{sec:orga6d88da}
+\label{org6870f45}
 
 For large datasets, the display of a large number of points in a
 scatterplot produces hidden point density, long computation times,
@@ -125,7 +125,7 @@ empty regions, with a gradient of blue hues for intermediate values).
 \index{current.panel.limits@\texttt{current.panel.limits}}
 \index{Panel function}
 
-\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
   library(hexbin)
   
@@ -147,10 +147,10 @@ empty regions, with a gradient of blue hues for intermediate values).
              )
 \end{lstlisting}
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/aranjuezSplomHexbin.pdf}
-\caption{\label{fig:orgparagraph2}
+\caption{\label{fig:org76a6754}
 Scatterplot matrix of the collection of meteorological time series of the Aranjuez station using hexagonal binning.}
 \end{figure}
 
@@ -177,7 +177,7 @@ values of this column are defined with the \texttt{times} argument.
 
 \index{reshape@\texttt{reshape}}
 
-\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
   aranjuezDF <- data.frame(aranjuez,
                            month=format(index(aranjuez), '%m'))
@@ -189,7 +189,7 @@ values of this column are defined with the \texttt{times} argument.
 \end{lstlisting}
 
 
-\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
   head(aranjuezRshp)
 \end{lstlisting}
@@ -197,27 +197,27 @@ values of this column are defined with the \texttt{times} argument.
 The \texttt{hexbinplot} displays this dataset with a different panel for
 each type of temperature (average, maximum, and minimum) but with a
 common color key encoding the point density (Figure
-\ref{fig:orgparagraph3}). Now, two cells with the same color in
+\ref{fig:org0d014c5}). Now, two cells with the same color in
 different panels encode the same value. 
 \index{hexbinplot@\texttt{hexbinplot}}
 \index{Panel function}
 
-\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
   hexbinplot(Radiation~Temperature|Statistic, data=aranjuezRshp,
              layout=c(1, 3), colramp=BTC) +
       layer(panel.loess(..., col = 'red'))
 \end{lstlisting}
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/aranjuezHexbinplot.pdf}
-\caption{\label{fig:orgparagraph3}
+\caption{\label{fig:org0d014c5}
 Scatterplot with hexagonal binning of temperature versus solar radiation using data of the Aranjuez station (\texttt{lattice} version).}
 \end{figure}
 
 The ggplot2 version uses \texttt{stat\_binhex}.
-\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
   ggplot(data=aranjuezRshp, aes(Temperature, Radiation)) +
       stat_binhex(ncol=1) + 
@@ -227,21 +227,21 @@ The ggplot2 version uses \texttt{stat\_binhex}.
 \end{lstlisting}
 
 \section{Scatterplot with Time as a Conditioning Variable}
-\label{sec:orgheadline3}
-\label{orgtarget3}
+\label{sec:orge56b9b1}
+\label{org3b0fd21}
 
 After discussing the hexagonal binning, let's recover the time
-variable. Figure \ref{fig:orgparagraph1} uses colors to encode
+variable. Figure \ref{fig:orgd5154b6} uses colors to encode
 months. Instead, we will now display separate scatterplots with a
 panel for each month. In addition, the statistic type (average,
 maximum, minimum) is included as an additional conditioning variable.
 
 This matrix of panels can be displayed with \texttt{ggplot} using
-\texttt{facet\_grid}. The code of Figure \ref{fig:orgparagraph4} uses partial
+\texttt{facet\_grid}. The code of Figure \ref{fig:org8f24822} uses partial
 transparency to cope with overplotting, small horizontal and vertical
 segments (\texttt{geom\_rug}) to display points density on both variables, and
 a smooth line in each panel.
-\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
   ggplot(data=aranjuezRshp, aes(Radiation, Temperature)) +
       facet_grid(Statistic ~ month) +
@@ -251,24 +251,24 @@ a smooth line in each panel.
       theme_bw()
 \end{lstlisting}
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/aranjuezFacetGrid.png}
-\caption{\label{fig:orgparagraph4}
+\caption{\label{fig:org8f24822}
 Scatterplot of temperature versus solar radiation for each month using data of the Aranjuez station (\texttt{ggplot2} version).}
 \end{figure}
 
 The version with \texttt{lattice} needs the \texttt{useOuterStrips} function from
 the \texttt{latticeExtra} package, which prints the names of the conditioning
 variables on the top and left outer margins (Figure
-\ref{fig:orgparagraph5}).
+\ref{fig:org07f5d83}).
 
 \index{useOuterStrips@\texttt{useOuterStrips}}
 \index{panel.rug@\texttt{panel.rug}}
 \index{panel.loess@\texttt{panel.loess}}
 \index{Packages!latticeExtra@\texttt{latticeExtra}}
 
-\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
   useOuterStrips(xyplot(Temperature ~ Radiation | month * Statistic,
                         data=aranjuezRshp,
@@ -281,14 +281,14 @@ variables on the top and left outer margins (Figure
       })
 \end{lstlisting}
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/aranjuezOuterStrips.pdf}
-\caption{\label{fig:orgparagraph5}
+\caption{\label{fig:org07f5d83}
 Scatterplot of temperature versus solar radiation for each month using data of the Aranjuez station (lattice version).}
 \end{figure}
 
 These figures show the typical seasonal behavior of solar radiation
 and ambient temperature. Additionally, it displays in more detail the
 same relations between radiation and temperature already discussed
-with Figure \ref{fig:orgparagraph3}.
+with Figure \ref{fig:org0d014c5}.

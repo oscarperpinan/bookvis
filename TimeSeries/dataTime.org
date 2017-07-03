@@ -36,10 +36,10 @@
   ##################################################################
 #+end_src
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{Data!SIAR}
 \index{Data!Meteorological variables}
-#+END_LaTeX
+#+END_EXPORT
 
 The Agroclimatic Information System for Irrigation (SIAR)
 \cite{SIAR2011} is a free-download database operating since 1999,
@@ -52,7 +52,7 @@ the stations of the network. Figure \ref{fig:SIAR_map} displays the
 stations over an altitude map. Some stations from the complete network
 have been omitted, due to difficulties accessing their coordinates
 or to incomplete or spurious data series[fn:1].
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth]{figs/mapaSIAR_crop}
@@ -60,7 +60,7 @@ or to incomplete or spurious data series[fn:1].
     indicates the altitude (meters).}
   \label{fig:SIAR_map}
 \end{figure}
-#+END_LaTeX
+#+END_EXPORT
 
 ** Daily Data of Different Meteorological Variables 
 #+begin_src R :exports none
@@ -87,10 +87,10 @@ etc.) and are detailed conveniently on the help page of this
 function. The =index.column= is the number of the column with the
 time index, and =format= defines the date format of this index.
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{Packages!zoo@\texttt{zoo}}
 \index{read.zoo@\texttt{read.zoo}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R :results output :exports both
   library(zoo)
@@ -111,9 +111,9 @@ time index, and =format= defines the date format of this index.
   summary(aranjuez)
 #+end_src
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{zoo@\texttt{zoo}}
-#+END_LaTeX
+#+END_EXPORT
 
 From the summary it is clear that parts of these time series include erroneous outliers that can be
 safely removed:
@@ -143,10 +143,10 @@ save(aranjuez, file='data/aranjuez.RData')
 As an example of multiple time series with the same scale, we will use
 data of daily solar radiation measurements from different locations.
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{Data!Solar radiation}
 \index{Data!SIAR}
-#+END_LaTeX
+#+END_EXPORT
 
 Daily solar radiation incident on the horizontal plane is registered
 by meterological stations and estimated from satellite images. This
@@ -249,9 +249,9 @@ and transpose the data.
 
 # ## http://www.bls.gov/webapps/legacy/cpsatab14.htm
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{Data!Unemployment}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R 
   unemployUSA <- read.csv('data/unemployUSA.csv')
@@ -273,12 +273,12 @@ of the =zoo= package converts the character vector of names into a
 (=%b=) are correctly interpreted in a non-English locale. This
 vector is the time index of a new =zoo= object. 
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{Packages!zoo@\texttt{zoo}}
 \index{as.yearmon@\texttt{as.yearmon}}
 \index{apply@\texttt{apply}}
 \index{zoo@\texttt{zoo}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R 
   library(zoo)
@@ -311,12 +311,12 @@ the evolution of the relationship between Gross National Income (GNI)
 and $CO_2$ emissions for a set of countries. The package =WDI= is able
 to search and download these data series.
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{Data!World Bank} 
 \index{Data!CO2@$CO_2$}
 \index{Data!GNI}
 \index{Packages!WDI@\texttt{WDI}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R
   library(WDI)

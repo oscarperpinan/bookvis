@@ -98,9 +98,9 @@ intense colors and to distinguish between the first and second
 half of the year with red and blue, respectively (Figure
 [[fig:aranjuezSplom]]).
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{splom@\texttt{splom}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R :results output graphics :exports both :file figs/aranjuezSplom.png :width 4000 :height 4000 :res 600
   load('data/aranjuez.RData')
@@ -144,10 +144,10 @@ highlighted in green). Clicks other than left-clicks terminate the
 procedure. The output of this function is the index of chosen
 points.
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{panel.link.splom@\texttt{panel.link.splom}}
 \index{trellis.focus@\texttt{trellis.focus}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R :results silent :exports code :eval no-export
 trellis.focus('panel', 1, 1)
@@ -193,14 +193,14 @@ attempt with =splom= can be improved with several modifications
   colors for high density values and darker colors for almost
   empty regions, with a gradient of blue hues for intermediate values).
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{Packages!hexbin@\texttt{hexbin}}
 \index{panel.hexbinplot@\texttt{panel.hexbinplot}}
 \index{panel.loess@\texttt{panel.loess}}
 \index{diag.panel.splom@\texttt{diag.panel.splom}}
 \index{current.panel.limits@\texttt{current.panel.limits}}
 \index{Panel function}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R :results output graphics :exports both :file figs/aranjuezSplomHexbin.pdf
   library(hexbin)
@@ -250,9 +250,9 @@ temperatures). The name of this variable can be set with
 differentiates multiple observations from the same variable. The
 values of this column are defined with the =times= argument.
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{reshape@\texttt{reshape}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R
   aranjuezDF <- data.frame(aranjuez,
@@ -274,10 +274,10 @@ each type of temperature (average, maximum, and minimum) but with a
 common color key encoding the point density (Figure
 [[fig:aranjuezHexbin]]). Now, two cells with the same color in
 different panels encode the same value. 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{hexbinplot@\texttt{hexbinplot}}
 \index{Panel function}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R :results output graphics :exports both :file figs/aranjuezHexbinplot.pdf
   hexbinplot(Radiation~Temperature|Statistic, data=aranjuezRshp,
@@ -338,12 +338,12 @@ the =latticeExtra= package, which prints the names of the conditioning
 variables on the top and left outer margins (Figure
 [[fig:aranjuezOuterStrips]]).
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{useOuterStrips@\texttt{useOuterStrips}}
 \index{panel.rug@\texttt{panel.rug}}
 \index{panel.loess@\texttt{panel.loess}}
 \index{Packages!latticeExtra@\texttt{latticeExtra}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R :results output graphics :exports both :file figs/aranjuezOuterStrips.pdf
   useOuterStrips(xyplot(Temperature ~ Radiation | month * Statistic,

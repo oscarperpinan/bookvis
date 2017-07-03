@@ -87,25 +87,25 @@ Flash enabled (Figure \ref{fig:googleVis}).
 
 
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{Data!CO2@$CO_2$}
 \index{Data!World Bank}
 \index{Packages!googleVis@\texttt{googleVis}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R :eval no-export
   library(googleVis)
   pgvis <- gvisMotionChart(CO2data, idvar='Country.Name', timevar='Year')
 #+end_src
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
   \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figs/googleVis}
     \caption{Snapshot of a Motion Chart produced with googleVis.}
     \label{fig:googleVis}
   \end{figure}
-#+END_LaTeX
+#+END_EXPORT
 
 
 #+begin_src R :exports none :eval no-export
@@ -175,10 +175,10 @@ colors, and thus some countries will share the same color. This is not
 a problem because the curves will be labeled, and countries with the
 same color will be displayed at enough distance.
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{Packages!RColorBrewer@\texttt{RColorBrewer}}
 \index{brewer.pal@\texttt{brewer.pal}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R 
   library(RColorBrewer)
@@ -198,9 +198,9 @@ variable to be represented along the x-axis (=CO2.capita=), and
 extract colors from the palette according to the order of this
 value.  
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{aggregate@\texttt{aggregate}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R 
   ## Rank of average values of CO2 per capita
@@ -213,9 +213,9 @@ hierarchical clustering of the time evolution of the $\mathrm{CO_2}$ per capita
 values (Figure \ref{fig:hclustCO2}). The data is extracted from the
 original $\mathrm{CO_2}$ =data.frame=.  
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{hclust@\texttt{hclust}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R :results output graphics :exports both :file "figs/hclust.pdf" 
   CO2capita <- CO2data[, c('Country.Name', 'Year', 'CO2.capita')]
@@ -249,9 +249,9 @@ exactly what the =groups= argument provides. The following code
 produces a curve for each country using different colors to
 distinguish them.
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{simpleTheme@\texttt{simpleTheme}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R 
   ## simpleTheme encapsulates the palette in a new theme for xyplot
@@ -288,11 +288,11 @@ is a solution. In the panel function, =subscripts= is a vector with
 the integer indices representing the rows of the =data.frame= to be
 displayed in the panel.
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{panel.text@\texttt{panel.text}}
 \index{subscripts@\texttt{subscripts}} \index{Panel function}
 \index{panel.superpose@\texttt{panel.superpose}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R :eval no-export
   xyplot(GNI.capita  ~ CO2.capita,
@@ -314,11 +314,11 @@ The same result with a clearer code is obtained with the combination
 of =+.trellis=, =glayer_= and =panel.text=. Using =glayer_= instead of
 =glayer=, we ensure that the labels are printed below the lines.
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{Packages!latticeExtra@\texttt{latticeExtra}}
 \index{glayer@\texttt{glayer}}
 \index{+.trellis@\texttt{+.trellis}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R
   pCO2.capita <- pCO2.capita +
@@ -355,10 +355,10 @@ close to the end of each line (Figure
 function use optimization routines to find locations without
 overlaps.
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{group.value@\texttt{group.value}}
 \index{group.number@\texttt{group.number}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R :results output graphics :exports both :file "figs/CO2_capita.pdf" 
   library(maptools)  
@@ -390,10 +390,10 @@ the collection or even define a custom method. For the =pCO2.capita=
 object, I have obtained the best results with =extreme.grid= (Figure
 \ref{fig:CO2-GNI-DL}).
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{Packages!directlabels@\texttt{directlabels}}
 \index{direct.label@\texttt{direct.label}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R :results output graphics :exports both :file "figs/CO2_capitaDL.pdf"
   library(directlabels)
@@ -475,10 +475,10 @@ Product with purchasing power parity (PPP) estimations.
 
 To use this numeric variable as an additional grouping factor, its range must be divided into different classes. The typical solution is to use =cut= to coerce the numeric variable into a =factor= whose levels correspond to uniform intervals, which could be unrelated to the data distribution. The =classInt= package \cite{Bivand2013} provides several methods to partition data into classes based on natural groups in the data distribution.
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{Packages!classInt@\texttt{classInt}}
 \index{classIntervals@\texttt{classIntervals}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R 
   library(classInt)
@@ -512,11 +512,11 @@ The graphic will display information on two variables (=GNI.capita= and =CO2.cap
 
 The =auto.key= mechanism of the =lattice= version is not able to cope with two grouping variables. Therefore, the legend, whose main componens are the labels (=intervals=) and the point sizes (=cex.key=), should be defined manually (Figure \ref{fig:CO2points}). 
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{panel.text@\texttt{panel.text}}
 \index{panel.groups@\texttt{panel.groups}}
 \index{panel.superpose@\texttt{panel.superpose}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R :results output graphics :exports both :file "figs/CO2points.pdf" 
 op <- options(digits=2)
@@ -575,9 +575,9 @@ there will not be a legend, there is no need to define class
 intervals, and thus the radius is directly proportional to the value
 of =CO2data$CO2.PPP=.
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{Packages!gridSVG@\texttt{gridSVG}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R 
   library(gridSVG)
@@ -624,10 +624,10 @@ object. Thus, the bubbles will travel across the values defined by
 The use of =rep=TRUE= ensures that the animation will be repeated
 indefinitely.
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{animUnit@\texttt{animUnit}}
 \index{grid.animate@\texttt{grid.animate}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R  
   ## Duration in seconds of the animation
@@ -669,9 +669,9 @@ A bit of interactivity can be added with the =grid.hyperlink=
 function. For example, the following code adds the corresponding
 Wikipedia link to a mouse click on each bubble.
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{grid.hyperlink@\texttt{grid.hyperlink}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R
   countries <- unique(CO2data$Country.Name)
@@ -702,22 +702,22 @@ of the book (Figure \ref{fig:bubblesSVG}). Because this animation does
 not trace the paths, Figure \ref{fig:CO2-GNI-DL} provides this
 information as a static complement.
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{grid.export@\texttt{grid.export}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R
   grid.export("figs/bubbles.svg")
 #+end_src
 
-#+BEGIN_LaTeX
-  \begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{figs/bubbles.png}
-    \caption{Animated bubbles produced with \texttt{gridSVG}.}
-    \label{fig:bubblesSVG}
-  \end{figure}
-#+END_LaTeX
+#+BEGIN_EXPORT latex
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{figs/bubbles.png}
+  \caption{Animated bubbles produced with \texttt{gridSVG}.}
+  \label{fig:bubblesSVG}
+\end{figure}
+#+END_EXPORT
 
 Now, sit down in your favorite easy chair and watch the magistral
 video "200 Countries, 200 Years, 4 Minutes"[fn:4]. After that, you are

@@ -1,6 +1,6 @@
 
 \section{SIAR}
-\label{sec-1}
+\label{sec:org0ca2455}
 \index{Data!SIAR}
 \index{Data!Meteorological variables}
 
@@ -24,7 +24,7 @@ or to incomplete or spurious data series\footnote{The name and location data of 
 \end{figure}
 
 \subsection{Daily Data of Different Meteorological Variables}
-\label{sec-1-1}
+\label{sec:org1fd8a31}
 As an example of multiple time series with different scales, we
 will use 8 years (from January 2004 to December 2011) of daily
 data corresponding to several meteorological variables measured at
@@ -46,44 +46,45 @@ time index, and \texttt{format} defines the date format of this index.
 \index{Packages!zoo@\texttt{zoo}}
 \index{read.zoo@\texttt{read.zoo}}
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-library(zoo)
-
-aranjuez <- read.zoo("data/aranjuez.gz",
-		     index.column = 3, format = "%d/%m/%Y",
-		     fileEncoding = 'UTF-16LE',
-		     header = TRUE, fill = TRUE,
-		     sep = ';', dec = ",", as.is = TRUE)
-aranjuez <- aranjuez[, -c(1:4)]
-
-names(aranjuez) <- c('TempAvg', 'TempMax', 'TempMin',
-		     'HumidAvg', 'HumidMax',
-		     'WindAvg', 'WindMax',
-		     'Radiation', 'Rain', 'ET')
-
-
-summary(aranjuez)
+  library(zoo)
+  
+  aranjuez <- read.zoo("data/aranjuez.gz",
+                       index.column = 3, format = "%d/%m/%Y",
+                       fileEncoding = 'UTF-16LE',
+                       header = TRUE, fill = TRUE,
+                       sep = ';', dec = ",", as.is = TRUE)
+  aranjuez <- aranjuez[, -c(1:4)]
+  
+  names(aranjuez) <- c('TempAvg', 'TempMax', 'TempMin',
+                       'HumidAvg', 'HumidMax',
+                       'WindAvg', 'WindMax',
+                       'Radiation', 'Rain', 'ET')
+  
+  
+  summary(aranjuez)
 \end{lstlisting}
 
 \index{zoo@\texttt{zoo}}
 
 From the summary it is clear that parts of these time series include erroneous outliers that can be
 safely removed:
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-aranjuezClean <- within(as.data.frame(aranjuez),{
-  TempMin[TempMin>40] <- NA
-  HumidMax[HumidMax>100] <- NA
-  WindAvg[WindAvg>10] <- NA
-  WindMax[WindMax>10] <- NA
-})
-
-aranjuez <- zoo(aranjuezClean, index(aranjuez))
+  aranjuezClean <- within(as.data.frame(aranjuez),{
+    TempMin[TempMin>40] <- NA
+    HumidMax[HumidMax>100] <- NA
+    WindAvg[WindAvg>10] <- NA
+    WindMax[WindMax>10] <- NA
+  })
+  
+  aranjuez <- zoo(aranjuezClean, index(aranjuez))
 \end{lstlisting}
 
+
 \subsection{Solar Radiation Measurements from Different Locations}
-\label{sec-1-2}
+\label{sec:orgcf7f82f}
 As an example of multiple time series with the same scale, we will use
 data of daily solar radiation measurements from different locations.
 
@@ -103,8 +104,8 @@ be the subject of later sections.
 
 The stations of the SIAR network include first-class pyranometers
 according to the World Meteorological Organization (WMO), whose
-absolute accuracy is within $\pm 5\%$ and is typically lower than $\pm
-3\%$. Solar irradiance is recorded every 15 minutes and then
+absolute accuracy is within \(\pm 5\%\) and is typically lower than \(\pm
+3\%\). Solar irradiance is recorded every 15 minutes and then
 collated through a datalogger within the station to generate the daily
 irradiation, which is later sent to the regional and national centers.
 
@@ -112,8 +113,9 @@ The file \texttt{navarra.RData} contains daily solar radiation data of 2011
 from the meteorological stations of Navarra, Spain. The names of the
 dataset are the abbreviations of each station name.
 
+
 \section{Unemployment in the United States}
-\label{sec-2}
+\label{sec:org33600b8}
 As an example of time series that can be displayed both in individual
 and in aggregate, we will use the unemployment data in the United
 States. The information on unemployed persons by industry and class of
@@ -126,20 +128,19 @@ are columns with the annual summaries (\texttt{annualCols}). We rearrange
 this \texttt{data.frame}, dropping the \texttt{Series.ID} and the annual columns,
 and transpose the data.
 
-
 \index{Data!Unemployment}
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-unemployUSA <- read.csv('data/unemployUSA.csv')
-nms <- unemployUSA$Series.ID
-##columns of annual summaries
-annualCols <- 14 + 13*(0:12)
-## Transpose. Remove annual summaries
-unemployUSA <- as.data.frame(t(unemployUSA[,-c(1, annualCols)]))
-## First 7 characters can be suppressed
-names(unemployUSA) <- substring(nms, 7)
-head(unemployUSA)
+  unemployUSA <- read.csv('data/unemployUSA.csv')
+  nms <- unemployUSA$Series.ID
+  ##columns of annual summaries
+  annualCols <- 14 + 13*(0:12)
+  ## Transpose. Remove annual summaries
+  unemployUSA <- as.data.frame(t(unemployUSA[,-c(1, annualCols)]))
+  ## First 7 characters can be suppressed
+  names(unemployUSA) <- substring(nms, 7)
+  head(unemployUSA)
 \end{lstlisting}
 
 With the transpose, the column names of the original data set are
@@ -155,27 +156,28 @@ vector is the time index of a new \texttt{zoo} object.
 \index{apply@\texttt{apply}}
 \index{zoo@\texttt{zoo}}
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-library(zoo)
-
-Sys.setlocale("LC_TIME", 'C')
-idx <- as.yearmon(row.names(unemployUSA), format='%b.%Y')
-unemployUSA <- zoo(unemployUSA, idx)
+  library(zoo)
+  
+  Sys.setlocale("LC_TIME", 'C')
+  idx <- as.yearmon(row.names(unemployUSA), format='%b.%Y')
+  unemployUSA <- zoo(unemployUSA, idx)
 \end{lstlisting}
 
 Finally, those rows with \texttt{NA} values are removed.
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-isNA <- apply(is.na(unemployUSA), 1, any)
-unemployUSA <- unemployUSA[!isNA,]
+  isNA <- apply(is.na(unemployUSA), 1, any)
+  unemployUSA <- unemployUSA[!isNA,]
 \end{lstlisting}
-\section{Gross National Income and CO$_{\text{2}}$ Emissions}
-\label{sec-3}
+
+\section{Gross National Income and CO\(_{\text{2}}\) Emissions}
+\label{sec:org6a96092}
 The catalog data of the World Bank Open Data initiative includes a the
 World Development Indicators (WDI)\footnote{\url{http://databank.worldbank.org/Data/Views/VariableSelection/SelectVariables.aspx}}. Among them we will analyze
 the evolution of the relationship between Gross National Income (GNI)
-and $CO_2$ emissions for a set of countries. The package \texttt{WDI} is able
+and \(CO_2\) emissions for a set of countries. The package \texttt{WDI} is able
 to search and download these data series.
 
 \index{Data!World Bank} 
@@ -183,29 +185,29 @@ to search and download these data series.
 \index{Data!GNI}
 \index{Packages!WDI@\texttt{WDI}}
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-library(WDI)
+  library(WDI)
+    
+  CO2data <- WDI(indicator=c('EN.ATM.CO2E.PC', 'EN.ATM.CO2E.PP.GD',
+                'NY.GNP.MKTP.PP.CD', 'NY.GNP.PCAP.PP.CD'),
+            start=2000, end=2011,
+            country=c('BR', 'CN', 'DE', 'ES',
+                'FI', 'FR', 'GR', 'IN', 'NO', 'US'))
 
-CO2data <- WDI(indicator=c('EN.ATM.CO2E.PC', 'EN.ATM.CO2E.PP.GD',
-	      'NY.GNP.MKTP.PP.CD', 'NY.GNP.PCAP.PP.CD'),
-	  start=2000, end=2011,
-	  country=c('BR', 'CN', 'DE', 'ES',
-	      'FI', 'FR', 'GR', 'IN', 'NO', 'US'))
-
-names(CO2data) <- c('iso2c', 'Country.Name', 'Year',
-		    'CO2.capita', 'CO2.PPP',
-		    'GNI.PPP', 'GNI.capita')
+  names(CO2data) <- c('iso2c', 'Country.Name', 'Year',
+                      'CO2.capita', 'CO2.PPP',
+                      'GNI.PPP', 'GNI.capita')
 \end{lstlisting}
 
 Only two minor modifications are needed: Remove the missing values and
 convert the \texttt{Country.Name} column into a \texttt{factor}. This first
 modification will save problems when displaying the time series, and
 the \texttt{factor} conversion will be useful for grouping.
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-isNA <- apply(is.na(CO2data), 1, any)
-CO2data <- CO2data[!isNA, ]
+  isNA <- apply(is.na(CO2data), 1, any)
+  CO2data <- CO2data[!isNA, ]
 
-CO2data$Country.Name <- factor(CO2data$Country.Name)
+  CO2data$Country.Name <- factor(CO2data$Country.Name)
 \end{lstlisting}

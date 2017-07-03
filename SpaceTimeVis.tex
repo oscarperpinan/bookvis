@@ -1,8 +1,8 @@
-% Created 2016-04-11 lun 18:16
+% Created 2017-07-03 lun 21:32
+% Intended LaTeX compiler: pdflatex
 \documentclass[smallroyalvopaper]{memoir}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{fixltx2e}
 \usepackage{graphicx}
 \usepackage{grffile}
 \usepackage{longtable}
@@ -27,7 +27,7 @@
  pdftitle={Displaying Time Series, Spatial, and Space-Time Data with \texttt{R}},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 24.5.1 (Org mode 8.3.4)}, 
+ pdfcreator={Emacs 24.5.1 (Org mode 9.0.5)}, 
  pdflang={English}}
 \begin{document}
 
@@ -42,10 +42,10 @@
 \mainmatter
 
 \chapter{Introduction}
-\label{sec:orgheadline13}
+\label{sec:org54b88fb}
 
 \section{What This Book Is About}
-\label{sec:orgheadline1}
+\label{sec:orgdaeedd4}
 \label{sec:thisBook}
 
 A data graphic is not only a static image but also tells a story about the data. It activates cognitive processes that are able to detect patterns and discover information not readily available with the raw data. This is particularly true for time series, spatial, and space-time datasets.
@@ -57,7 +57,7 @@ On the other hand, there is a collection of books that provides code and detaile
 This book proposes methods to display time series, spatial, and space-time data using \textsf{R}, and aims to be a synthesis of both groups providing code and detailed information to produce high-quality graphics with practical examples.
 
 \section{What You Will \emph{Not} Find in This Book}
-\label{sec:orgheadline2}
+\label{sec:orge624ee3}
 \label{sec:thisBookIsNot}
 
 \begin{itemize}
@@ -96,7 +96,7 @@ Instead, this book is focused on the exploration of data with visual methods, so
 \end{itemize}
 
 \section{How to Read This Book}
-\label{sec:orgheadline4}
+\label{sec:org2f83429}
 \label{sec:how-read}
 
 This book is organized into three parts, each devoted to different types of data. Each part comprises several chapters according to the various visualization methods or data characteristics. The chapters are structured as independent units so readers can jump directly to a certain chapter according to their needs. Of course, there are several dependencies and redundancies between the sets of chapters that have been conveniently signaled with cross-references. 
@@ -106,7 +106,7 @@ The content of each chapter illustrates how to display a dataset starting with a
 Although I have done my best to help readers understand the methods and code, you should not expect to understand it after one reading. The key is practical experience, and the best way is to try out the code with the provided data \textbf{and} modify it to suit your needs with your own data. There is a website and a code repository to help you in this task.
 
 \subsection{Website and Code Repository}
-\label{sec:orgheadline3}
+\label{sec:org82f078a}
 \label{sec:github}
 
 The book website with the main graphics of this book is located at
@@ -135,7 +135,7 @@ git clone https://github.com/oscarperpinan/spacetime-vis.git
 \end{lstlisting}
 
 \section{\texttt{R} Graphics}
-\label{sec:orgheadline6}
+\label{sec:org111e07c}
 \label{sec:r-graphics}
 
 \index{Packages!grid@=grid}
@@ -144,7 +144,7 @@ There are two distinct graphics systems built into \texttt{R}, referred to as tr
 Other packages are constructed over it to provide high-level functions, most notably the \texttt{lattice} and \texttt{ggplot2} packages.
 
 \subsection{lattice}
-\label{sec:orgheadline5}
+\label{sec:org228627a}
 \label{sec:lattice}
 
 \index{Packages!lattice@=lattice}
@@ -158,7 +158,7 @@ Optionally, the formula may be \texttt{y \textasciitilde{} x | g1 * g2} and \tex
 
 For example, in the following code, the variable \texttt{wt} of the dataset \texttt{mtcars} is represented against the \texttt{mpg}, with a panel for each level of the categorical variable \texttt{am}. The points are grouped by the values of the \texttt{cyl} variable.
 
-\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 xyplot(wt ~ mpg | am, data = mtcars, groups = cyl)
 \end{lstlisting}
@@ -176,7 +176,7 @@ On the other hand, the \texttt{latticeExtra} package \cite{Sarkar.Andrews2012} p
 superposition of \texttt{trellis} objects and layers with the \texttt{+.trellis} function. Using both packages, you can define a graphic with the formula interface (under the \texttt{lattice} model) and overlay additional content as layers (following the \texttt{ggplot2} model).
 
 \section{ggplot2}
-\label{sec:orgheadline8}
+\label{sec:orgaab63b4}
 \label{sec:ggplot2}
 
 \index{Packages!ggplot2@=ggplot2}
@@ -196,7 +196,7 @@ With \texttt{ggplot2}, a graphic is composed of:
 
 The function \texttt{ggplot} is typically used to construct a plot incrementally, using the \texttt{+} operator to add layers to the existing ggplot object.  For instance, the following code (equivalent to the previous \texttt{lattice} example) uses \texttt{mtcars} as the dataset, and maps the \texttt{mpg} variable on the x-axis and the \texttt{wt} variable on the y-axis. The geometric object is the point using the \texttt{cyl} variable to control the color. Finally, the levels of the \texttt{am} variable define the panels of the graphic. 
 
-\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 ggplot(mtcars, aes(mpg, wt)) +
     geom_point(aes(colour=factor(cyl))) +
@@ -207,7 +207,7 @@ This package is increasingly popular, with a list of more than ninety packages d
 method definitions based on \texttt{ggplot2} to display their classes. In our context, only the \texttt{zoo} package defines the \texttt{autoplot} function based on it.
 
 \subsection{Comparison between lattice and ggplot2}
-\label{sec:orgheadline7}
+\label{sec:orged104d1}
 \label{sec:comparison}
 
 Which package to choose is, for a wide range of datasets, a question of personal preferences. You may be interested in a comparison between them published in a series of blog posts\footnote{\url{http://learnr.wordpress.com/2009/06/28/ggplot2-version-of-figures-in-lattice-multivariate-data-visualization-with-r-part-1/}}.  However, the major drawback of \texttt{ggplot2} is its considerably slower speed when dealing with large datasets\footnote{Take a look at the time comparison published as the final result of the previous series of blog posts,
@@ -215,7 +215,7 @@ Which package to choose is, for a wide range of datasets, a question of personal
 
 
 \section{Packages}
-\label{sec:orgheadline9}
+\label{sec:org27e3e10}
 \label{sec:introduction-packages}
 
 Throughout the book, several \textsf{R} packages are used. All of them are available from \textsf{CRAN}, and you must install them before
@@ -237,7 +237,7 @@ stamps (Section \ref{sec:zoo}).
 
 
 \section{Software Used to Write This Book}
-\label{sec:orgheadline10}
+\label{sec:orga1f1d1d}
 \label{sec:software-book}
 
 This book has been written using different computers running Debian GNU Linux and using several gems of open-source software: 
@@ -248,7 +248,7 @@ This book has been written using different computers running Debian GNU Linux an
 \end{itemize}
 
 \section{About the Author}
-\label{sec:orgheadline11}
+\label{sec:org5b02bcb}
 \label{sec:aboutMe}
 
 During the past 15 years, my main area of expertise has been photovoltaic solar energy systems, with a special interest in solar radiation.
@@ -259,7 +259,7 @@ Now I work as a professor and researcher at the university. Data visualization i
 I have been using \textsf{R} to simulate the performance of photovoltaic energy systems and to analyze solar radiation data, both as time series and spatial data. As a result, I have developed packages that include several graphical methods to deal with multivariate time series (namely, \texttt{solaR} \cite{Perpinan2012b}) and space-time data (\texttt{rasterVis}). 
 
 \section{Acknowledgments}
-\label{sec:orgheadline12}
+\label{sec:orgcc07ed5}
 \label{sec:acknow}
 
 Writing a book is often described as a solitary activity. It is certainly difficult to write when you are with friends or spending time with your family,\ldots{} although with three little children at home I have learned to write prose and code while my baby wants to learn typing and my daughters need help to share a family of dinosaurs. 
@@ -285,10 +285,10 @@ Last, and most importantly, thanks to Candela, Marina, and Javi, my crazy little
 
 
 \part{Time Series}
-\label{sec:orgheadline23}
+\label{sec:orga9acf6a}
 
 \chapter{Displaying Time Series: Introduction}
-\label{sec:orgheadline18}
+\label{sec:orge62c673}
 \label{cha:timeIntro}
 
 A time series is a sequence of observations registered at consecutive time instants. When these time instants are evenly spaced, the distance between them is called the sampling interval. The visualization of time series is intended to reveal changes of one or more quantitative variables through time, and to display the relationships between the variables and their evolution through time.
@@ -298,7 +298,7 @@ The standard time series graph displays the time along the horizontal axis. Seve
 These chapters provide a variety of examples to illustrate a set of useful techniques. These examples make use of several datasets (available at the book website) described in Chapter \ref{cha:dataTime}.
 
 \section{Packages}
-\label{sec:orgheadline16}
+\label{sec:org817f56a}
 \label{sec:time-series-packages}
 
 The CRAN Tasks View ``Time Series Analysis'' \footnote{\url{http://CRAN.R-project.org/view=TimeSeries}} summarizes the packages for reading, vizualizing, and analyzing time series. This section provides a brief introduction to the \texttt{zoo} and \texttt{xts} packages. Most of the information has been extracted from their vignettes, webpages, and help pages. You should read them for detailed information.
@@ -306,7 +306,7 @@ The CRAN Tasks View ``Time Series Analysis'' \footnote{\url{http://CRAN.R-projec
 Both packages extensively use the time classes defined in \texttt{R}. The interested reader will find an overview of the different time classes in \texttt{R} in \cite{Ripley.Hornik2001} and \cite{Grothendieck.Petzoldt2004}.
 
 \subsection{zoo}
-\label{sec:orgheadline14}
+\label{sec:orgc0ba0ce}
 \label{sec:zoo}
 
 \index{Packages!zoo@\texttt{zoo}}
@@ -334,18 +334,18 @@ This package provides four methods for dealing with missing observations:
 
 \item \texttt{na.approx} replaces missing values by linear interpolation.
 
-\item \texttt{na.locf} replaces missing observations by the most recent non-=NA= prior to it.
+\item \texttt{na.locf} replaces missing observations by the most recent non-NA prior to it.
 \end{enumerate}
 
 The package defines interfaces to \texttt{read.table} and \texttt{write.table} for reading, \texttt{read.zoo}, and writing, \texttt{write.zoo}, \texttt{zoo} series from or to text files. The \texttt{read.zoo} function expects either a text file or connection as input or a \texttt{data.frame}. \texttt{write.zoo} first coerces its argument to a \texttt{data.frame}, adds a column with the index, and then calls \texttt{write.table}.
 
 \subsection{xts}
-\label{sec:orgheadline15}
+\label{sec:org37aa9a7}
 \label{sec:xts}
 
 \index{Packages!xts@\texttt{xts}}
 
-The \texttt{xts} package \cite{Ryan.Ulrich2013} extends the \texttt{zoo} class definition to provide a general time-series object. The index of an \texttt{xts} object must be of a time or date class: \texttt{Date}, \texttt{POSIXct}, \texttt{chron}, \texttt{yearmon}, \texttt{yearqtr}, or \texttt{timeDate}. With this restriction, the subset operator \texttt{[} is able to extract data using the ISO:8601 \footnote{\url{http://en.wikipedia.org/wiki/ISO_8601}} time format notation \texttt{CCYY-MM-DD HH:MM:SS}. It is also possible to extract a range of times with a \texttt{from/to} notation, where both from and to are optional. If either side is missing, it is interpreted as a request to retrieve data from the beginning, or through the end of the data object.
+The \texttt{xts} package \cite{Ryan.Ulrich2013} extends the \texttt{zoo} class definition to provide a general time-series object. The index of an \texttt{xts} object must be of a time or date class: \texttt{Date}, \texttt{POSIXct}, \texttt{chron}, \texttt{yearmon}, \texttt{yearqtr}, or \texttt{timeDate}. With this restriction, the subset operator \texttt{[} is able to extract data using the ISO:8601 \footnote{\url{http://en.wikipedia.org/wiki/ISO\_8601}} time format notation \texttt{CCYY-MM-DD HH:MM:SS}. It is also possible to extract a range of times with a \texttt{from/to} notation, where both from and to are optional. If either side is missing, it is interpreted as a request to retrieve data from the beginning, or through the end of the data object.
 
 Furthermore, this package provides several time-based tools:
 
@@ -358,7 +358,7 @@ Furthermore, this package provides several time-based tools:
 \end{itemize}
 
 \section{Further Reading}
-\label{sec:orgheadline17}
+\label{sec:orgf64e810}
 \label{cha:further-reading-time}
 
 \begin{itemize}
@@ -380,13 +380,13 @@ Furthermore, this package provides several time-based tools:
 \end{itemize}
 
 \chapter{Time on the Horizontal Axis}
-\label{sec:orgheadline19}
+\label{sec:org3b22bf6}
 \label{cha:timeHorizontalAxis}
 
 The most frequent visualization method of a time series uses the horizontal axis to depict the time index. This chapter illustrates several variants to display multivariate time series: multiple time series with different scales, variables with the same scale, and stacked graphs.
 
 \section{Time Graph of Different Meteorological Variables}
-\label{sec-1}
+\label{sec:orga1693cf}
 \label{sec:differentVariables}
 There is a variety of scientific research interested in the
 relationship among several meteorological variables. A suitable
@@ -400,40 +400,42 @@ For this example we will use the 8 years of daily data from the
 SIAR meteorological station located at Aranjuez (Madrid).  This
 multivariate time series can be displayed with the \texttt{xyplot} method of
 \texttt{lattice} for \texttt{zoo} objects with a panel for each variable (Figure
-\ref{fig:aranjuezNaive}).
+\ref{fig:org74c58d9}).
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-load('data/aranjuez.RData')
-library(zoo)
-## The layout argument arranges panels in rows
-xyplot(aranjuez, layout=c(1, ncol(aranjuez)))
+  load('data/aranjuez.RData')
+  library(zoo)
+  ## The layout argument arranges panels in rows
+  xyplot(aranjuez, layout=c(1, ncol(aranjuez)))
 \end{lstlisting}
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/aranjuez.pdf}
-\caption{\label{fig:aranjuezNaive}Time plot of the collection of meteorological time series of the Aranjuez station (\texttt{lattice} version).}
+\caption{\label{fig:org74c58d9}
+Time plot of the collection of meteorological time series of the Aranjuez station (\texttt{lattice} version).}
 \end{figure}
 
 The package \texttt{ggplot2} provides the generic method \texttt{autoplot} to
 automate the display of certain classes with a simple command. The
 package \texttt{zoo} provides an \texttt{autoplot} method for the \texttt{zoo} class with a
-result similar to that obtained with \texttt{xyplot} (Figure \ref{fig:aranjuezNaiveGG}).
+result similar to that obtained with \texttt{xyplot} (Figure \ref{fig:org576aec7}).
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-autoplot(aranjuez) + facet_free()
+  autoplot(aranjuez) + facet_free()
 \end{lstlisting}
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/aranjuezGG.pdf}
-\caption{\label{fig:aranjuezNaiveGG}Time plot of the collection of meteorological time series of the Aranjuez station (\texttt{ggplot2} version).}
+\caption{\label{fig:org576aec7}
+Time plot of the collection of meteorological time series of the Aranjuez station (\texttt{ggplot2} version).}
 \end{figure}
 
 \subsection{\floweroneleft Annotations to Enhance the Time Graph}
-\label{sec-1-1}
+\label{sec:orgd4b61c5}
 
 These first attempts can be improved with a custom panel function
 that generates the content of each panel using the information
@@ -466,46 +468,47 @@ layers.
 \index{panel.number@\texttt{panel.number}}
 \index{panel.points@\texttt{panel.points}}
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-library(grid)
-library(latticeExtra)
-
-## Auxiliary function to extract the year value of a POSIXct time
-## index
-Year <- function(x)format(x, "%Y")
-
-xyplot(aranjuez, layout=c(1, ncol(aranjuez)), strip=FALSE,
-       scales=list(y=list(cex=0.6, rot=0)),
-       panel=function(x, y, ...){
-         ## Alternation of years
-         panel.xblocks(x, Year,
-                       col = c("lightgray", "white"),
-                       border = "darkgray")
-         ## Values under the average highlighted with red regions
-         panel.xblocks(x, y<mean(y, na.rm=TRUE),
-                       col = "indianred1",
-                       height=unit(0.1, 'npc'))
-         ## Time series
-         panel.lines(x, y, col='royalblue4', lwd=0.5, ...)
-         ## Label of each time series
-         panel.text(x[1], min(y, na.rm=TRUE),
-                    names(aranjuez)[panel.number()],
-                    cex=0.6, adj=c(0, 0), srt=90, ...)
-         ## Triangles to point the maxima and minima 
-         idxMax <- which.max(y)
-         panel.points(x[idxMax], y[idxMax],
-                      col='black', fill='lightblue', pch=24)
-         idxMin <- which.min(y)
-         panel.points(x[idxMin], y[idxMin],
-                      col='black', fill='lightblue', pch=25)
-       })
+  library(grid)
+  library(latticeExtra)
+  
+  ## Auxiliary function to extract the year value of a POSIXct time
+  ## index
+  Year <- function(x)format(x, "%Y")
+  
+  xyplot(aranjuez, layout=c(1, ncol(aranjuez)), strip=FALSE,
+         scales=list(y=list(cex=0.6, rot=0)),
+         panel=function(x, y, ...){
+           ## Alternation of years
+           panel.xblocks(x, Year,
+                         col = c("lightgray", "white"),
+                         border = "darkgray")
+           ## Values under the average highlighted with red regions
+           panel.xblocks(x, y<mean(y, na.rm=TRUE),
+                         col = "indianred1",
+                         height=unit(0.1, 'npc'))
+           ## Time series
+           panel.lines(x, y, col='royalblue4', lwd=0.5, ...)
+           ## Label of each time series
+           panel.text(x[1], min(y, na.rm=TRUE),
+                      names(aranjuez)[panel.number()],
+                      cex=0.6, adj=c(0, 0), srt=90, ...)
+           ## Triangles to point the maxima and minima 
+           idxMax <- which.max(y)
+           panel.points(x[idxMax], y[idxMax],
+                        col='black', fill='lightblue', pch=24)
+           idxMin <- which.min(y)
+           panel.points(x[idxMin], y[idxMin],
+                        col='black', fill='lightblue', pch=25)
+         })
 \end{lstlisting}
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/aranjuezXblocks.pdf}
-\caption{\label{fig:aranjuezEnhanced}Enhanced time plot of the collection of meteorological time series of the Aranjuez station.}
+\caption{\label{fig:org1d68c01}
+Enhanced time plot of the collection of meteorological time series of the Aranjuez station.}
 \end{figure}
 
 There is no equivalent \texttt{panel.xblocks} function that can be used with
@@ -518,11 +521,11 @@ object into a \texttt{data.frame} in long format. \texttt{fortify} returns a
 \texttt{data.frame} with three columns: the time \texttt{Index}, a factor
 indicating the \texttt{Series}, and the corresponding \texttt{Value}.
 \end{itemize}
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-timeIdx <- index(aranjuez)
-
-long <- fortify(aranjuez, melt=TRUE)
+  timeIdx <- index(aranjuez)
+  
+  long <- fortify(aranjuez, melt=TRUE)
 \end{lstlisting}
 
 \begin{itemize}
@@ -530,82 +533,82 @@ long <- fortify(aranjuez, melt=TRUE)
 \texttt{scale} because these regions are negative when the \texttt{data.frame} is
 centered.
 \end{itemize}
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-## Values below mean are negative after being centered
-scaled <- fortify(scale(aranjuez, scale=FALSE), melt=TRUE)
-## The 'scaled' column is the result of the centering.
-## The new 'Value' column store the original values.
-scaled <- transform(scaled, scaled=Value, Value=long$Value)
-underIdx <- which(scaled$scaled <= 0)
-## 'under' is the subset of values below the average
-under <- scaled[underIdx,]
+  ## Values below mean are negative after being centered
+  scaled <- fortify(scale(aranjuez, scale=FALSE), melt=TRUE)
+  ## The 'scaled' column is the result of the centering.
+  ## The new 'Value' column store the original values.
+  scaled <- transform(scaled, scaled=Value, Value=long$Value)
+  underIdx <- which(scaled$scaled <= 0)
+  ## 'under' is the subset of values below the average
+  under <- scaled[underIdx,]
 \end{lstlisting}
 
 \begin{itemize}
 \item The years bands are defined with the function \texttt{endpoints} from the
-  \texttt{xts} package:
+\texttt{xts} package:
 \end{itemize}
 \index{Package!xts@\texttt{xts}}
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-library(xts)
-ep <- endpoints(timeIdx, on='years')
-N <- length(ep[-1])
-## 'tsp' is start and 'tep' is the end of each band
-tep <- timeIdx[ep]
-tsp <- timeIdx[ep[-(N+1)]+1]
-## 'cols' is a vector with the color of each band
-cols <- rep_len(c('gray', 'white'), N)
+  library(xts)
+  ep <- endpoints(timeIdx, on='years')
+  N <- length(ep[-1])
+  ## 'tsp' is start and 'tep' is the end of each band
+  tep <- timeIdx[ep]
+  tsp <- timeIdx[ep[-(N+1)]+1]
+  ## 'cols' is a vector with the color of each band
+  cols <- rep_len(c('gray', 'white'), N)
 \end{lstlisting}
 \begin{itemize}
 \item The minima and maxima points of each variable are extracted with
-  \texttt{apply}:
+\texttt{apply}:
 \end{itemize}
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-minIdx <- timeIdx[apply(aranjuez, 2, which.min)]
-minVals <- apply(aranjuez, 2, min, na.rm=TRUE)
-mins <- data.frame(Index=minIdx,
-                   Value=minVals,
-                   Series=names(aranjuez))
-
-maxIdx <- timeIdx[apply(aranjuez, 2, which.max)]
-maxVals <- apply(aranjuez, 2, max, na.rm=TRUE)
-maxs <- data.frame(Index=maxIdx,
-                   Value=maxVals,
-                   Series=names(aranjuez))
+  minIdx <- timeIdx[apply(aranjuez, 2, which.min)]
+  minVals <- apply(aranjuez, 2, min, na.rm=TRUE)
+  mins <- data.frame(Index=minIdx,
+                     Value=minVals,
+                     Series=names(aranjuez))
+  
+  maxIdx <- timeIdx[apply(aranjuez, 2, which.max)]
+  maxVals <- apply(aranjuez, 2, max, na.rm=TRUE)
+  maxs <- data.frame(Index=maxIdx,
+                     Value=maxVals,
+                     Series=names(aranjuez))
 \end{lstlisting}
 
 \begin{itemize}
 \item With \texttt{ggplot} we define the canvas, and the layers of information are
 added successively:
 \end{itemize}
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-ggplot(data=long, aes(Index, Value)) +
-    ## Time series of each variable
-    geom_line(colour = "royalblue4", lwd = 0.5) +
-    ## Year bands
-    annotate(geom='rect', ymin = -Inf, ymax = Inf,
-              xmin=tsp, xmax=tep,
-              fill = cols, alpha = 0.4) +
-    ## Values below average
-    geom_rug(data=under,
-             sides='b', col='indianred1') +
-    ## Minima
-    geom_point(data=mins, pch=25) +
-    ## Maxima
-    geom_point(data=maxs, pch=24) +
-    ## Axis labels and theme definition
-    labs(x='Time', y=NULL) +
-    theme_bw() +
-    ## Each series is displayed in a different panel with an
-    ## independent y scale
-    facet_free()
+  ggplot(data=long, aes(Index, Value)) +
+      ## Time series of each variable
+      geom_line(colour = "royalblue4", lwd = 0.5) +
+      ## Year bands
+      annotate(geom='rect', ymin = -Inf, ymax = Inf,
+                xmin=tsp, xmax=tep,
+                fill = cols, alpha = 0.4) +
+      ## Values below average
+      geom_rug(data=under,
+               sides='b', col='indianred1') +
+      ## Minima
+      geom_point(data=mins, pch=25) +
+      ## Maxima
+      geom_point(data=maxs, pch=24) +
+      ## Axis labels and theme definition
+      labs(x='Time', y=NULL) +
+      theme_bw() +
+      ## Each series is displayed in a different panel with an
+      ## independent y scale
+      facet_free()
 \end{lstlisting}
 
-Some messages from Figure \ref{fig:aranjuezEnhanced}:
+Some messages from Figure \ref{fig:org1d68c01}:
 \begin{itemize}
 \item The radiation, temperature, and evotranspiration are
 quasi-periodic and are almost synchronized between them. Their
@@ -625,8 +628,9 @@ temperatures below the average value during summer, while it is
 not difficult to find days with radiation below the average
 during this season.
 \end{itemize}
+
 \section{Time Series of Variables with the Same Scale}
-\label{sec-2}
+\label{sec:orge8d40ac}
 \label{SEC:sameScale}
 As an example of time series of variables with the same scale, we will
 use measurements of solar radiation from different meteorological
@@ -642,27 +646,28 @@ density clusters because regions with more overlapping lines are
 darker. Figure \ref{fig:navarraNaive} displays the variations
 around the time average (\texttt{avRad}).
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-load('data/navarra.RData')
+  load('data/navarra.RData')
 \end{lstlisting}
 
 \index{zoo@\texttt{zoo}} 
 \index{xyplot.zoo@\texttt{xyplot.zoo}}
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-avRad <- zoo(rowMeans(navarra, na.rm=1), index(navarra))
-pNavarra <- xyplot(navarra - avRad,
-                   superpose=TRUE, auto.key=FALSE,
-                   lwd=0.5, alpha=0.3, col='midnightblue') 
-pNavarra
+  avRad <- zoo(rowMeans(navarra, na.rm=1), index(navarra))
+  pNavarra <- xyplot(navarra - avRad,
+                     superpose=TRUE, auto.key=FALSE,
+                     lwd=0.5, alpha=0.3, col='midnightblue') 
+  pNavarra
 \end{lstlisting}
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/navarra.pdf}
-\caption{\label{fig:navarraNaive}Time plot of the variations around time average of solar radiation measurements from the meteorological stations of Navarra.}
+\caption{\label{fig:org81dd1c9}
+Time plot of the variations around time average of solar radiation measurements from the meteorological stations of Navarra.}
 \end{figure}
 
 This result can be improved with different methods: the cut-and-stack
@@ -670,7 +675,7 @@ method, the horizon graph with \texttt{horizonplot}, and dynamic labeling
 with the \texttt{gridSVG} package.
 
 \subsection{Aspect Ratio and Rate of Change}
-\label{sec-2-1}
+\label{sec:org70f6054}
 When a graphic is intended to inform about the rate of change,
 special attention must be paid to the aspect ratio of the graph,
 defined as the ratio of the height to the width of the graphical
@@ -680,32 +685,34 @@ information about the relative local rate of change of one
 variable with another by comparing the orientations of the local
 line segments that compose the polylines. The recommendation is to
 choose the aspect ratio so that the absolute values of the
-orientations of the segments are centered on $\SI{45}{\degree}$ (banking
-to $\SI{45}{\degree}$). 
+orientations of the segments are centered on \(\SI{45}{\degree}\) (banking
+to \(\SI{45}{\degree}\)). 
 
-The problem with banking to $\SI{45}{\degree}$ is that the resulting
+The problem with banking to \(\SI{45}{\degree}\) is that the resulting
 aspect ratio is frequently too small. A suitable solution to
 minimize wasted space is the cut-and-stack method. The \texttt{xyplot.ts}
 method implement this solution with the combination of the
 arguments \texttt{aspect} and \texttt{cut}. The version of Figure
-\ref{fig:navarraNaive} using banking to $\SI{45}{\degree}$ and the
+\ref{fig:navarraNaive} using banking to \(\SI{45}{\degree}\) and the
 cut-and-stack method is produced with
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-xyplot(navarra - avRad,
-       aspect='xy', cut=list(n=3, overlap=0.1),
-       strip=FALSE,
-       superpose=TRUE, auto.key=FALSE,
-       lwd=0.5, alpha=0.3, col='midnightblue')
+  xyplot(navarra - avRad,
+         aspect='xy', cut=list(n=3, overlap=0.1),
+         strip=FALSE,
+         superpose=TRUE, auto.key=FALSE,
+         lwd=0.5, alpha=0.3, col='midnightblue')
 \end{lstlisting}
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/navarraBanking.pdf}
-\caption{\label{fig:navarraBanking}Cut-and-stack plot with banking to $\SI{45}{\degree}$.}
+\caption{\label{fig:orgbf0c9b7}
+Cut-and-stack plot with banking to \(\SI{45}{\degree}\).}
 \end{figure}
+
 \subsection{The Horizon Graph}
-\label{sec-2-2}
+\label{sec:orgc526526}
 The horizon graph\index{Horizon graph} is useful in examining how a
 large number of series changes over time, and does so in a way
 that allows both comparisons between the individual time series
@@ -738,19 +745,20 @@ using a row for each time series.
 \index{Packages!latticeExtra@\texttt{latticeExtra}}
 \index{horizonplot@\texttt{horizonplot}}
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-library(latticeExtra)
-
-horizonplot(navarra-avRad,
-            layout=c(1, ncol(navarra)),
-            origin=0, colorkey=TRUE)
+  library(latticeExtra)
+  
+  horizonplot(navarra-avRad,
+              layout=c(1, ncol(navarra)),
+              origin=0, colorkey=TRUE)
 \end{lstlisting}
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/navarraHorizonplot.pdf}
-\caption{\label{fig:navarraHorizonplot}Horizon plot of variations around time average of solar radiation measurements from the meteorological stations of Navarra.}
+\caption{\label{fig:orgdb19d16}
+Horizon plot of variations around time average of solar radiation measurements from the meteorological stations of Navarra.}
 \end{figure}
 
 Figure \ref{fig:navarraHorizonplot} allows several questions to be
@@ -763,8 +771,9 @@ answered:
 \item Which part of the year is associated with more intense
 absolute fluctuations across the set of stations?
 \end{itemize}
+
 \subsection{Time Graph of the Differences between a Time Series and a Reference}
-\label{sec-2-3}
+\label{sec:org8da874e}
 The horizon graph is also useful in revealing the differences between
 a univariate time series and another reference. For example, we
 might be interested in the departure of the observed temperature
@@ -776,12 +785,12 @@ average temperatures measured at the meteorological station of
 Aranjuez. The reference is the long-term daily average calculated
 with \texttt{ave}.
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-Ta <- aranjuez$TempAvg
-timeIndex <- index(aranjuez)
-longTa <- ave(Ta, format(timeIndex, '%j'))
-diffTa <- (Ta - longTa)
+  Ta <- aranjuez$TempAvg
+  timeIndex <- index(aranjuez)
+  longTa <- ave(Ta, format(timeIndex, '%j'))
+  diffTa <- (Ta - longTa)
 \end{lstlisting}
 
 
@@ -789,18 +798,19 @@ The temperature time series, the long-term average and the
 differences between them can be displayed with the \texttt{xyplot}
 method, now using \texttt{screens} to use a different panel for the
 differences time series (Figure \ref{fig:diffTa_xyplot})
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-xyplot(cbind(Ta, longTa, diffTa),
-       col=c('darkgray', 'red', 'midnightblue'),
-       superpose=TRUE, auto.key=list(space='right'),
-       screens=c(rep('Average Temperature', 2), 'Differences'))
+  xyplot(cbind(Ta, longTa, diffTa),
+         col=c('darkgray', 'red', 'midnightblue'),
+         superpose=TRUE, auto.key=list(space='right'),
+         screens=c(rep('Average Temperature', 2), 'Differences'))
 \end{lstlisting}
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/diffTa_xyplot.pdf}
-\caption{\label{fig:diffTa_xyplot}Daily temperature time series, its long-term average and the differences between them.}
+\caption{\label{fig:org74069ea}
+Daily temperature time series, its long-term average and the differences between them.}
 \end{figure}
 
 The horizon graph is better suited for displaying the differences. The
@@ -810,30 +820,31 @@ next code again uses the cut-and-stack method (Figure
 average while 2005 and 2009 did the contrary. Year 2007 was frequently
 below the long-term average but 2011 was more similar to that
 reference.
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-years <- unique(format(timeIndex, '%Y'))
-
-horizonplot(diffTa, cut=list(n=8, overlap=0),
-            colorkey=TRUE, layout=c(1, 8),
-            scales=list(draw=FALSE, y=list(relation='same')),
-            origin=0, strip.left=FALSE) +
-    layer(grid.text(years[panel.number()], x = 0, y = 0.1, 
-                    gp=gpar(cex=0.8),
-                    just = "left"))
+  years <- unique(format(timeIndex, '%Y'))
+  
+  horizonplot(diffTa, cut=list(n=8, overlap=0),
+              colorkey=TRUE, layout=c(1, 8),
+              scales=list(draw=FALSE, y=list(relation='same')),
+              origin=0, strip.left=FALSE) +
+      layer(grid.text(years[panel.number()], x = 0, y = 0.1, 
+                      gp=gpar(cex=0.8),
+                      just = "left"))
 \end{lstlisting}
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/diffTa_horizon.pdf}
-\caption{\label{fig:diffTa_horizon}Horizon graph displaying differences between a daily temperature time series and its long-term average.}
+\caption{\label{fig:orgad3631e}
+Horizon graph displaying differences between a daily temperature time series and its long-term average.}
 \end{figure}
 
 A different approach to display this information is to produce a level
 plot displaying the time series using parts of its time index as
 independent and conditioning variables\footnote{This approach was inspired by the \texttt{strip} function of the
 \texttt{metvurst} package
-(\url{http://metvurst.blogspot.com.es/2012/11/plotting-large-amounts-of-atmospheric_4.html}).}. The following code
+(\url{http://metvurst.blogspot.com.es/2012/11/plotting-large-amounts-of-atmospheric\_4.html}).}. The following code
 displays the differences with the day of month on the horizontal axis
 and the year on the vertical axis, with a different panel for each
 month number. Therefore, each cell of Figure \ref{fig:diffTa_level}
@@ -844,38 +855,40 @@ plot of Figure \ref{fig:diffTa_horizon} clearly displays the yearly
 evolution, the combination of variables of the level plot focuses on
 the comparison between years in a certain month.
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-year <- function(x)as.numeric(format(x, '%Y'))
-day <- function(x)as.numeric(format(x, '%d'))
-month <- function(x)as.numeric(format(x, '%m'))
+  year <- function(x)as.numeric(format(x, '%Y'))
+  day <- function(x)as.numeric(format(x, '%d'))
+  month <- function(x)as.numeric(format(x, '%m'))
 \end{lstlisting}
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-myTheme <- modifyList(custom.theme(region=brewer.pal(9, 'RdBu')),
-                                   list(
-                                     strip.background=list(col='gray'),
-                                     panel.background=list(col='gray')))
-
-maxZ <- max(abs(diffTa))
-
-levelplot(diffTa ~ day(timeIndex) * year(timeIndex) | factor(month(timeIndex)),
-          at=pretty(c(-maxZ, maxZ), n=8),
-          colorkey=list(height=0.3),
-          layout=c(1, 12), strip=FALSE, strip.left=TRUE,
-          xlab='Day', ylab='Month', 
-          par.settings=myTheme)
+  myTheme <- modifyList(custom.theme(region=brewer.pal(9, 'RdBu')),
+                                     list(
+                                       strip.background=list(col='gray'),
+                                       panel.background=list(col='gray')))
+  
+  maxZ <- max(abs(diffTa))
+  
+  levelplot(diffTa ~ day(timeIndex) * year(timeIndex) | factor(month(timeIndex)),
+            at=pretty(c(-maxZ, maxZ), n=8),
+            colorkey=list(height=0.3),
+            layout=c(1, 12), strip=FALSE, strip.left=TRUE,
+            xlab='Day', ylab='Month', 
+            par.settings=myTheme)
 \end{lstlisting}
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/diffTa_levelplot.pdf}
-\caption{\label{fig:diffTa_level}Level plot of differences between a daily temperature time series and its long-term average.}
+\caption{\label{fig:org58fe518}
+Level plot of differences between a daily temperature time series and its long-term average.}
 \end{figure}
 
+
 \subsection{\floweroneleft Interaction with \texttt{gridSVG}}
-\label{sec-2-4}
+\label{sec:orgca2fb62}
 The \texttt{gridSVG} package provides functions to convert \texttt{grid}-based \texttt{R}
 graphics to an SVG format. It provides several functions to add
 dynamic and interactive capabilities to \texttt{R} graphics. In this section
@@ -891,16 +904,16 @@ code.
 \index{Packages!gridSVG@\texttt{gridSVG}}
 \index{grid.ls@\texttt{grid.ls}}
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-library(gridSVG)
-## grobs in the graphical output
-pNavarra
-grobs <- grid.ls(print=FALSE)
-## only interested in some of them
-nms <- grobs$name[grobs$type == "grobListing"]
-idxNames <- grep('lines', nms)
-IDs <- nms[idxNames]
+  library(gridSVG)
+  ## grobs in the graphical output
+  pNavarra
+  grobs <- grid.ls(print=FALSE)
+  ## only interested in some of them
+  nms <- grobs$name[grobs$type == "grobListing"]
+  idxNames <- grep('lines', nms)
+  IDs <- nms[idxNames]
 \end{lstlisting}
 
 The second step is to modify each \texttt{grob} (graphical object) to add
@@ -920,24 +933,24 @@ sets this attribute to \texttt{info}.
 
 \index{grid.garnish@\texttt{grid.garnish}}
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-for (id in unique(IDs)){
-  ## extract information from the data
-  ## according to the ID value
-  i <- strsplit(id, '\\.')
-  i <- sapply(i, function(x)as.numeric(x[5]))
-  ## Information to be attached to each line: annual mean of daily
-  ## radiation and abbreviated name of the station
-  dat <- round(mean(navarra[,i], na.rm=TRUE), 2)
-  info <- paste(names(navarra)[i], paste(dat, collapse=','),
-                sep=': ')
-  ## attach SVG attributes
-  grid.garnish(id,
-               onmouseover="highlight(evt)",
-               onmouseout="hide(evt)",
-               title=info)
-}
+  for (id in unique(IDs)){
+    ## extract information from the data
+    ## according to the ID value
+    i <- strsplit(id, '\\.')
+    i <- sapply(i, function(x)as.numeric(x[5]))
+    ## Information to be attached to each line: annual mean of daily
+    ## radiation and abbreviated name of the station
+    dat <- round(mean(navarra[,i], na.rm=TRUE), 2)
+    info <- paste(names(navarra)[i], paste(dat, collapse=','),
+                  sep=': ')
+    ## attach SVG attributes
+    grid.garnish(id,
+                 onmouseover="highlight(evt)",
+                 onmouseout="hide(evt)",
+                 title=info)
+  }
 \end{lstlisting}
 
 These JavaScript functions are included in a script file named
@@ -946,34 +959,34 @@ added as an additional object with \texttt{grid.script}.
 
 \index{grid.script@\texttt{grid.script}}
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-grid.script(filename="highlight.js")
+  grid.script(filename="highlight.js")
 \end{lstlisting}
 
 This script is easy to understand, even without previous
 JavaScript knowledge:
 \index{JavaScript}
 \begin{verbatim}
-highlight = function(evt){',
-    evt.target.setAttribute('opacity', '1');
-    evt.target.setAttribute('stroke', 'red');
-    evt.target.setAttribute('stroke-width', '1');
-}
-
-hide = function(evt){
-    evt.target.setAttribute('opacity', '0.3');
-    evt.target.setAttribute('stroke', green');
-    evt.target.setAttribute('stroke-width', '0.3');
-}
+  highlight = function(evt){',
+      evt.target.setAttribute('opacity', '1');
+      evt.target.setAttribute('stroke', 'red');
+      evt.target.setAttribute('stroke-width', '1');
+  }
+  
+  hide = function(evt){
+      evt.target.setAttribute('opacity', '0.3');
+      evt.target.setAttribute('stroke', green');
+      evt.target.setAttribute('stroke-width', '0.3');
+  }
 \end{verbatim}
 
 Finally, \texttt{gridToSVG} exports the whole scene to SVG. 
 \index{grid.export@\texttt{grid.export}} 
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-grid.export('figs/navarraRadiation.svg')
+  grid.export('figs/navarraRadiation.svg')
 \end{lstlisting}
 
 A snapshot of the result, as viewed in a browser with a line
@@ -989,8 +1002,9 @@ questions raised with that graphic.
 \end{figure}
 
 
+
 \section{Stacked Graphs}
-\label{sec-3}
+\label{sec:org1004137}
 If the variables of a multivariate time series can be summed to
 produce a meaningful global variable, they may be better displayed
 with stacked graphs. For example, the information on unemployment in
@@ -998,24 +1012,25 @@ the United States provides data of unemployed persons by industry and
 class of workers, and can be summed to give a total unemployment time
 series.
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-load('data/unemployUSA.RData')
+  load('data/unemployUSA.RData')
 \end{lstlisting}
 
 The time series of unemployment can be directly displayed
 with the \texttt{xyplot.zoo} method (Figure \ref{fig:unemployUSAxyplot}).
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-xyplot(unemployUSA, superpose=TRUE, par.settings=custom.theme,
-       auto.key=list(space='right'))
+  xyplot(unemployUSA, superpose=TRUE, par.settings=custom.theme,
+         auto.key=list(space='right'))
 \end{lstlisting}
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/unemployUSAxyplot.pdf}
-\caption{\label{fig:unemployUSAxyplot}Time series of unemployment  with \texttt{xyplot} using the default panel function.}
+\caption{\label{fig:org443e433}
+Time series of unemployment  with \texttt{xyplot} using the default panel function.}
 \end{figure}
 
 This graphical output is not very useful: the legend is confusing,
@@ -1029,18 +1044,19 @@ set of stacked colored polygons to follow the macro/micro principle
 proposed by Tufte \cite{Tufte1990}: Show a collection of individual
 time series and also display their sum. A traditional stacked graph is
 easily obtained with \texttt{geom\_area}:
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-library(scales) ## scale_x_yearmon needs scales::pretty_breaks
-autoplot(unemployUSA, facets=NULL, geom='area') +
-    geom_area(aes(fill=Series)) +
-    scale_x_yearmon()
+  library(scales) ## scale_x_yearmon needs scales::pretty_breaks
+  autoplot(unemployUSA, facets=NULL, geom='area') +
+      geom_area(aes(fill=Series)) +
+      scale_x_yearmon()
 \end{lstlisting}
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/unemployUSAgeomArea.pdf}
-\caption{\label{fig:unemployUSAgeomArea}Time series of unemployment with stacked areas using \texttt{geom\_area}.}
+\caption{\label{fig:org0218bb2}
+Time series of unemployment with stacked areas using \texttt{geom\_area}.}
 \end{figure}
 
 Traditional stacked graphs have their bottom on the x-axis which makes
@@ -1059,27 +1075,28 @@ ThemeRiver with \texttt{xyplot}. The result is displayed in Figure
 \ref{fig:unemployUSAThemeRiver} with a vertical line to indicate
 one of main milestones of the financial crisis, whose effect on
 the overall unemployment results is clearly evident.
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-library(colorspace)
-## We will use a qualitative palette from colorspace
-nCols <- ncol(unemployUSA)
-pal <- rainbow_hcl(nCols, c=70, l=75, start=30, end=300)
-myTheme <- custom.theme(fill=pal, lwd=0.2)
-
-sep2008 <- as.numeric(as.yearmon('2008-09'))
-
-xyplot(unemployUSA, superpose=TRUE, auto.key=FALSE,
-       panel=panel.flow, prepanel=prepanel.flow,
-       origin='themeRiver', scales=list(y=list(draw=FALSE)),
-       par.settings=myTheme) +
-    layer(panel.abline(v=sep2008, col='gray', lwd=0.7))
+  library(colorspace)
+  ## We will use a qualitative palette from colorspace
+  nCols <- ncol(unemployUSA)
+  pal <- rainbow_hcl(nCols, c=70, l=75, start=30, end=300)
+  myTheme <- custom.theme(fill=pal, lwd=0.2)
+  
+  sep2008 <- as.numeric(as.yearmon('2008-09'))
+  
+  xyplot(unemployUSA, superpose=TRUE, auto.key=FALSE,
+         panel=panel.flow, prepanel=prepanel.flow,
+         origin='themeRiver', scales=list(y=list(draw=FALSE)),
+         par.settings=myTheme) +
+      layer(panel.abline(v=sep2008, col='gray', lwd=0.7))
 \end{lstlisting}
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/unemployUSAThemeRiver.pdf}
-\caption{\label{fig:unemployUSAThemeRiver}ThemeRiver of unemployment in the United States.}
+\caption{\label{fig:org169f65d}
+ThemeRiver of unemployment in the United States.}
 \end{figure}
 
 This figure can help answer several questions. For example:
@@ -1099,7 +1116,7 @@ Statistics'' reports from the Bureau of Labor Statistics\footnote{The March 2012
 
 
 \subsection{\floweroneleft Panel and Prepanel Functions to Implement the ThemeRiver with \texttt{xyplot}}
-\label{sec-3-1}
+\label{sec:org357fcfa}
 \label{sec:themeRiverPanel}
 The \texttt{xyplot} function displays information according to the class
 of its first argument (methods) and to the \texttt{panel} function. We
@@ -1171,82 +1188,82 @@ polygons and the labels share the same color (\texttt{col[i]}).
 \index{panel.text@\texttt{panel.text}}
 \index{panel.polygon@\texttt{panel.polygon}}
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-panel.flow <- function(x, y, groups, origin, ...){
-  dat <- data.frame(x=x, y=y, groups=groups)
-  nVars <- nlevels(groups)
-  groupLevels <- levels(groups)
-
-  ## From long to wide
-  yWide <- unstack(dat, y~groups)
-  ## Where are the maxima of each variable located? We will use
-  ## them to position labels.
-  idxMaxes <- apply(yWide, 2, which.max)
-
-  ##Origin calculated following Havr.eHetzler.ea2002
-  if (origin=='themeRiver') origin= -1/2*rowSums(yWide)
-  else origin=0 
-  yWide <- cbind(origin=origin, yWide)
-  ## Cumulative sums to define the polygon
-  yCumSum <- t(apply(yWide, 1, cumsum))
-  Y <- as.data.frame(sapply(seq_len(nVars),
-                            function(iCol)c(yCumSum[,iCol+1],
-                                            rev(yCumSum[,iCol]))))
-  names(Y) <- levels(groups)
-  ## Back to long format, since xyplot works that way
-  y <- stack(Y)$values
-
-  ## Similar but easier for x
-  xWide <- unstack(dat, x~groups)
-  x <- rep(c(xWide[,1], rev(xWide[,1])), nVars)
-  ## Groups repeated twice (upper and lower limits of the polygon)
-  groups <- rep(groups, each=2)
-
-  ## Graphical parameters
-  superpose.polygon <- trellis.par.get("superpose.polygon")
-  col = superpose.polygon$col
-  border = superpose.polygon$border 
-  lwd = superpose.polygon$lwd 
-
-  ## Draw polygons
-  for (i in seq_len(nVars)){
-    xi <- x[groups==groupLevels[i]]
-    yi <- y[groups==groupLevels[i]]
-    panel.polygon(xi, yi, border=border,
-                  lwd=lwd, col=col[i])
+  panel.flow <- function(x, y, groups, origin, ...){
+    dat <- data.frame(x=x, y=y, groups=groups)
+    nVars <- nlevels(groups)
+    groupLevels <- levels(groups)
+  
+    ## From long to wide
+    yWide <- unstack(dat, y~groups)
+    ## Where are the maxima of each variable located? We will use
+    ## them to position labels.
+    idxMaxes <- apply(yWide, 2, which.max)
+  
+    ##Origin calculated following Havr.eHetzler.ea2002
+    if (origin=='themeRiver') origin= -1/2*rowSums(yWide)
+    else origin=0 
+    yWide <- cbind(origin=origin, yWide)
+    ## Cumulative sums to define the polygon
+    yCumSum <- t(apply(yWide, 1, cumsum))
+    Y <- as.data.frame(sapply(seq_len(nVars),
+                              function(iCol)c(yCumSum[,iCol+1],
+                                              rev(yCumSum[,iCol]))))
+    names(Y) <- levels(groups)
+    ## Back to long format, since xyplot works that way
+    y <- stack(Y)$values
+  
+    ## Similar but easier for x
+    xWide <- unstack(dat, x~groups)
+    x <- rep(c(xWide[,1], rev(xWide[,1])), nVars)
+    ## Groups repeated twice (upper and lower limits of the polygon)
+    groups <- rep(groups, each=2)
+    
+    ## Graphical parameters
+    superpose.polygon <- trellis.par.get("superpose.polygon")
+    col = superpose.polygon$col
+    border = superpose.polygon$border 
+    lwd = superpose.polygon$lwd 
+  
+    ## Draw polygons
+    for (i in seq_len(nVars)){
+      xi <- x[groups==groupLevels[i]]
+      yi <- y[groups==groupLevels[i]]
+      panel.polygon(xi, yi, border=border,
+                    lwd=lwd, col=col[i])
+    }
+  
+    ## Print labels
+    for (i in seq_len(nVars)){
+      xi <- x[groups==groupLevels[i]]
+      yi <- y[groups==groupLevels[i]]
+      N <- length(xi)/2
+      ## Height available for the label
+      h <- unit(yi[idxMaxes[i]], 'native') -
+        unit(yi[idxMaxes[i] + 2*(N-idxMaxes[i]) +1], 'native')
+      ##...converted to "char" units
+      hChar <- convertHeight(h, 'char', TRUE)
+      ## If there is enough space and we are not at the first or
+      ## last variable, then the label is printed inside the polygon.
+      if((hChar >= 1) && !(i %in% c(1, nVars))){
+        grid.text(groupLevels[i],
+                  xi[idxMaxes[i]],
+                  (yi[idxMaxes[i]] +
+                   yi[idxMaxes[i] + 2*(N-idxMaxes[i]) +1])/2,
+                  gp = gpar(col='white', alpha=0.7, cex=0.7),
+                  default.units='native')
+      } else {
+        ## Elsewhere, the label is printed outside
+  
+        grid.text(groupLevels[i],
+                  xi[N],
+                  (yi[N] + yi[N+1])/2,
+                  gp=gpar(col=col[i], cex=0.7),
+                  just='left', default.units='native')
+      }          
+    }
   }
-
-  ## Print labels
-  for (i in seq_len(nVars)){
-    xi <- x[groups==groupLevels[i]]
-    yi <- y[groups==groupLevels[i]]
-    N <- length(xi)/2
-    ## Height available for the label
-    h <- unit(yi[idxMaxes[i]], 'native') -
-      unit(yi[idxMaxes[i] + 2*(N-idxMaxes[i]) +1], 'native')
-    ##...converted to "char" units
-    hChar <- convertHeight(h, 'char', TRUE)
-    ## If there is enough space and we are not at the first or
-    ## last variable, then the label is printed inside the polygon.
-    if((hChar >= 1) && !(i %in% c(1, nVars))){
-      grid.text(groupLevels[i],
-                xi[idxMaxes[i]],
-                (yi[idxMaxes[i]] +
-                 yi[idxMaxes[i] + 2*(N-idxMaxes[i]) +1])/2,
-                gp = gpar(col='white', alpha=0.7, cex=0.7),
-                default.units='native')
-    } else {
-      ## Elsewhere, the label is printed outside
-
-      grid.text(groupLevels[i],
-                xi[N],
-                (yi[N] + yi[N+1])/2,
-                gp=gpar(col=col[i], cex=0.7),
-                just='left', default.units='native')
-    }          
-  }
-}
 \end{lstlisting}
 
 With this panel function, \texttt{xyplot} displays a set of stacked
@@ -1254,18 +1271,19 @@ polygons corresponding to the multivariate time series (Figure
 \ref{fig:themeRiverError}). However, the graphical window is not
 large enough, and part of the polygons fall out of it. Why?
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-xyplot(unemployUSA, superpose=TRUE, auto.key=FALSE,
-       panel=panel.flow, origin='themeRiver',
-       par.settings=myTheme, cex=0.4, offset=0,
-       scales=list(y=list(draw=FALSE)))
+  xyplot(unemployUSA, superpose=TRUE, auto.key=FALSE,
+         panel=panel.flow, origin='themeRiver',
+         par.settings=myTheme, cex=0.4, offset=0,
+         scales=list(y=list(draw=FALSE)))
 \end{lstlisting}
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[height=0.45\textheight]{figs/ThemeRiverError.pdf}
-\caption{\label{fig:themeRiverError}First attempt of ThemeRiver.}
+\caption{\label{fig:org2cb8b60}
+First attempt of ThemeRiver.}
 \end{figure}
 
 The problem is that \texttt{lattice} makes a preliminary estimate of the
@@ -1284,958 +1302,247 @@ while the limits of the y-axis are calculated with the minimum of the
 first column of \texttt{yCumSum} (the origin line) and with the maximum of
 its last column (the upper line of the cumulative sum).
 
-\lstset{language=R,numbers=none}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-prepanel.flow <- function(x, y, groups, origin,...){
-  dat <- data.frame(x=x, y=y, groups=groups)
-  nVars <- nlevels(groups)
-  groupLevels <- levels(groups)
-  yWide <- unstack(dat, y~groups)
-  if (origin=='themeRiver') origin= -1/2*rowSums(yWide)
-  else origin=0
-  yWide <- cbind(origin=origin, yWide)
-  yCumSum <- t(apply(yWide, 1, cumsum))
-
-  list(xlim=range(x),
-       ylim=c(min(yCumSum[,1]), max(yCumSum[,nVars+1])),
-       dx=diff(x),
-       dy=diff(c(yCumSum[,-1])))
-}
-\end{lstlisting}
-
-\chapter{Time as a Conditioning or Grouping Variable}
-\label{sec:orgheadline20}
-\label{cha:timeGroupFactor}
-
-In Section \ref{sec:differentVariables} we learned to display the time evolution of multiple time series with different scales. But, what if instead of displaying the time evolution we want to confront the variables between them? Section \ref{SEC:groupVariable} proposes the scatterplot matrix solution with time as a grouping variable. Section \ref{SEC:conditionVariable} uses an enhanced scatterplot with time as a conditioning variable. Section \ref{SEC:hexbin} includes a digression about the hexagonal binning for large datasets.
-
-\section{Scatterplot Matrix: Time as a Grouping Variable}
-\label{sec:orgheadline2}
-\label{orgtarget1}
-
-The scatterplot matrices are based on the technique of small multiples
-\cite{Tufte1990}: small, thumbnail-sized representations of multiple
-images displayed all at once, which allows the reader to immediately,
-and in parallel, compare the inter-frame differences.  A scatterplot
-matrix is a display of all pairwise bivariate scatterplots arranged in
-a \(p \times p\) matrix for \(p\) variables. Each subplot shows the
-relation between the pair of variables at the intersection of the row
-and column indicated by the variable names in the diagonal panels
-\cite{Friendly.Denis2005}.
-
-This graphical tool is implemented in the \texttt{splom} function\footnote{\texttt{ggplot2} users may wish to explore the \texttt{ggpairs} function
-from the \texttt{GGally} package.}. The
-following code displays the relation between the set of
-meteorological variables using a sequential palette from the
-ColorBrewer catalog (\texttt{RbBu}, with black added to complete a
-twelve-color palette) to encode the month. The order of colors of
-this palette is chosen in order to display summer months with
-intense colors and to distinguish between the first and second
-half of the year with red and blue, respectively (Figure
-\ref{fig:orgparagraph1}).
-
-\index{splom@\texttt{splom}}
-
-\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-  load('data/aranjuez.RData')
+  prepanel.flow <- function(x, y, groups, origin,...){
+    dat <- data.frame(x=x, y=y, groups=groups)
+    nVars <- nlevels(groups)
+    groupLevels <- levels(groups)
+    yWide <- unstack(dat, y~groups)
+    if (origin=='themeRiver') origin= -1/2*rowSums(yWide)
+    else origin=0
+    yWide <- cbind(origin=origin, yWide)
+    yCumSum <- t(apply(yWide, 1, cumsum))
   
-  ## Red-Blue palette with black added (12 colors)
-  colors <- c(brewer.pal(n=11, 'RdBu'), '#000000')
-  ## Rearrange according to months (darkest for summer)
-  colors <- colors[c(6:1, 12:7)]
-  
-  splom(~as.data.frame(aranjuez),
-          groups=format(index(aranjuez), '%m'),
-        auto.key=list(space='right', 
-            title='Month', cex.title=1),
-        pscale=0, varname.cex=0.7, xlab='',
-          par.settings=custom.theme(symbol=colors,
-              pch=19), cex=0.3, alpha=0.1)
+    list(xlim=range(x),
+         ylim=c(min(yCumSum[,1]), max(yCumSum[,nVars+1])),
+         dx=diff(x),
+         dy=diff(c(yCumSum[,-1])))
+  }
 \end{lstlisting}
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=.9\linewidth]{figs/aranjuezSplom.png}
-\caption{\label{fig:orgparagraph1}
-Scatter plot matrix of the collection of meteorological time series of the Aranjuez station.}
-\end{figure}
-
-
-Let's explore Figure \ref{fig:orgparagraph1}. For example,
-\begin{itemize}
-\item The highest values of ambient temperature (average, maximum, and
-mimimun), solar radiation, and evotranspiration can be found
-during the summer.
-\item These variables are almost linearly related. The relation
-between radiation and temperature is different during both
-halves of the year (red and blue regions can be easily distinguished).
-\item The humidity reaches its highest values during winter without
-appreciable differences between the first and second half of the
-year. The temperature and humidity may be related with an
-exponential function.
-\end{itemize}
-
-A bit of interactivity can be added to this plot with the
-identification of some points. This task is easy with
-\texttt{panel.link.splom}. The points are selected via mouse clicks (and
-highlighted in green). Clicks other than left-clicks terminate the
-procedure. The output of this function is the index of chosen
-points.
-
-\index{panel.link.splom@\texttt{panel.link.splom}}
-\index{trellis.focus@\texttt{trellis.focus}}
-
-\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-trellis.focus('panel', 1, 1)
-idx <- panel.link.splom(pch=13, cex=0.6, col='green')
-aranjuez[idx,]
-\end{lstlisting}
-
-
-\subsection{Hexagonal Binning}
-\label{sec:orgheadline1}
-\label{orgtarget2}
-
-For large datasets, the display of a large number of points in a
-scatterplot produces hidden point density, long computation times,
-and slow displays. These problems can be circumvented with the
-estimation and representation of points densities.  A common
-encoding uses gray scales, pseudo colors or partial
-transparency. An improved scheme encodes density as the size of
-hexagon symbols inscribed within hexagonal binning regions
-\cite{Carr.Littlefield.ea1987}.
-
-The \texttt{hexbin} package \cite{Carr.Lewin-Koh.ea2013} includes several
-functions for hexagonal binning.  The \texttt{panel.hexbinplot} is a good
-substitute for the default panel function. In addition, our first
-attempt with \texttt{splom} can be improved with several modifications
-(Figure \ref{fig:aranjuezSplomHexbin}):
-\begin{itemize}
-\item The scale's ticks and labels are suppressed with \texttt{pscale=0}.
-\item The panels of the lower part of the matrix (\texttt{lower.panel}) will
-include a locally weighted scatterplot smoothing (loess) with
-\texttt{panel.loess}.
-\item The diagonal panels (\texttt{diag.panel}) will display the kernel
-density estimate of each variable. The \texttt{density} function
-computes this estimate. The result is adjusted to the panel
-limits (calculated with \texttt{current.panel.limits}). The kernel
-density is plotted with \texttt{panel.lines} and the \texttt{diag.panel.splom}
-function completes the content of each diagonal panel.
-\item The point density is encoded with the palette \texttt{BTC} (ligther
-colors for high density values and darker colors for almost
-empty regions, with a gradient of blue hues for intermediate values).
-\end{itemize}
-
-\index{Packages!hexbin@\texttt{hexbin}}
-\index{panel.hexbinplot@\texttt{panel.hexbinplot}}
-\index{panel.loess@\texttt{panel.loess}}
-\index{diag.panel.splom@\texttt{diag.panel.splom}}
-\index{current.panel.limits@\texttt{current.panel.limits}}
-\index{Panel function}
-
-\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-  library(hexbin)
-  
-  splom(~as.data.frame(aranjuez),
-             panel=panel.hexbinplot, xlab='',
-             colramp=BTC,
-             diag.panel = function(x, ...){
-               yrng <- current.panel.limits()$ylim
-               d <- density(x, na.rm=TRUE)
-               d$y <- with(d, yrng[1] + 0.95 * diff(yrng) * y / max(y))
-               panel.lines(d)
-               diag.panel.splom(x, ...)
-             },
-             lower.panel = function(x, y, ...){
-               panel.hexbinplot(x, y, ...)
-               panel.loess(x, y, ..., col = 'red')
-             },
-             pscale=0, varname.cex=0.7
-             )
-\end{lstlisting}
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=.9\linewidth]{figs/aranjuezSplomHexbin.pdf}
-\caption{\label{fig:orgparagraph2}
-Scatterplot matrix of the collection of meteorological time series of the Aranjuez station using hexagonal binning.}
-\end{figure}
-
-A drawback of the matrix of scatterplots with hexagonal binning is
-that each panel is drawn independently, so it is impossible to compute
-a common color key for all of them. In other words, two cells with
-exactly the same color in different panels encode different point
-densities.
-
-It is possible to display a reduced set of variables against
-another one and generate a common color key using the \texttt{hexbinplot}
-function. First, the dataset must be reshaped from the wide format
-(one colum for each variable) to the long format (only one column for
-the values with one row for each observation). 
-
-The \texttt{reshape} function needs several arguments to perform the
-conversion. The most important is the \texttt{data.frame} to be
-transformed. Then there are the names of variables to be mapped to
-a single variable in the long dataset (the three ambient
-temperatures). The name of this variable can be set with
-\texttt{v.names}. Finally, \texttt{timevar} is the name of the column in long format that
-differentiates multiple observations from the same variable. The
-values of this column are defined with the \texttt{times} argument.
-
-\index{reshape@\texttt{reshape}}
-
-\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-  aranjuezDF <- data.frame(aranjuez,
-                           month=format(index(aranjuez), '%m'))
-  aranjuezRshp <- reshape(aranjuezDF, direction='long',
-                          varying=list(names(aranjuez)[1:3]),
-                          v.names='Temperature',
-                          times=names(aranjuez)[1:3],
-                          timevar='Statistic')
-\end{lstlisting}
-
-
-\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-  head(aranjuezRshp)
-\end{lstlisting}
-
-The \texttt{hexbinplot} displays this dataset with a different panel for
-each type of temperature (average, maximum, and minimum) but with a
-common color key encoding the point density (Figure
-\ref{fig:orgparagraph3}). Now, two cells with the same color in
-different panels encode the same value. 
-\index{hexbinplot@\texttt{hexbinplot}}
-\index{Panel function}
-
-\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-  hexbinplot(Radiation~Temperature|Statistic, data=aranjuezRshp,
-             layout=c(1, 3), colramp=BTC) +
-      layer(panel.loess(..., col = 'red'))
-\end{lstlisting}
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=.9\linewidth]{figs/aranjuezHexbinplot.pdf}
-\caption{\label{fig:orgparagraph3}
-Scatterplot with hexagonal binning of temperature versus solar radiation using data of the Aranjuez station (\texttt{lattice} version).}
-\end{figure}
-
-The ggplot2 version uses \texttt{stat\_binhex}.
-\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-  ggplot(data=aranjuezRshp, aes(Temperature, Radiation)) +
-      stat_binhex(ncol=1) + 
-      stat_smooth(se=FALSE, method='loess', col='red') +
-      facet_wrap(~Statistic, ncol=1) +
-      theme_bw()
-\end{lstlisting}
-
-\section{Scatterplot with Time as a Conditioning Variable}
-\label{sec:orgheadline3}
-\label{orgtarget3}
-
-After discussing the hexagonal binning, let's recover the time
-variable. Figure \ref{fig:orgparagraph1} uses colors to encode
-months. Instead, we will now display separate scatterplots with a
-panel for each month. In addition, the statistic type (average,
-maximum, minimum) is included as an additional conditioning variable.
-
-This matrix of panels can be displayed with \texttt{ggplot} using
-\texttt{facet\_grid}. The code of Figure \ref{fig:orgparagraph4} uses partial
-transparency to cope with overplotting, small horizontal and vertical
-segments (\texttt{geom\_rug}) to display points density on both variables, and
-a smooth line in each panel.
-\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-  ggplot(data=aranjuezRshp, aes(Radiation, Temperature)) +
-      facet_grid(Statistic ~ month) +
-      geom_point(col='skyblue4', pch=19, cex=0.5, alpha=0.3) +
-      geom_rug() +
-      stat_smooth(se=FALSE, method='loess', col='indianred1', lwd=1.2) +
-      theme_bw()
-\end{lstlisting}
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=.9\linewidth]{figs/aranjuezFacetGrid.png}
-\caption{\label{fig:orgparagraph4}
-Scatterplot of temperature versus solar radiation for each month using data of the Aranjuez station (\texttt{ggplot2} version).}
-\end{figure}
-
-The version with \texttt{lattice} needs the \texttt{useOuterStrips} function from
-the \texttt{latticeExtra} package, which prints the names of the conditioning
-variables on the top and left outer margins (Figure
-\ref{fig:orgparagraph5}).
-
-\index{useOuterStrips@\texttt{useOuterStrips}}
-\index{panel.rug@\texttt{panel.rug}}
-\index{panel.loess@\texttt{panel.loess}}
-\index{Packages!latticeExtra@\texttt{latticeExtra}}
-
-\lstset{language=R,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-  useOuterStrips(xyplot(Temperature ~ Radiation | month * Statistic,
-                        data=aranjuezRshp,
-                        between=list(x=0),
-                        col='skyblue4', pch=19,
-                        cex=0.5, alpha=0.3)) +
-      layer({
-          panel.rug(..., col.line='indianred1', end=0.05, alpha=0.6)
-          panel.loess(..., col='indianred1', lwd=1.5, alpha=1)
-      })
-\end{lstlisting}
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=.9\linewidth]{figs/aranjuezOuterStrips.pdf}
-\caption{\label{fig:orgparagraph5}
-Scatterplot of temperature versus solar radiation for each month using data of the Aranjuez station (lattice version).}
-\end{figure}
-
-These figures show the typical seasonal behavior of solar radiation
-and ambient temperature. Additionally, it displays in more detail the
-same relations between radiation and temperature already discussed
-with Figure \ref{fig:orgparagraph3}.
-
-\chapter{Time as a Complementary Variable}
-\label{sec:orgheadline21}
-\label{cha:timeComplementary}
-
-Gapminder \footnote{\url{http://www.gapminder.org/}} is an independent foundation based in Stockholm, Sweden.  Its mission is ``to debunk devastating myths about the world by offering free access to a fact-based world view.'' They provide free online tools, data, and videos ``to better understand the changing world.'' The initial development of Gapminder was the Trendalyzer software, used by Hans Rosling in several sequences of his documentary ``The Joy of Stats.''
-
-The information visualization technique used by Trendalyzer is an interactive bubble chart. By default it shows five variables: two numeric variables on the vertical and horizontal axes, bubble size and color, and a time variable that may be manipulated with a slider. The software uses brushing and linking techniques for displaying the numeric value of a highlighted country.
-
-This software was acquired by Google in 2007, and is now available as a Motion Chart gadget and as the Public Data Explorer.
-
-In this chapter, time will be used as a complementary variable which adds information to a graph where several variables are confronted. We will illustrate this approach with the evolution of the relationship between Gross National Income (GNI) and carbon dioxide (\(CO_2\)) emissions for a set of countries extracted from the database of the World Bank Open Data. We will try several solutions to display the relationship between \(CO_2\) emissions and GNI over the years using time as a complementary variable. The final method will produce an animated plot resembling the Trendalyzer solution.
-
-\section{Polylines}
-\label{sec-1}
-The first solution is a Motion Chart the \texttt{googleVis} package
-\cite{Gesmann.deCastillo2011}, an interface between R and the Google
-Visualisation API. With its \texttt{gvisMotionChart} function it is easy to
-produce a Motion Chart that can be displayed using a browser with
-Flash enabled (Figure \ref{fig:googleVis}).
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-load('data/CO2.RData')
-\end{lstlisting}
-
-
-
-\index{Data!CO2@$CO_2$}
-\index{Data!World Bank}
-\index{Packages!googleVis@\texttt{googleVis}}
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-library(googleVis)
-pgvis <- gvisMotionChart(CO2data, idvar='Country.Name', timevar='Year')
-\end{lstlisting}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=\textwidth]{figs/googleVis}
-  \caption{Snapshot of a Motion Chart produced with googleVis.}
-  \label{fig:googleVis}
-\end{figure}
-
-
-
-Although the \texttt{gvisMotionChart} is quite easy to use, the global
-appearance and behavior are completely determined by Google
-API\footnote{You should read the Google API Terms of Service before using
-  \texttt{googleVis}: \url{https://developers.google.com/terms/}.}. Moreover, you should carefully read their Terms of Use
-before using it for public distribution.
-
-Our next attempt is to display the entire data in a panel with a
-scatterplot using country names as the grouping factor. Points of each
-country are connected with polylines to reveal the time evolution
-(Figure \ref{fig:CO2-GNI}).
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-## lattice version
-xyplot(GNI.capita  ~ CO2.capita, data=CO2data,
-       xlab="Carbon dioxide emissions (metric tons per capita)",
-       ylab="GNI per capita, PPP (current international $)",
-       groups=Country.Name, type='b')
-\end{lstlisting}
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=.9\linewidth]{figs/CO2_GNI.pdf}
-\caption{\label{fig:CO2-GNI}GNI per capita versus $\mathrm{CO_2}$ emissions per capita (\texttt{lattice} version).}
-\end{figure}
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-## ggplot2 version
-ggplot(data=CO2data, aes(x=CO2.capita, y=GNI.capita,
-           color=Country.Name)) +
-    xlab("Carbon dioxide emissions (metric tons per capita)") +
-    ylab("GNI per capita, PPP (current international $)") +
-    geom_point() + geom_path() + theme_bw()
-\end{lstlisting}
-
-Three improvements can be added to this graphical result: 
-\begin{enumerate}
-\item Define a better palette to enhance visual discrimination between
-countries.
-\item Display time information with labels to show year values.
-\item Label each polyline with the country name instead of a legend.
-\end{enumerate}
-\section{Choosing Colors}
-\label{sec-2}
-The \texttt{Country.Name} categorical variable will be encoded with a
-qualitative palette, namely the first five colors of \texttt{Set1}
-palette\footnote{\url{http://colorbrewer2.org/}} from the \texttt{RColorBrewer} package
-\cite{Neuwirth2011}. Because there are more countries than colors, we
-have to repeat some colors to complete the number of levels of the
-variable \texttt{Country.Name}. The result is a palette with non-unique
-colors, and thus some countries will share the same color. This is not
-a problem because the curves will be labeled, and countries with the
-same color will be displayed at enough distance.
-
-\index{Packages!RColorBrewer@\texttt{RColorBrewer}}
-\index{brewer.pal@\texttt{brewer.pal}}
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-library(RColorBrewer)
-
-nCountries <- nlevels(CO2data$Country.Name)
-pal <- brewer.pal(n=5, 'Set1')
-pal <- rep(pal, length = nCountries)
-\end{lstlisting}
-
-Adjacent colors of this palette are chosen to be easily
-distinguishable. Therefore, the connection between colors and
-countries must be in such a way that nearby lines are encoded
-with adjacent colors of the palette.
-
-A simple approach is to calculate the annual average of the
-variable to be represented along the x-axis (\texttt{CO2.capita}), and
-extract colors from the palette according to the order of this
-value.  
-
-\index{aggregate@\texttt{aggregate}}
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-## Rank of average values of CO2 per capita
-CO2mean <- aggregate(CO2.capita ~ Country.Name, data=CO2data, FUN=mean)
-palOrdered <- pal[rank(CO2mean$CO2.capita)]
-\end{lstlisting}
-
-A more sophisticated solution is to use the ordered results of a
-hierarchical clustering of the time evolution of the $\mathrm{CO_2}$ per capita
-values (Figure \ref{fig:hclustCO2}). The data is extracted from the
-original $\mathrm{CO_2}$ \texttt{data.frame}.  
-
-\index{hclust@\texttt{hclust}}
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-CO2capita <- CO2data[, c('Country.Name', 'Year', 'CO2.capita')]
-CO2capita <- reshape(CO2capita, idvar='Country.Name', timevar='Year', direction='wide')
-hCO2 <- hclust(dist(CO2capita[, -1]))
-
-oldpar <- par(mar=c(0, 2, 0, 0) + .1)
-plot(hCO2, labels=CO2capita$Country.Name,
-     xlab='', ylab='', sub='', main='')
-par(oldpar)
-\end{lstlisting}
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=.9\linewidth]{figs/hclust.pdf}
-\caption{\label{fig:hclustCO2}Hierarchical clustering of the time evolution of $\mathrm{CO_2}$ per capita values.}
-\end{figure}
-
-
-The colors of the palette are assigned to each country with \texttt{match},
-which returns a vector of the positions of the matches of the country
-names in alphabetical order in the country names ordered according to
-the hierarchical clustering.
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-idx <- match(levels(CO2data$Country.Name), 
-             CO2capita$Country.Name[hCO2$order])
-palOrdered <- pal[idx]
-\end{lstlisting}
-It must be highlighted that this palette links colors with the levels
-of \texttt{Country.Name} (country names in alphabetical order), which is
-exactly what the \texttt{groups} argument provides. The following code
-produces a curve for each country using different colors to
-distinguish them.
-
-\index{simpleTheme@\texttt{simpleTheme}}
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-## simpleTheme encapsulates the palette in a new theme for xyplot
-myTheme <- simpleTheme(pch=19, cex=0.6, col=palOrdered)
-
-pCO2.capita <- xyplot(GNI.capita  ~ CO2.capita,
-                      xlab="Carbon dioxide emissions (metric tons per capita)",
-                      ylab="GNI per capita, PPP (current international $)",
-                      groups=Country.Name, data=CO2data,
-                      par.settings=myTheme,
-                      type='b')
-\end{lstlisting}
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-gCO2.capita <- ggplot(data=CO2data, aes(x=CO2.capita, y=GNI.capita,
-                      color=Country.Name)) +
-    geom_point() + geom_path() +
-    scale_color_manual(values=palOrdered, guide=FALSE) +
-    xlab('CO2 emissions (metric tons per capita)') +
-    ylab('GNI per capita, PPP (current international $)') +
-    theme_bw()
-\end{lstlisting}
-\section{Labels to Show Time Information}
-\label{sec-3}
-This result can be improved with labels displaying the years to show
-the time evolution.  A panel function with \texttt{panel.text} to print the
-year labels and \texttt{panel.superpose} to display the lines for each group
-is a solution. In the panel function, \texttt{subscripts} is a vector with
-the integer indices representing the rows of the \texttt{data.frame} to be
-displayed in the panel.
-
-\index{panel.text@\texttt{panel.text}}
-\index{subscripts@\texttt{subscripts}} \index{Panel function}
-\index{panel.superpose@\texttt{panel.superpose}}
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-xyplot(GNI.capita  ~ CO2.capita,
-       xlab="Carbon dioxide emissions (metric tons per capita)",
-       ylab="GNI per capita, PPP (current international $)",
-       groups=Country.Name, data=CO2data,
-       par.settings=myTheme,
-       type='b', 
-       panel=function(x, y, ..., subscripts, groups){
-         panel.text(x, y, ...,
-                    labels=CO2data$Year[subscripts],
-                    pos=2, cex=0.5, col='gray')
-         panel.superpose(x, y, subscripts, groups,...)
-       }
-       )
-\end{lstlisting}
-
-The same result with a clearer code is obtained with the combination
-of \texttt{+.trellis}, \texttt{glayer\_} and \texttt{panel.text}. Using \texttt{glayer\_} instead of
-\texttt{glayer}, we ensure that the labels are printed below the lines.
-
-\index{Packages!latticeExtra@\texttt{latticeExtra}}
-\index{glayer@\texttt{glayer}}
-\index{+.trellis@\texttt{+.trellis}}
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-pCO2.capita <- pCO2.capita +
-    glayer_(panel.text(..., labels=CO2data$Year[subscripts],
-                       pos=2, cex=0.5, col='gray'))
-\end{lstlisting}
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-gCO2.capita <- gCO2.capita + geom_text(aes(label=Year),
-                                       colour='gray',
-                                       size=2.5,
-                                       hjust=0, vjust=0)
-\end{lstlisting}
-\section{Country Names: Positioning Labels}
-\label{sec-4}
-The common solution to link each curve with the group value is to add
-a legend. However, a legend can be confusing with too many items. In
-addition, the reader must carry out a complex task: Choose the line,
-memorize its color, search for it in the legend, and read the country
-name.
-
-A better approach is to label each line using nearby text with the
-same color encoding. A suitable method is to place the labels
-close to the end of each line (Figure
-\ref{fig:CO2-GNI-glayer}). Labels are placed with the
-\texttt{panel.pointLabel} function from the \texttt{maptools} package. This
-function use optimization routines to find locations without
-overlaps.
-
-\index{group.value@\texttt{group.value}}
-\index{group.number@\texttt{group.number}}
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-library(maptools)  
-## group.value provides the country name; group.number is the
-## index of each country to choose the color from the palette.
-pCO2.capita +
-    glayer(panel.pointLabel(mean(x), mean(y),
-                            labels= group.value,
-                            col=palOrdered[group.number],
-                            cex=.8,
-                            fontface=2, fontfamily='Palatino'))
-\end{lstlisting}
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=.9\linewidth]{figs/CO2_capita.pdf}
-\caption{\label{fig:CO2-GNI-glayer}$\mathrm{CO_2}$ emissions versus GNI per capita. Labels are placed with \texttt{panel.pointLabel}.}
-\end{figure}
-
-
-However, this solution does not solve the overlapping between labels
-and lines. The package \texttt{directlabels} \cite{Hocking2013} includes a
-wide repertory of positioning methods to cope with this problem. The
-main function, \texttt{direct.label}, is able to determine a suitable method
-for each plot, although the user can choose a different method from
-the collection or even define a custom method. For the \texttt{pCO2.capita}
-object, I have obtained the best results with \texttt{extreme.grid} (Figure
-\ref{fig:CO2-GNI-DL}).
-
-\index{Packages!directlabels@\texttt{directlabels}}
-\index{direct.label@\texttt{direct.label}}
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-library(directlabels)
-direct.label(pCO2.capita, method='extreme.grid')
-\end{lstlisting}
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=.9\linewidth]{figs/CO2_capitaDL.pdf}
-\caption{\label{fig:CO2-GNI-DL}$\mathrm{CO_2}$ emissions versus GNI per capita. Labels are placed with the \texttt{extreme.grid} method of the \texttt{directlabels} package.}
-\end{figure}
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-direct.label(gCO2.capita, method='extreme.grid')
-\end{lstlisting}
-\section{A Panel for Each Year}
-\label{sec-5}
-Time can be used as a conditioning variable (as shown in previous
-sections) to display subsets of the data in different panels. Figure
-\ref{fig:CO2-GNI-panel} is produced with the same code as in Figure
-\ref{fig:CO2-GNI}, now including \texttt{|factor(Year)} in the lattice
-version and \texttt{facet\_wrap(\textasciitilde{} Year)} in the \texttt{ggplot2} version.
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-xyplot(GNI.capita  ~ CO2.capita | factor(Year), data=CO2data,
-       xlab="Carbon dioxide emissions (metric tons per capita)",
-       ylab="GNI per capita, PPP (current international $)",
-       groups=Country.Name, type='b',
-       auto.key=list(space='right'))
-\end{lstlisting}
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=.9\linewidth]{figs/CO2_capita_panel.pdf}
-\caption{\label{fig:CO2-GNI-panel}$\mathrm{CO_2}$ emissions versus GNI per capita with a panel for each year.}
-\end{figure}
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-ggplot(data=CO2data, aes(x=CO2.capita, y=GNI.capita, colour=Country.Name)) +
-    facet_wrap(~ Year) + geom_point(pch=19) + 
-    xlab('CO2 emissions (metric tons per capita)') +
-    ylab('GNI per capita, PPP (current international $)') +
-    theme_bw()
-\end{lstlisting}
-
-Because the grouping variable, \texttt{Country.Name}, has many levels, the
-legend is not very useful. Once again, point labeling is recommended
-(Figure \ref{fig:CO2-GNI-panel-labels}).
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-xyplot(GNI.capita  ~ CO2.capita | factor(Year), data=CO2data,
-       xlab="Carbon dioxide emissions (metric tons per capita)",
-       ylab="GNI per capita, PPP (current international $)",
-       groups=Country.Name, type='b',
-       par.settings=myTheme) + 
-    glayer(panel.pointLabel(x, y, labels=group.value,
-                            col=palOrdered[group.number], cex=0.7))
-\end{lstlisting}
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=.9\linewidth]{figs/CO2_capita_panel_labels.pdf}
-\caption{\label{fig:CO2-GNI-panel-labels}$\mathrm{CO_2}$ emissions versus GNI per capita with a panel for each year.}
-\end{figure}
-
-\subsection{\floweroneleft Using Variable Size to Encode an Additional Variable}
-\label{sec-5-1}
-Instead of using simple points, we can display circles of
-different radius to encode a new variable. This new variable is
-\texttt{CO2.PPP}, the ratio of $\mathrm{CO_2}$ emissions to the Gross Domestic
-Product with purchasing power parity (PPP) estimations.
-
-To use this numeric variable as an additional grouping factor, its
-range must be divided into different classes. The typical solution is
-to use \texttt{cut} to coerce the numeric variable into a \texttt{factor} whose
-levels correspond to uniform intervals, which could be unrelated to
-the data distribution. The \texttt{classInt} package \cite{Bivand2013}
-provides several methods to partition data into classes based on
-natural groups in the data distribution.
-
-\index{Packages!classInt@\texttt{classInt}}
-\index{classIntervals@\texttt{classIntervals}}
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-library(classInt)
-z <- CO2data$CO2.PPP
-intervals <- classIntervals(z, n=4, style='fisher')
-\end{lstlisting}
-
-Although the functions of this package are mainly intended to create
-color palettes for maps, the results can also be associated to
-point sizes. \texttt{cex.key} defines the sequence of sizes (to be
-displayed in the legend) associated with each \texttt{CO2.PPP} using the
-\texttt{findCols} function.
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-nInt <- length(intervals$brks) - 1
-cex.key <- seq(0.5, 1.8, length=nInt)
-
-idx <- findCols(intervals)
-CO2data$cexPoints <- cex.key[idx]
-\end{lstlisting}
-
-The graphic will display information on two variables (\texttt{GNI.capita}
-and \texttt{CO2.capita} in the vertical and horizontal axes, respectively)
-with a conditioning variable (\texttt{Year}) and two grouping variables
-(\texttt{Country.Name}, and \texttt{CO2.PPP} through \texttt{cexPoints}) (Figure
-\ref{fig:CO2pointsGG}).
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-ggplot(data=CO2data, aes(x=CO2.capita, y=GNI.capita, colour=Country.Name)) +
-    facet_wrap(~ Year) + geom_point(aes(size=cexPoints), pch=19) +
-    xlab('Carbon dioxide emissions (metric tons per capita)') +
-    ylab('GNI per capita, PPP (current international $)') +
-    theme_bw()
-\end{lstlisting}
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=.9\linewidth]{figs/CO2pointsGG.pdf}
-\caption{\label{fig:CO2pointsGG}$\mathrm{CO_2}$ emissions versus GNI per capita for different intervals of the ratio of $\mathrm{CO_2}$ emissions to the GDP PPP estimations.}
-\end{figure}
-
-The \texttt{auto.key} mechanism of the \texttt{lattice} version is not able to cope
-with two grouping variables. Therefore, the legend, whose main
-componens are the labels (\texttt{intervals}) and the point sizes
-(\texttt{cex.key}), should be defined manually (Figure \ref{fig:CO2points}).
-
-\index{panel.text@\texttt{panel.text}}
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-op <- options(digits=2)
-tab <- print(intervals)
-options(op)
-
-key <- list(space='right',
-            title=expression(CO[2]/GNI.PPP),
-            cex.title=1,
-            ## Labels of the key are the intervals strings
-            text=list(labels=names(tab), cex=0.85),
-            ## Points sizes are defined with cex.key
-            points=list(col='black', pch=19,
-              cex=cex.key, alpha=0.7))
-
-
-xyplot(GNI.capita ~ CO2.capita|factor(Year), data=CO2data,
-       xlab="Carbon dioxide emissions (metric tons per capita)",
-       ylab="GNI per capita, PPP (current international $)",
-       groups=Country.Name, key=key, alpha=0.7,
-       col=palOrdered, cex=CO2data$cexPoints) +
-    glayer(panel.pointLabel(x, y, labels=group.value,
-                            col=palOrdered[group.number], cex=0.7))
-\end{lstlisting}
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=.9\linewidth]{figs/CO2points.pdf}
-\caption{\label{fig:CO2points}$\mathrm{CO_2}$ emissions versus GNI per capita for different intervals of the ratio of $\mathrm{CO_2}$ emissions to the GDP PPP estimations.}
-\end{figure}
-\section{\floweroneleft Traveling Bubbles}
-\label{sec-6}
-The final solution to display this multivariate time series is with
-animation via the function \texttt{grid.animate} of the \texttt{gridSVG}
-package. We will mimic the Trendalyzer/Motion Chart solution, using
-traveling bubbles of different colors and with radius proportional to
-\texttt{CO2.PPP}.
-
-The first step is to draw the initial state of the bubbles. Their
-colors are again defined by the \texttt{palOrdered} palette, although the
-\texttt{adjustcolor} function is used for a ligther \texttt{fill} color. Because
-there will not be a legend, there is no need to define class
-intervals, and thus the radius is directly proportional to the value
-of \texttt{CO2data\$CO2.PPP}.
-
-\index{Packages!gridSVG@\texttt{gridSVG}}
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-library(gridSVG)
-
-xyplot(GNI.capita ~ CO2.capita, data=CO2data,
-       xlab="Carbon dioxide emissions (metric tons per capita)",
-       ylab="GNI per capita, PPP (current international $)",
-       subset=Year==2000, groups=Country.Name,
-       ## The limits of the graphic are defined
-       ## with the entire dataset
-       xlim=extendrange(CO2data$CO2.capita),
-       ylim=extendrange(CO2data$GNI.capita),
-       panel=function(x, y, ..., subscripts, groups) {
-         color <- palOrdered[groups[subscripts]]
-         radius <- CO2data$CO2.PPP[subscripts]
-         ## Size of labels
-         cex <- 1.1*sqrt(radius)
-         ## Bubbles
-         grid.circle(x, y, default.units="native",
-                     r=radius*unit(.25, "inch"),
-                     name=trellis.grobname("points", type="panel"),
-                     gp=gpar(col=color,
-                       ## Fill color ligther than border
-                       fill=adjustcolor(color, alpha=.5),
-                       lwd=2))
-         ## Country labels
-         grid.text(label=groups[subscripts],
-                   x=unit(x, 'native'),
-                   ## Labels above each bubble
-                   y=unit(y, 'native') + 1.5 * radius *unit(.25, 'inch'),
-                   name=trellis.grobname('labels', type='panel'),
-                   gp=gpar(col=color, cex=cex))
-       })
-\end{lstlisting}
-
-From this initial state, \texttt{grid.animate} creates a collection of
-animated graphical objects with the result of \texttt{animUnit}. This
-function produces a set of values that will be interpreted by
-\texttt{grid.animate} as intermediate states of a feature of the graphical
-object. Thus, the bubbles will travel across the values defined by
-\texttt{x\_points} and \texttt{y\_points}, while their labels will use \texttt{x\_points} and
-\texttt{x\_labels}.
-
-The use of \texttt{rep=TRUE} ensures that the animation will be repeated
-indefinitely.
-
-\index{animUnit@\texttt{animUnit}}
-\index{grid.animate@\texttt{grid.animate}}
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-## Duration in seconds of the animation
-duration <- 20
-
-nCountries <- nlevels(CO2data$Country.Name)
-years <- unique(CO2data$Year)
-nYears <- length(years)
-
-## Intermediate positions of the bubbles
-x_points <- animUnit(unit(CO2data$CO2.capita, 'native'),
-                     id=rep(seq_len(nCountries), each=nYears))
-y_points <- animUnit(unit(CO2data$GNI.capita, 'native'),
-                     id=rep(seq_len(nCountries), each=nYears))
-## Intermediate positions of the labels
-y_labels <- animUnit(unit(CO2data$GNI.capita, 'native') +
-                     1.5 * CO2data$CO2.PPP * unit(.25, 'inch'),
-                     id=rep(seq_len(nCountries), each=nYears))
-## Intermediate sizes of the bubbles
-size <- animUnit(CO2data$CO2.PPP * unit(.25, 'inch'),
-                     id=rep(seq_len(nCountries), each=nYears))
-
-grid.animate(trellis.grobname("points", type="panel", row=1, col=1),
-             duration=duration,
-             x=x_points,
-             y=y_points,
-             r=size,
-             rep=TRUE)
-
-grid.animate(trellis.grobname("labels", type="panel", row=1, col=1),
-             duration=duration,
-             x=x_points,
-             y=y_labels,
-             rep=TRUE)
-\end{lstlisting}
-
-A bit of interactivity can be added with the \texttt{grid.hyperlink}
-function. For example, the following code adds the corresponding
-Wikipedia link to a mouse click on each bubble.
-
-\index{grid.hyperlink@\texttt{grid.hyperlink}}
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-countries <- unique(CO2data$Country.Name)
-URL <- paste('http://en.wikipedia.org/wiki/', countries, sep='')
-grid.hyperlink(trellis.grobname('points', type='panel', row=1, col=1),
-               URL, group=FALSE)
-\end{lstlisting}
-
-Finally, the time information: The year is printed in the lower
-right corner, using the \texttt{visibility} attribute of an animated
-\texttt{textGrob} object to show and hide the values.
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-visibility <- matrix("hidden", nrow=nYears, ncol=nYears)
-diag(visibility) <- "visible"
-yearText <- animateGrob(garnishGrob(textGrob(years, .9, .15,
-                                             name="year",
-                                             gp=gpar(cex=2, col="grey")),
-                                    visibility="hidden"),
-                        duration=20,
-                        visibility=visibility,
-                        rep=TRUE)
-grid.draw(yearText)
-\end{lstlisting}
-
-The SVG file produced with \texttt{grid.export} is available at the website
-of the book (Figure \ref{fig:bubblesSVG}). Because this animation does
-not trace the paths, Figure \ref{fig:CO2-GNI-DL} provides this
-information as a static complement.
-
-\index{grid.export@\texttt{grid.export}}
-
-\lstset{language=R,numbers=none}
-\begin{lstlisting}
-grid.export("figs/bubbles.svg")
-\end{lstlisting}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=\textwidth]{figs/bubbles.png}
-  \caption{Animated bubbles produced with \texttt{gridSVG}.}
-  \label{fig:bubblesSVG}
-\end{figure}
-
-Now, sit down in your favorite easy chair and watch the magistral
-video ``200 Countries, 200 Years, 4 Minutes"\footnote{\url{http://www.gapminder.org/videos/200-years-that-changed-the-world-bbc/}}. After that, you are
-ready to open the SVG file of traveling bubbles: It is easier, a short
-time period with less than twenty countries.
 
 \chapter{About the Data}
-\label{sec:orgheadline22}
+\label{sec:org02d2fdc}
 \label{cha:dataTime}
 
+\section{SIAR}
+\label{sec:org0ca2455}
+\index{Data!SIAR}
+\index{Data!Meteorological variables}
+
+The Agroclimatic Information System for Irrigation (SIAR)
+\cite{SIAR2011} is a free-download database operating since 1999,
+covering the majority of the irrigated area of Spain.  This network
+belongs to the Ministry of Agriculture, Food and Environment of Spain,
+as a tool to predict and study meteorological variables for
+agriculture. SIAR is composed of twelve regional centers and a
+national center, aiming to centralize and depurate measurements from
+the stations of the network. Figure \ref{fig:SIAR_map} displays the
+stations over an altitude map. Some stations from the complete network
+have been omitted, due to difficulties accessing their coordinates
+or to incomplete or spurious data series\footnote{The name and location data of these stations are available at the \href{https://github.com/oscarperpinan/CMSAF-SIAR/blob/master/data/SIAR.csv}{GitHub repository} of the paper \cite{Antonanzas-Torres.Canizares.ea2013}.}.
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{figs/mapaSIAR_crop}
+  \caption{Meteorological stations of the SIAR network. The color key
+    indicates the altitude (meters).}
+  \label{fig:SIAR_map}
+\end{figure}
+
+\subsection{Daily Data of Different Meteorological Variables}
+\label{sec:org1fd8a31}
+As an example of multiple time series with different scales, we
+will use 8 years (from January 2004 to December 2011) of daily
+data corresponding to several meteorological variables measured at
+the SIAR station located at Aranjuez (Madrid, Spain) available on
+the SIAR webpage\footnote{\url{http://eportal.magrama.gob.es/websiar}}. The \texttt{aranjuez.gz} file, available in the
+\texttt{data} folder of the book repository, contains this information
+with several meteorological variables: average, maximum, and
+minimum ambient temperature; average and maximum humidity; average
+and maximum wind speed; rainfall; solar radiation on the
+horizontal plane; and evotranspiration.
+
+The \texttt{read.zoo} from the \texttt{zoo} package accepts this string and
+downloads the data to construct a \texttt{zoo} object. Several
+arguments are passed directly to \texttt{read.table} (\texttt{header}, \texttt{skip},
+etc.) and are detailed conveniently on the help page of this
+function. The \texttt{index.column} is the number of the column with the
+time index, and \texttt{format} defines the date format of this index.
+
+\index{Packages!zoo@\texttt{zoo}}
+\index{read.zoo@\texttt{read.zoo}}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+  library(zoo)
+  
+  aranjuez <- read.zoo("data/aranjuez.gz",
+                       index.column = 3, format = "%d/%m/%Y",
+                       fileEncoding = 'UTF-16LE',
+                       header = TRUE, fill = TRUE,
+                       sep = ';', dec = ",", as.is = TRUE)
+  aranjuez <- aranjuez[, -c(1:4)]
+  
+  names(aranjuez) <- c('TempAvg', 'TempMax', 'TempMin',
+                       'HumidAvg', 'HumidMax',
+                       'WindAvg', 'WindMax',
+                       'Radiation', 'Rain', 'ET')
+  
+  
+  summary(aranjuez)
+\end{lstlisting}
+
+\index{zoo@\texttt{zoo}}
+
+From the summary it is clear that parts of these time series include erroneous outliers that can be
+safely removed:
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+  aranjuezClean <- within(as.data.frame(aranjuez),{
+    TempMin[TempMin>40] <- NA
+    HumidMax[HumidMax>100] <- NA
+    WindAvg[WindAvg>10] <- NA
+    WindMax[WindMax>10] <- NA
+  })
+  
+  aranjuez <- zoo(aranjuezClean, index(aranjuez))
+\end{lstlisting}
+
+
+\subsection{Solar Radiation Measurements from Different Locations}
+\label{sec:orgcf7f82f}
+As an example of multiple time series with the same scale, we will use
+data of daily solar radiation measurements from different locations.
+
+\index{Data!Solar radiation}
+\index{Data!SIAR}
+
+Daily solar radiation incident on the horizontal plane is registered
+by meterological stations and estimated from satellite images. This
+meteorological variable is important for a wide variety of scientific
+disciplines and engineering applications. Its variations and trends,
+dependent on the location (mainly latitude, and also longitude and
+altitude) and on time (day of the year), have been analyzed and
+modeled in a huge collection of papers and reports. In this section
+we will focus our attention on the time evolution of the solar
+radiation. The spatial distribution and the spatio-time behavior will
+be the subject of later sections.
+
+The stations of the SIAR network include first-class pyranometers
+according to the World Meteorological Organization (WMO), whose
+absolute accuracy is within \(\pm 5\%\) and is typically lower than \(\pm
+3\%\). Solar irradiance is recorded every 15 minutes and then
+collated through a datalogger within the station to generate the daily
+irradiation, which is later sent to the regional and national centers.
+
+The file \texttt{navarra.RData} contains daily solar radiation data of 2011
+from the meteorological stations of Navarra, Spain. The names of the
+dataset are the abbreviations of each station name.
+
+
+\section{Unemployment in the United States}
+\label{sec:org33600b8}
+As an example of time series that can be displayed both in individual
+and in aggregate, we will use the unemployment data in the United
+States. The information on unemployed persons by industry and class of
+worker is available in Table A-14 published by the Bureau of Labor
+Statistics\footnote{\url{http://www.bls.gov/webapps/legacy/cpsatab14.htm}}.
+
+The dataset arranges the information with a row for each category
+(\texttt{Series.ID}) and a column for each monthly value. In addition, there
+are columns with the annual summaries (\texttt{annualCols}). We rearrange
+this \texttt{data.frame}, dropping the \texttt{Series.ID} and the annual columns,
+and transpose the data.
+
+\index{Data!Unemployment}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+  unemployUSA <- read.csv('data/unemployUSA.csv')
+  nms <- unemployUSA$Series.ID
+  ##columns of annual summaries
+  annualCols <- 14 + 13*(0:12)
+  ## Transpose. Remove annual summaries
+  unemployUSA <- as.data.frame(t(unemployUSA[,-c(1, annualCols)]))
+  ## First 7 characters can be suppressed
+  names(unemployUSA) <- substring(nms, 7)
+  head(unemployUSA)
+\end{lstlisting}
+
+With the transpose, the column names of the original data set are
+now the row names of the \texttt{data.frame}. The \texttt{as.yearmon} function
+of the \texttt{zoo} package converts the character vector of names into a
+\texttt{yearmon} vector, a class for representing monthly data. With
+\texttt{Sys.setlocale("LC\_TIME", 'C')} we ensure that month abbreviations
+(\texttt{\%b}) are correctly interpreted in a non-English locale. This
+vector is the time index of a new \texttt{zoo} object. 
+
+\index{Packages!zoo@\texttt{zoo}}
+\index{as.yearmon@\texttt{as.yearmon}}
+\index{apply@\texttt{apply}}
+\index{zoo@\texttt{zoo}}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+  library(zoo)
+  
+  Sys.setlocale("LC_TIME", 'C')
+  idx <- as.yearmon(row.names(unemployUSA), format='%b.%Y')
+  unemployUSA <- zoo(unemployUSA, idx)
+\end{lstlisting}
+
+Finally, those rows with \texttt{NA} values are removed.
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+  isNA <- apply(is.na(unemployUSA), 1, any)
+  unemployUSA <- unemployUSA[!isNA,]
+\end{lstlisting}
+
+\section{Gross National Income and CO\(_{\text{2}}\) Emissions}
+\label{sec:org6a96092}
+The catalog data of the World Bank Open Data initiative includes a the
+World Development Indicators (WDI)\footnote{\url{http://databank.worldbank.org/Data/Views/VariableSelection/SelectVariables.aspx}}. Among them we will analyze
+the evolution of the relationship between Gross National Income (GNI)
+and \(CO_2\) emissions for a set of countries. The package \texttt{WDI} is able
+to search and download these data series.
+
+\index{Data!World Bank} 
+\index{Data!CO2@$CO_2$}
+\index{Data!GNI}
+\index{Packages!WDI@\texttt{WDI}}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+  library(WDI)
+    
+  CO2data <- WDI(indicator=c('EN.ATM.CO2E.PC', 'EN.ATM.CO2E.PP.GD',
+                'NY.GNP.MKTP.PP.CD', 'NY.GNP.PCAP.PP.CD'),
+            start=2000, end=2011,
+            country=c('BR', 'CN', 'DE', 'ES',
+                'FI', 'FR', 'GR', 'IN', 'NO', 'US'))
+
+  names(CO2data) <- c('iso2c', 'Country.Name', 'Year',
+                      'CO2.capita', 'CO2.PPP',
+                      'GNI.PPP', 'GNI.capita')
+\end{lstlisting}
+
+Only two minor modifications are needed: Remove the missing values and
+convert the \texttt{Country.Name} column into a \texttt{factor}. This first
+modification will save problems when displaying the time series, and
+the \texttt{factor} conversion will be useful for grouping.
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+  isNA <- apply(is.na(CO2data), 1, any)
+  CO2data <- CO2data[!isNA, ]
+
+  CO2data$Country.Name <- factor(CO2data$Country.Name)
+\end{lstlisting}
+
 \part{Spatial Data}
-\label{sec:orgheadline37}
+\label{sec:org8ac3895}
 
 \chapter{Displaying Spatial Data: Introduction}
-\label{sec:orgheadline33}
+\label{sec:org5cc9888}
 \label{cha:spatialIntro}
 
 Spatial data (also known as geospatial data) are directly or indirectly referenced to a location on the surface of the Earth. Their spatial reference is composed of coordinate values and a system of reference for these coordinates. Spatial data are often accessed, manipulated, or analyzed through Geographic Information Systems (GIS).
@@ -2245,13 +1552,13 @@ Real objects represented by GIS data can be divided into two abstractions: discr
 This part exposes several examples where vector and raster data are displayed to show geographic location of features and physical landscape features of a place (reference and physical maps, Chapter \ref{cha:refer-phys-maps}) or a specific variable in the context of a geographic reference (thematic maps, Chapter \ref{cha:thematicMaps}). These examples make use of several datasets (available at the book website) described in Chapter \ref{cha:dataSpatial}.
 
 \section{Packages}
-\label{sec:orgheadline31}
+\label{sec:org937d336}
 \label{sec:spatial-packages}
 
 The CRAN Tasks View ``Analysis of Spatial Data'' \footnote{\url{http://CRAN.R-project.org/view=Spatial}} summarizes the packages for reading, vizualizing, and analyzing spatial data. This section provides a brief introduction to \texttt{sp}, \texttt{raster}, \texttt{rasterVis}, \texttt{maptools}, \texttt{rgdal}, \texttt{gstat}, and \texttt{maps}. Most of the information has been extracted from their vignettes, webpages, and help pages. You should read them for detailed information.
 
 \subsection{sp}
-\label{sec:orgheadline24}
+\label{sec:org12d63f9}
 \label{sec:sp}
 
 \index{Packages!sp@\texttt{sp}}
@@ -2285,7 +1592,7 @@ A number of spatial methods are available for the classes in \texttt{sp}:
 \end{itemize}
 
 \subsection{raster}
-\label{sec:orgheadline25}
+\label{sec:org44372d7}
 \label{sec:raster}
 
 \index{Packages!raster@\texttt{raster}}
@@ -2329,7 +1636,7 @@ There are several functions to modify the content or the spatial extent of \text
 \end{itemize}
 
 \subsection{rasterVis}
-\label{sec:orgheadline26}
+\label{sec:org9e346ea}
 \label{sec:rasterVis}
 \index{Packages!rasterVis@\texttt{rasterVis}}
 
@@ -2340,7 +1647,7 @@ It also includes several methods in the frame of the Exploratory Data Analysis a
 On the other hand, this package is able to display vector fields using arrows, \texttt{vectorplot}, or with streamlines \cite{Wegenkittl.Groeller1997}, \texttt{streamplot}. In this last method, for each point, \emph{droplet}, of a jittered regular grid, a short streamline portion, \emph{streamlet}, is calculated by integrating the underlying vector field at that point. The main color of each streamlet indicates local vector magnitude (slope). Streamlets are composed of points whose sizes, positions, and color degradation encode the local vector direction (aspect).
 
 \subsection{maptools}
-\label{sec:orgheadline27}
+\label{sec:org8f6b526}
 \label{sec:maptools}
 \index{Packages!maptools@\texttt{maptools}}
 
@@ -2367,7 +1674,7 @@ The \texttt{maptools} package \cite{Bivand.Lewin-Koh2013} provides a set of tool
 The topology operations on geometries performed by this package (for example, \texttt{unionSpatialPolygons} ) use the package \texttt{rgeos}, an interface to the Geometry Engine Open Source (GEOS) \footnote{\url{http://trac.osgeo.org/geos/}}.
 
 \subsection{rgdal}
-\label{sec:orgheadline28}
+\label{sec:org9f24351}
 \label{sec:rgdal}
 \index{Packages!rgdal@\texttt{rgdal}}
 
@@ -2376,7 +1683,7 @@ The \texttt{rgdal} package \cite{Bivand.Keitt.ea2013} provides bindings to the G
 In addition, this package provides access to projection and transformation operations from the PROJ.4 library \footnote{\url{https://trac.osgeo.org/proj/}}. This package implements several \texttt{spTransform} methods providing transformation between datums and conversion between projections using PROJ.4 projection arguments.
 
 \subsection{gstat}
-\label{sec:orgheadline29}
+\label{sec:org34536cb}
 \label{sec:gstat}
 \index{Packages!gstat@\texttt{gstat}}
 
@@ -2391,7 +1698,7 @@ Most of the functionality of this package is beyond the scope of this book. Howe
 \end{itemize}
 
 \subsection{maps}
-\label{sec:orgheadline30}
+\label{sec:org92f9c6a}
 \label{sec:maps}
 \index{Packages!maps@\texttt{maps}}
 \index{Packages!mapproj@\texttt{mapproj}}
@@ -2400,7 +1707,7 @@ Most of the functionality of this package is beyond the scope of this book. Howe
 The \texttt{maps} \cite{Becker.Wilks.ea2013}, \texttt{mapdata} \cite{Becker.Wilks.ea2013b}, and \texttt{mapproj} \cite{McIlroy.Brownrigg.ea2013} packages are useful to draw or create geographical maps. \texttt{mapdata} contains higher resolution databases, and \texttt{mapproj} converts latitude/longitude coordinates into projected coordinates.
 
 \section{Further Reading}
-\label{sec:orgheadline32}
+\label{sec:orgcdf5d54}
 \label{cha:further-reading-spatial}
 
 \begin{itemize}
@@ -2411,13 +1718,13 @@ The \texttt{maps} \cite{Becker.Wilks.ea2013}, \texttt{mapdata} \cite{Becker.Wilk
 
 \item \cite{Hengl2009} is an open-access book with seven spatial data analysis exercises. The author is the creator and maintainer of the Spatial-Analyst webpage \footnote{\url{http://spatial-analyst.net}}.
 
-\item The CRAN Tasks View ``Analysis of Spatial Data'' \footnote{\url{http://CRAN.R-project.org/view=Spatial}} summarizes the packages for reading, vizualizing, and analyzing spatial data. The packages in development published at R-Forge are listed in the ``Spatial Data \& Statistics'' topic view \footnote{\url{http://r-forge.r-project.org/softwaremap/trove_list.php?form_cat=353}}. The R-SIG-Geo mailing list \footnote{\url{https://stat.ethz.ch/mailman/listinfo/R-SIG-Geo/}} is a powerful resource for obtaining help.
+\item The CRAN Tasks View ``Analysis of Spatial Data'' \footnote{\url{http://CRAN.R-project.org/view=Spatial}} summarizes the packages for reading, vizualizing, and analyzing spatial data. The packages in development published at R-Forge are listed in the ``Spatial Data \& Statistics'' topic view \footnote{\url{http://r-forge.r-project.org/softwaremap/trove\_list.php?form\_cat=353}}. The R-SIG-Geo mailing list \footnote{\url{https://stat.ethz.ch/mailman/listinfo/R-SIG-Geo/}} is a powerful resource for obtaining help.
 
 \item The ``Spatial Analysis'' \footnote{\url{http://spatialanalysis.co.uk/map-gallery/}} and ``Kartograph'' \footnote{\url{http://kartograph.org/}} webpages publish a variety of beautiful visualization examples.
 \end{itemize}
 
 \chapter{Thematic Maps}
-\label{sec:orgheadline34}
+\label{sec:org6a1e042}
 \label{cha:thematicMaps}
 
 A thematic map focuses on a specific theme or variable, commonly using geographic data such as coastlines, boundaries, and places as points of reference for the variable being mapped. These maps provide specific information about particular locations or areas (proportional symbol mapping and choropleth maps) and information about spatial patterns (isarithmic and raster maps). The following sections illustrate the code you need to produce these maps, with a final section devoted to the visualization of vector fields.
@@ -2584,15 +1891,15 @@ ggplot(data=NO2df, aes(long, lat, size=classNO2, fill=classNO2)) +
 
 ## Definition of an improved key with title and background
 NO2key <- list(x=0.98, y=0.02, corner=c(1, 0),
-              title=expression(NO[2]~~(paste(mu, plain(g))/m^3)),
-              cex.title=.75, cex=0.7,
-              background='gray92')
+	      title=expression(NO[2]~~(paste(mu, plain(g))/m^3)),
+	      cex.title=.75, cex=0.7,
+	      background='gray92')
 
 pNO2 <- spplot(NO2sp["classNO2"],
-               col.regions=airPal,  cex=dentAQ,
-               edge.col='black',
-               scales=list(draw=TRUE),
-               key.space=NO2key)
+	       col.regions=airPal,  cex=dentAQ,
+	       edge.col='black',
+	       scales=list(draw=TRUE),
+	       key.space=NO2key)
 pNO2
 \end{lstlisting}
 
@@ -2655,16 +1962,16 @@ NO2df <- data.frame(NO2sp)
 ## ggmap
 ggmap(madridGG) +
     geom_point(data=NO2df,
-               aes(long, lat, size=classNO2, fill=classNO2),
-               pch=21, col='black') +
+	       aes(long, lat, size=classNO2, fill=classNO2),
+	       pch=21, col='black') +
        scale_fill_manual(values=airPal) +
        scale_size_manual(values=dentAQ*2)
 
 ##OpenStreetMap
 autoplot(madridOM) + 
     geom_point(data=NO2df,
-               aes(long, lat, size=classNO2, fill=classNO2),
-               pch=21, col='black') +
+	       aes(long, lat, size=classNO2, fill=classNO2),
+	       pch=21, col='black') +
     scale_fill_manual(values=airPal) +
     scale_size_manual(values=dentAQ*2)
 \end{lstlisting}
@@ -2684,9 +1991,9 @@ height <- with(bbMap, ur.lat - ll.lat)
 width <- with(bbMap, ur.lon - ll.lon)
 
 pNO2 + layer(grid.raster(madridGG,
-                          width=width, height=height,
-                          default.units='native'),
-             under=TRUE)
+			  width=width, height=height,
+			  default.units='native'),
+	     under=TRUE)
 \end{lstlisting}
 
 \begin{figure}[htb]
@@ -2705,15 +2012,15 @@ height <- with(tile$bbox, p1[2] - p2[2])
 width <- with(tile$bbox, p2[1] - p1[1])
 
 colors <- as.raster(matrix(tile$colorData,
-                           ncol=tile$yres,
-                           nrow=tile$xres,
-                           byrow=TRUE))
+			   ncol=tile$yres,
+			   nrow=tile$xres,
+			   byrow=TRUE))
 
 pNO2 + layer(grid.raster(colors,
-                         width=width,
-                         height=height,
-                         default.units='native'),
-             under=TRUE)
+			 width=width,
+			 height=height,
+			 default.units='native'),
+	     under=TRUE)
 \end{lstlisting}
 \subsubsection{Vector Data}
 \label{sec-1-4-2}
@@ -2779,8 +2086,8 @@ final result.
 spDistricts <- list('sp.polygons', distritosMadrid, fill='gray97', lwd=0.3)
 spStreets <- list('sp.lines', streetsMadrid, lwd=0.05)
 spNames <- list(sp.pointLabel, NO2sp,
-                labels=substring(NO2sp$codEst, 7),
-                cex=0.6, fontfamily='Palatino')
+		labels=substring(NO2sp$codEst, 7),
+		cex=0.6, fontfamily='Palatino')
 
 spplot(NO2sp["classNO2"], col.regions=airPal, cex=dentAQ,
        edge.col='black', alpha=0.8,
@@ -2793,12 +2100,12 @@ spplot(NO2sp["classNO2"], col.regions=airPal, cex=dentAQ,
 \begin{lstlisting}
 pNO2 +
     layer(sp.pointLabel(NO2sp,
-                        labels=substring(NO2sp$codEst, 7),
-                        cex=0.8, fontfamily='Palatino')
-          ) +
+			labels=substring(NO2sp$codEst, 7),
+			cex=0.8, fontfamily='Palatino')
+	  ) +
     layer_({
-        sp.polygons(distritosMadrid, fill='gray97', lwd=0.3)
-        sp.lines(streetsMadrid, lwd=0.05)
+	sp.polygons(distritosMadrid, fill='gray97', lwd=0.3)
+	sp.lines(streetsMadrid, lwd=0.05)
     })
 \end{lstlisting}
 
@@ -2974,8 +2281,8 @@ for (i in 1:nrow(NO2df)){
   codURL <- as.numeric(substr(codEst, 7, 8))
   rootURL <- 'http://www.mambiente.munimadrid.es'
   stationURL <- paste(rootURL,
-                      '/opencms/opencms/calaire/contenidos/estaciones/estacion',
-                      codURL, '.html', sep='')
+		      '/opencms/opencms/calaire/contenidos/estaciones/estacion',
+		      codURL, '.html', sep='')
   content <- htmlParse(stationURL, encoding='utf8')
   ## Extracted with http://www.selectorgadget.com/
   xPath <- '//*[contains(concat( " ", @class, " " ), concat( " ", "imagen_1", " " ))]'
@@ -3012,16 +2319,16 @@ tooltips <- sapply(seq_len(nrow(NO2df)), function(i){
   codEst <- NO2df[i, "codEst"]
   ## Information to be attached to each line
   stats <- paste(c('Mean', 'Median', 'SD'),
-                 signif(NO2df[i, c('mean', 'median', 'sd')], 4),
-                 sep=' = ', collapse='<br />')
+		 signif(NO2df[i, c('mean', 'median', 'sd')], 4),
+		 sep=' = ', collapse='<br />')
   ## Station photograph 
   imageURL <- paste('images/', codEst, '.jpg', sep='')
   imageInfo <- paste("<img src=", imageURL,
-                     " width='100' height='100' />", sep='')
+		     " width='100' height='100' />", sep='')
   ## Text to be included in the tooltip
   nameStation <- paste('<b>', 
-                       as.character(NO2df[i, "Nombre"]),
-                       '</b>', sep='')
+		       as.character(NO2df[i, "Nombre"]),
+		       '</b>', sep='')
   info <- paste(nameStation, stats, sep='<br />')
   ## Tooltip includes the image and the text
   paste(imageInfo, info, sep='<br />')
@@ -3039,8 +2346,8 @@ urlList <- sapply(seq_len(nrow(NO2df)), function(i){
   codEst <- NO2df[i, "codEst"]
   codURL <- as.numeric(substr(codEst, 7, 8))
   stationURL <- paste(rootURL,
-                      '/opencms/opencms/calaire/contenidos/estaciones/estacion',
-                      codURL, '.html', sep='')
+		      '/opencms/opencms/calaire/contenidos/estaciones/estacion',
+		      codURL, '.html', sep='')
   })
 
 grid.hyperlink('points.panel', urlList, grep=TRUE, group=FALSE)
@@ -3088,7 +2395,7 @@ htmlEnd <- '</body> </html>'
 svgText <- paste(readLines('figs/airMadrid.svg'), collapse='\n')
 
 writeLines(paste(htmlBegin, svgText, htmlEnd, sep='\n'),
-           'airMadrid.html')
+	   'airMadrid.html')
 \end{lstlisting}
 
 
@@ -3097,6 +2404,7 @@ writeLines(paste(htmlBegin, svgText, htmlEnd, sep='\n'),
 \includegraphics[width=0.9\textwidth]{figs/airMadridTooltip.png}
 \caption{\label{fig:airMadridTooltip}Tooltips generated with \texttt{gridSVG} using jQuery and jQuery UI.}
 \end{figure}
+
 \section{Choropleth Maps}
 \label{sec-1}
 \label{sec:multiChoropleth}
@@ -3115,7 +2423,7 @@ choropleth map of the inmigration behavior in the United States.
 \lstset{language=R,numbers=none}
 \begin{lstlisting}
 votes2011 <- read.csv('data/votes2011.csv',
-                      colClasses=c('factor', 'factor', 'numeric', 'numeric'))
+		      colClasses=c('factor', 'factor', 'numeric', 'numeric'))
 \end{lstlisting}
 
 The next section describes how to define a \texttt{SpatialPolygonsDataFrame}
@@ -3322,10 +2630,10 @@ pList <- lapply(1:nClasses, function(i){
     ## Only those polygons corresponding to a level are selected
     mapClass <- espMapVotes[espMapVotes$whichMax==classes[i],]
     pClass <- spplot(mapClass['pcMax'], col.regions=multiPal[[i]],
-                     col='transparent',
-                     ## labels only needed in the last legend
-                     colorkey=(if (i==nClasses) TRUE else list(labels=rep('', 6))),
-                     at = seq(0, 100, by=20))
+		     col='transparent',
+		     ## labels only needed in the last legend
+		     colorkey=(if (i==nClasses) TRUE else list(labels=rep('', 6))),
+		     at = seq(0, 100, by=20))
 })
 
 p <- Reduce('+', pList)
@@ -3357,7 +2665,7 @@ addTitle <- function(legend, title){
   legendGrob <- eval(as.call(c(as.symbol(legend$fun), legend$args)))
   ## Layout of the legend WITH the title
   ly <- grid.layout(ncol=1, nrow=2,
-                    widths=unit(0.9, 'grobwidth', data=legendGrob))
+		    widths=unit(0.9, 'grobwidth', data=legendGrob))
   ## Create a frame to host the original legend and the title
   fg <- frameGrob(ly, name=paste('legendTitle', title, sep='_'))
   ## Add the grobs to the frame
@@ -3371,7 +2679,7 @@ for (i in seq_along(classes)){
   lg <- pList[[i]]$legend$right
   ## ... and add the addTitle function to the legend component of each trellis object
   pList[[i]]$legend$right <- list(fun='addTitle',
-                                  args=list(legend=lg, title=classes[i]))
+				  args=list(legend=lg, title=classes[i]))
 }
 \end{lstlisting}
 
@@ -3416,10 +2724,10 @@ peninsulaLines <- provinces[!canarias,]
 p +
   layer(sp.polygons(peninsulaLines,  lwd = 0.1)) +
   layer(grid.rect(x=bbIslands[1,1], y=bbIslands[2,1],
-                  width=diff(bbIslands[1,]),
-                  height=diff(bbIslands[2,]),
-                  default.units='native', just=c('left', 'bottom'),
-                  gp=gpar(lwd=0.5, fill='transparent')))
+		  width=diff(bbIslands[1,]),
+		  height=diff(bbIslands[2,]),
+		  default.units='native', just=c('left', 'bottom'),
+		  gp=gpar(lwd=0.5, fill='transparent')))
 \end{lstlisting}
 
 \begin{figure}[htb]
@@ -3427,6 +2735,7 @@ p +
 \includegraphics[width=.9\linewidth]{figs/mapLegends.png}
 \caption{\label{fig:mapLegends}Spanish general elections results. The map shows the result of the most voted option in each municipality.}
 \end{figure}
+
 \section{Raster Maps}
 \label{sec-1}
 \label{cha:raster}
@@ -3491,10 +2800,10 @@ library(maptools)
 
 ext <- as.vector(extent(SISav))
 boundaries <- map('worldHires',
-                  xlim=ext[1:2], ylim=ext[3:4],
-                  plot=FALSE)
+		  xlim=ext[1:2], ylim=ext[3:4],
+		  plot=FALSE)
 boundaries <- map2SpatialLines(boundaries,
-                               proj4string=CRS(projection(SISav)))
+			       proj4string=CRS(projection(SISav)))
 \end{lstlisting}
 
 \index{Packages!sp@\texttt{sp}}
@@ -3547,7 +2856,7 @@ DEM <- raster('ESP_msk_alt')
 slope <- terrain(DEM, 'slope')
 aspect <- terrain(DEM, 'aspect')
 hs <- hillShade(slope=slope, aspect=aspect,
-                angle=20, direction=30)
+		angle=20, direction=30)
 \end{lstlisting}
 \lstset{language=R,numbers=none}
 \begin{lstlisting}
@@ -3566,7 +2875,7 @@ setwd(old)
 hsTheme <- modifyList(GrTheme(), list(regions=list(alpha=0.6)))
 
 levelplot(SISav, panel=panel.levelplot.raster,
-          margin=FALSE, colorkey=FALSE) +
+	  margin=FALSE, colorkey=FALSE) +
     levelplot(hs, par.settings=hsTheme, maxpixels=1e6) +
     layer(sp.lines(boundaries, lwd=0.5))
 \end{lstlisting}
@@ -3676,8 +2985,8 @@ divPal[5] <- "#FFFFFF"
 
 showPal <- function(pal, labs=pal, cex=0.6, ...){
   barplot(rep(1, length(pal)), col=pal,
-          names.arg=labs, cex.names=cex,
-          axes=FALSE, ...)
+	  names.arg=labs, cex.names=cex,
+	  axes=FALSE, ...)
 }
 
 showPal(divPal)
@@ -3785,7 +3094,7 @@ showPal(pal, round(mids, 1))
 \lstset{language=R,numbers=none}
 \begin{lstlisting}
 levelplot(SISav, par.settings=rasterTheme(region=pal),
-          at=breaks, contour=TRUE)
+	  at=breaks, contour=TRUE)
 \end{lstlisting}
 
 \begin{figure}[htb]
@@ -3841,11 +3150,11 @@ displays the result.
 library(classInt)
 
 cl <- classIntervals(SISav[],
-                     ## n=15, style='equal')
-                     ## style='hclust')
-                     ## style='sd')
-                     style='kmeans')
-                     ## style='quantile')
+		     ## n=15, style='equal')
+		     ## style='hclust')
+		     ## style='sd')
+		     style='kmeans')
+		     ## style='quantile')
 cl
 breaks <- cl$brks
 \end{lstlisting}
@@ -3950,16 +3259,16 @@ adequate colors (Figure \ref{fig:landClass}).
 library(rasterVis)
 
 pal <- c('palegreen4', # Forest
-         'lightgoldenrod', # Land
-         'indianred4', # Urban
-         'snow3')      # Snow
+	 'lightgoldenrod', # Land
+	 'indianred4', # Urban
+	 'snow3')      # Snow
 
 catTheme <- modifyList(rasterTheme(),
-                       list(panel.background = list(col='lightskyblue1'),
-                            regions = list(col= pal)))
+		       list(panel.background = list(col='lightskyblue1'),
+			    regions = list(col= pal)))
 
 levelplot(landClass, maxpixels=3.5e5, par.settings=catTheme,
-          panel=panel.levelplot.raster)
+	  panel=panel.levelplot.raster)
 \end{lstlisting}
 
 \begin{figure}[htb]
@@ -3975,7 +3284,7 @@ latter raster using a logarithmic scale.
 \lstset{language=R,numbers=none}
 \begin{lstlisting}
 pPop <- levelplot(pop, zscaleLog=10, par.settings=BTCTheme,
-                  maxpixels=3.5e5, panel=panel.levelplot.raster)
+		  maxpixels=3.5e5, panel=panel.levelplot.raster)
 pPop
 \end{lstlisting}
 
@@ -3998,7 +3307,7 @@ logarithm of the population density associated to each land class.
 s <- stack(pop, landClass)
 names(s) <- c('pop', 'landClass')
 histogram(~log10(pop)|landClass, data=s,
-          scales=list(relation='free'))
+	  scales=list(relation='free'))
 \end{lstlisting}
 
 \begin{figure}[htb]
@@ -4043,10 +3352,10 @@ pList <- lapply(1:nClasses, function(i){
   cols <- rev(sequential_hcl(16, h = (30 + step*(i-1))%%360))
 
   pClass <- levelplot(popSub, zscaleLog=10, at=at,
-                      maxpixels=3.5e5,
-                      ## labels only needed in the last legend
-                      colorkey=(if (i==nClasses) TRUE else list(labels=list(labels=rep('', 17)))),
-                      col.regions=cols, margin=FALSE)
+		      maxpixels=3.5e5,
+		      ## labels only needed in the last legend
+		      colorkey=(if (i==nClasses) TRUE else list(labels=list(labels=rep('', 17)))),
+		      col.regions=cols, margin=FALSE)
 })
 \end{lstlisting}
 
@@ -4056,6 +3365,7 @@ pList <- lapply(1:nClasses, function(i){
 \includegraphics[width=.9\linewidth]{figs/popLandClass.png}
 \caption{\label{fig:popLandClass}Population density for each land class (multivariate raster).}
 \end{figure}
+
 \section{Vector Fields}
 \label{sec-1}
 \label{sec:vector}
@@ -4101,7 +3411,7 @@ visually confusing.
 \lstset{language=R,numbers=none}
 \begin{lstlisting}
 vectorplot(windField, isField=TRUE, par.settings=BTCTheme(),
-           colorkey=FALSE, scales=list(draw=FALSE))
+	   colorkey=FALSE, scales=list(draw=FALSE))
 \end{lstlisting}
 
 \begin{figure}[htb]
@@ -4128,13 +3438,13 @@ positions, and color degradation encode the local vector direction
 \lstset{language=R,numbers=none}
 \begin{lstlisting}
 myTheme <- streamTheme(region=rev(brewer.pal(n=4, name='Greys')),
-                                    symbol=BTC(n=9, beg=20))
+				    symbol=BTC(n=9, beg=20))
 streamplot(windField, isField=TRUE,
-           par.settings=myTheme,
-           droplet=list(pc=12),
-           streamlet=list(L=5, h=5),
-           scales=list(draw=FALSE),
-           panel=panel.levelplot.raster)
+	   par.settings=myTheme,
+	   droplet=list(pc=12),
+	   streamlet=list(L=5, h=5),
+	   scales=list(draw=FALSE),
+	   panel=panel.levelplot.raster)
 \end{lstlisting}
 
 \begin{figure}[htb]
@@ -4154,7 +3464,7 @@ Morocco. Also apparent are the Pyrenees mountains and some of the
 river valleys.
 
 \chapter{Reference and Physical Maps}
-\label{sec:orgheadline35}
+\label{sec:org292f78b}
 \label{cha:refer-phys-maps}
 
 A reference map focuses on the geographic location of features. In these maps, cities are named and major transport routes are identified. In addition, natural features such as rivers and mountains are named, and elevation is shown using a simple color shading.
@@ -4213,7 +3523,7 @@ and creates a \texttt{SpatialPolygonsDataFrame} object.
 old <- setwd(tempdir())
 
 download.file('http://www.gadm.org/data/shp/BRA_adm.zip',
-              'BRA_adm.zip')
+	      'BRA_adm.zip')
 unzip('BRA_adm.zip')
 brazilAdm <- readShapePoly('BRA_adm1.shp', proj4string=proj)
 Encoding(levels(brazilAdm$NAME_1)) <- 'latin1'
@@ -4225,7 +3535,7 @@ file and creates a \texttt{RasterLayer} object.
 \lstset{language=R,numbers=none}
 \begin{lstlisting}
 download.file('http://www.diva-gis.org/data/alt/BRA_alt.zip',
-              'BRA_alt.zip')
+	      'BRA_alt.zip')
 unzip('BRA_alt.zip')
 brazilDEM <- raster('BRA_alt')
 \end{lstlisting}
@@ -4237,7 +3547,7 @@ object.
 \begin{lstlisting}
 ## World Water lines (Natural Earth)
 download.file('http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/physical/ne_10m_rivers_lake_centerlines.zip',
-              'neRivers.zip')
+	      'neRivers.zip')
 unzip('neRivers.zip')
 worldlRiv <- readShapeLines('ne_10m_rivers_lake_centerlines', proj4string = proj)
 \end{lstlisting}
@@ -4247,7 +3557,7 @@ cropped by the extent of the DEM raster.
 \lstset{language=R,numbers=none}
 \begin{lstlisting}
 download.file('http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/raster/OB_LR.zip',
-              'neSea.zip')
+	      'neSea.zip')
 unzip('neSea.zip')
 worldSea <- raster('OB_LR.tif')
 brazilSea <- crop(worldSea, brazilDEM)
@@ -4313,10 +3623,10 @@ words.
 admNames <- strsplit(as.character(brazilAdm$NAME_1), ' ')
 
 admNames <- sapply(admNames,
-                 FUN=function(s){
-                   sep=if (length(s)>2) '\n' else  ' '
-                   paste(s, collapse=sep)
-                   })
+		 FUN=function(s){
+		   sep=if (length(s)>2) '\n' else  ' '
+		   paste(s, collapse=sep)
+		   })
 \end{lstlisting}
 \subsection{Overlaying Layers of Information}
 \label{sec-1-4}
@@ -4332,8 +3642,8 @@ of four layers:
 blueTheme <- rasterTheme(region=brewer.pal(n=9, 'Blues'))
 
 seaPlot <- levelplot(brazilSea, par.settings=blueTheme,
-                    maxpixels=1e6, panel=panel.levelplot.raster,
-                    margin=FALSE, colorkey=FALSE)
+		    maxpixels=1e6, panel=panel.levelplot.raster,
+		    margin=FALSE, colorkey=FALSE)
 \end{lstlisting}
 
 \index{rasterTheme@\texttt{rasterTheme}}
@@ -4347,8 +3657,8 @@ produced by the \texttt{terrain\_hcl} function from the \texttt{colorspace} pack
 terrainTheme <- rasterTheme(region=terrain_hcl(15))
 
 altPlot <- levelplot(brazilDEM, par.settings=terrainTheme,
-                     maxpixels=1e6, panel=panel.levelplot.raster,
-                     margin=FALSE, colorkey=FALSE)
+		     maxpixels=1e6, panel=panel.levelplot.raster,
+		     margin=FALSE, colorkey=FALSE)
 \end{lstlisting}
 
 \index{rasterTheme@\texttt{rasterTheme}}
@@ -4386,18 +3696,18 @@ routines to find good locations for point labels without overlaps.
     sp.lines(brazilRiv, col='darkblue', lwd=0.2)
     ## Amazonas
     sp.lineLabel(amazonas, amazonasLab, 
-                 lwd=1, col='darkblue', col.line='darkblue',
-                 cex=0.5, fontfamily='Palatino')
+		 lwd=1, col='darkblue', col.line='darkblue',
+		 cex=0.5, fontfamily='Palatino')
     ## Administrative boundaries
     sp.polygons(brazilAdm, col='black', lwd=0.2)
     ## Centroids of administrative boundaries ...
     panel.points(centroids, col='black')
     ## ... with their labels
     panel.pointLabel(centroids, labels=admNames,
-                     cex=0.7, fontfamily='Palatino', lineheight=.8)
+		     cex=0.7, fontfamily='Palatino', lineheight=.8)
     ## Country name
     panel.text(xyBrazil[1], xyBrazil[2], labels='B R A Z I L',
-               cex=1.5, fontfamily = 'Palatino', fontface=2)
+	       cex=1.5, fontfamily = 'Palatino', fontface=2)
 })
 \end{lstlisting}
 \end{enumerate}
@@ -4414,6 +3724,7 @@ routines to find good locations for point labels without overlaps.
 \includegraphics[width=.9\linewidth]{figs/brazil.png}
 \caption{\label{fig:brazil}Physical map of Brazil. Main administrative regions and the Amazonas River are labeled.}
 \end{figure}
+
 \section{\floweroneleft OpenStreetMap with Hill Shade Layers}
 \label{sec-1}
 
@@ -4476,9 +3787,9 @@ idxPrimary <- find(highways, way(tags(v=='primary')))
 idxSecondary <- find(highways, way(tags(v=='secondary')))
 idxTertiary <- find(highways, way(tags(v=='tertiary')))
 idxOther <- find(highways,
-                 way(tags(v=='unclassified' |
-                          v=='footway' |
-                          v=='steps')))
+		 way(tags(v=='unclassified' |
+			  v=='footway' |
+			  v=='steps')))
 \end{lstlisting}
 
 The result of \texttt{find} is the index of each element. The correspondent
@@ -4582,7 +3893,7 @@ demCedeira[demCedeira <= 0] <- NA
 slope <- terrain(demCedeira, 'slope')
 aspect <- terrain(demCedeira, 'aspect')
 hsCedeira <- hillShade(slope=slope, aspect=aspect,
-                       angle=20, direction=30)
+		       angle=20, direction=30)
 \end{lstlisting}
 \subsection{Overlaying Layers of Information}
 \label{sec-1-3}
@@ -4625,7 +3936,7 @@ library(rasterVis)
 ##Auxiliary function to display the roads. A thicker black line in
 ##the background and a thinner one with an appropiate color.
 sp.road <- function(line, lwd=5, blwd=7,
-                    col='indianred1', bcol='black'){
+		    col='indianred1', bcol='black'){
   sp.lines(line, lwd=blwd, col=bcol)
   sp.lines(line, lwd=lwd, col=col)
 }
@@ -4634,12 +3945,12 @@ sp.road <- function(line, lwd=5, blwd=7,
 hsTheme <- modifyList(GrTheme(), list(panel.background=list(col='skyblue3')))
 ## DEM with terrain colors and semitransparency
 terrainTheme <- modifyList(rasterTheme(region=terrain_hcl(n=15)),
-                                list(regions=list(alpha=0.6)))
+				list(regions=list(alpha=0.6)))
 ## Hill shade and DEM overlaid
 levelplot(hsCedeira, maxpixels=ncell(hsCedeira),
-          par.settings=hsTheme, margin=FALSE, colorkey=FALSE) +
+	  par.settings=hsTheme, margin=FALSE, colorkey=FALSE) +
   levelplot(demCedeira, maxpixels=ncell(demCedeira),
-            par.settings=terrainTheme) +
+	    par.settings=terrainTheme) +
   ## Roads and places
   layer({
     ## Street and roads
@@ -4651,8 +3962,8 @@ levelplot(hsCedeira, maxpixels=ncell(hsCedeira),
     ## Places except Cedeira town
     sp.points(places, pch=19, col='black', cex=0.4, alpha=0.8)
     sp.pointLabel(places, labels=places$name,
-                      fontfamily = 'Palatino', 
-                      cex=0.6, col='black')
+		      fontfamily = 'Palatino', 
+		      cex=0.6, col='black')
     ## Cedeira town
     panel.points(cedeiraCoords, pch=18, col='black', cex=1)
     panel.text(cedeiraCoords, labels='Cedeira', pos=2, offset=1)
@@ -4666,7 +3977,7 @@ levelplot(hsCedeira, maxpixels=ncell(hsCedeira),
 \end{figure}
 
 \chapter{About the Data}
-\label{sec:orgheadline36}
+\label{sec:orga59e527}
 \label{cha:dataSpatial}
 
 \section{Air Quality in Madrid}
@@ -4794,8 +4105,8 @@ datos11 <- lapply(rawData, function(x){
   ## Only data from valid days
   dat <- dat[day]
   res <- data.frame(codEst, codParam, ##codTec, codPeriod,
-                    month, day, year=2011,
-                    dat)
+		    month, day, year=2011,
+		    dat)
   })
 datos11 <- do.call(rbind, datos11)
 write.csv2(datos11, 'data/airQuality.csv')
@@ -4841,11 +4152,11 @@ and standard deviation) computed with \texttt{aggregate}:
 \lstset{language=R,numbers=none}
 \begin{lstlisting}
 NO2agg <- aggregate(dat ~ codEst, data=NO2,
-                    FUN = function(x) {
-                        c(mean=signif(mean(x), 3),
-                          median=median(x),
-                          sd=signif(sd(x), 3))
-                        })
+		    FUN = function(x) {
+			c(mean=signif(mean(x), 3),
+			  median=median(x),
+			  sd=signif(sd(x), 3))
+			})
 NO2agg <- do.call(cbind, NO2agg)
 NO2agg <- as.data.frame(NO2agg)
 \end{lstlisting}
@@ -4906,8 +4217,8 @@ pcMax <- Max/census * 100
 
 ## Province-Municipality code. sprintf formats a number with leading zeros.
 PROVMUN <- with(dat2011, paste(sprintf('%02d', Código.de.Provincia),
-                               sprintf('%03d', Código.de.Municipio),
-                               sep=""))
+			       sprintf('%03d', Código.de.Municipio),
+			       sep=""))
 
 votes2011 <- data.frame(PROVMUN, whichMax, Max, pcMax)
 write.csv(votes2011, 'data/votes2011.csv', row.names=FALSE)
@@ -5001,11 +4312,12 @@ pop <- raster('875430rgb-167772161.0.FLOAT.TIFF')
 ## http://neo.sci.gsfc.nasa.gov/Search.html?group=20
 landClass <- raster('241243rgb-167772161.0.TIFF')
 \end{lstlisting}
+
 \part{Space-Time Data}
-\label{sec:orgheadline46}
+\label{sec:orgb4c0e70}
 
 \chapter{Displaying Spatiotemporal Data: Introduction}
-\label{sec:orgheadline43}
+\label{sec:orgd0563ed}
 \label{cha:introductionST}
 
 Space-time datasets are indexed both in space and in time. The data may consist of a spatial vector object (for example, points or polygons) or raster data at different times. The first case is representative of data from fixed sensors providing measurements abundant in time but sparse in space. The second case is the typical format of satellite imagery, which produces high spatial resolution data sparse in time \cite{Pebesma2012}.
@@ -5021,13 +4333,13 @@ Finally, the space-time object can be reduced to a multivariate time series (whe
 The next chapters, focused on raster space-time data (Chapter \ref{cha:rasterST}) and point space-time data (Chapter \ref{cha:pointsST}), illustrate with examples how to produce animations, multipanel graphics, hovmöller diagrams, and time-series with \texttt{R}.
 
 \section{Packages}
-\label{sec:orgheadline41}
+\label{sec:org9958585}
 \label{sec:spacetime-packages}
 
 The CRAN Tasks View ``Handling and Analyzing Spatiotemporal Data'' \footnote{\url{http://cran.r-project.org/web/views/SpatioTemporal.html}} summarizes the packages for reading, vizualizing, and analyzing space-time data. This section provides a brief introduction to the \texttt{spacetime}, \texttt{raster}, and \texttt{rasterVis} packages. Most of the information has been extracted from their vignettes, webpages, and help pages. You should read them for detailed information.
 
 \subsection{spacetime}
-\label{sec:orgheadline38}
+\label{sec:org2a5b9ea}
 \label{sec:spacetime}
 \index{Packages!spacetime@\texttt{spacetime}}
 
@@ -5062,7 +4374,7 @@ Moreover, \texttt{spacetime} provides several methods for the following classes:
 \end{itemize}
 
 \subsection{raster}
-\label{sec:orgheadline39}
+\label{sec:orgd71857d}
 \label{sec:rasterST}
 \index{Packages!raster@\texttt{raster}}
 
@@ -5071,7 +4383,7 @@ The \texttt{raster} package \cite{Hijmans2013} is able to add time information a
 If a \texttt{Raster*} object includes this information, the \texttt{zApply} function can be used to apply a function over a time series of layers of the object.
 
 \subsection{rasterVis}
-\label{sec:orgheadline40}
+\label{sec:org2cf7297}
 \label{sec:rastervisST}
 \index{Packages!rasterVis@\texttt{rasterVis}}
 
@@ -5088,7 +4400,7 @@ If a \texttt{Raster*} object includes this information, the \texttt{zApply} func
 On the other hand, the \texttt{histogram}, \texttt{densityplot}, and \texttt{bwplot} methods accept a \texttt{FUN} argument to be applied to the \texttt{z} slot of \texttt{Raster*} object (defined by \texttt{setZ}). The result of this function is used as the grouping variable of the plot to create different panels.
 
 \section{Further Reading}
-\label{sec:orgheadline42}
+\label{sec:org2d9b6a0}
 \label{cha:further-reading-spatiotime}
 
 \begin{itemize}
@@ -5106,7 +4418,7 @@ On the other hand, the \texttt{histogram}, \texttt{densityplot}, and \texttt{bwp
 \end{itemize}
 
 \chapter{Spatiotemporal Raster Data}
-\label{sec:orgheadline44}
+\label{sec:orge98980e}
 \label{cha:rasterST}
 
 \section{Introduction}
@@ -5309,8 +4621,8 @@ xyplot(SISdm, digits=1, col='black', lwd=0.2, alpha=0.6)
 \lstset{language=R,numbers=none}
 \begin{lstlisting}
 horizonplot(SISdm, digits=1,
-            col.regions=rev(brewer.pal(n=6, 'PuOr')),
-            xlab='', ylab='Latitude')
+	    col.regions=rev(brewer.pal(n=6, 'PuOr')),
+	    xlab='', ylab='Latitude')
 \end{lstlisting}
 
 \begin{figure}[htb]
@@ -5404,8 +4716,8 @@ projLL <- CRS('+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0')
 cftLL <- projectExtent(cft, projLL)
 cftExt <- as.vector(bbox(cftLL))
 boundaries <- map('worldHires',
-                  xlim=cftExt[c(1,3)], ylim=cftExt[c(2,4)],
-                  plot=FALSE)
+		  xlim=cftExt[c(1,3)], ylim=cftExt[c(2,4)],
+		  plot=FALSE)
 boundaries <- map2SpatialLines(boundaries, proj4string=projLL)
 boundaries <- spTransform(boundaries, CRS(projLCC2d))
 \end{lstlisting}
@@ -5430,7 +4742,7 @@ cloudTheme <- rasterTheme(region=brewer.pal(n=9, 'Blues'))
 \begin{lstlisting}
 tmp <- tempdir()
 trellis.device(png, file=paste0(tmp, '/Rplot%02d.png'),
-                      res=300, width=1500, height=1500)
+		      res=300, width=1500, height=1500)
 levelplot(cft, layout=c(1, 1), par.settings=cloudTheme) +
     layer(sp.lines(boundaries, lwd=0.6))
 dev.off()
@@ -5463,9 +4775,9 @@ display a matrix of twenty-four panels.
 \lstset{language=R,numbers=none}
 \begin{lstlisting}
 levelplot(cft, layers=25:48, layout=c(6, 4),
-          par.settings=cloudTheme,
-          names.attr=paste0(sprintf('%02d', 1:24), 'h'),
-          panel=panel.levelplot.raster) +
+	  par.settings=cloudTheme,
+	  names.attr=paste0(sprintf('%02d', 1:24), 'h'),
+	  panel=panel.levelplot.raster) +
     layer(sp.lines(boundaries, lwd=0.6))
 \end{lstlisting}
 
@@ -5487,7 +4799,7 @@ positions and relations. You should use both graphical tools to grasp
 the entire 3D dataset.
 
 \chapter{Spatiotemporal Point Observations}
-\label{sec:orgheadline45}
+\label{sec:orgbe4ced7}
 \label{cha:pointsST}
 
 \section{Introduction}
@@ -5566,8 +4878,8 @@ library(spacetime)
 
 NO2$time <- with(NO2, ISOdate(year, month, day))
 NO2wide <- reshape(NO2[,c('codEst', 'dat', 'time')],
-                   idvar='time', timevar='codEst',
-                   direction='wide')
+		   idvar='time', timevar='codEst',
+		   direction='wide')
 NO2zoo <- zoo(NO2wide[,-1], NO2wide$time)
 
 dats <- data.frame(vals=as.vector(t(NO2zoo)))
@@ -5695,15 +5007,15 @@ library(grid)
 
 ## Auxiliary panel function to display circles
 panel.circlesplot <- function(x, y, cex, col='gray',
-                              name='stationsCircles', ...){
+			      name='stationsCircles', ...){
 grid.circle(x, y, r=cex,
-            gp=gpar(fill=col, alpha=0.5),
-            default.units='native', name=name)
+	    gp=gpar(fill=col, alpha=0.5),
+	    default.units='native', name=name)
 }
 
 pStart <- spplot(start, panel=panel.circlesplot,
-                 cex=startVals,
-                 scales=list(draw=TRUE), auto.key=FALSE)
+		 cex=startVals,
+		 scales=list(draw=TRUE), auto.key=FALSE)
 pStart
 \end{lstlisting}
 \subsection{Intermediate States to Create the Animation}
@@ -5726,20 +5038,20 @@ circles will distinguish between weekdays and weekend.  The use of
 isWeekend <- function(x) {format(x, '%w') %in% c(0, 6)}
 color <- ifelse(isWeekend(days), 'blue', 'green')
 colorAnim <- animValue(rep(color, each=nStations),
-                       id=rep(seq_len(nStations), nDays))
+		       id=rep(seq_len(nStations), nDays))
 
 ## Intermediate sizes of the circles
 vals <- NO2st$vals/5000
 vals[is.na(vals)] <- 0
 radius <- animUnit(unit(vals, 'native'),
-                       id=rep(seq_len(nStations), nDays))                     
+		       id=rep(seq_len(nStations), nDays))                     
 
 ## Animation of circles including sizes and colors
 grid.animate('stationsCircles',
-             duration=duration,
-             r=radius,
-             fill=colorAnim,
-             rep=TRUE)
+	     duration=duration,
+	     r=radius,
+	     fill=colorAnim,
+	     rep=TRUE)
 \end{lstlisting}
 \subsection{Time Reference: Progress Bar}
 \label{sec-4-3}
@@ -5767,27 +5079,27 @@ prettyDays <- pretty(days, 12)
 pbWidth <- .95
 ## Background
 grid.rect(.5, 0.01, width=pbWidth, height=.01,
-          just=c('center', 'bottom'),
-          name='bgbar', gp=gpar(fill='gray'))
+	  just=c('center', 'bottom'),
+	  name='bgbar', gp=gpar(fill='gray'))
 
 ## Width of the progress bar for each day
 dayWidth <- pbWidth/nDays
 ticks <- c(0, cumsum(as.numeric(diff(prettyDays)))*dayWidth) + .025
 grid.segments(ticks, .01, ticks, .02)
 grid.text(format(prettyDays, '%d-%b'),
-                 ticks, .03, gp=gpar(cex=.5))
+		 ticks, .03, gp=gpar(cex=.5))
 ## Initial display of the progress bar
 grid.rect(.025, .01, width=0,
-          height=.01, just=c('left', 'bottom'),
-          name='pbar', gp=gpar(fill='blue', alpha='.3'))
+	  height=.01, just=c('left', 'bottom'),
+	  name='pbar', gp=gpar(fill='blue', alpha='.3'))
 ## ...and its animation
 grid.animate('pbar', duration=duration,
-             width=seq(0, pbWidth, length=duration),
-             rep=TRUE)
+	     width=seq(0, pbWidth, length=duration),
+	     rep=TRUE)
 ## Pause animations when mouse is over the progress bar
 grid.garnish('bgbar',
-             onmouseover='document.rootElement.pauseAnimations()',
-             onmouseout='document.rootElement.unpauseAnimations()')
+	     onmouseover='document.rootElement.pauseAnimations()',
+	     onmouseout='document.rootElement.unpauseAnimations()')
 \end{lstlisting}
 
 The SVG file is finally produced with \texttt{gridToSVG} (Figure \ref{fig:NO2pb})
@@ -5819,11 +5131,11 @@ NO2mean <- zoo(rowMeans(NO2zoo, na.rm=TRUE), index(NO2zoo))
 ## Time series plot with position highlighted
 pTimeSeries <- xyplot(NO2mean, xlab='', identifier='timePlot') +
     layer({
-        grid.points(0, .5, size=unit(.5, 'char'),
-                    default.units='npc',
-                    gp=gpar(fill='gray'),
-                    name='locator')
-        grid.segments(0, 0, 0, 1, name='vLine')
+	grid.points(0, .5, size=unit(.5, 'char'),
+		    default.units='npc',
+		    gp=gpar(fill='gray'),
+		    name='locator')
+	grid.segments(0, 0, 0, 1, name='vLine')
     })
 
 print(pStart, position=c(0, .2, 1, 1), more=TRUE)
@@ -5841,26 +5153,26 @@ over the time series plot.
 \lstset{language=R,numbers=none}
 \begin{lstlisting}
 grid.animate('locator',
-             x=unit(as.numeric(index(NO2zoo)), 'native'),
-             y=unit(as.numeric(NO2mean), 'native'),
-             duration=duration, rep=TRUE)
+	     x=unit(as.numeric(index(NO2zoo)), 'native'),
+	     y=unit(as.numeric(NO2mean), 'native'),
+	     duration=duration, rep=TRUE)
 
 xLine <- unit(index(NO2zoo), 'native')
 
 grid.animate('vLine',
-             x0=xLine, x1=xLine,
-             duration=duration, rep=TRUE)
+	     x0=xLine, x1=xLine,
+	     duration=duration, rep=TRUE)
 
 grid.animate('stationsCircles',
-             duration=duration,
-             r=radius,
-             fill=colorAnim,
-             rep=TRUE)
+	     duration=duration,
+	     r=radius,
+	     fill=colorAnim,
+	     rep=TRUE)
 
 ## Pause animations when mouse is over the time series plot
 grid.garnish('timePlot', grep=TRUE,
-             onmouseover='document.rootElement.pauseAnimations()',
-             onmouseout='document.rootElement.unpauseAnimations()')
+	     onmouseover='document.rootElement.pauseAnimations()',
+	     onmouseout='document.rootElement.unpauseAnimations()')
 
 grid.export('figs/vLine.svg')
 \end{lstlisting}

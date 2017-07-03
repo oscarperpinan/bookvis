@@ -149,13 +149,13 @@ is displayed in Figure \ref{fig:aranjuezEnhanced}:
 Because the functions included in the panel function are executed
 consecutively, their order determines the superposition of graphical
 layers.
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{Panel function}
 \index{panel.xblocks@\texttt{panel.xblocks}}
 \index{panel.text@\texttt{panel.text}}
 \index{panel.number@\texttt{panel.number}}
 \index{panel.points@\texttt{panel.points}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R :exports none
 ## lattice version
@@ -235,9 +235,9 @@ the corresponding bands (years and regions below the average values):
 
 - The years bands are defined with the function =endpoints= from the
   =xts= package:
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
   \index{Package!xts@\texttt{xts}}
-#+END_LaTeX
+#+END_EXPORT
 #+begin_src R :eval no-export
   library(xts)
   ep <- endpoints(timeIdx, on='years')
@@ -334,10 +334,10 @@ around the time average (=avRad=).
   load('data/navarra.RData')
 #+end_src
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{zoo@\texttt{zoo}} 
 \index{xyplot.zoo@\texttt{xyplot.zoo}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R :results output graphics :exports both :file figs/navarra.pdf
   avRad <- zoo(rowMeans(navarra, na.rm=1), index(navarra))
@@ -430,10 +430,10 @@ Figure \ref{fig:navarraHorizonplot} displays the variations of
 solar radiation around the time average with an horizon graph
 using a row for each time series.
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{Packages!latticeExtra@\texttt{latticeExtra}}
 \index{horizonplot@\texttt{horizonplot}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R :results output graphics :exports both :file figs/navarraHorizonplot.pdf
   library(latticeExtra)
@@ -586,10 +586,10 @@ listing of the names of grobs or viewports included in the graphic
 output: only the lines will be connected with the JavaScript
 code. 
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{Packages!gridSVG@\texttt{gridSVG}}
 \index{grid.ls@\texttt{grid.ls}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R
   library(gridSVG)
@@ -617,9 +617,9 @@ been already visited. In addition, because the browsers display the
 content of the title attribute with a default tooltip, =grid.garnish=
 sets this attribute to =info=.
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{grid.garnish@\texttt{grid.garnish}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R
   for (id in unique(IDs)){
@@ -644,9 +644,9 @@ These JavaScript functions are included in a script file named
 =highlight.js= (available at the website of the book). It can be
 added as an additional object with =grid.script=.
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{grid.script@\texttt{grid.script}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R 
   grid.script(filename="highlight.js")
@@ -670,9 +670,9 @@ JavaScript knowledge:
 #+end_example
 
 Finally, =gridToSVG= exports the whole scene to SVG. 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{grid.export@\texttt{grid.export}} 
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R
   grid.export('figs/navarraRadiation.svg')
@@ -684,13 +684,13 @@ file with your browser, explore it using the horizon graph (Figure
 \ref{fig:navarraHorizonplot}) as a reference, and try to answer the
 questions raised with that graphic.
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
   \begin{figure}
     \centering
     \includegraphics[width=0.9\textwidth]{figs/navarraSVG_captura.png}
     \caption{\label{fig:navarraSVG}Snapshot of an SVG graphic produced with \texttt{gridSVG}.}
   \end{figure}
-#+END_LaTeX
+#+END_EXPORT
 
 
 
@@ -965,7 +965,7 @@ enough room for the text (=hChar>1=) or at the right if the polygon is
 too small, or if it is the first or last variable of the set. Both the
 polygons and the labels share the same color (=col[i]=).
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \index{Panel function}
 \index{superpose.polygon@\texttt{superpose.polygon}}
 \index{trellis.par.get@\texttt{trellis.par.get}}
@@ -974,7 +974,7 @@ polygons and the labels share the same color (=col[i]=).
 \index{unstack@\texttt{unstack}}
 \index{panel.text@\texttt{panel.text}}
 \index{panel.polygon@\texttt{panel.polygon}}
-#+END_LaTeX
+#+END_EXPORT
 
 #+begin_src R :noweb yes :tangle no
 <<panelFlow>>
