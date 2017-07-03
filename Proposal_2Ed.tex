@@ -1,0 +1,83 @@
+% Created 2017-01-29 dom 23:32
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{mathpazo}
+\usepackage[usenames,svgnames,dvipsnames]{xcolor}
+\hypersetup{colorlinks=true, linkcolor=Blue, urlcolor=Blue}
+\author{Oscar Perpiñán Lamigueiro}
+\date{\today}
+\title{Proposal of changes for a second edition of ``Displaying Time Series, Spatial, and Space-Time Data with R''}
+\hypersetup{
+ pdfauthor={Oscar Perpiñán Lamigueiro},
+ pdftitle={Proposal of changes for a second edition of ``Displaying Time Series, Spatial, and Space-Time Data with R''},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 24.5.1 (Org mode 9.0.3)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+
+
+\section{Interactive graphics}
+\label{sec:org11abd04}
+
+In the last two years several R packages devoted to interactive graphics have been published. The \texttt{htmlwidgets} package is the framework for creating R bindings to popular JavaScript libraries. In the context of the book these are the more interesting packages:
+
+\begin{itemize}
+\item \texttt{leaflet} (spatial data): \url{https://rstudio.github.io/leaflet/} (\emph{``Leaflet is a JavaScript library for creating dynamic maps that support panning and zooming along with various annotations like markers, polygons, and popups.''})
+\item \texttt{mapview} (spatial data): \url{http://environmentalinformatics-marburg.github.io/mapview/introduction.html} (\emph{``mapview was created o fill the gap of quick (not presentation grade) interactive plotting to examine and visually investigate spatial data''})
+\item \texttt{dygraphs} (time series): \url{http://rstudio.github.io/dygraphs/} (\emph{``Dygraphs provides rich facilities for charting time-series data in R and includes support for many interactive features including series/point highlighting, zooming, and panning.''})
+\item \texttt{highcharter} (time series and maps): \url{http://jkunst.com/highcharter/}
+\item \texttt{streamgraph} (time series with stacked graphs): \url{http://hrbrmstr.github.io/streamgraph/}
+\end{itemize}
+
+
+Most of the examples of interactive graphics included in the book make use of the \texttt{gridSVG} package. Unfortunately this package is not of common usage nowadays and their authors are not adding new features to it. Therefore, I will rewrite these examples with the new packages.
+
+\section{New features in the \texttt{sp} package}
+\label{sec:orgbbd81fb}
+The \texttt{sp} package includes in the recent versions (\url{https://cran.r-project.org/web/packages/sp/news.html}) new features that should be covered in the book:
+\begin{itemize}
+\item A new function \texttt{panel.ggmap}: Figure 8.4 (Air Madrid example) will be modified to use it.
+\item A new class SpatialMultipoints (an unique feature can be represented with multiple locations): A new section will be included to display these objects.
+\end{itemize}
+
+On the other hand, Edzer Pebesma, author of \texttt{sp}, has recently published the \texttt{sf} package, implementing Simple Features for R (\url{https://cran.r-project.org/package=sf}). The visualization methods included in this package are still in development, but I think it is interesting to devote an example to this package.
+
+\section{Improvements}
+\label{sec:org813ed42}
+\begin{itemize}
+\item Add introductory sections with easier examples to show the basics of the most important packages and functions.
+
+\item Additional section devoted to the \texttt{rgl} package (\url{http://rgl.neoscientists.org/about.shtml}) using the Earth's city lights imagery (\url{http://visibleearth.nasa.gov/view.php?id=55167}) in the code, maybe including an interactive example with the \texttt{rglwidget} package (\url{http://www.htmlwidgets.org/showcase\_rglwidget.html})
+
+\item Alternative method for the figure 3.9 (calendar plot) using \texttt{ggplot2} based on this post \url{https://mvuorre.github.io/post/2016/2016-03-24-github-waffle-plot/}
+
+\item The ``Bivariate Choropleth Maps: A How-to Guide'' is an useful resource to improve the section 8.2.3 \url{http://www.joshuastevens.net/cartography/make-a-bivariate-choropleth-map/}
+\end{itemize}
+
+\section{Bug fixes}
+\label{sec:org64692db}
+
+\begin{itemize}
+\item Make animated plots code from Chapter 13 portable (\url{https://github.com/oscarperpinan/spacetime-vis/pull/6})
+\item Fix URLs for brazilAdm and brazilDEM datasets (\url{https://github.com/oscarperpinan/spacetime-vis/pull/3})
+\item Fix URLs for Galicia DEM datasets (\url{https://github.com/oscarperpinan/spacetime-vis/issues/5})
+\end{itemize}
+\end{document}
