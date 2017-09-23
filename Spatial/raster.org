@@ -136,6 +136,26 @@ context with a layer of administrative boundaries (Figure
 #+RESULTS:
 [[file:figs/leveplotSISavBoundaries.pdf]]
 
+*** Mapview
+
+#+begin_src R
+library(mapview)
+
+mapview(SISav, legend = TRUE)
+#+end_src
+
+#+begin_src R
+  SIAR <- read.csv("data/SIAR.csv")
+
+  spSIAR <- SpatialPointsDataFrame(SIAR[, c(6, 7)],
+                                   SIAR[, -c(6, 7)],
+                                   proj4str = CRS(projection(SISav)))
+#+end_src
+
+#+begin_src R
+mapview(SISav, legend = TRUE) + mapview(spSIAR, zcol = 'Estacion')
+#+end_src
+
 *** Hill Shading
 #+LABEL: sec:hill-shading
 #+begin_src R :exports none
