@@ -27,7 +27,7 @@
 #+end_src
 
 #+begin_src R :exports none :tangle no
-  setwd('~/Dropbox/chapman/book/')
+  setwd('~/github/bookvis')
 #+end_src
 
 #+begin_src R :exports none  
@@ -117,6 +117,7 @@ result similar to that obtained with =xyplot= (Figure [[fig:aranjuezNaiveGG]]).
 #+LABEL: fig:aranjuezNaiveGG 
 #+RESULTS:
 [[file:figs/aranjuezGG.pdf]]
+
 
 ** \floweroneleft Annotations to Enhance the Time Graph
 
@@ -566,6 +567,55 @@ the comparison between years in a certain month.
 #+RESULTS:
 [[file:figs/diffTa_levelplot.pdf]]
 
+
+** Interactive
+
+*** Dygraphs
+#+begin_src R
+library(dygraphs)
+
+dyTemp <- dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
+                  main = "Temperature in Aranjuez",
+                  ylab = "ºC")
+
+dyTemp
+#+end_src
+
+#+begin_src R
+dyTemp %>%
+    dyHighlight(highlightSeriesBackgroundAlpha = 0.2)
+#+end_src
+
+#+begin_src R
+dyTemp %>%
+    dyHighlight(highlightSeriesOpts = list(strokeWidth = 2))
+#+end_src
+
+#+begin_src R
+dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
+        main = "Temperature in Aranjuez",
+        ylab = "ºC") %>%
+    dySeries(c("TempMin", "TempAvg", "TempMax"),
+             label = "Temperature")
+#+end_src
+
+*** Highcharter
+
+#+begin_src R
+library(highcharter)
+library(xts)
+
+aranjuezXTS <- as.xts(aranjuez)
+
+highchart() %>%
+    hc_add_series_xts(name = 'TempMax',
+                      aranjuezXTS[, "TempMax"]) %>%
+    hc_add_series_xts(name = 'TempMin',
+                      aranjuezXTS[, "TempMin"]) %>%
+    hc_add_series_xts(name = 'TempAvg',
+                      aranjuezXTS[, "TempAvg"])
+
+#+end_src
 
 ** \floweroneleft Interaction with =gridSVG=
 #+begin_src R :exports none
@@ -1017,7 +1067,6 @@ its last column (the upper line of the cumulative sum).
 #+begin_src R :noweb yes :tangle no
 <<prepanelFlow>>
 #+end_src
-
 
 * Footnotes
 [fn:2] The March 2012 highlights report is available at http://www.bls.gov/ces/highlights032012.pdf.
