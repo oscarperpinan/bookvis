@@ -568,9 +568,9 @@ the comparison between years in a certain month.
 [[file:figs/diffTa_levelplot.pdf]]
 
 
-** Interactive
+* Interactive
 
-*** Dygraphs
+** Dygraphs
 #+begin_src R
 library(dygraphs)
 
@@ -599,7 +599,7 @@ dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
              label = "Temperature")
 #+end_src
 
-*** Highcharter
+** Highcharter
 
 #+begin_src R
 library(highcharter)
