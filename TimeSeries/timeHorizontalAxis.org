@@ -1068,6 +1068,32 @@ its last column (the upper line of the cumulative sum).
 <<prepanelFlow>>
 #+end_src
 
+** Interactive
+
+#+begin_src R
+## remotes::install_github("hrbrmstr/streamgraph")
+library(streamgraph)
+library(reshape2)
+#+end_src
+
+#+begin_src R
+unemployDF <- as.data.frame(unemployUSA)
+
+unemployDF$time <- as.Date(index(unemployUSA))
+
+unemployDF <- melt(unemployDF, id.vars = 'time')
+#+end_src
+
+#+begin_src R
+streamgraph(unemployDF,
+            key = "variable",
+            value = "value",
+            date = "time") %>%
+    sg_axis_x(1, "year", "%Y") %>%
+    sg_fill_brewer("Set1")
+#+end_src
+
+
 * Footnotes
 [fn:2] The March 2012 highlights report is available at http://www.bls.gov/ces/highlights032012.pdf.
 
