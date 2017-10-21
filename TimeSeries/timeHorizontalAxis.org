@@ -567,6 +567,25 @@ the comparison between years in a certain month.
 #+RESULTS:
 [[file:figs/diffTa_levelplot.pdf]]
 
+ggplot version.
+#+begin_src R :results output graphics :exports both :file figs/diffTa_ggplot.pdf
+df <- data.frame(Vals = diffTa,
+                 Day = day(timeIndex),
+                 Year = year(timeIndex),
+                 Month = month(timeIndex))
+
+ggplot(data = df,
+       aes(fill = Vals,
+           x = Day,
+           y = Year)) +
+    facet_wrap(~ Month, ncol = 1, switch = 'y') +
+    scale_y_continuous(breaks = pretty_breaks()) + 
+    scale_fill_distiller(palette = 'RdBu', direction = 1) + 
+    geom_tile(color = "white", size = 0.4) +
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank())
+#+end_src
+
 
 * Interactive
 
