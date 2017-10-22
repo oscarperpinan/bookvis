@@ -27,7 +27,7 @@
 #+end_src
 
 #+begin_src R :exports none :tangle no
-  setwd('~/Dropbox/chapman/book/')
+  setwd('~/github/bookvis/')
 #+end_src
 
 #+begin_src R :exports none
@@ -69,6 +69,8 @@
   
 #+end_src
 
+#+RESULTS:
+
 * Scatterplot Matrix: Time as a Grouping Variable
 <<SEC:groupVariable>>
 
@@ -102,14 +104,16 @@ half of the year with red and blue, respectively (Figure
 \index{splom@\texttt{splom}}
 #+END_EXPORT
 
-#+begin_src R :results output graphics :exports both :file figs/aranjuezSplom.png :width 4000 :height 4000 :res 600
+#+begin_src R
   load('data/aranjuez.RData')
   
   ## Red-Blue palette with black added (12 colors)
   colors <- c(brewer.pal(n=11, 'RdBu'), '#000000')
   ## Rearrange according to months (darkest for summer)
   colors <- colors[c(6:1, 12:7)]
-  
+#+end_src
+
+#+begin_src R :results output graphics :exports both :file figs/aranjuezSplom.png :width 4000 :height 4000 :res 600
   splom(~as.data.frame(aranjuez),
           groups=format(index(aranjuez), '%m'),
         auto.key=list(space='right', 
@@ -124,6 +128,18 @@ half of the year with red and blue, respectively (Figure
 #+RESULTS:
 [[file:figs/aranjuezSplom.png]]
 
+ggplot version
+#+begin_src R
+library(GGally)
+
+df <- as.data.frame(aranjuez)
+df$Month <- format(index(aranjuez), '%m')
+ 
+p <- ggpairs(df,
+             columns = 1:10, ## Do not include "Month"
+             upper = list(continuous = "points"),
+             mapping = aes(colour = Month, alpha = 0.1))
+#+end_src
 
 Let's explore Figure [[fig:aranjuezSplom]]. For example,
 - The highest values of ambient temperature (average, maximum, and
