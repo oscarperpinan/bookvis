@@ -69,6 +69,8 @@
   ##################################################################
 #+end_src
 
+#+RESULTS:
+
 
 
 * Time Graph of Different Meteorological Variables
@@ -334,6 +336,7 @@ around the time average (=avRad=).
 #+begin_src R
   load('data/navarra.RData')
 #+end_src
+
 
 #+BEGIN_EXPORT latex
 \index{zoo@\texttt{zoo}} 
@@ -804,7 +807,8 @@ A suitable improvement is to display the multivariate time series as a
 set of stacked colored polygons to follow the macro/micro principle
 proposed by Tufte \cite{Tufte1990}: Show a collection of individual
 time series and also display their sum. A traditional stacked graph is
-easily obtained with =geom_area=:
+easily obtained with =geom_area= (Figure \ref{fig:unemployUSAgeomArea}):
+
 #+begin_src R :results output graphics :exports both :file "figs/unemployUSAgeomArea.pdf" 
   library(scales) ## scale_x_yearmon needs scales::pretty_breaks
   autoplot(unemployUSA, facets=NULL, geom='area') +
