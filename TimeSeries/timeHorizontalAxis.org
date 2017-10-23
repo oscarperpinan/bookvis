@@ -639,6 +639,32 @@ highchart() %>%
 
 #+end_src
 
+** plotly
+
+#+begin_src R
+library(reshape2)
+df <- fortify(navarra - avRad)
+df <- melt(df, id.vars = 'Index', variable.name = 'Station')
+#+end_src
+
+#+begin_src R
+## Number of stations
+N <- ncol(navarra)
+## Color palette
+pal <- colorRampPalette(
+    brewer.pal(9, 'Set1'))(N)
+#+end_src
+
+#+begin_src R
+library(plotly)
+
+plot_ly(df,
+        x = ~ Index,
+        y = ~ value,
+        color = ~ Station) %>%
+    add_lines(alpha = 0.5, colors = pal)
+#+end_src
+
 ** \floweroneleft Interaction with =gridSVG=
 #+begin_src R :exports none
   ##################################################################
