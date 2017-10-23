@@ -555,13 +555,39 @@ xyplot(GNI.capita ~ CO2.capita|factor(Year), data=CO2data,
 #+RESULTS:
 [[file:figs/CO2points.pdf]]
 
-* \floweroneleft Traveling Bubbles
+* Traveling Bubbles
 #+begin_src R :exports none
   ##################################################################
   ## Travelling bubbles
   ##################################################################
 #+end_src
 
+** plotly
+
+#+begin_src R
+p <- plot_ly(CO2data,
+             x = ~CO2.capita,
+             y = ~GNI.capita,
+             size = ~CO2.PPP, 
+             text = ~Country.Name, hoverinfo = "text")
+
+p <- add_markers(p,
+                 color = ~Country.Name,
+                 frame = ~Year,
+                 ids = ~Country.Name,
+                 showlegend = FALSE)
+
+p <- animation_opts(p,
+                    frame = 1000,
+                    transition = 800,
+                    redraw = FALSE) %>%
+    animation_slider(
+        currentvalue = list(prefix = "Year "))
+
+p
+#+end_src
+
+** \floweroneleft gridSVG
 The final solution to display this multivariate time series is with
 animation via the function =grid.animate= of the =gridSVG=
 package. We will mimic the Trendalyzer/Motion Chart solution, using
