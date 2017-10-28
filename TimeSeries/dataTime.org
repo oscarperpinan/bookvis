@@ -1,7 +1,7 @@
-#+PROPERTY: header-args :session *R* :tangle /home/oscar/R/spacetimeVis/dataTime.R :eval no-export
+#+PROPERTY: header-args :session *R* :tangle /home/oscar/github/spacetime-vis/dataTime.R :eval no-export
 
 #+begin_src R :exports none :tangle no
-  setwd('~/Dropbox/chapman/book/')
+  setwd('~/github/bookvis/')
 #+end_src
 
 * SIAR
@@ -222,8 +222,6 @@ are columns with the annual summaries (=annualCols=). We rearrange
 this =data.frame=, dropping the =Series.ID= and the annual columns,
 and transpose the data.
 
-# ## http://www.bls.gov/webapps/legacy/cpsatab14.htm
-
 #+BEGIN_EXPORT latex
 \index{Data!Unemployment}
 #+END_EXPORT
@@ -280,7 +278,7 @@ Finally, those rows with =NA= values are removed.
   ##################################################################
 #+end_src
 
-The catalog data of the World Bank Open Data initiative includes a the
+The catalog data of the World Bank Open Data initiative includes the
 World Development Indicators (WDI)[fn:3]. Among them we will analyze
 the evolution of the relationship between Gross National Income (GNI)
 and $CO_2$ emissions for a set of countries. The package =WDI= is able
@@ -366,11 +364,11 @@ the =factor= conversion will be useful for grouping.
 
 * Footnotes
 
-[fn:1] The name and location data of these stations are available at the [[https://github.com/oscarperpinan/CMSAF-SIAR/blob/master/data/SIAR.csv][GitHub repository]] of the paper \cite{Antonanzas-Torres.Canizares.ea2013}.
+[fn:1] The name and location data of these stations are available at the [[https://github.com/oscarperpinan/CMSAF-SIAR/blob/master/data/SIAR.csv][GitHub repository]] of the paper cite:Antonanzas-Torres.Canizares.ea2013.
 
 [fn:2] http://www.bls.gov/webapps/legacy/cpsatab14.htm
 
-[fn:3] http://databank.worldbank.org/Data/Views/VariableSelection/SelectVariables.aspx
+[fn:3] http://databank.worldbank.org/data/reports.aspx?source=world-development-indicators
 
 [fn:4] [[http://eportal.magrama.gob.es/websiar]]
 

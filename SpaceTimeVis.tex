@@ -1,4 +1,4 @@
-% Created 2017-10-29 dom 00:49
+% Created 2017-10-29 dom 01:37
 % Intended LaTeX compiler: pdflatex
 \documentclass[smallroyalvopaper]{memoir}
 \usepackage[utf8]{inputenc}
@@ -42,10 +42,10 @@
 \mainmatter
 
 \chapter{Introduction}
-\label{sec:orgf24684e}
+\label{sec:org8af0c1e}
 
 \section{What This Book Is About}
-\label{sec:orgb7b7ab0}
+\label{sec:orgbaa3311}
 \label{sec:thisBook}
 
 A data graphic is not only a static image but also tells a story about the data. It activates cognitive processes that are able to detect patterns and discover information not readily available with the raw data. This is particularly true for time series, spatial, and space-time datasets.
@@ -57,7 +57,7 @@ On the other hand, there is a collection of books that provides code and detaile
 This book proposes methods to display time series, spatial, and space-time data using \textsf{R}, and aims to be a synthesis of both groups providing code and detailed information to produce high-quality graphics with practical examples.
 
 \section{What You Will \emph{Not} Find in This Book}
-\label{sec:org8482d80}
+\label{sec:org46545a5}
 \label{sec:thisBookIsNot}
 
 \begin{itemize}
@@ -96,7 +96,7 @@ Instead, this book is focused on the exploration of data with visual methods, so
 \end{itemize}
 
 \section{How to Read This Book}
-\label{sec:org44cc2db}
+\label{sec:orgd87306d}
 \label{sec:how-read}
 
 This book is organized into three parts, each devoted to different types of data. Each part comprises several chapters according to the various visualization methods or data characteristics. The chapters are structured as independent units so readers can jump directly to a certain chapter according to their needs. Of course, there are several dependencies and redundancies between the sets of chapters that have been conveniently signaled with cross-references. 
@@ -106,7 +106,7 @@ The content of each chapter illustrates how to display a dataset starting with a
 Although I have done my best to help readers understand the methods and code, you should not expect to understand it after one reading. The key is practical experience, and the best way is to try out the code with the provided data \textbf{and} modify it to suit your needs with your own data. There is a website and a code repository to help you in this task.
 
 \subsection{Website and Code Repository}
-\label{sec:org1780abc}
+\label{sec:orgf09f7eb}
 \label{sec:github}
 
 The book website with the main graphics of this book is located at
@@ -135,7 +135,7 @@ git clone https://github.com/oscarperpinan/spacetime-vis.git
 \end{lstlisting}
 
 \section{\texttt{R} Graphics}
-\label{sec:orgf208b2b}
+\label{sec:orgef167d5}
 \label{sec:r-graphics}
 
 \index{Packages!grid@=grid}
@@ -144,7 +144,7 @@ There are two distinct graphics systems built into \texttt{R}, referred to as tr
 Other packages are constructed over it to provide high-level functions, most notably the \texttt{lattice} and \texttt{ggplot2} packages.
 
 \subsection{lattice}
-\label{sec:orgca6e3ea}
+\label{sec:org5145211}
 \label{sec:lattice}
 
 \index{Packages!lattice@=lattice}
@@ -176,7 +176,7 @@ On the other hand, the \texttt{latticeExtra} package \cite{Sarkar.Andrews2012} p
 superposition of \texttt{trellis} objects and layers with the \texttt{+.trellis} function. Using both packages, you can define a graphic with the formula interface (under the \texttt{lattice} model) and overlay additional content as layers (following the \texttt{ggplot2} model).
 
 \section{ggplot2}
-\label{sec:org7067209}
+\label{sec:org2eae420}
 \label{sec:ggplot2}
 
 \index{Packages!ggplot2@=ggplot2}
@@ -207,7 +207,7 @@ This package is increasingly popular, with a list of more than ninety packages d
 method definitions based on \texttt{ggplot2} to display their classes. In our context, only the \texttt{zoo} package defines the \texttt{autoplot} function based on it.
 
 \subsection{Comparison between lattice and ggplot2}
-\label{sec:orgf833f1b}
+\label{sec:org7d8d2cf}
 \label{sec:comparison}
 
 Which package to choose is, for a wide range of datasets, a question of personal preferences. You may be interested in a comparison between them published in a series of blog posts\footnote{\url{http://learnr.wordpress.com/2009/06/28/ggplot2-version-of-figures-in-lattice-multivariate-data-visualization-with-r-part-1/}}.  However, the major drawback of \texttt{ggplot2} is its considerably slower speed when dealing with large datasets\footnote{Take a look at the time comparison published as the final result of the previous series of blog posts,
@@ -215,7 +215,7 @@ Which package to choose is, for a wide range of datasets, a question of personal
 
 
 \section{Packages}
-\label{sec:org1429f0a}
+\label{sec:orgc3ff946}
 \label{sec:introduction-packages}
 
 Throughout the book, several \textsf{R} packages are used. All of them are available from \textsf{CRAN}, and you must install them before
@@ -237,7 +237,7 @@ stamps (Section \ref{sec:zoo}).
 
 
 \section{Software Used to Write This Book}
-\label{sec:org2f741ac}
+\label{sec:org0ee44a8}
 \label{sec:software-book}
 
 This book has been written using different computers running Debian GNU Linux and using several gems of open-source software: 
@@ -248,7 +248,7 @@ This book has been written using different computers running Debian GNU Linux an
 \end{itemize}
 
 \section{About the Author}
-\label{sec:org4e662c4}
+\label{sec:org8de3410}
 \label{sec:aboutMe}
 
 During the past 15 years, my main area of expertise has been photovoltaic solar energy systems, with a special interest in solar radiation.
@@ -259,7 +259,7 @@ Now I work as a professor and researcher at the university. Data visualization i
 I have been using \textsf{R} to simulate the performance of photovoltaic energy systems and to analyze solar radiation data, both as time series and spatial data. As a result, I have developed packages that include several graphical methods to deal with multivariate time series (namely, \texttt{solaR} \cite{Perpinan2012b}) and space-time data (\texttt{rasterVis}). 
 
 \section{Acknowledgments}
-\label{sec:org7b81f13}
+\label{sec:org93b5fdb}
 \label{sec:acknow}
 
 Writing a book is often described as a solitary activity. It is certainly difficult to write when you are with friends or spending time with your family,\ldots{} although with three little children at home I have learned to write prose and code while my baby wants to learn typing and my daughters need help to share a family of dinosaurs. 
@@ -285,10 +285,10 @@ Last, and most importantly, thanks to Candela, Marina, and Javi, my crazy little
 
 
 \part{Time Series}
-\label{sec:orgdf297b7}
+\label{sec:org28c671a}
 
 \chapter{Displaying Time Series: Introduction}
-\label{sec:orgf1f86ae}
+\label{sec:org7a21c2c}
 \label{cha:timeIntro}
 
 A time series is a sequence of observations registered at consecutive time instants. When these time instants are evenly spaced, the distance between them is called the sampling interval. The visualization of time series is intended to reveal changes of one or more quantitative variables through time, and to display the relationships between the variables and their evolution through time.
@@ -298,7 +298,7 @@ The standard time series graph displays the time along the horizontal axis. Seve
 These chapters provide a variety of examples to illustrate a set of useful techniques. These examples make use of several datasets (available at the book website) described in Chapter \ref{cha:dataTime}.
 
 \section{Packages}
-\label{sec:org0575378}
+\label{sec:orgaae7587}
 \label{sec:time-series-packages}
 
 The CRAN Tasks View ``Time Series Analysis'' \footnote{\url{http://CRAN.R-project.org/view=TimeSeries}} summarizes the packages for reading, vizualizing, and analyzing time series. This section provides a brief introduction to the \texttt{zoo} and \texttt{xts} packages. Most of the information has been extracted from their vignettes, webpages, and help pages. You should read them for detailed information.
@@ -306,7 +306,7 @@ The CRAN Tasks View ``Time Series Analysis'' \footnote{\url{http://CRAN.R-projec
 Both packages extensively use the time classes defined in \texttt{R}. The interested reader will find an overview of the different time classes in \texttt{R} in \cite{Ripley.Hornik2001} and \cite{Grothendieck.Petzoldt2004}.
 
 \subsection{zoo}
-\label{sec:org7b98906}
+\label{sec:org88c7196}
 \label{sec:zoo}
 
 \index{Packages!zoo@\texttt{zoo}}
@@ -340,7 +340,7 @@ This package provides four methods for dealing with missing observations:
 The package defines interfaces to \texttt{read.table} and \texttt{write.table} for reading, \texttt{read.zoo}, and writing, \texttt{write.zoo}, \texttt{zoo} series from or to text files. The \texttt{read.zoo} function expects either a text file or connection as input or a \texttt{data.frame}. \texttt{write.zoo} first coerces its argument to a \texttt{data.frame}, adds a column with the index, and then calls \texttt{write.table}.
 
 \subsection{xts}
-\label{sec:org1bf2726}
+\label{sec:org95a3600}
 \label{sec:xts}
 
 \index{Packages!xts@\texttt{xts}}
@@ -358,7 +358,7 @@ Furthermore, this package provides several time-based tools:
 \end{itemize}
 
 \section{Further Reading}
-\label{sec:org81b891b}
+\label{sec:orgac19e41}
 \label{cha:further-reading-time}
 
 \begin{itemize}
@@ -380,7 +380,7 @@ Furthermore, this package provides several time-based tools:
 \end{itemize}
 
 \chapter{Time on the Horizontal Axis}
-\label{sec:org71f0a43}
+\label{sec:org4a90b7f}
 \label{cha:timeHorizontalAxis}
 
 The most frequent visualization method of a time series uses the horizontal axis to depict the time index. This chapter illustrates several variants to display multivariate time series: multiple time series with different scales, variables with the same scale, and stacked graphs.
@@ -1450,7 +1450,7 @@ streamgraph(unemployDF,
 \end{lstlisting}
 
 \chapter{Time as a Conditioning or Grouping Variable}
-\label{sec:org3cfca76}
+\label{sec:org84e4c46}
 \label{cha:timeGroupFactor}
 
 In Section \ref{sec:differentVariables} we learned to display the time evolution of multiple time series with different scales. But, what if instead of displaying the time evolution we want to confront the variables between them? Section \ref{SEC:groupVariable} proposes the scatterplot matrix solution with time as a grouping variable. Section \ref{SEC:conditionVariable} uses an enhanced scatterplot with time as a conditioning variable. Section \ref{SEC:hexbin} includes a digression about the hexagonal binning for large datasets.
@@ -1759,7 +1759,7 @@ same relations between radiation and temperature already discussed
 with Figure \ref{fig:aranjuezHexbin}.
 
 \chapter{Time as a Complementary Variable}
-\label{sec:org184df19}
+\label{sec:orgdd0bb2b}
 \label{cha:timeComplementary}
 
 Gapminder \footnote{\url{http://www.gapminder.org/}} is an independent foundation based in Stockholm, Sweden.  Its mission is ``to debunk devastating myths about the world by offering free access to a fact-based world view.'' They provide free online tools, data, and videos ``to better understand the changing world.'' The initial development of Gapminder was the Trendalyzer software, used by Hans Rosling in several sequences of his documentary ``The Joy of Stats.''
@@ -2417,11 +2417,11 @@ ready to open the SVG file of traveling bubbles: It is easier, a short
 time period with less than twenty countries.
 
 \chapter{About the Data}
-\label{sec:orgc57b862}
+\label{sec:org96df7dc}
 \label{cha:dataTime}
 
 \section{SIAR}
-\label{sec:org0ca2455}
+\label{sec:orgea06a9c}
 \index{Data!SIAR}
 \index{Data!Meteorological variables}
 
@@ -2445,7 +2445,7 @@ or to incomplete or spurious data series\footnote{The name and location data of 
 \end{figure}
 
 \subsection{Daily Data of Different Meteorological Variables}
-\label{sec:org1fd8a31}
+\label{sec:org55a588e}
 As an example of multiple time series with different scales, we
 will use 8 years (from January 2004 to December 2011) of daily
 data corresponding to several meteorological variables measured at
@@ -2505,7 +2505,7 @@ safely removed:
 
 
 \subsection{Solar Radiation Measurements from Different Locations}
-\label{sec:orgcf7f82f}
+\label{sec:orgcf9b0ce}
 As an example of multiple time series with the same scale, we will use
 data of daily solar radiation measurements from different locations.
 
@@ -2536,7 +2536,7 @@ dataset are the abbreviations of each station name.
 
 
 \section{Unemployment in the United States}
-\label{sec:org33600b8}
+\label{sec:org7a12f51}
 As an example of time series that can be displayed both in individual
 and in aggregate, we will use the unemployment data in the United
 States. The information on unemployed persons by industry and class of
@@ -2594,9 +2594,9 @@ Finally, those rows with \texttt{NA} values are removed.
 \end{lstlisting}
 
 \section{Gross National Income and CO\(_{\text{2}}\) Emissions}
-\label{sec:org6a96092}
-The catalog data of the World Bank Open Data initiative includes a the
-World Development Indicators (WDI)\footnote{\url{http://databank.worldbank.org/Data/Views/VariableSelection/SelectVariables.aspx}}. Among them we will analyze
+\label{sec:org0e2c416}
+The catalog data of the World Bank Open Data initiative includes the
+World Development Indicators (WDI)\footnote{\url{http://databank.worldbank.org/data/reports.aspx?source=world-development-indicators}}. Among them we will analyze
 the evolution of the relationship between Gross National Income (GNI)
 and \(CO_2\) emissions for a set of countries. The package \texttt{WDI} is able
 to search and download these data series.
