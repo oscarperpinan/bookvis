@@ -1,7 +1,6 @@
 
-\section{Time Graph of Different Meteorological Variables}
-\label{sec:orga1693cf}
-\label{sec:differentVariables}
+\section{Time Graph of Different Meteorological Variables \label{sec:differentVariables}}
+\label{sec:orgb8378ab}
 There is a variety of scientific research interested in the
 relationship among several meteorological variables. A suitable
 approach is to display the time evolution of all of them using a
@@ -14,7 +13,8 @@ For this example we will use the 8 years of daily data from the
 SIAR meteorological station located at Aranjuez (Madrid).  This
 multivariate time series can be displayed with the \texttt{xyplot} method of
 \texttt{lattice} for \texttt{zoo} objects with a panel for each variable (Figure
-\ref{fig:org74c58d9}).
+\ref{fig:aranjuezNaive}).
+
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
@@ -24,17 +24,17 @@ multivariate time series can be displayed with the \texttt{xyplot} method of
   xyplot(aranjuez, layout=c(1, ncol(aranjuez)))
 \end{lstlisting}
 
+
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/aranjuez.pdf}
-\caption{\label{fig:org74c58d9}
-Time plot of the collection of meteorological time series of the Aranjuez station (\texttt{lattice} version).}
+\caption{Time plot of the collection of meteorological time series of the Aranjuez station (\texttt{lattice} version). \label{fig:aranjuezNaive}}
 \end{figure}
 
 The package \texttt{ggplot2} provides the generic method \texttt{autoplot} to
 automate the display of certain classes with a simple command. The
 package \texttt{zoo} provides an \texttt{autoplot} method for the \texttt{zoo} class with a
-result similar to that obtained with \texttt{xyplot} (Figure \ref{fig:org576aec7}).
+result similar to that obtained with \texttt{xyplot} (Figure \ref{fig:aranjuezNaiveGG})
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
@@ -44,12 +44,12 @@ result similar to that obtained with \texttt{xyplot} (Figure \ref{fig:org576aec7
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/aranjuezGG.pdf}
-\caption{\label{fig:org576aec7}
-Time plot of the collection of meteorological time series of the Aranjuez station (\texttt{ggplot2} version).}
+\caption{Time plot of the collection of meteorological time series of the Aranjuez station (\texttt{ggplot2} version). \label{fig:aranjuezNaiveGG}}
 \end{figure}
 
+
 \subsection{\floweroneleft Annotations to Enhance the Time Graph}
-\label{sec:orgd4b61c5}
+\label{sec:org27cdd0d}
 
 These first attempts can be improved with a custom panel function
 that generates the content of each panel using the information
@@ -121,8 +121,7 @@ layers.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/aranjuezXblocks.pdf}
-\caption{\label{fig:org1d68c01}
-Enhanced time plot of the collection of meteorological time series of the Aranjuez station.}
+\caption{Enhanced time plot of the collection of meteorological time series of the Aranjuez station. \label{fig:aranjuezEnhanced}}
 \end{figure}
 
 There is no equivalent \texttt{panel.xblocks} function that can be used with
@@ -222,7 +221,7 @@ added successively:
       facet_free()
 \end{lstlisting}
 
-Some messages from Figure \ref{fig:org1d68c01}:
+Some messages from Figure \ref{fig:aranjuezEnhanced}:
 \begin{itemize}
 \item The radiation, temperature, and evotranspiration are
 quasi-periodic and are almost synchronized between them. Their
@@ -243,9 +242,8 @@ not difficult to find days with radiation below the average
 during this season.
 \end{itemize}
 
-\section{Time Series of Variables with the Same Scale}
-\label{sec:orge8d40ac}
-\label{SEC:sameScale}
+\section{Time Series of Variables with the Same Scale \label{SEC:sameScale}}
+\label{sec:orgd581730}
 As an example of time series of variables with the same scale, we will
 use measurements of solar radiation from different meteorological
 stations.
@@ -265,6 +263,7 @@ around the time average (\texttt{avRad}).
   load('data/navarra.RData')
 \end{lstlisting}
 
+
 \index{zoo@\texttt{zoo}} 
 \index{xyplot.zoo@\texttt{xyplot.zoo}}
 
@@ -280,8 +279,7 @@ around the time average (\texttt{avRad}).
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/navarra.pdf}
-\caption{\label{fig:org81dd1c9}
-Time plot of the variations around time average of solar radiation measurements from the meteorological stations of Navarra.}
+\caption{Time plot of the variations around time average of solar radiation measurements from the meteorological stations of Navarra. \label{fig:navarraNaive}}
 \end{figure}
 
 This result can be improved with different methods: the cut-and-stack
@@ -289,7 +287,7 @@ method, the horizon graph with \texttt{horizonplot}, and dynamic labeling
 with the \texttt{gridSVG} package.
 
 \subsection{Aspect Ratio and Rate of Change}
-\label{sec:org70f6054}
+\label{sec:org9c6a838}
 When a graphic is intended to inform about the rate of change,
 special attention must be paid to the aspect ratio of the graph,
 defined as the ratio of the height to the width of the graphical
@@ -321,18 +319,17 @@ cut-and-stack method is produced with
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/navarraBanking.pdf}
-\caption{\label{fig:orgbf0c9b7}
-Cut-and-stack plot with banking to \(\SI{45}{\degree}\).}
+\caption{Cut-and-stack plot with banking to \(\SI{45}{\degree}\). \label{fig:navarraBanking}}
 \end{figure}
 
-\subsection{The Horizon Graph}
-\label{sec:orgc526526}
+\subsection{The Horizon Graph \label{sec:horizonplot}}
+\label{sec:org7b6987d}
 The horizon graph\index{Horizon graph} is useful in examining how a
 large number of series changes over time, and does so in a way
 that allows both comparisons between the individual time series
 and and independent analysis of each series. Moreover,
 extraordinary behaviors and predominant patterns are easily
-distinguished \cite{Heer.Kong.ea2009, Few2008}.
+distinguished \cite{Heer.Kong.ea2009,Few2008}.
 
 This graph displays several stacked series collapsing the y-axis
 to free vertical space:
@@ -371,8 +368,7 @@ using a row for each time series.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/navarraHorizonplot.pdf}
-\caption{\label{fig:orgdb19d16}
-Horizon plot of variations around time average of solar radiation measurements from the meteorological stations of Navarra.}
+\caption{Horizon plot of variations around time average of solar radiation measurements from the meteorological stations of Navarra. \label{fig:navarraHorizonplot}}
 \end{figure}
 
 Figure \ref{fig:navarraHorizonplot} allows several questions to be
@@ -386,8 +382,9 @@ answered:
 absolute fluctuations across the set of stations?
 \end{itemize}
 
-\subsection{Time Graph of the Differences between a Time Series and a Reference}
-\label{sec:org8da874e}
+\subsection{Time Graph of the Differences between a Time Series and a Reference \label{sec:differences}}
+\label{sec:orge0f7159}
+
 The horizon graph is also useful in revealing the differences between
 a univariate time series and another reference. For example, we
 might be interested in the departure of the observed temperature
@@ -423,8 +420,7 @@ differences time series (Figure \ref{fig:diffTa_xyplot})
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/diffTa_xyplot.pdf}
-\caption{\label{fig:org74069ea}
-Daily temperature time series, its long-term average and the differences between them.}
+\caption{Daily temperature time series, its long-term average and the differences between them. \label{fig:diffTa_xyplot}}
 \end{figure}
 
 The horizon graph is better suited for displaying the differences. The
@@ -450,8 +446,7 @@ reference.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/diffTa_horizon.pdf}
-\caption{\label{fig:orgad3631e}
-Horizon graph displaying differences between a daily temperature time series and its long-term average.}
+\caption{Horizon graph displaying differences between a daily temperature time series and its long-term average. \label{fig:diffTa_horizon}}
 \end{figure}
 
 A different approach to display this information is to produce a level
@@ -491,18 +486,125 @@ the comparison between years in a certain month.
             layout=c(1, 12), strip=FALSE, strip.left=TRUE,
             xlab='Day', ylab='Month', 
             par.settings=myTheme)
+  
 \end{lstlisting}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/diffTa_levelplot.pdf}
-\caption{\label{fig:org58fe518}
-Level plot of differences between a daily temperature time series and its long-term average.}
+\caption{Level plot of differences between a daily temperature time series and its long-term average. \label{fig:diffTa_level}}
 \end{figure}
 
+ggplot version.
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+df <- data.frame(Vals = diffTa,
+                 Day = day(timeIndex),
+                 Year = year(timeIndex),
+                 Month = month(timeIndex))
+
+ggplot(data = df,
+       aes(fill = Vals,
+           x = Day,
+           y = Year)) +
+    facet_wrap(~ Month, ncol = 1, switch = 'y') +
+    scale_y_continuous(breaks = pretty_breaks()) + 
+    scale_fill_distiller(palette = 'RdBu', direction = 1) + 
+    geom_tile(color = "white", size = 0.4) +
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank())
+\end{lstlisting}
+
+
+\section{Interactive}
+\label{sec:org4746381}
+
+\subsection{Dygraphs \label{sec:dygraphs}}
+\label{sec:org0bdba69}
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+library(dygraphs)
+
+dyTemp <- dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
+                  main = "Temperature in Aranjuez",
+                  ylab = "ºC")
+
+dyTemp
+\end{lstlisting}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+dyTemp %>%
+    dyHighlight(highlightSeriesBackgroundAlpha = 0.2)
+\end{lstlisting}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+dyTemp %>%
+    dyHighlight(highlightSeriesOpts = list(strokeWidth = 2))
+\end{lstlisting}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
+        main = "Temperature in Aranjuez",
+        ylab = "ºC") %>%
+    dySeries(c("TempMin", "TempAvg", "TempMax"),
+             label = "Temperature")
+\end{lstlisting}
+
+\subsection{Highcharter \label{sec:highcharter}}
+\label{sec:org5bd5719}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+library(highcharter)
+library(xts)
+
+aranjuezXTS <- as.xts(aranjuez)
+
+highchart() %>%
+    hc_add_series_xts(name = 'TempMax',
+                      aranjuezXTS[, "TempMax"]) %>%
+    hc_add_series_xts(name = 'TempMin',
+                      aranjuezXTS[, "TempMin"]) %>%
+    hc_add_series_xts(name = 'TempAvg',
+                      aranjuezXTS[, "TempAvg"])
+
+\end{lstlisting}
+
+\subsection{plotly \label{sec:plotly}}
+\label{sec:orgf73492c}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+library(reshape2)
+df <- fortify(navarra - avRad)
+df <- melt(df, id.vars = 'Index', variable.name = 'Station')
+\end{lstlisting}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+## Number of stations
+N <- ncol(navarra)
+## Color palette
+pal <- colorRampPalette(
+    brewer.pal(9, 'Set1'))(N)
+\end{lstlisting}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+library(plotly)
+
+plot_ly(df,
+        x = ~ Index,
+        y = ~ value,
+        color = ~ Station) %>%
+    add_lines(alpha = 0.5, colors = pal)
+\end{lstlisting}
 
 \subsection{\floweroneleft Interaction with \texttt{gridSVG}}
-\label{sec:orgca2fb62}
+\label{sec:org16008e2}
 The \texttt{gridSVG} package provides functions to convert \texttt{grid}-based \texttt{R}
 graphics to an SVG format. It provides several functions to add
 dynamic and interactive capabilities to \texttt{R} graphics. In this section
@@ -617,8 +719,8 @@ questions raised with that graphic.
 
 
 
-\section{Stacked Graphs}
-\label{sec:org1004137}
+\section{Stacked Graphs \label{sec:stacked}}
+\label{sec:orgd7225d2}
 If the variables of a multivariate time series can be summed to
 produce a meaningful global variable, they may be better displayed
 with stacked graphs. For example, the information on unemployment in
@@ -643,8 +745,7 @@ with the \texttt{xyplot.zoo} method (Figure \ref{fig:unemployUSAxyplot}).
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/unemployUSAxyplot.pdf}
-\caption{\label{fig:org443e433}
-Time series of unemployment  with \texttt{xyplot} using the default panel function.}
+\caption{Time series of unemployment  with \texttt{xyplot} using the default panel function. \label{fig:unemployUSAxyplot}}
 \end{figure}
 
 This graphical output is not very useful: the legend is confusing,
@@ -657,20 +758,20 @@ A suitable improvement is to display the multivariate time series as a
 set of stacked colored polygons to follow the macro/micro principle
 proposed by Tufte \cite{Tufte1990}: Show a collection of individual
 time series and also display their sum. A traditional stacked graph is
-easily obtained with \texttt{geom\_area}:
+easily obtained with \texttt{geom\_area} (Figure \ref{fig:unemployUSAgeomArea}):
+
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
   library(scales) ## scale_x_yearmon needs scales::pretty_breaks
   autoplot(unemployUSA, facets=NULL, geom='area') +
       geom_area(aes(fill=Series)) +
-      scale_x_yearmon()
+      scale_x_yearmon()  
 \end{lstlisting}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/unemployUSAgeomArea.pdf}
-\caption{\label{fig:org0218bb2}
-Time series of unemployment with stacked areas using \texttt{geom\_area}.}
+\caption{Time series of unemployment with stacked areas using \texttt{geom\_area}. \label{fig:unemployUSAgeomArea}}
 \end{figure}
 
 Traditional stacked graphs have their bottom on the x-axis which makes
@@ -709,8 +810,7 @@ the overall unemployment results is clearly evident.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/unemployUSAThemeRiver.pdf}
-\caption{\label{fig:org169f65d}
-ThemeRiver of unemployment in the United States.}
+\caption{ThemeRiver of unemployment in the United States. \label{fig:unemployUSAThemeRiver}}
 \end{figure}
 
 This figure can help answer several questions. For example:
@@ -729,9 +829,8 @@ Statistics'' reports from the Bureau of Labor Statistics\footnote{The March 2012
 
 
 
-\subsection{\floweroneleft Panel and Prepanel Functions to Implement the ThemeRiver with \texttt{xyplot}}
-\label{sec:org357fcfa}
-\label{sec:themeRiverPanel}
+\subsection{\floweroneleft Panel and Prepanel Functions to Implement the ThemeRiver with \texttt{xyplot} \label{sec:themeRiverPanel}}
+\label{sec:org8881172}
 The \texttt{xyplot} function displays information according to the class
 of its first argument (methods) and to the \texttt{panel} function. We
 will use the \texttt{xyplot.zoo} method (equivalent to the \texttt{xyplot.ts}
@@ -878,6 +977,7 @@ polygons and the labels share the same color (\texttt{col[i]}).
       }          
     }
   }
+  
 \end{lstlisting}
 
 With this panel function, \texttt{xyplot} displays a set of stacked
@@ -896,8 +996,7 @@ large enough, and part of the polygons fall out of it. Why?
 \begin{figure}[htbp]
 \centering
 \includegraphics[height=0.45\textheight]{figs/ThemeRiverError.pdf}
-\caption{\label{fig:org2cb8b60}
-First attempt of ThemeRiver.}
+\caption{First attempt of ThemeRiver. \label{fig:themeRiverError}}
 \end{figure}
 
 The problem is that \texttt{lattice} makes a preliminary estimate of the
@@ -933,4 +1032,33 @@ its last column (the upper line of the cumulative sum).
          dx=diff(x),
          dy=diff(c(yCumSum[,-1])))
   }
+\end{lstlisting}
+
+\subsection{Interactive \label{sec:interactive}}
+\label{sec:orgff344f4}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+## remotes::install_github("hrbrmstr/streamgraph")
+library(streamgraph)
+library(reshape2)
+\end{lstlisting}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+unemployDF <- as.data.frame(unemployUSA)
+
+unemployDF$time <- as.Date(index(unemployUSA))
+
+unemployDF <- melt(unemployDF, id.vars = 'time')
+\end{lstlisting}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+streamgraph(unemployDF,
+            key = "variable",
+            value = "value",
+            date = "time") %>%
+    sg_axis_x(1, "year", "%Y") %>%
+    sg_fill_brewer("Set1")
 \end{lstlisting}

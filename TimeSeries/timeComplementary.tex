@@ -1,12 +1,6 @@
 
 \section{Polylines}
-\label{sec:orgc72a4d0}
-The first solution is a Motion Chart the \texttt{googleVis} package
-\cite{Gesmann.deCastillo2011}, an interface between R and the Google
-Visualisation API. With its \texttt{gvisMotionChart} function it is easy to
-produce a Motion Chart that can be displayed using a browser with
-Flash enabled (Figure \ref{fig:googleVis}).
-
+\label{sec:org9a31244}
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
   load('data/CO2.RData')
@@ -16,29 +10,8 @@ Flash enabled (Figure \ref{fig:googleVis}).
 
 \index{Data!CO2@$CO_2$}
 \index{Data!World Bank}
-\index{Packages!googleVis@\texttt{googleVis}}
 
-\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-  library(googleVis)
-  pgvis <- gvisMotionChart(CO2data, idvar='Country.Name', timevar='Year')
-\end{lstlisting}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=\textwidth]{figs/googleVis}
-  \caption{Snapshot of a Motion Chart produced with googleVis.}
-  \label{fig:googleVis}
-\end{figure}
-
-
-Although the \texttt{gvisMotionChart} is quite easy to use, the global
-appearance and behavior are completely determined by Google
-API\footnote{You should read the Google API Terms of Service before using
-\texttt{googleVis}: \url{https://developers.google.com/terms/}.}. Moreover, you should carefully read their Terms of Use
-before using it for public distribution.
-
-Our next attempt is to display the entire data in a panel with a
+Our first approach is to display the entire data in a panel with a
 scatterplot using country names as the grouping factor. Points of each
 country are connected with polylines to reveal the time evolution
 (Figure \ref{fig:CO2-GNI}).
@@ -54,8 +27,7 @@ country are connected with polylines to reveal the time evolution
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/CO2_GNI.pdf}
-\caption{\label{fig:org7b3c9a3}
-GNI per capita versus \(\mathrm{CO_2}\) emissions per capita (\texttt{lattice} version).}
+\caption{GNI per capita versus \(\mathrm{CO_2}\) emissions per capita (\texttt{lattice} version). \label{fig:CO2-GNI}}
 \end{figure}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
@@ -77,7 +49,7 @@ countries.
 \end{enumerate}
 
 \section{Choosing Colors}
-\label{sec:org4c66e21}
+\label{sec:org4b07690}
 The \texttt{Country.Name} categorical variable will be encoded with a
 qualitative palette, namely the first five colors of \texttt{Set1}
 palette\footnote{\url{http://colorbrewer2.org/}} from the \texttt{RColorBrewer} package
@@ -116,7 +88,7 @@ value.
 \begin{lstlisting}
   ## Rank of average values of CO2 per capita
   CO2mean <- aggregate(CO2.capita ~ Country.Name, data=CO2data, FUN=mean)
-  palOrdered <- pal[rank(CO2mean$CO2.capita)]
+  palOrdered <- pal[rank(CO2mean$CO2.capita)]  
 \end{lstlisting}
 
 A more sophisticated solution is to use the ordered results of a
@@ -141,8 +113,7 @@ original \(\mathrm{CO_2}\) \texttt{data.frame}.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/hclust.pdf}
-\caption{\label{fig:org50b3144}
-Hierarchical clustering of the time evolution of \(\mathrm{CO_2}\) per capita values.}
+\caption{Hierarchical clustering of the time evolution of \(\mathrm{CO_2}\) per capita values. \label{fig:hclustCO2}}
 \end{figure}
 
 
@@ -154,7 +125,7 @@ the hierarchical clustering.
 \begin{lstlisting}
   idx <- match(levels(CO2data$Country.Name), 
                CO2capita$Country.Name[hCO2$order])
-  palOrdered <- pal[idx]
+  palOrdered <- pal[idx]  
 \end{lstlisting}
 It must be highlighted that this palette links colors with the levels
 of \texttt{Country.Name} (country names in alphabetical order), which is
@@ -189,7 +160,7 @@ distinguish them.
 \end{lstlisting}
 
 \section{Labels to Show Time Information}
-\label{sec:orge727fe1}
+\label{sec:orgb4bf40e}
 This result can be improved with labels displaying the years to show
 the time evolution.  A panel function with \texttt{panel.text} to print the
 year labels and \texttt{panel.superpose} to display the lines for each group
@@ -239,10 +210,11 @@ of \texttt{+.trellis}, \texttt{glayer\_} and \texttt{panel.text}. Using \texttt{
                                          colour='gray',
                                          size=2.5,
                                          hjust=0, vjust=0)
+  
 \end{lstlisting}
 
 \section{Country Names: Positioning Labels}
-\label{sec:orgbd000f1}
+\label{sec:orge5711bb}
 The common solution to link each curve with the group value is to add
 a legend. However, a legend can be confusing with too many items. In
 addition, the reader must carry out a complex task: Choose the line,
@@ -276,8 +248,7 @@ overlaps.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/CO2_capita.pdf}
-\caption{\label{fig:org8261a86}
-\(\mathrm{CO_2}\) emissions versus GNI per capita. Labels are placed with \texttt{panel.pointLabel}.}
+\caption{\(\mathrm{CO_2}\) emissions versus GNI per capita. Labels are placed with \texttt{panel.pointLabel}. \label{fig:CO2-GNI-glayer}}
 \end{figure}
 
 However, this solution does not solve the overlapping between labels
@@ -301,8 +272,7 @@ object, I have obtained the best results with \texttt{extreme.grid} (Figure
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/CO2_capitaDL.pdf}
-\caption{\label{fig:org9ed9b8b}
-\(\mathrm{CO_2}\) emissions versus GNI per capita. Labels are placed with the \texttt{extreme.grid} method of the \texttt{directlabels} package.}
+\caption{\(\mathrm{CO_2}\) emissions versus GNI per capita. Labels are placed with the \texttt{extreme.grid} method of the \texttt{directlabels} package. \label{fig:CO2-GNI-DL}}
 \end{figure}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
@@ -311,7 +281,7 @@ object, I have obtained the best results with \texttt{extreme.grid} (Figure
 \end{lstlisting}
 
 \section{A Panel for Each Year}
-\label{sec:org1d55583}
+\label{sec:orga136fcf}
 Time can be used as a conditioning variable (as shown in previous
 sections) to display subsets of the data in different panels. Figure
 \ref{fig:CO2-GNI-panel} is produced with the same code as in Figure
@@ -330,8 +300,7 @@ version and \texttt{facet\_wrap(\textasciitilde{} Year)} in the \texttt{ggplot2}
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/CO2_capita_panel.pdf}
-\caption{\label{fig:orga43832e}
-\(\mathrm{CO_2}\) emissions versus GNI per capita with a panel for each year.}
+\caption{\(\mathrm{CO_2}\) emissions versus GNI per capita with a panel for each year. \label{fig:CO2-GNI-panel}}
 \end{figure}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
@@ -361,12 +330,11 @@ legend is not very useful. Once again, point labeling is recommended
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/CO2_capita_panel_labels.pdf}
-\caption{\label{fig:org4b89044}
-\(\mathrm{CO_2}\) emissions versus GNI per capita with a panel for each year.}
+\caption{\(\mathrm{CO_2}\) emissions versus GNI per capita with a panel for each year. \label{fig:CO2-GNI-panel-labels}}
 \end{figure}
 
 \subsection{\floweroneleft Using Variable Size to Encode an Additional Variable}
-\label{sec:org160b674}
+\label{sec:org0c38490}
 Instead of using simple points, we can display circles of
 different radius to encode a new variable. This new variable is
 \texttt{CO2.PPP}, the ratio of \(\mathrm{CO_2}\) emissions to the Gross Domestic
@@ -408,8 +376,7 @@ The graphic will display information on two variables (\texttt{GNI.capita} and \
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/CO2pointsGG.pdf}
-\caption{\label{fig:org1693900}
-\(\mathrm{CO_2}\) emissions versus GNI per capita for different intervals of the ratio of \(\mathrm{CO_2}\) emissions to the GDP PPP estimations.}
+\caption{\(\mathrm{CO_2}\) emissions versus GNI per capita for different intervals of the ratio of \(\mathrm{CO_2}\) emissions to the GDP PPP estimations. \label{fig:CO2pointsGG}}
 \end{figure}
 
 The \texttt{auto.key} mechanism of the \texttt{lattice} version is not able to cope with two grouping variables. Therefore, the legend, whose main componens are the labels (\texttt{intervals}) and the point sizes (\texttt{cex.key}), should be defined manually (Figure \ref{fig:CO2points}). 
@@ -448,18 +415,79 @@ xyplot(GNI.capita ~ CO2.capita|factor(Year), data=CO2data,
                             col=palOrdered[group.number],
                             cex=0.7)
        }
-       )
+       ) 
 \end{lstlisting}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/CO2points.pdf}
-\caption{\label{fig:org6b9977a}
-\(\mathrm{CO_2}\) emissions versus GNI per capita for different intervals of the ratio of \(\mathrm{CO_2}\) emissions to the GDP PPP estimations.}
+\caption{\(\mathrm{CO_2}\) emissions versus GNI per capita for different intervals of the ratio of \(\mathrm{CO_2}\) emissions to the GDP PPP estimations. \label{fig:CO2points}}
 \end{figure}
 
-\section{\floweroneleft Traveling Bubbles}
-\label{sec:org8e37515}
+\section{Interactive}
+\label{sec:org73e87b6}
+\subsection{\texttt{googleVis}}
+\label{sec:org1d66980}
+The first solution is a Motion Chart the \texttt{googleVis} package
+\cite{Gesmann.deCastillo2011}, an interface between R and the Google
+Visualisation API. With its \texttt{gvisMotionChart} function it is easy to
+produce a Motion Chart that can be displayed using a browser with
+Flash enabled (Figure \ref{fig:googleVis}).
+
+\index{Packages!googleVis@\texttt{googleVis}}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+  library(googleVis)
+  pgvis <- gvisMotionChart(CO2data, idvar='Country.Name', timevar='Year')
+\end{lstlisting}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{figs/googleVis}
+  \caption{Snapshot of a Motion Chart produced with googleVis.}
+  \label{fig:googleVis}
+\end{figure}
+
+
+Although the \texttt{gvisMotionChart} is quite easy to use, the global
+appearance and behavior are completely determined by Google
+API\footnote{You should read the Google API Terms of Service before using
+\texttt{googleVis}: \url{https://developers.google.com/terms/}.}. Moreover, you should carefully read their Terms of Use
+before using it for public distribution.
+
+
+\subsection{plotly}
+\label{sec:org2257d27}
+
+\index{Packages!plotlyG@\texttt{plotly}}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+p <- plot_ly(CO2data,
+             x = ~CO2.capita,
+             y = ~GNI.capita,
+             size = ~CO2.PPP, 
+             text = ~Country.Name, hoverinfo = "text")
+
+p <- add_markers(p,
+                 color = ~Country.Name,
+                 frame = ~Year,
+                 ids = ~Country.Name,
+                 showlegend = FALSE)
+
+p <- animation_opts(p,
+                    frame = 1000,
+                    transition = 800,
+                    redraw = FALSE) %>%
+    animation_slider(
+        currentvalue = list(prefix = "Year "))
+
+p
+\end{lstlisting}
+
+\subsection{\floweroneleft gridSVG}
+\label{sec:org4cf5f5a}
 The final solution to display this multivariate time series is with
 animation via the function \texttt{grid.animate} of the \texttt{gridSVG}
 package. We will mimic the Trendalyzer/Motion Chart solution, using
@@ -558,6 +586,7 @@ indefinitely.
                x=x_points,
                y=y_labels,
                rep=TRUE)
+  
 \end{lstlisting}
 
 A bit of interactivity can be added with the \texttt{grid.hyperlink}
@@ -572,6 +601,7 @@ Wikipedia link to a mouse click on each bubble.
   URL <- paste('http://en.wikipedia.org/wiki/', countries, sep='')
   grid.hyperlink(trellis.grobname('points', type='panel', row=1, col=1),
                  URL, group=FALSE)
+  
 \end{lstlisting}
 
 Finally, the time information: The year is printed in the lower

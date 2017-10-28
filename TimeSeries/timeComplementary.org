@@ -89,7 +89,7 @@
 Our first approach is to display the entire data in a panel with a
 scatterplot using country names as the grouping factor. Points of each
 country are connected with polylines to reveal the time evolution
-(Figure \ref{fig:CO2-GNI}).
+(Figure ref:fig:CO2-GNI).
 #+begin_src R :results output graphics :exports both :file "figs/CO2_GNI.pdf" 
   ## lattice version
   xyplot(GNI.capita  ~ CO2.capita, data=CO2data,
@@ -98,8 +98,7 @@ country are connected with polylines to reveal the time evolution
          groups=Country.Name, type='b')
 #+end_src
 
-#+CAPTION: GNI per capita versus $\mathrm{CO_2}$ emissions per capita (=lattice= version).
-#+LABEL: fig:CO2-GNI
+#+CAPTION: GNI per capita versus $\mathrm{CO_2}$ emissions per capita (=lattice= version). label:fig:CO2-GNI
 #+RESULTS:
 [[file:figs/CO2_GNI.pdf]]
 
@@ -128,7 +127,7 @@ Three improvements can be added to this graphical result:
 The =Country.Name= categorical variable will be encoded with a
 qualitative palette, namely the first five colors of =Set1=
 palette[fn:2] from the =RColorBrewer= package
-\cite{Neuwirth2011}. Because there are more countries than colors, we
+cite:Neuwirth2011. Because there are more countries than colors, we
 have to repeat some colors to complete the number of levels of the
 variable =Country.Name=. The result is a palette with non-unique
 colors, and thus some countries will share the same color. This is not
@@ -170,7 +169,7 @@ value.
 
 A more sophisticated solution is to use the ordered results of a
 hierarchical clustering of the time evolution of the $\mathrm{CO_2}$ per capita
-values (Figure \ref{fig:hclustCO2}). The data is extracted from the
+values (Figure ref:fig:hclustCO2). The data is extracted from the
 original $\mathrm{CO_2}$ =data.frame=.  
 
 #+BEGIN_EXPORT latex
@@ -188,8 +187,7 @@ original $\mathrm{CO_2}$ =data.frame=.
   par(oldpar)
 #+end_src
 
-#+CAPTION: Hierarchical clustering of the time evolution of $\mathrm{CO_2}$ per capita values.
-#+LABEL: fig:hclustCO2
+#+CAPTION: Hierarchical clustering of the time evolution of $\mathrm{CO_2}$ per capita values. label:fig:hclustCO2
 #+RESULTS:
 [[file:figs/hclust.pdf]]
 
@@ -310,7 +308,7 @@ name.
 A better approach is to label each line using nearby text with the
 same color encoding. A suitable method is to place the labels
 close to the end of each line (Figure
-\ref{fig:CO2-GNI-glayer}). Labels are placed with the
+ref:fig:CO2-GNI-glayer). Labels are placed with the
 =panel.pointLabel= function from the =maptools= package. This
 function use optimization routines to find locations without
 overlaps.
@@ -332,8 +330,7 @@ overlaps.
                               fontface=2, fontfamily='Palatino'))
 #+end_src
 
-#+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita. Labels are placed with =panel.pointLabel=.
-#+LABEL: fig:CO2-GNI-glayer
+#+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita. Labels are placed with =panel.pointLabel=. label:fig:CO2-GNI-glayer
 #+RESULTS:
 [[file:figs/CO2_capita.pdf]]
 
@@ -342,13 +339,13 @@ overlaps.
 # #+end_src
 
 However, this solution does not solve the overlapping between labels
-and lines. The package =directlabels= \cite{Hocking2013} includes a
+and lines. The package =directlabels= cite:Hocking2013 includes a
 wide repertory of positioning methods to cope with this problem. The
 main function, =direct.label=, is able to determine a suitable method
 for each plot, although the user can choose a different method from
 the collection or even define a custom method. For the =pCO2.capita=
 object, I have obtained the best results with =extreme.grid= (Figure
-\ref{fig:CO2-GNI-DL}).
+ref:fig:CO2-GNI-DL).
 
 #+BEGIN_EXPORT latex
 \index{Packages!directlabels@\texttt{directlabels}}
@@ -360,8 +357,7 @@ object, I have obtained the best results with =extreme.grid= (Figure
   direct.label(pCO2.capita, method='extreme.grid')
 #+end_src
 
-#+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita. Labels are placed with the \texttt{extreme.grid} method of the \texttt{directlabels} package.
-#+LABEL: fig:CO2-GNI-DL 
+#+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita. Labels are placed with the \texttt{extreme.grid} method of the \texttt{directlabels} package. label:fig:CO2-GNI-DL 
 #+RESULTS:
 [[file:figs/CO2_capitaDL.pdf]]
 
@@ -378,8 +374,8 @@ object, I have obtained the best results with =extreme.grid= (Figure
 
 Time can be used as a conditioning variable (as shown in previous
 sections) to display subsets of the data in different panels. Figure
-\ref{fig:CO2-GNI-panel} is produced with the same code as in Figure
-\ref{fig:CO2-GNI}, now including =|factor(Year)= in the lattice
+ref:fig:CO2-GNI-panel is produced with the same code as in Figure
+ref:fig:CO2-GNI, now including =|factor(Year)= in the lattice
 version and =facet_wrap(~ Year)= in the =ggplot2= version.
 
 #+begin_src R :results output graphics :exports both :file "figs/CO2_capita_panel.pdf"
@@ -390,8 +386,7 @@ version and =facet_wrap(~ Year)= in the =ggplot2= version.
          auto.key=list(space='right'))
 #+end_src
 
-#+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita with a panel for each year.
-#+LABEL: fig:CO2-GNI-panel
+#+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita with a panel for each year. label:fig:CO2-GNI-panel
 #+RESULTS:
 [[file:figs/CO2_capita_panel.pdf]]
 
@@ -405,7 +400,7 @@ version and =facet_wrap(~ Year)= in the =ggplot2= version.
 
 Because the grouping variable, =Country.Name=, has many levels, the
 legend is not very useful. Once again, point labeling is recommended
-(Figure \ref{fig:CO2-GNI-panel-labels}).
+(Figure ref:fig:CO2-GNI-panel-labels).
 
 #+begin_src R :results output graphics :exports both :file "figs/CO2_capita_panel_labels.pdf"
   xyplot(GNI.capita  ~ CO2.capita | factor(Year), data=CO2data,
@@ -417,8 +412,7 @@ legend is not very useful. Once again, point labeling is recommended
                               col=palOrdered[group.number], cex=0.7))
 #+end_src
 
-#+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita with a panel for each year.
-#+LABEL: fig:CO2-GNI-panel-labels
+#+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita with a panel for each year. label:fig:CO2-GNI-panel-labels
 #+RESULTS:
 [[file:figs/CO2_capita_panel_labels.pdf]]
 
@@ -433,7 +427,7 @@ different radius to encode a new variable. This new variable is
 =CO2.PPP=, the ratio of $\mathrm{CO_2}$ emissions to the Gross Domestic
 Product with purchasing power parity (PPP) estimations.
 
-To use this numeric variable as an additional grouping factor, its range must be divided into different classes. The typical solution is to use =cut= to coerce the numeric variable into a =factor= whose levels correspond to uniform intervals, which could be unrelated to the data distribution. The =classInt= package \cite{Bivand2013} provides several methods to partition data into classes based on natural groups in the data distribution.
+To use this numeric variable as an additional grouping factor, its range must be divided into different classes. The typical solution is to use =cut= to coerce the numeric variable into a =factor= whose levels correspond to uniform intervals, which could be unrelated to the data distribution. The =classInt= package cite:Bivand2013 provides several methods to partition data into classes based on natural groups in the data distribution.
 
 #+BEGIN_EXPORT latex
 \index{Packages!classInt@\texttt{classInt}}
@@ -455,7 +449,7 @@ Although the functions of this package are mainly intended to create color palet
   CO2data$cexPoints <- cex.key[idx]
 #+end_src
 
-The graphic will display information on two variables (=GNI.capita= and =CO2.capita= in the vertical and horizontal axes, respectively) with a conditioning variable (=Year=) and two grouping variables (=Country.Name=, and =CO2.PPP= through =cexPoints=) (Figure \ref{fig:CO2pointsGG}).
+The graphic will display information on two variables (=GNI.capita= and =CO2.capita= in the vertical and horizontal axes, respectively) with a conditioning variable (=Year=) and two grouping variables (=Country.Name=, and =CO2.PPP= through =cexPoints=) (Figure ref:fig:CO2pointsGG).
 
 #+begin_src R :results output graphics :exports both :file "figs/CO2pointsGG.pdf" 
   ggplot(data=CO2data, aes(x=CO2.capita, y=GNI.capita, colour=Country.Name)) +
@@ -465,12 +459,11 @@ The graphic will display information on two variables (=GNI.capita= and =CO2.cap
       theme_bw()
 #+end_src
 
-#+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita for different intervals of the ratio of $\mathrm{CO_2}$ emissions to the GDP PPP estimations.
-#+LABEL: fig:CO2pointsGG
+#+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita for different intervals of the ratio of $\mathrm{CO_2}$ emissions to the GDP PPP estimations. label:fig:CO2pointsGG
 #+RESULTS:
 [[file:figs/CO2pointsGG.pdf]]
 
-The =auto.key= mechanism of the =lattice= version is not able to cope with two grouping variables. Therefore, the legend, whose main componens are the labels (=intervals=) and the point sizes (=cex.key=), should be defined manually (Figure \ref{fig:CO2points}). 
+The =auto.key= mechanism of the =lattice= version is not able to cope with two grouping variables. Therefore, the legend, whose main componens are the labels (=intervals=) and the point sizes (=cex.key=), should be defined manually (Figure ref:fig:CO2points). 
 
 #+BEGIN_EXPORT latex
 \index{panel.text@\texttt{panel.text}}
@@ -510,8 +503,7 @@ xyplot(GNI.capita ~ CO2.capita|factor(Year), data=CO2data,
        ) 
 #+end_src
 
-#+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita for different intervals of the ratio of $\mathrm{CO_2}$ emissions to the GDP PPP estimations.
-#+LABEL: fig:CO2points 
+#+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita for different intervals of the ratio of $\mathrm{CO_2}$ emissions to the GDP PPP estimations. label:fig:CO2points 
 #+RESULTS:
 [[file:figs/CO2points.pdf]]
 
@@ -523,10 +515,10 @@ xyplot(GNI.capita ~ CO2.capita|factor(Year), data=CO2data,
   ##################################################################
 #+end_src
 The first solution is a Motion Chart the =googleVis= package
-\cite{Gesmann.deCastillo2011}, an interface between R and the Google
+cite:Gesmann.deCastillo2011, an interface between R and the Google
 Visualisation API. With its =gvisMotionChart= function it is easy to
 produce a Motion Chart that can be displayed using a browser with
-Flash enabled (Figure \ref{fig:googleVis}).
+Flash enabled (Figure ref:fig:googleVis).
 
 #+BEGIN_EXPORT latex
 \index{Packages!googleVis@\texttt{googleVis}}
@@ -732,8 +724,8 @@ right corner, using the =visibility= attribute of an animated
 #+end_src
 
 The SVG file produced with =grid.export= is available at the website
-of the book (Figure \ref{fig:bubblesSVG}). Because this animation does
-not trace the paths, Figure \ref{fig:CO2-GNI-DL} provides this
+of the book (Figure ref:fig:bubblesSVG). Because this animation does
+not trace the paths, Figure ref:fig:CO2-GNI-DL provides this
 information as a static complement.
 
 #+BEGIN_EXPORT latex

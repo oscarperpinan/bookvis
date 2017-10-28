@@ -1,7 +1,6 @@
 
-\section{Scatterplot Matrix: Time as a Grouping Variable}
-\label{sec:orgcc24b3b}
-\label{org011a590}
+\section{Scatterplot Matrix: Time as a Grouping Variable \label{SEC:groupVariable}}
+\label{sec:org3632fd6}
 
 The scatterplot matrices are based on the technique of small multiples
 \cite{Tufte1990}: small, thumbnail-sized representations of multiple
@@ -13,8 +12,7 @@ relation between the pair of variables at the intersection of the row
 and column indicated by the variable names in the diagonal panels
 \cite{Friendly.Denis2005}.
 
-This graphical tool is implemented in the \texttt{splom} function\footnote{\texttt{ggplot2} users may wish to explore the \texttt{ggpairs} function
-from the \texttt{GGally} package.}. The
+This graphical tool is implemented in the \texttt{splom} function. The
 following code displays the relation between the set of
 meteorological variables using a sequential palette from the
 ColorBrewer catalog (\texttt{RbBu}, with black added to complete a
@@ -22,7 +20,7 @@ twelve-color palette) to encode the month. The order of colors of
 this palette is chosen in order to display summer months with
 intense colors and to distinguish between the first and second
 half of the year with red and blue, respectively (Figure
-\ref{fig:orgd5154b6}).
+\ref{fig:aranjuezSplom}).
 
 \index{splom@\texttt{splom}}
 
@@ -34,7 +32,10 @@ half of the year with red and blue, respectively (Figure
   colors <- c(brewer.pal(n=11, 'RdBu'), '#000000')
   ## Rearrange according to months (darkest for summer)
   colors <- colors[c(6:1, 12:7)]
-  
+\end{lstlisting}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
   splom(~as.data.frame(aranjuez),
           groups=format(index(aranjuez), '%m'),
         auto.key=list(space='right', 
@@ -47,12 +48,25 @@ half of the year with red and blue, respectively (Figure
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/aranjuezSplom.png}
-\caption{\label{fig:orgd5154b6}
-Scatter plot matrix of the collection of meteorological time series of the Aranjuez station.}
+\caption{Scatter plot matrix of the collection of meteorological time series of the Aranjuez station. \label{fig:aranjuezSplom}}
 \end{figure}
 
+\textbf{ggplot version}
 
-Let's explore Figure \ref{fig:orgd5154b6}. For example,
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+library(GGally)
+
+df <- as.data.frame(aranjuez)
+df$Month <- format(index(aranjuez), '%m')
+ 
+p <- ggpairs(df,
+             columns = 1:10, ## Do not include "Month"
+             upper = list(continuous = "points"),
+             mapping = aes(colour = Month, alpha = 0.1))
+\end{lstlisting}
+
+Let's explore Figure \ref{fig:aranjuezSplom}. For example,
 \begin{itemize}
 \item The highest values of ambient temperature (average, maximum, and
 mimimun), solar radiation, and evotranspiration can be found
@@ -84,9 +98,8 @@ aranjuez[idx,]
 \end{lstlisting}
 
 
-\subsection{Hexagonal Binning}
-\label{sec:orga6d88da}
-\label{org6870f45}
+\subsection{Hexagonal Binning \label{SEC:hexbin}}
+\label{sec:orgbb598f3}
 
 For large datasets, the display of a large number of points in a
 scatterplot produces hidden point density, long computation times,
@@ -145,13 +158,13 @@ empty regions, with a gradient of blue hues for intermediate values).
              },
              pscale=0, varname.cex=0.7
              )
+  
 \end{lstlisting}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/aranjuezSplomHexbin.pdf}
-\caption{\label{fig:org76a6754}
-Scatterplot matrix of the collection of meteorological time series of the Aranjuez station using hexagonal binning.}
+\caption{Scatterplot matrix of the collection of meteorological time series of the Aranjuez station using hexagonal binning. \label{fig:aranjuezSplomHexbin}}
 \end{figure}
 
 A drawback of the matrix of scatterplots with hexagonal binning is
@@ -197,7 +210,7 @@ values of this column are defined with the \texttt{times} argument.
 The \texttt{hexbinplot} displays this dataset with a different panel for
 each type of temperature (average, maximum, and minimum) but with a
 common color key encoding the point density (Figure
-\ref{fig:org0d014c5}). Now, two cells with the same color in
+\ref{fig:aranjuezHexbin}). Now, two cells with the same color in
 different panels encode the same value. 
 \index{hexbinplot@\texttt{hexbinplot}}
 \index{Panel function}
@@ -212,8 +225,7 @@ different panels encode the same value.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/aranjuezHexbinplot.pdf}
-\caption{\label{fig:org0d014c5}
-Scatterplot with hexagonal binning of temperature versus solar radiation using data of the Aranjuez station (\texttt{lattice} version).}
+\caption{Scatterplot with hexagonal binning of temperature versus solar radiation using data of the Aranjuez station (\texttt{lattice} version). \label{fig:aranjuezHexbin}}
 \end{figure}
 
 The ggplot2 version uses \texttt{stat\_binhex}.
@@ -226,18 +238,17 @@ The ggplot2 version uses \texttt{stat\_binhex}.
       theme_bw()
 \end{lstlisting}
 
-\section{Scatterplot with Time as a Conditioning Variable}
-\label{sec:orge56b9b1}
-\label{org3b0fd21}
+\section{Scatterplot with Time as a Conditioning Variable \label{SEC:conditionVariable}}
+\label{sec:org0c82a77}
 
 After discussing the hexagonal binning, let's recover the time
-variable. Figure \ref{fig:orgd5154b6} uses colors to encode
+variable. Figure \ref{fig:aranjuezSplom} uses colors to encode
 months. Instead, we will now display separate scatterplots with a
 panel for each month. In addition, the statistic type (average,
 maximum, minimum) is included as an additional conditioning variable.
 
 This matrix of panels can be displayed with \texttt{ggplot} using
-\texttt{facet\_grid}. The code of Figure \ref{fig:org8f24822} uses partial
+\texttt{facet\_grid}. The code of Figure \ref{fig:aranjuezFacetGrid} uses partial
 transparency to cope with overplotting, small horizontal and vertical
 segments (\texttt{geom\_rug}) to display points density on both variables, and
 a smooth line in each panel.
@@ -254,14 +265,13 @@ a smooth line in each panel.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/aranjuezFacetGrid.png}
-\caption{\label{fig:org8f24822}
-Scatterplot of temperature versus solar radiation for each month using data of the Aranjuez station (\texttt{ggplot2} version).}
+\caption{Scatterplot of temperature versus solar radiation for each month using data of the Aranjuez station (\texttt{ggplot2} version). \label{fig:aranjuezFacetGrid}}
 \end{figure}
 
 The version with \texttt{lattice} needs the \texttt{useOuterStrips} function from
 the \texttt{latticeExtra} package, which prints the names of the conditioning
 variables on the top and left outer margins (Figure
-\ref{fig:org07f5d83}).
+ \ref{fig:aranjuezOuterStrips}).
 
 \index{useOuterStrips@\texttt{useOuterStrips}}
 \index{panel.rug@\texttt{panel.rug}}
@@ -284,11 +294,10 @@ variables on the top and left outer margins (Figure
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/aranjuezOuterStrips.pdf}
-\caption{\label{fig:org07f5d83}
-Scatterplot of temperature versus solar radiation for each month using data of the Aranjuez station (lattice version).}
+\caption{Scatterplot of temperature versus solar radiation for each month using data of the Aranjuez station (lattice version). \label{fig:aranjuezOuterStrips}}
 \end{figure}
 
 These figures show the typical seasonal behavior of solar radiation
 and ambient temperature. Additionally, it displays in more detail the
 same relations between radiation and temperature already discussed
-with Figure \ref{fig:org0d014c5}.
+with Figure \ref{fig:aranjuezHexbin}.
