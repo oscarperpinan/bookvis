@@ -27,7 +27,7 @@
 #+end_src
 
 #+begin_src R :exports none :tangle no
-  setwd('~/Dropbox/chapman/book/')
+  setwd('~/github/bookvis')
 #+end_src
 
 #+begin_src R :exports none  
@@ -75,12 +75,6 @@
 ##################################################################
 #+end_src
 
-The first solution is a Motion Chart the =googleVis= package
-\cite{Gesmann.deCastillo2011}, an interface between R and the Google
-Visualisation API. With its =gvisMotionChart= function it is easy to
-produce a Motion Chart that can be displayed using a browser with
-Flash enabled (Figure \ref{fig:googleVis}).
-
 #+begin_src R
   load('data/CO2.RData')
 #+end_src
@@ -90,43 +84,9 @@ Flash enabled (Figure \ref{fig:googleVis}).
 #+BEGIN_EXPORT latex
 \index{Data!CO2@$CO_2$}
 \index{Data!World Bank}
-\index{Packages!googleVis@\texttt{googleVis}}
 #+END_EXPORT
 
-#+begin_src R :eval no-export
-  library(googleVis)
-  pgvis <- gvisMotionChart(CO2data, idvar='Country.Name', timevar='Year')
-#+end_src
-
-#+BEGIN_EXPORT latex
-  \begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{figs/googleVis}
-    \caption{Snapshot of a Motion Chart produced with googleVis.}
-    \label{fig:googleVis}
-  \end{figure}
-#+END_EXPORT
-
-
-#+begin_src R :exports none :eval no-export
-print(pgvis, 'html', file='figs/googleVis.html')
-#+end_src
-
-# plot(pvgis)
-# print(pgvis, 'html', file='figs/googleVis.html')
-# vignette of googleVis
-# 1. Go to http://www.macromedia.com/support/documentation/en/flashplayer/help/settings_manager04.html
-# 2. Click on the dropbox which says 'Edit location' and choose 'add location'
-# 3. Click 'browse for folder'
-# 4. Choose the folder in which you saved your html file
-# 5. Click OK
-
-Although the =gvisMotionChart= is quite easy to use, the global
-appearance and behavior are completely determined by Google
-API[fn:3]. Moreover, you should carefully read their Terms of Use
-before using it for public distribution.
-
-Our next attempt is to display the entire data in a panel with a
+Our first approach is to display the entire data in a panel with a
 scatterplot using country names as the grouping factor. Points of each
 country are connected with polylines to reveal the time evolution
 (Figure \ref{fig:CO2-GNI}).
@@ -555,14 +515,62 @@ xyplot(GNI.capita ~ CO2.capita|factor(Year), data=CO2data,
 #+RESULTS:
 [[file:figs/CO2points.pdf]]
 
-* Traveling Bubbles
+* Interactive
+** =googleVis=
 #+begin_src R :exports none
   ##################################################################
-  ## Travelling bubbles
+  ## Interactive
   ##################################################################
 #+end_src
+The first solution is a Motion Chart the =googleVis= package
+\cite{Gesmann.deCastillo2011}, an interface between R and the Google
+Visualisation API. With its =gvisMotionChart= function it is easy to
+produce a Motion Chart that can be displayed using a browser with
+Flash enabled (Figure \ref{fig:googleVis}).
+
+#+BEGIN_EXPORT latex
+\index{Packages!googleVis@\texttt{googleVis}}
+#+END_EXPORT
+
+#+begin_src R :eval no-export
+  library(googleVis)
+  pgvis <- gvisMotionChart(CO2data, idvar='Country.Name', timevar='Year')
+#+end_src
+
+#+BEGIN_EXPORT latex
+  \begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figs/googleVis}
+    \caption{Snapshot of a Motion Chart produced with googleVis.}
+    \label{fig:googleVis}
+  \end{figure}
+#+END_EXPORT
+
+
+#+begin_src R :exports none :eval no-export
+print(pgvis, 'html', file='figs/googleVis.html')
+#+end_src
+
+# plot(pvgis)
+# print(pgvis, 'html', file='figs/googleVis.html')
+# vignette of googleVis
+# 1. Go to http://www.macromedia.com/support/documentation/en/flashplayer/help/settings_manager04.html
+# 2. Click on the dropbox which says 'Edit location' and choose 'add location'
+# 3. Click 'browse for folder'
+# 4. Choose the folder in which you saved your html file
+# 5. Click OK
+
+Although the =gvisMotionChart= is quite easy to use, the global
+appearance and behavior are completely determined by Google
+API[fn:3]. Moreover, you should carefully read their Terms of Use
+before using it for public distribution.
+
 
 ** plotly
+
+#+BEGIN_EXPORT latex
+\index{Packages!plotlyG@\texttt{plotly}}
+#+END_EXPORT
 
 #+begin_src R
 p <- plot_ly(CO2data,
