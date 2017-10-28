@@ -1,6 +1,6 @@
 
 \section{Time Graph of Different Meteorological Variables \label{sec:differentVariables}}
-\label{sec:orgb8378ab}
+\label{sec:orgfbebbce}
 There is a variety of scientific research interested in the
 relationship among several meteorological variables. A suitable
 approach is to display the time evolution of all of them using a
@@ -49,7 +49,7 @@ result similar to that obtained with \texttt{xyplot} (Figure \ref{fig:aranjuezNa
 
 
 \subsection{\floweroneleft Annotations to Enhance the Time Graph}
-\label{sec:org27cdd0d}
+\label{sec:org07f591e}
 
 These first attempts can be improved with a custom panel function
 that generates the content of each panel using the information
@@ -243,7 +243,7 @@ during this season.
 \end{itemize}
 
 \section{Time Series of Variables with the Same Scale \label{SEC:sameScale}}
-\label{sec:orgd581730}
+\label{sec:orgefc122a}
 As an example of time series of variables with the same scale, we will
 use measurements of solar radiation from different meteorological
 stations.
@@ -287,7 +287,7 @@ method, the horizon graph with \texttt{horizonplot}, and dynamic labeling
 with the \texttt{gridSVG} package.
 
 \subsection{Aspect Ratio and Rate of Change}
-\label{sec:org9c6a838}
+\label{sec:orgd2b8a0e}
 When a graphic is intended to inform about the rate of change,
 special attention must be paid to the aspect ratio of the graph,
 defined as the ratio of the height to the width of the graphical
@@ -323,7 +323,7 @@ cut-and-stack method is produced with
 \end{figure}
 
 \subsection{The Horizon Graph \label{sec:horizonplot}}
-\label{sec:org7b6987d}
+\label{sec:orga0ff336}
 The horizon graph\index{Horizon graph} is useful in examining how a
 large number of series changes over time, and does so in a way
 that allows both comparisons between the individual time series
@@ -383,7 +383,7 @@ absolute fluctuations across the set of stations?
 \end{itemize}
 
 \subsection{Time Graph of the Differences between a Time Series and a Reference \label{sec:differences}}
-\label{sec:orge0f7159}
+\label{sec:org7d979d9}
 
 The horizon graph is also useful in revealing the differences between
 a univariate time series and another reference. For example, we
@@ -453,7 +453,7 @@ A different approach to display this information is to produce a level
 plot displaying the time series using parts of its time index as
 independent and conditioning variables\footnote{This approach was inspired by the \texttt{strip} function of the
 \texttt{metvurst} package
-(\url{http://metvurst.blogspot.com.es/2012/11/plotting-large-amounts-of-atmospheric\_4.html}).}. The following code
+\url{https://metvurst.wordpress.com/2013/03/04/visualising-large-amounts-of-hourly-environmental-data-2/}.}. The following code
 displays the differences with the day of month on the horizontal axis
 and the year on the vertical axis, with a different panel for each
 month number. Therefore, each cell of Figure \ref{fig:diffTa_level}
@@ -517,10 +517,10 @@ ggplot(data = df,
 
 
 \section{Interactive}
-\label{sec:org4746381}
+\label{sec:orgbc06b9a}
 
 \subsection{Dygraphs \label{sec:dygraphs}}
-\label{sec:org0bdba69}
+\label{sec:orgaf87588}
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 library(dygraphs)
@@ -554,7 +554,7 @@ dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
 \end{lstlisting}
 
 \subsection{Highcharter \label{sec:highcharter}}
-\label{sec:org5bd5719}
+\label{sec:orgcb3d21e}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
@@ -574,7 +574,7 @@ highchart() %>%
 \end{lstlisting}
 
 \subsection{plotly \label{sec:plotly}}
-\label{sec:orgf73492c}
+\label{sec:orgf41c7ac}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
@@ -604,7 +604,7 @@ plot_ly(df,
 \end{lstlisting}
 
 \subsection{\floweroneleft Interaction with \texttt{gridSVG}}
-\label{sec:org16008e2}
+\label{sec:org448ed5d}
 The \texttt{gridSVG} package provides functions to convert \texttt{grid}-based \texttt{R}
 graphics to an SVG format. It provides several functions to add
 dynamic and interactive capabilities to \texttt{R} graphics. In this section
@@ -720,7 +720,7 @@ questions raised with that graphic.
 
 
 \section{Stacked Graphs \label{sec:stacked}}
-\label{sec:orgd7225d2}
+\label{sec:org9fc194d}
 If the variables of a multivariate time series can be summed to
 produce a meaningful global variable, they may be better displayed
 with stacked graphs. For example, the information on unemployment in
@@ -830,7 +830,7 @@ Statistics'' reports from the Bureau of Labor Statistics\footnote{The March 2012
 
 
 \subsection{\floweroneleft Panel and Prepanel Functions to Implement the ThemeRiver with \texttt{xyplot} \label{sec:themeRiverPanel}}
-\label{sec:org8881172}
+\label{sec:org327f4fe}
 The \texttt{xyplot} function displays information according to the class
 of its first argument (methods) and to the \texttt{panel} function. We
 will use the \texttt{xyplot.zoo} method (equivalent to the \texttt{xyplot.ts}
@@ -1035,7 +1035,7 @@ its last column (the upper line of the cumulative sum).
 \end{lstlisting}
 
 \subsection{Interactive \label{sec:interactive}}
-\label{sec:orgff344f4}
+\label{sec:orge90985f}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}

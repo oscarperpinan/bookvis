@@ -1109,5 +1109,5 @@ streamgraph(unemployDF,
 
 [fn:5] This approach was inspired by the =strip= function of the
 =metvurst= package
-(http://metvurst.blogspot.com.es/2012/11/plotting-large-amounts-of-atmospheric_4.html).
+https://metvurst.wordpress.com/2013/03/04/visualising-large-amounts-of-hourly-environmental-data-2/.
 
