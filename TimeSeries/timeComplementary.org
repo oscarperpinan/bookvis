@@ -55,6 +55,8 @@
   load('data/CO2.RData')
 #+end_src
 
+#+RESULTS:
+
 
 
 #+BEGIN_EXPORT latex
@@ -541,6 +543,8 @@ before using it for public distribution.
 #+END_EXPORT
 
 #+begin_src R
+library(plotly)
+
 p <- plot_ly(CO2data,
              x = ~CO2.capita,
              y = ~GNI.capita,
@@ -562,6 +566,12 @@ p <- animation_opts(p,
 
 p
 #+end_src
+
+#+CAPTION: plotly animation label:fig:plotly_animation
+[[file:figs/plotly_animation.png]]
+
+
+#+RESULTS:
 
 ** \floweroneleft gridSVG
 The final solution to display this multivariate time series is with

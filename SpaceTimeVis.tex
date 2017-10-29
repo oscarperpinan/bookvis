@@ -1,4 +1,4 @@
-% Created 2017-10-29 dom 01:44
+% Created 2017-10-29 dom 18:37
 % Intended LaTeX compiler: pdflatex
 \documentclass[smallroyalvopaper]{memoir}
 \usepackage[utf8]{inputenc}
@@ -42,10 +42,10 @@
 \mainmatter
 
 \chapter{Introduction}
-\label{sec:orgf690499}
+\label{sec:orga3186c5}
 
 \section{What This Book Is About}
-\label{sec:orgd56cb82}
+\label{sec:orgf7aa735}
 \label{sec:thisBook}
 
 A data graphic is not only a static image but also tells a story about the data. It activates cognitive processes that are able to detect patterns and discover information not readily available with the raw data. This is particularly true for time series, spatial, and space-time datasets.
@@ -57,7 +57,7 @@ On the other hand, there is a collection of books that provides code and detaile
 This book proposes methods to display time series, spatial, and space-time data using \textsf{R}, and aims to be a synthesis of both groups providing code and detailed information to produce high-quality graphics with practical examples.
 
 \section{What You Will \emph{Not} Find in This Book}
-\label{sec:org3cc8e51}
+\label{sec:org5576ca3}
 \label{sec:thisBookIsNot}
 
 \begin{itemize}
@@ -96,7 +96,7 @@ Instead, this book is focused on the exploration of data with visual methods, so
 \end{itemize}
 
 \section{How to Read This Book}
-\label{sec:org982fb15}
+\label{sec:orga646a17}
 \label{sec:how-read}
 
 This book is organized into three parts, each devoted to different types of data. Each part comprises several chapters according to the various visualization methods or data characteristics. The chapters are structured as independent units so readers can jump directly to a certain chapter according to their needs. Of course, there are several dependencies and redundancies between the sets of chapters that have been conveniently signaled with cross-references. 
@@ -106,7 +106,7 @@ The content of each chapter illustrates how to display a dataset starting with a
 Although I have done my best to help readers understand the methods and code, you should not expect to understand it after one reading. The key is practical experience, and the best way is to try out the code with the provided data \textbf{and} modify it to suit your needs with your own data. There is a website and a code repository to help you in this task.
 
 \subsection{Website and Code Repository}
-\label{sec:org0a37510}
+\label{sec:orgce226eb}
 \label{sec:github}
 
 The book website with the main graphics of this book is located at
@@ -135,7 +135,7 @@ git clone https://github.com/oscarperpinan/spacetime-vis.git
 \end{lstlisting}
 
 \section{\texttt{R} Graphics}
-\label{sec:org23345b4}
+\label{sec:org27136e3}
 \label{sec:r-graphics}
 
 \index{Packages!grid@=grid}
@@ -144,7 +144,7 @@ There are two distinct graphics systems built into \texttt{R}, referred to as tr
 Other packages are constructed over it to provide high-level functions, most notably the \texttt{lattice} and \texttt{ggplot2} packages.
 
 \subsection{lattice}
-\label{sec:org7ca35ff}
+\label{sec:orgab9c658}
 \label{sec:lattice}
 
 \index{Packages!lattice@=lattice}
@@ -176,7 +176,7 @@ On the other hand, the \texttt{latticeExtra} package \cite{Sarkar.Andrews2012} p
 superposition of \texttt{trellis} objects and layers with the \texttt{+.trellis} function. Using both packages, you can define a graphic with the formula interface (under the \texttt{lattice} model) and overlay additional content as layers (following the \texttt{ggplot2} model).
 
 \section{ggplot2}
-\label{sec:org12c99cd}
+\label{sec:orgd82c59a}
 \label{sec:ggplot2}
 
 \index{Packages!ggplot2@=ggplot2}
@@ -207,7 +207,7 @@ This package is increasingly popular, with a list of more than ninety packages d
 method definitions based on \texttt{ggplot2} to display their classes. In our context, only the \texttt{zoo} package defines the \texttt{autoplot} function based on it.
 
 \subsection{Comparison between lattice and ggplot2}
-\label{sec:org838b28f}
+\label{sec:org055d59c}
 \label{sec:comparison}
 
 Which package to choose is, for a wide range of datasets, a question of personal preferences. You may be interested in a comparison between them published in a series of blog posts\footnote{\url{http://learnr.wordpress.com/2009/06/28/ggplot2-version-of-figures-in-lattice-multivariate-data-visualization-with-r-part-1/}}.  However, the major drawback of \texttt{ggplot2} is its considerably slower speed when dealing with large datasets\footnote{Take a look at the time comparison published as the final result of the previous series of blog posts,
@@ -215,7 +215,7 @@ Which package to choose is, for a wide range of datasets, a question of personal
 
 
 \section{Packages}
-\label{sec:orgc6aa9dc}
+\label{sec:orgf3202ac}
 \label{sec:introduction-packages}
 
 Throughout the book, several \textsf{R} packages are used. All of them are available from \textsf{CRAN}, and you must install them before
@@ -237,7 +237,7 @@ stamps (Section \ref{sec:zoo}).
 
 
 \section{Software Used to Write This Book}
-\label{sec:org91a51d5}
+\label{sec:org6258d86}
 \label{sec:software-book}
 
 This book has been written using different computers running Debian GNU Linux and using several gems of open-source software: 
@@ -248,7 +248,7 @@ This book has been written using different computers running Debian GNU Linux an
 \end{itemize}
 
 \section{About the Author}
-\label{sec:org2f5dc83}
+\label{sec:org4741785}
 \label{sec:aboutMe}
 
 During the past 15 years, my main area of expertise has been photovoltaic solar energy systems, with a special interest in solar radiation.
@@ -259,7 +259,7 @@ Now I work as a professor and researcher at the university. Data visualization i
 I have been using \textsf{R} to simulate the performance of photovoltaic energy systems and to analyze solar radiation data, both as time series and spatial data. As a result, I have developed packages that include several graphical methods to deal with multivariate time series (namely, \texttt{solaR} \cite{Perpinan2012b}) and space-time data (\texttt{rasterVis}). 
 
 \section{Acknowledgments}
-\label{sec:org34eb11c}
+\label{sec:org6ab3440}
 \label{sec:acknow}
 
 Writing a book is often described as a solitary activity. It is certainly difficult to write when you are with friends or spending time with your family,\ldots{} although with three little children at home I have learned to write prose and code while my baby wants to learn typing and my daughters need help to share a family of dinosaurs. 
@@ -285,10 +285,10 @@ Last, and most importantly, thanks to Candela, Marina, and Javi, my crazy little
 
 
 \part{Time Series}
-\label{sec:org4d7f1cb}
+\label{sec:org47b2d53}
 
 \chapter{Displaying Time Series: Introduction}
-\label{sec:org80b1704}
+\label{sec:org049505d}
 \label{cha:timeIntro}
 
 A time series is a sequence of observations registered at consecutive time instants. When these time instants are evenly spaced, the distance between them is called the sampling interval. The visualization of time series is intended to reveal changes of one or more quantitative variables through time, and to display the relationships between the variables and their evolution through time.
@@ -298,7 +298,7 @@ The standard time series graph displays the time along the horizontal axis. Seve
 These chapters provide a variety of examples to illustrate a set of useful techniques. These examples make use of several datasets (available at the book website) described in Chapter \ref{cha:dataTime}.
 
 \section{Packages}
-\label{sec:org1b32a92}
+\label{sec:org9a66e8e}
 \label{sec:time-series-packages}
 
 The CRAN Tasks View ``Time Series Analysis'' \footnote{\url{http://CRAN.R-project.org/view=TimeSeries}} summarizes the packages for reading, vizualizing, and analyzing time series. This section provides a brief introduction to the \texttt{zoo} and \texttt{xts} packages. Most of the information has been extracted from their vignettes, webpages, and help pages. You should read them for detailed information.
@@ -306,7 +306,7 @@ The CRAN Tasks View ``Time Series Analysis'' \footnote{\url{http://CRAN.R-projec
 Both packages extensively use the time classes defined in \texttt{R}. The interested reader will find an overview of the different time classes in \texttt{R} in \cite{Ripley.Hornik2001} and \cite{Grothendieck.Petzoldt2004}.
 
 \subsection{zoo}
-\label{sec:org8d6c2e7}
+\label{sec:org8cfc4f0}
 \label{sec:zoo}
 
 \index{Packages!zoo@\texttt{zoo}}
@@ -340,7 +340,7 @@ This package provides four methods for dealing with missing observations:
 The package defines interfaces to \texttt{read.table} and \texttt{write.table} for reading, \texttt{read.zoo}, and writing, \texttt{write.zoo}, \texttt{zoo} series from or to text files. The \texttt{read.zoo} function expects either a text file or connection as input or a \texttt{data.frame}. \texttt{write.zoo} first coerces its argument to a \texttt{data.frame}, adds a column with the index, and then calls \texttt{write.table}.
 
 \subsection{xts}
-\label{sec:org1019836}
+\label{sec:orgf135761}
 \label{sec:xts}
 
 \index{Packages!xts@\texttt{xts}}
@@ -358,7 +358,7 @@ Furthermore, this package provides several time-based tools:
 \end{itemize}
 
 \section{Further Reading}
-\label{sec:org9c256d2}
+\label{sec:orgfdf9df7}
 \label{cha:further-reading-time}
 
 \begin{itemize}
@@ -380,13 +380,13 @@ Furthermore, this package provides several time-based tools:
 \end{itemize}
 
 \chapter{Time on the Horizontal Axis}
-\label{sec:orgb41d4cc}
+\label{sec:org955c64b}
 \label{cha:timeHorizontalAxis}
 
 The most frequent visualization method of a time series uses the horizontal axis to depict the time index. This chapter illustrates several variants to display multivariate time series: multiple time series with different scales, variables with the same scale, and stacked graphs.
 
 \section{Time Graph of Different Meteorological Variables \label{sec:differentVariables}}
-\label{sec:orgfbebbce}
+\label{sec:org8f9b9dc}
 There is a variety of scientific research interested in the
 relationship among several meteorological variables. A suitable
 approach is to display the time evolution of all of them using a
@@ -435,7 +435,7 @@ result similar to that obtained with \texttt{xyplot} (Figure \ref{fig:aranjuezNa
 
 
 \subsection{\floweroneleft Annotations to Enhance the Time Graph}
-\label{sec:org07f591e}
+\label{sec:org25249c7}
 
 These first attempts can be improved with a custom panel function
 that generates the content of each panel using the information
@@ -629,7 +629,7 @@ during this season.
 \end{itemize}
 
 \section{Time Series of Variables with the Same Scale \label{SEC:sameScale}}
-\label{sec:orgefc122a}
+\label{sec:orgdf3c644}
 As an example of time series of variables with the same scale, we will
 use measurements of solar radiation from different meteorological
 stations.
@@ -673,7 +673,7 @@ method, the horizon graph with \texttt{horizonplot}, and dynamic labeling
 with the \texttt{gridSVG} package.
 
 \subsection{Aspect Ratio and Rate of Change}
-\label{sec:orgd2b8a0e}
+\label{sec:orgcbd31b9}
 When a graphic is intended to inform about the rate of change,
 special attention must be paid to the aspect ratio of the graph,
 defined as the ratio of the height to the width of the graphical
@@ -709,7 +709,7 @@ cut-and-stack method is produced with
 \end{figure}
 
 \subsection{The Horizon Graph \label{sec:horizonplot}}
-\label{sec:orga0ff336}
+\label{sec:org21c12c1}
 The horizon graph\index{Horizon graph} is useful in examining how a
 large number of series changes over time, and does so in a way
 that allows both comparisons between the individual time series
@@ -769,7 +769,7 @@ absolute fluctuations across the set of stations?
 \end{itemize}
 
 \subsection{Time Graph of the Differences between a Time Series and a Reference \label{sec:differences}}
-\label{sec:org7d979d9}
+\label{sec:org2d0f619}
 
 The horizon graph is also useful in revealing the differences between
 a univariate time series and another reference. For example, we
@@ -903,10 +903,34 @@ ggplot(data = df,
 
 
 \section{Interactive}
-\label{sec:orgbc06b9a}
+\label{sec:orgc05d485}
 
 \subsection{Dygraphs \label{sec:dygraphs}}
-\label{sec:orgaf87588}
+\label{sec:orga94cdc9}
+The dygraphs JavaScript charting library:
+
+\begin{itemize}
+\item Plots time series without using an external server or Flash
+\item Supports error bands around data series
+\item Interactive pan and zoom
+\item Displays values on mouseover
+\item Adjustable averaging period
+\item Extensive set of options for customization.
+\item Compatible with the Google Visualization API
+\end{itemize}
+
+The dygraphs package is an R interface to the dygraphs JavaScript charting library. It provides rich facilities for charting time-series data in R, including:
+
+\begin{itemize}
+\item Automatically plots xts time series objects (or any object convertible to xts).
+\item Highly configurable axis and series display (including optional second Y-axis).
+\item Rich interactive features including zoom/pan and series/point highlighting.
+\item Display upper/lower bars (e.g. prediction intervals) around series.
+\item Various graph overlays including shaded regions, event lines, and point annotations.
+\item Use at the R console just like conventional R plots (via RStudio Viewer).
+\item Seamless embedding within R Markdown documents and Shiny web applications.
+\end{itemize}
+
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 library(dygraphs)
@@ -917,6 +941,15 @@ dyTemp <- dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
 
 dyTemp
 \end{lstlisting}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/dygraphs_aranjuez.png}
+\caption{dygraphs \label{fig:dygraphs}}
+\end{figure}
+
+Note that this graph is fully interactive: as your mouse moves over the series individual values are displayed. You can also select regions of the graph to zoom into (double-click zooms out).
+
+You can customize dygraphs by piping additional commands onto the original dygraph object. 
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
@@ -924,11 +957,18 @@ dyTemp %>%
     dyHighlight(highlightSeriesBackgroundAlpha = 0.2)
 \end{lstlisting}
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/dygraphs_aranjuez_selected.png}
+\caption{dygraphs selected \label{fig:dygraphs_selected}}
+\end{figure}
+
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 dyTemp %>%
     dyHighlight(highlightSeriesOpts = list(strokeWidth = 2))
 \end{lstlisting}
+
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
@@ -939,8 +979,14 @@ dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
              label = "Temperature")
 \end{lstlisting}
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/dygraphs_aranjuez_maxmin.png}
+\caption{dygraphs maxmin \label{fig:dygraphs_maxmin}}
+\end{figure}
+
 \subsection{Highcharter \label{sec:highcharter}}
-\label{sec:orgcb3d21e}
+\label{sec:org2d7d949}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
@@ -959,8 +1005,22 @@ highchart() %>%
 
 \end{lstlisting}
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/highcharter_aranjuez.png}
+\caption{highcharter \label{fig:highcharter}}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/highcharter_aranjuez_zoom.png}
+\caption{highcharter zoom \label{fig:highcharter_zoom}}
+\end{figure}
+
+
+
 \subsection{plotly \label{sec:plotly}}
-\label{sec:orgf41c7ac}
+\label{sec:org6390a09}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
@@ -978,6 +1038,7 @@ pal <- colorRampPalette(
     brewer.pal(9, 'Set1'))(N)
 \end{lstlisting}
 
+
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 library(plotly)
@@ -988,9 +1049,21 @@ plot_ly(df,
         color = ~ Station) %>%
     add_lines(alpha = 0.5, colors = pal)
 \end{lstlisting}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/plotly_navarra.png}
+\caption{plotly \label{fig:plotly}}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/plotly_navarra_zoom.png}
+\caption{plotly zoom \label{fig:plotly_zoom}}
+\end{figure}
+
 
 \subsection{\floweroneleft Interaction with \texttt{gridSVG}}
-\label{sec:org448ed5d}
+\label{sec:orgffddf53}
 The \texttt{gridSVG} package provides functions to convert \texttt{grid}-based \texttt{R}
 graphics to an SVG format. It provides several functions to add
 dynamic and interactive capabilities to \texttt{R} graphics. In this section
@@ -1106,7 +1179,7 @@ questions raised with that graphic.
 
 
 \section{Stacked Graphs \label{sec:stacked}}
-\label{sec:org9fc194d}
+\label{sec:org526e9b9}
 If the variables of a multivariate time series can be summed to
 produce a meaningful global variable, they may be better displayed
 with stacked graphs. For example, the information on unemployment in
@@ -1216,7 +1289,7 @@ Statistics'' reports from the Bureau of Labor Statistics\footnote{The March 2012
 
 
 \subsection{\floweroneleft Panel and Prepanel Functions to Implement the ThemeRiver with \texttt{xyplot} \label{sec:themeRiverPanel}}
-\label{sec:org327f4fe}
+\label{sec:orgf031799}
 The \texttt{xyplot} function displays information according to the class
 of its first argument (methods) and to the \texttt{panel} function. We
 will use the \texttt{xyplot.zoo} method (equivalent to the \texttt{xyplot.ts}
@@ -1421,7 +1494,7 @@ its last column (the upper line of the cumulative sum).
 \end{lstlisting}
 
 \subsection{Interactive \label{sec:interactive}}
-\label{sec:orge90985f}
+\label{sec:orgfdeed7f}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
@@ -1432,11 +1505,9 @@ library(reshape2)
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-unemployDF <- as.data.frame(unemployUSA)
+unemployDF <- fortify(unemployUSA)
 
-unemployDF$time <- as.Date(index(unemployUSA))
-
-unemployDF <- melt(unemployDF, id.vars = 'time')
+unemployDF <- melt(unemployDF, id.vars = 'Index')
 \end{lstlisting}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
@@ -1444,13 +1515,25 @@ unemployDF <- melt(unemployDF, id.vars = 'time')
 streamgraph(unemployDF,
             key = "variable",
             value = "value",
-            date = "time") %>%
+            date = "Index") %>%
     sg_axis_x(1, "year", "%Y") %>%
     sg_fill_brewer("Set1")
 \end{lstlisting}
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/streamgraph_interactive.png}
+\caption{Streamgraph created with the \texttt{streamgraph} package, without selection. \label{fig:streamgraph_interactive}}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/streamgraph_interactive_selected.png}
+\caption{Streamgraph created with the \texttt{streamgraph} package, with a selection. \label{fig:streamgraph_interactive_selected}}
+\end{figure}
+
 \chapter{Time as a Conditioning or Grouping Variable}
-\label{sec:org297158f}
+\label{sec:orgbda5ceb}
 \label{cha:timeGroupFactor}
 
 In Section \ref{sec:differentVariables} we learned to display the time evolution of multiple time series with different scales. But, what if instead of displaying the time evolution we want to confront the variables between them? Section \ref{SEC:groupVariable} proposes the scatterplot matrix solution with time as a grouping variable. Section \ref{SEC:conditionVariable} uses an enhanced scatterplot with time as a conditioning variable. Section \ref{SEC:hexbin} includes a digression about the hexagonal binning for large datasets.
@@ -1759,7 +1842,7 @@ same relations between radiation and temperature already discussed
 with Figure \ref{fig:aranjuezHexbin}.
 
 \chapter{Time as a Complementary Variable}
-\label{sec:org244a88b}
+\label{sec:org88f36dc}
 \label{cha:timeComplementary}
 
 Gapminder \footnote{\url{http://www.gapminder.org/}} is an independent foundation based in Stockholm, Sweden.  Its mission is ``to debunk devastating myths about the world by offering free access to a fact-based world view.'' They provide free online tools, data, and videos ``to better understand the changing world.'' The initial development of Gapminder was the Trendalyzer software, used by Hans Rosling in several sequences of his documentary ``The Joy of Stats.''
@@ -1771,7 +1854,7 @@ This software was acquired by Google in 2007, and is now available as a Motion C
 In this chapter, time will be used as a complementary variable which adds information to a graph where several variables are confronted. We will illustrate this approach with the evolution of the relationship between Gross National Income (GNI) and carbon dioxide (\(CO_2\)) emissions for a set of countries extracted from the database of the World Bank Open Data. We will try several solutions to display the relationship between \(CO_2\) emissions and GNI over the years using time as a complementary variable. The final method will produce an animated plot resembling the Trendalyzer solution.
 
 \section{Polylines}
-\label{sec:org9a31244}
+\label{sec:org0978822}
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
   load('data/CO2.RData')
@@ -1820,7 +1903,7 @@ countries.
 \end{enumerate}
 
 \section{Choosing Colors}
-\label{sec:org4b07690}
+\label{sec:orgc74a42f}
 The \texttt{Country.Name} categorical variable will be encoded with a
 qualitative palette, namely the first five colors of \texttt{Set1}
 palette\footnote{\url{http://colorbrewer2.org/}} from the \texttt{RColorBrewer} package
@@ -1931,7 +2014,7 @@ distinguish them.
 \end{lstlisting}
 
 \section{Labels to Show Time Information}
-\label{sec:orgb4bf40e}
+\label{sec:orgb1d6814}
 This result can be improved with labels displaying the years to show
 the time evolution.  A panel function with \texttt{panel.text} to print the
 year labels and \texttt{panel.superpose} to display the lines for each group
@@ -1985,7 +2068,7 @@ of \texttt{+.trellis}, \texttt{glayer\_} and \texttt{panel.text}. Using \texttt{
 \end{lstlisting}
 
 \section{Country Names: Positioning Labels}
-\label{sec:orge5711bb}
+\label{sec:org45c0d39}
 The common solution to link each curve with the group value is to add
 a legend. However, a legend can be confusing with too many items. In
 addition, the reader must carry out a complex task: Choose the line,
@@ -2052,7 +2135,7 @@ object, I have obtained the best results with \texttt{extreme.grid} (Figure
 \end{lstlisting}
 
 \section{A Panel for Each Year}
-\label{sec:orga136fcf}
+\label{sec:org485a375}
 Time can be used as a conditioning variable (as shown in previous
 sections) to display subsets of the data in different panels. Figure
 \ref{fig:CO2-GNI-panel} is produced with the same code as in Figure
@@ -2105,7 +2188,7 @@ legend is not very useful. Once again, point labeling is recommended
 \end{figure}
 
 \subsection{\floweroneleft Using Variable Size to Encode an Additional Variable}
-\label{sec:org0c38490}
+\label{sec:orgd72398b}
 Instead of using simple points, we can display circles of
 different radius to encode a new variable. This new variable is
 \texttt{CO2.PPP}, the ratio of \(\mathrm{CO_2}\) emissions to the Gross Domestic
@@ -2196,9 +2279,9 @@ xyplot(GNI.capita ~ CO2.capita|factor(Year), data=CO2data,
 \end{figure}
 
 \section{Interactive}
-\label{sec:org73e87b6}
+\label{sec:org43562c9}
 \subsection{\texttt{googleVis}}
-\label{sec:org1d66980}
+\label{sec:org00e9c57}
 The first solution is a Motion Chart the \texttt{googleVis} package
 \cite{Gesmann.deCastillo2011}, an interface between R and the Google
 Visualisation API. With its \texttt{gvisMotionChart} function it is easy to
@@ -2229,12 +2312,14 @@ before using it for public distribution.
 
 
 \subsection{plotly}
-\label{sec:org2257d27}
+\label{sec:org5de0add}
 
 \index{Packages!plotlyG@\texttt{plotly}}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
+library(plotly)
+
 p <- plot_ly(CO2data,
              x = ~CO2.capita,
              y = ~GNI.capita,
@@ -2257,8 +2342,14 @@ p <- animation_opts(p,
 p
 \end{lstlisting}
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/plotly_animation.png}
+\caption{plotly animation \label{fig:plotly_animation}}
+\end{figure}
+
 \subsection{\floweroneleft gridSVG}
-\label{sec:org4cf5f5a}
+\label{sec:org00d79b1}
 The final solution to display this multivariate time series is with
 animation via the function \texttt{grid.animate} of the \texttt{gridSVG}
 package. We will mimic the Trendalyzer/Motion Chart solution, using
@@ -2417,7 +2508,7 @@ ready to open the SVG file of traveling bubbles: It is easier, a short
 time period with less than twenty countries.
 
 \chapter{About the Data}
-\label{sec:org0f45688}
+\label{sec:org0ef698f}
 \label{cha:dataTime}
 
 \section{SIAR}

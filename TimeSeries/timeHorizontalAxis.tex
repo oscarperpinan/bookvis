@@ -1,6 +1,6 @@
 
 \section{Time Graph of Different Meteorological Variables \label{sec:differentVariables}}
-\label{sec:orgfbebbce}
+\label{sec:org8f9b9dc}
 There is a variety of scientific research interested in the
 relationship among several meteorological variables. A suitable
 approach is to display the time evolution of all of them using a
@@ -49,7 +49,7 @@ result similar to that obtained with \texttt{xyplot} (Figure \ref{fig:aranjuezNa
 
 
 \subsection{\floweroneleft Annotations to Enhance the Time Graph}
-\label{sec:org07f591e}
+\label{sec:org25249c7}
 
 These first attempts can be improved with a custom panel function
 that generates the content of each panel using the information
@@ -243,7 +243,7 @@ during this season.
 \end{itemize}
 
 \section{Time Series of Variables with the Same Scale \label{SEC:sameScale}}
-\label{sec:orgefc122a}
+\label{sec:orgdf3c644}
 As an example of time series of variables with the same scale, we will
 use measurements of solar radiation from different meteorological
 stations.
@@ -287,7 +287,7 @@ method, the horizon graph with \texttt{horizonplot}, and dynamic labeling
 with the \texttt{gridSVG} package.
 
 \subsection{Aspect Ratio and Rate of Change}
-\label{sec:orgd2b8a0e}
+\label{sec:orgcbd31b9}
 When a graphic is intended to inform about the rate of change,
 special attention must be paid to the aspect ratio of the graph,
 defined as the ratio of the height to the width of the graphical
@@ -323,7 +323,7 @@ cut-and-stack method is produced with
 \end{figure}
 
 \subsection{The Horizon Graph \label{sec:horizonplot}}
-\label{sec:orga0ff336}
+\label{sec:org21c12c1}
 The horizon graph\index{Horizon graph} is useful in examining how a
 large number of series changes over time, and does so in a way
 that allows both comparisons between the individual time series
@@ -383,7 +383,7 @@ absolute fluctuations across the set of stations?
 \end{itemize}
 
 \subsection{Time Graph of the Differences between a Time Series and a Reference \label{sec:differences}}
-\label{sec:org7d979d9}
+\label{sec:org2d0f619}
 
 The horizon graph is also useful in revealing the differences between
 a univariate time series and another reference. For example, we
@@ -517,10 +517,34 @@ ggplot(data = df,
 
 
 \section{Interactive}
-\label{sec:orgbc06b9a}
+\label{sec:orgc05d485}
 
 \subsection{Dygraphs \label{sec:dygraphs}}
-\label{sec:orgaf87588}
+\label{sec:orga94cdc9}
+The dygraphs JavaScript charting library:
+
+\begin{itemize}
+\item Plots time series without using an external server or Flash
+\item Supports error bands around data series
+\item Interactive pan and zoom
+\item Displays values on mouseover
+\item Adjustable averaging period
+\item Extensive set of options for customization.
+\item Compatible with the Google Visualization API
+\end{itemize}
+
+The dygraphs package is an R interface to the dygraphs JavaScript charting library. It provides rich facilities for charting time-series data in R, including:
+
+\begin{itemize}
+\item Automatically plots xts time series objects (or any object convertible to xts).
+\item Highly configurable axis and series display (including optional second Y-axis).
+\item Rich interactive features including zoom/pan and series/point highlighting.
+\item Display upper/lower bars (e.g. prediction intervals) around series.
+\item Various graph overlays including shaded regions, event lines, and point annotations.
+\item Use at the R console just like conventional R plots (via RStudio Viewer).
+\item Seamless embedding within R Markdown documents and Shiny web applications.
+\end{itemize}
+
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 library(dygraphs)
@@ -531,6 +555,15 @@ dyTemp <- dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
 
 dyTemp
 \end{lstlisting}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/dygraphs_aranjuez.png}
+\caption{dygraphs \label{fig:dygraphs}}
+\end{figure}
+
+Note that this graph is fully interactive: as your mouse moves over the series individual values are displayed. You can also select regions of the graph to zoom into (double-click zooms out).
+
+You can customize dygraphs by piping additional commands onto the original dygraph object. 
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
@@ -538,11 +571,18 @@ dyTemp %>%
     dyHighlight(highlightSeriesBackgroundAlpha = 0.2)
 \end{lstlisting}
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/dygraphs_aranjuez_selected.png}
+\caption{dygraphs selected \label{fig:dygraphs_selected}}
+\end{figure}
+
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 dyTemp %>%
     dyHighlight(highlightSeriesOpts = list(strokeWidth = 2))
 \end{lstlisting}
+
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
@@ -553,8 +593,14 @@ dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
              label = "Temperature")
 \end{lstlisting}
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/dygraphs_aranjuez_maxmin.png}
+\caption{dygraphs maxmin \label{fig:dygraphs_maxmin}}
+\end{figure}
+
 \subsection{Highcharter \label{sec:highcharter}}
-\label{sec:orgcb3d21e}
+\label{sec:org2d7d949}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
@@ -573,8 +619,22 @@ highchart() %>%
 
 \end{lstlisting}
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/highcharter_aranjuez.png}
+\caption{highcharter \label{fig:highcharter}}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/highcharter_aranjuez_zoom.png}
+\caption{highcharter zoom \label{fig:highcharter_zoom}}
+\end{figure}
+
+
+
 \subsection{plotly \label{sec:plotly}}
-\label{sec:orgf41c7ac}
+\label{sec:org6390a09}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
@@ -592,6 +652,7 @@ pal <- colorRampPalette(
     brewer.pal(9, 'Set1'))(N)
 \end{lstlisting}
 
+
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 library(plotly)
@@ -602,9 +663,21 @@ plot_ly(df,
         color = ~ Station) %>%
     add_lines(alpha = 0.5, colors = pal)
 \end{lstlisting}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/plotly_navarra.png}
+\caption{plotly \label{fig:plotly}}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/plotly_navarra_zoom.png}
+\caption{plotly zoom \label{fig:plotly_zoom}}
+\end{figure}
+
 
 \subsection{\floweroneleft Interaction with \texttt{gridSVG}}
-\label{sec:org448ed5d}
+\label{sec:orgffddf53}
 The \texttt{gridSVG} package provides functions to convert \texttt{grid}-based \texttt{R}
 graphics to an SVG format. It provides several functions to add
 dynamic and interactive capabilities to \texttt{R} graphics. In this section
@@ -720,7 +793,7 @@ questions raised with that graphic.
 
 
 \section{Stacked Graphs \label{sec:stacked}}
-\label{sec:org9fc194d}
+\label{sec:org526e9b9}
 If the variables of a multivariate time series can be summed to
 produce a meaningful global variable, they may be better displayed
 with stacked graphs. For example, the information on unemployment in
@@ -830,7 +903,7 @@ Statistics'' reports from the Bureau of Labor Statistics\footnote{The March 2012
 
 
 \subsection{\floweroneleft Panel and Prepanel Functions to Implement the ThemeRiver with \texttt{xyplot} \label{sec:themeRiverPanel}}
-\label{sec:org327f4fe}
+\label{sec:orgf031799}
 The \texttt{xyplot} function displays information according to the class
 of its first argument (methods) and to the \texttt{panel} function. We
 will use the \texttt{xyplot.zoo} method (equivalent to the \texttt{xyplot.ts}
@@ -1035,7 +1108,7 @@ its last column (the upper line of the cumulative sum).
 \end{lstlisting}
 
 \subsection{Interactive \label{sec:interactive}}
-\label{sec:orge90985f}
+\label{sec:orgfdeed7f}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
@@ -1046,11 +1119,9 @@ library(reshape2)
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-unemployDF <- as.data.frame(unemployUSA)
+unemployDF <- fortify(unemployUSA)
 
-unemployDF$time <- as.Date(index(unemployUSA))
-
-unemployDF <- melt(unemployDF, id.vars = 'time')
+unemployDF <- melt(unemployDF, id.vars = 'Index')
 \end{lstlisting}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
@@ -1058,7 +1129,19 @@ unemployDF <- melt(unemployDF, id.vars = 'time')
 streamgraph(unemployDF,
             key = "variable",
             value = "value",
-            date = "time") %>%
+            date = "Index") %>%
     sg_axis_x(1, "year", "%Y") %>%
     sg_fill_brewer("Set1")
 \end{lstlisting}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/streamgraph_interactive.png}
+\caption{Streamgraph created with the \texttt{streamgraph} package, without selection. \label{fig:streamgraph_interactive}}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/streamgraph_interactive_selected.png}
+\caption{Streamgraph created with the \texttt{streamgraph} package, with a selection. \label{fig:streamgraph_interactive_selected}}
+\end{figure}

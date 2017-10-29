@@ -1,6 +1,6 @@
 
 \section{Polylines}
-\label{sec:org9a31244}
+\label{sec:org0978822}
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
   load('data/CO2.RData')
@@ -49,7 +49,7 @@ countries.
 \end{enumerate}
 
 \section{Choosing Colors}
-\label{sec:org4b07690}
+\label{sec:orgc74a42f}
 The \texttt{Country.Name} categorical variable will be encoded with a
 qualitative palette, namely the first five colors of \texttt{Set1}
 palette\footnote{\url{http://colorbrewer2.org/}} from the \texttt{RColorBrewer} package
@@ -160,7 +160,7 @@ distinguish them.
 \end{lstlisting}
 
 \section{Labels to Show Time Information}
-\label{sec:orgb4bf40e}
+\label{sec:orgb1d6814}
 This result can be improved with labels displaying the years to show
 the time evolution.  A panel function with \texttt{panel.text} to print the
 year labels and \texttt{panel.superpose} to display the lines for each group
@@ -214,7 +214,7 @@ of \texttt{+.trellis}, \texttt{glayer\_} and \texttt{panel.text}. Using \texttt{
 \end{lstlisting}
 
 \section{Country Names: Positioning Labels}
-\label{sec:orge5711bb}
+\label{sec:org45c0d39}
 The common solution to link each curve with the group value is to add
 a legend. However, a legend can be confusing with too many items. In
 addition, the reader must carry out a complex task: Choose the line,
@@ -281,7 +281,7 @@ object, I have obtained the best results with \texttt{extreme.grid} (Figure
 \end{lstlisting}
 
 \section{A Panel for Each Year}
-\label{sec:orga136fcf}
+\label{sec:org485a375}
 Time can be used as a conditioning variable (as shown in previous
 sections) to display subsets of the data in different panels. Figure
 \ref{fig:CO2-GNI-panel} is produced with the same code as in Figure
@@ -334,7 +334,7 @@ legend is not very useful. Once again, point labeling is recommended
 \end{figure}
 
 \subsection{\floweroneleft Using Variable Size to Encode an Additional Variable}
-\label{sec:org0c38490}
+\label{sec:orgd72398b}
 Instead of using simple points, we can display circles of
 different radius to encode a new variable. This new variable is
 \texttt{CO2.PPP}, the ratio of \(\mathrm{CO_2}\) emissions to the Gross Domestic
@@ -425,9 +425,9 @@ xyplot(GNI.capita ~ CO2.capita|factor(Year), data=CO2data,
 \end{figure}
 
 \section{Interactive}
-\label{sec:org73e87b6}
+\label{sec:org43562c9}
 \subsection{\texttt{googleVis}}
-\label{sec:org1d66980}
+\label{sec:org00e9c57}
 The first solution is a Motion Chart the \texttt{googleVis} package
 \cite{Gesmann.deCastillo2011}, an interface between R and the Google
 Visualisation API. With its \texttt{gvisMotionChart} function it is easy to
@@ -458,12 +458,14 @@ before using it for public distribution.
 
 
 \subsection{plotly}
-\label{sec:org2257d27}
+\label{sec:org5de0add}
 
 \index{Packages!plotlyG@\texttt{plotly}}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
+library(plotly)
+
 p <- plot_ly(CO2data,
              x = ~CO2.capita,
              y = ~GNI.capita,
@@ -486,8 +488,14 @@ p <- animation_opts(p,
 p
 \end{lstlisting}
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/plotly_animation.png}
+\caption{plotly animation \label{fig:plotly_animation}}
+\end{figure}
+
 \subsection{\floweroneleft gridSVG}
-\label{sec:org4cf5f5a}
+\label{sec:org00d79b1}
 The final solution to display this multivariate time series is with
 animation via the function \texttt{grid.animate} of the \texttt{gridSVG}
 package. We will mimic the Trendalyzer/Motion Chart solution, using

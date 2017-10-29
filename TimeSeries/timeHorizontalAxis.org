@@ -554,6 +554,26 @@ ggplot(data = df,
 * Interactive
 
 ** Dygraphs label:sec:dygraphs
+The dygraphs JavaScript charting library:
+
+- Plots time series without using an external server or Flash
+- Supports error bands around data series
+- Interactive pan and zoom
+- Displays values on mouseover
+- Adjustable averaging period
+- Extensive set of options for customization.
+- Compatible with the Google Visualization API
+
+The dygraphs package is an R interface to the dygraphs JavaScript charting library. It provides rich facilities for charting time-series data in R, including:
+
+- Automatically plots xts time series objects (or any object convertible to xts).
+- Highly configurable axis and series display (including optional second Y-axis).
+- Rich interactive features including zoom/pan and series/point highlighting.
+- Display upper/lower bars (e.g. prediction intervals) around series.
+- Various graph overlays including shaded regions, event lines, and point annotations.
+- Use at the R console just like conventional R plots (via RStudio Viewer).
+- Seamless embedding within R Markdown documents and Shiny web applications.
+
 #+begin_src R
 library(dygraphs)
 
@@ -563,16 +583,28 @@ dyTemp <- dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
 
 dyTemp
 #+end_src
+#+CAPTION: dygraphs label:fig:dygraphs
+[[file:figs/dygraphs_aranjuez.png]]
+
+Note that this graph is fully interactive: as your mouse moves over the series individual values are displayed. You can also select regions of the graph to zoom into (double-click zooms out).
+
+You can customize dygraphs by piping additional commands onto the original dygraph object. 
 
 #+begin_src R
 dyTemp %>%
     dyHighlight(highlightSeriesBackgroundAlpha = 0.2)
 #+end_src
 
+#+RESULTS:
+
+#+CAPTION: dygraphs selected label:fig:dygraphs_selected
+[[file:figs/dygraphs_aranjuez_selected.png]]
+
 #+begin_src R
 dyTemp %>%
     dyHighlight(highlightSeriesOpts = list(strokeWidth = 2))
 #+end_src
+
 
 #+begin_src R
 dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
@@ -581,6 +613,9 @@ dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
     dySeries(c("TempMin", "TempAvg", "TempMax"),
              label = "Temperature")
 #+end_src
+
+#+CAPTION: dygraphs maxmin label:fig:dygraphs_maxmin
+[[file:figs/dygraphs_aranjuez_maxmin.png]]
 
 ** Highcharter label:sec:highcharter
 
@@ -600,6 +635,14 @@ highchart() %>%
 
 #+end_src
 
+#+CAPTION: highcharter label:fig:highcharter
+[[file:figs/highcharter_aranjuez.png]]
+
+#+CAPTION: highcharter zoom label:fig:highcharter_zoom
+[[file:figs/highcharter_aranjuez_zoom.png]]
+
+
+
 ** plotly label:sec:plotly
 
 #+begin_src R
@@ -608,6 +651,8 @@ df <- fortify(navarra - avRad)
 df <- melt(df, id.vars = 'Index', variable.name = 'Station')
 #+end_src
 
+#+RESULTS:
+
 #+begin_src R
 ## Number of stations
 N <- ncol(navarra)
@@ -615,6 +660,7 @@ N <- ncol(navarra)
 pal <- colorRampPalette(
     brewer.pal(9, 'Set1'))(N)
 #+end_src
+
 
 #+begin_src R
 library(plotly)
@@ -625,6 +671,12 @@ plot_ly(df,
         color = ~ Station) %>%
     add_lines(alpha = 0.5, colors = pal)
 #+end_src
+#+CAPTION: plotly label:fig:plotly
+[[file:figs/plotly_navarra.png]]
+
+#+CAPTION: plotly zoom label:fig:plotly_zoom
+[[file:figs/plotly_navarra_zoom.png]]
+
 
 ** \floweroneleft Interaction with =gridSVG=
 #+begin_src R :exports none
@@ -1082,21 +1134,25 @@ library(reshape2)
 #+end_src
 
 #+begin_src R
-unemployDF <- as.data.frame(unemployUSA)
+unemployDF <- fortify(unemployUSA)
 
-unemployDF$time <- as.Date(index(unemployUSA))
-
-unemployDF <- melt(unemployDF, id.vars = 'time')
+unemployDF <- melt(unemployDF, id.vars = 'Index')
 #+end_src
 
 #+begin_src R
 streamgraph(unemployDF,
             key = "variable",
             value = "value",
-            date = "time") %>%
+            date = "Index") %>%
     sg_axis_x(1, "year", "%Y") %>%
     sg_fill_brewer("Set1")
 #+end_src
+
+#+CAPTION: Streamgraph created with the =streamgraph= package, without selection. label:fig:streamgraph_interactive
+[[file:figs/streamgraph_interactive.png]]
+
+#+CAPTION: Streamgraph created with the =streamgraph= package, with a selection. label:fig:streamgraph_interactive_selected
+[[file:figs/streamgraph_interactive_selected.png]]
 
 
 * Footnotes
