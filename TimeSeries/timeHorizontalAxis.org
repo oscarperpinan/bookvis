@@ -30,10 +30,14 @@
       ans <- xscale.components.default(...)
       ans$top=FALSE
       ans
+  }
+
   yscale.components.custom <- function(...){
       ans <- yscale.components.default(...)
       ans$right=FALSE
       ans
+  }
+
   myArgs <- list(as.table=TRUE,
                  between=list(x=0.5, y=0.2),
                  xscale.components = xscale.components.custom,
@@ -45,10 +49,11 @@
   ##################################################################
 #+end_src
 
-* Time Graph of Different Meteorological Variables label:sec:differentVariables
+
+* Time Graph of Variables with Different Scales  label:sec:differentVariables
 #+begin_src R :exports none
   ##################################################################
-  ## Time graph of different meteorological variables
+  ## Time graph of variables with different scales
   ##################################################################
 #+end_src
 There is a variety of scientific research interested in the
@@ -65,10 +70,15 @@ multivariate time series can be displayed with the =xyplot= method of
 =lattice= for =zoo= objects with a panel for each variable (Figure
 [[ref:fig:aranjuezNaive]]).
 
+#+begin_src R
+  library(zoo)
+  load('data/aranjuez.RData')
+#+end_src
+
+#+RESULTS:
+: aranjuez
 
 #+begin_src R :results output graphics :exports both :file figs/aranjuez.pdf
-  load('data/aranjuez.RData')
-  library(zoo)
   ## The layout argument arranges panels in rows
   xyplot(aranjuez, layout=c(1, ncol(aranjuez)))
 #+end_src
@@ -325,8 +335,7 @@ around the time average (=avRad=).
 [[file:figs/navarra.pdf]]
 
 This result can be improved with different methods: the cut-and-stack
-method, the horizon graph with =horizonplot=, and dynamic labeling
-with the =gridSVG= package.
+method, and the horizon graph with =horizonplot=.
 
 ** Aspect Ratio and Rate of Change
 #+begin_src R :exports none
@@ -452,6 +461,8 @@ with =ave=.
   diffTa <- (Ta - longTa)
 #+end_src
 
+#+RESULTS:
+
 
 The temperature time series, the long-term average and the
 differences between them can be displayed with the =xyplot=
@@ -510,6 +521,8 @@ the comparison between years in a certain month.
   month <- function(x)as.numeric(format(x, '%m'))
 #+end_src
 
+#+RESULTS:
+
 #+begin_src R :results output graphics :exports both :file figs/diffTa_levelplot.pdf
   myTheme <- modifyList(custom.theme(region=brewer.pal(9, 'RdBu')),
                                      list(
@@ -531,48 +544,49 @@ the comparison between years in a certain month.
 #+RESULTS:
 [[file:figs/diffTa_levelplot.pdf]]
 
-ggplot version.
-#+begin_src R :results output graphics :exports both :file figs/diffTa_ggplot.pdf
+The =ggplot= version of the Figure  ref:fig:diffTa_level requires a =data.frame= with the day, year, and month arranged in different columns.
+#+begin_src R
 df <- data.frame(Vals = diffTa,
                  Day = day(timeIndex),
                  Year = year(timeIndex),
                  Month = month(timeIndex))
+#+end_src
+
+The values (=Vals= column of this =data.frame=) are displayed as a level plot thanks to the =geom_raster= function.
+#+begin_src R :results output graphics :exports both :file figs/diffTa_ggplot.pdf
+library(scales) 
+## The packages scales is needed for the pretty_breaks function.
 
 ggplot(data = df,
        aes(fill = Vals,
            x = Day,
            y = Year)) +
-    facet_wrap(~ Month, ncol = 1, switch = 'y') +
+    facet_wrap(~ Month, ncol = 1, strip.position = 'left') +
     scale_y_continuous(breaks = pretty_breaks()) + 
     scale_fill_distiller(palette = 'RdBu', direction = 1) + 
-    geom_tile(color = "white", size = 0.4) +
+    geom_raster() +
     theme(panel.grid.major = element_blank(),
           panel.grid.minor = element_blank())
 #+end_src
 
 
-* Interactive
+* Interactive graphics label:sec:interactive_horizontal
+This section describes the interactive alternatives of the static
+figures included in the previous sections with four packages:
+=dygraphs=, =highcharter=, =plotly=, and =gridSVG=.
+
+=dygraphs=, =highcharter=, and =plotly= are =R= interfaces to
+JavaScript libraries based on the =htmlwidgets= package, while the
+=gridSVG= package converts a =grid= graphic object into an SVG file.
 
 ** Dygraphs label:sec:dygraphs
-The dygraphs JavaScript charting library:
-
-- Plots time series without using an external server or Flash
-- Supports error bands around data series
-- Interactive pan and zoom
-- Displays values on mouseover
-- Adjustable averaging period
-- Extensive set of options for customization.
-- Compatible with the Google Visualization API
-
-The dygraphs package is an R interface to the dygraphs JavaScript charting library. It provides rich facilities for charting time-series data in R, including:
-
-- Automatically plots xts time series objects (or any object convertible to xts).
-- Highly configurable axis and series display (including optional second Y-axis).
-- Rich interactive features including zoom/pan and series/point highlighting.
-- Display upper/lower bars (e.g. prediction intervals) around series.
-- Various graph overlays including shaded regions, event lines, and point annotations.
-- Use at the R console just like conventional R plots (via RStudio Viewer).
-- Seamless embedding within R Markdown documents and Shiny web applications.
+The =dygraphs= package is an interface to the =dygraphs= JavaScript
+library, and provides facilities for charting time-series. It works
+automatically with =xts= time series objects, or with objects than can
+be coerced to this class. The result is an interactive graph, where
+values are displayed according to the mouse position over the time
+series. Regions can be selected to zoom into a time period. The figure
+label:fig:dygraphs is an snapshot of the interactive graph.
 
 #+begin_src R
 library(dygraphs)
@@ -583,10 +597,11 @@ dyTemp <- dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
 
 dyTemp
 #+end_src
+
 #+CAPTION: dygraphs label:fig:dygraphs
 [[file:figs/dygraphs_aranjuez.png]]
 
-Note that this graph is fully interactive: as your mouse moves over the series individual values are displayed. You can also select regions of the graph to zoom into (double-click zooms out).
+
 
 You can customize dygraphs by piping additional commands onto the original dygraph object. 
 
