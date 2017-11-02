@@ -114,7 +114,7 @@ The plotting of each panel is performed by the panel function, specified in a hi
 On the other hand, the =latticeExtra= package cite:Sarkar.Andrews2012 provides additional flexibility for the somewhat rigid structure of the Trellis framework implemented in =lattice=. This package complements the =lattice= with the implementation of layers via the =layer= function, and
 superposition of =trellis= objects and layers with the =+.trellis= function. Using both packages, you can define a graphic with the formula interface (under the =lattice= model) and overlay additional content as layers (following the =ggplot2= model).
 
-** ggplot2
+*** ggplot2
 label:sec:ggplot2
 
 \index{Packages!ggplot2@=ggplot2}} 
@@ -168,6 +168,8 @@ highlighted here:
 
 - =raster= cite:Hijmans2013 is a major extension of gridded spatial data classes. It provides a unified access method to different raster formats, permitting large objects to be analyzed with the definition of basic and high-level processing functions (Sections ref:sec:raster and ref:sec:rasterST). =rasterVis= cite:Perpinan.Hijmans2013 provides enhanced visualization of raster data with methods for spatiotemporal rasters (Sections ref:sec:rasterVis and ref:sec:rastervisST).
 
+- =htmlwidgets= R interfaces for JavaScript libraries.
+
 - =gridSVG= cite:Murrell.Potter2013 converts any grid scene to an \textsf{SVG} document. The =grid.hyperlink= function allows a hyperlink to be associated with any component of the scene, the =grid.animate= function can be used to animate any component of a scene, and the =grid.garnish= function can be used to add \textsf{SVG} attributes to the components of a scene. By setting event handler attributes on a component, plus possibly using the =grid.script= function to add \textsf{JavaScript} to the scene, it is possible to make the component respond to user input such as mouse clicks.
 
 
@@ -183,12 +185,12 @@ This book has been written using different computers running Debian GNU Linux an
 ** About the Author
 label:sec:aboutMe
 
-During the past 15 years, my main area of expertise has been photovoltaic solar energy systems, with a special interest in solar radiation.
+During the past 17 years, my main area of expertise has been photovoltaic solar energy systems, with a special interest in solar radiation.
 Initially I worked as an engineer for a private company and I was involved in several commercial and research projects. The project teams were partly integrated by people with low technical skills who relied on the input from engineers to complete their work. I learned how a good visualization output eased the communication process. 
 
 Now I work as a professor and researcher at the university. Data visualization is one of the most important tools I have available. It helps me embrace and share the steps, methods, and results of my research. With students, it is an inestimable partner in helping them understand complex concepts.
 
-I have been using \textsf{R} to simulate the performance of photovoltaic energy systems and to analyze solar radiation data, both as time series and spatial data. As a result, I have developed packages that include several graphical methods to deal with multivariate time series (namely, =solaR= cite:Perpinan2012b=) and space-time data (=rasterVis=). 
+I have been using \textsf{R} to simulate the performance of photovoltaic energy systems and to analyze solar radiation data, both as time series and spatial data. As a result, I have developed packages that include several graphical methods to deal with multivariate time series (namely, =solaR= cite:Perpinan2012b=, =meteoForecast= cite:Perpinan.Almeida2015, and =PVF= cite:Pinho-Almeida2015) and space-time data (=rasterVis= cite:Perpinan.Hijmans2013). 
 
 ** Acknowledgments
 label:sec:acknow
