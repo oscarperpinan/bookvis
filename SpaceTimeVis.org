@@ -15,213 +15,214 @@
 \mainmatter
 
 ** Introduction
+label:sec:introduction
 
-*** What This Book Is About
- label:sec:thisBook
+# *** What This Book Is About
+#  label:sec:thisBook
 
- A data graphic is not only a static image but also tells a story about the data. It activates cognitive processes that are able to detect patterns and discover information not readily available with the raw data. This is particularly true for time series, spatial, and space-time datasets.
+#  A data graphic is not only a static image but also tells a story about the data. It activates cognitive processes that are able to detect patterns and discover information not readily available with the raw data. This is particularly true for time series, spatial, and space-time datasets.
 
- There are several excellent books about data graphics and visual perception theory, with guidelines and advice for displaying information, including visual examples. Let's mention /The Elements of Graphical Data/ cite:Cleveland1994 and /Visualizing Data/ cite:Cleveland1993 by W. S. Cleveland, /Envisioning Information/ cite:Tufte1990 and /The Visual Display of Quantitative Information/ cite:Tufte2001 by E. Tufte, /The Functional Art/ by A. Cairo cite:Cairo2012, and /Visual Thinking for Design/ by C. Ware cite:Ware2008. Ordinarily, they do not include the code or software tools to produce those graphics.
+#  There are several excellent books about data graphics and visual perception theory, with guidelines and advice for displaying information, including visual examples. Let's mention /The Elements of Graphical Data/ cite:Cleveland1994 and /Visualizing Data/ cite:Cleveland1993 by W. S. Cleveland, /Envisioning Information/ cite:Tufte1990 and /The Visual Display of Quantitative Information/ cite:Tufte2001 by E. Tufte, /The Functional Art/ by A. Cairo cite:Cairo2012, and /Visual Thinking for Design/ by C. Ware cite:Ware2008. Ordinarily, they do not include the code or software tools to produce those graphics.
 
- On the other hand, there is a collection of books that provides code and detailed information about the graphical tools available with =R=. Commonly they do not use real data in the examples and do not provide advice for improving graphics according to visualization theory. Three books are the unquestioned representatives of this group: /R Graphics/ by P. Murrell cite:Murrell2011, /Lattice: Multivariate Data Visualization with R/ by D. Sarkar cite:Sarkar2010, and /ggplot2: Elegant Graphics for Data Analysis/ by H. Wickham cite:Wickham2009.
+#  On the other hand, there is a collection of books that provides code and detailed information about the graphical tools available with =R=. Commonly they do not use real data in the examples and do not provide advice for improving graphics according to visualization theory. Three books are the unquestioned representatives of this group: /R Graphics/ by P. Murrell cite:Murrell2011, /Lattice: Multivariate Data Visualization with R/ by D. Sarkar cite:Sarkar2010, and /ggplot2: Elegant Graphics for Data Analysis/ by H. Wickham cite:Wickham2009.
 
- This book proposes methods to display time series, spatial, and space-time data using \textsf{R}, and aims to be a synthesis of both groups providing code and detailed information to produce high-quality graphics with practical examples.
+#  This book proposes methods to display time series, spatial, and space-time data using \textsf{R}, and aims to be a synthesis of both groups providing code and detailed information to produce high-quality graphics with practical examples.
 
-*** What You Will /Not/ Find in This Book
- label:sec:thisBookIsNot
+# *** What You Will /Not/ Find in This Book
+#  label:sec:thisBookIsNot
 
- - *This is not a book to learn =R=*. 
+#  - *This is not a book to learn =R=*. 
 
-   Readers should have a fair knowledge of programming with =R= to understand the book. In addition, previous experience with the =zoo=, =sp=, =raster=, =lattice=, =ggplot2=, and =grid= packages is helpful.
+#    Readers should have a fair knowledge of programming with =R= to understand the book. In addition, previous experience with the =zoo=, =sp=, =raster=, =lattice=, =ggplot2=, and =grid= packages is helpful.
 
-   If you need to improve your \textsf{R} skills, consider these information sources:
+#    If you need to improve your \textsf{R} skills, consider these information sources:
 
-   - Introduction to =R=[fn:3].
-   - Official manuals[fn:4].
-   - Contributed documents[fn:5].
-   - Mailing lists[fn:6].
-   - R-bloggers[fn:7].
-   - Books related to =R=[fn:8] and particularly /Software for Data Analysis/ by John M. Chambers cite:Chambers2008.
+#    - Introduction to =R=[fn:3].
+#    - Official manuals[fn:4].
+#    - Contributed documents[fn:5].
+#    - Mailing lists[fn:6].
+#    - R-bloggers[fn:7].
+#    - Books related to =R=[fn:8] and particularly /Software for Data Analysis/ by John M. Chambers cite:Chambers2008.
 
- - *This book does not provide an exhaustive collection of visualization methods*.
+#  - *This book does not provide an exhaustive collection of visualization methods*.
 
-    Instead, it illustrates what I found to be the most useful and effective methods. Notwithstanding, each part includes a section titled ``Further Reading'' with bibliographic proposals for additional information.
-
-
- - *This book does not include a complete review or discussion of =R= packages*.
-
-   Their most useful functions, classes, and methods regarding data and graphics are outlined in the introductory chapter of each part, and   conveniently illustrated with the help of examples. However, if you need detailed information about a certain aspect of a package, you should read the correspondent package manual or vignette. Moreover, if you want to know additional alternatives, you can navigate through the CRAN Task Views about Time Series[fn:9], Spatial Data[fn:10], Spatiotemporal  Data[fn:11], and Graphics[fn:12].
+#     Instead, it illustrates what I found to be the most useful and effective methods. Notwithstanding, each part includes a section titled ``Further Reading'' with bibliographic proposals for additional information.
 
 
- - *Finally, this book is not a handbook of data analysis, geostatistics, point pattern analysis, or time series theory*.
+#  - *This book does not include a complete review or discussion of =R= packages*.
 
-   Instead, this book is focused on the exploration of data with visual methods, so it may be framed in the Exploratory Data Analysis approach. Therefore, this book may be a useful complement for superb bibliographic references where you will find plenty of information about those subjects. For example, cite:Chatfield2003, cite:Cressie.Wikle2011, cite:Slocum.McMaster.ea2005 and cite:Bivand.Pebesma.ea2008.
-
-*** How to Read This Book
- label:sec:how-read
-
- This book is organized into three parts, each devoted to different types of data. Each part comprises several chapters according to the various visualization methods or data characteristics. The chapters are structured as independent units so readers can jump directly to a certain chapter according to their needs. Of course, there are several dependencies and redundancies between the sets of chapters that have been conveniently signaled with cross-references. 
-
- The content of each chapter illustrates how to display a dataset starting with an easy and direct approach. Often this first result is not entirely satisfactory so additional improvements are progressively added. Each step involves additional complexity which, in some cases, can be overwhelming during a first reading. Thus, some sections, marked with the sign \floweroneleft, can be safely skipped for later reading.
-
- Although I have done my best to help readers understand the methods and code, you should not expect to understand it after one reading. The key is practical experience, and the best way is to try out the code with the provided data *and* modify it to suit your needs with your own data. There is a website and a code repository to help you in this task.
-
-**** Website and Code Repository
- label:sec:github
-
- The book website with the main graphics of this book is located at
- #+BEGIN_CENTER
-   http://oscarperpinan.github.com/spacetime-vis/
- #+END_CENTER
- The full code is freely available from the repository:
- #+BEGIN_CENTER
-   https://github.com/oscarperpinan/spacetime-vis
- #+END_CENTER
-
- On the other hand, the datasets used in the examples are either available at the repository or can be freely obtained from other websites. It must be underlined that the combination of code and data freely available allows this book to be fully reproducible.
-
- I have chosen the datasets according to two main criteria: 
- - They are freely available without restrictions for public use.
- - They cover different scientific and professional fields (meteorology and climate research, economy and social sciences,
-   energy and engineering, environmental research, epidemiology, etc.).
-
- The repository and the website can be downloaded as compressed files[fn:13], and if you use =git=, you can clone the repository with
-
- #+BEGIN_SRC bash
-git clone https://github.com/oscarperpinan/spacetime-vis.git
- #+END_SRC
-
-*** =R= Graphics
- label:sec:r-graphics
-
-#+INDEX: Packages!grid@=grid
- There are two distinct graphics systems built into =R=, referred to as traditional and grid graphics. Grid graphics are produced with the =grid= package cite:Murrell2011, a flexible low-level graphics toolbox. Compared with the traditional graphics model, it provides more flexibility to modify or add content to an existent graphical output, better support for combining different outputs easily, and more possibilities for interaction. All the graphics in this book have been produced with the grid graphics model.
-
- Other packages are constructed over it to provide high-level functions, most notably the =lattice= and =ggplot2= packages.
-
-**** lattice
- label:sec:lattice
-
-#+INDEX: Packages!lattice@=lattice
-
- The =lattice= package cite:Sarkar2010 is an independent implementation of Trellis graphics, which were mostly influenced by /The Elements of Graphing Data/ cite:Cleveland1994. Trellis graphics often consist of a rectangular array of panels. The =lattice= package uses a /formula/ interface to define the structure of the array of panels with the specification of the variables involved in the plot. The result of a =lattice=
- high-level function is a =trellis= object.
-
- For bivariate graphics, the formula is generally of the form =y ~ x= representing a single panel plot with =y= versus =x=. This formula can also involve expressions. The main function for bivariate graphics is =xyplot=. 
-
- Optionally, the formula may be =y ~ x | g1 * g2= and =y= is represented against =x= conditional on the variables =g1= and =g2=. Each unique combination of the levels of these conditioning variables determines a subset of the variables =x= and =y=. Each subset provides the data for a single panel in the Trellis display, an array of panels laid out in columns, rows, and pages.
-
- For example, in the following code, the variable =wt= of the dataset =mtcars= is represented against the =mpg=, with a panel for each level of the categorical variable =am=. The points are grouped by the values of the =cyl= variable.
-
- #+begin_src R :eval no
-xyplot(wt ~ mpg | am, data = mtcars, groups = cyl)
- #+end_src
+#    Their most useful functions, classes, and methods regarding data and graphics are outlined in the introductory chapter of each part, and   conveniently illustrated with the help of examples. However, if you need detailed information about a certain aspect of a package, you should read the correspondent package manual or vignette. Moreover, if you want to know additional alternatives, you can navigate through the CRAN Task Views about Time Series[fn:9], Spatial Data[fn:10], Spatiotemporal  Data[fn:11], and Graphics[fn:12].
 
 
- For trivariate graphics, the formula is of the form =z ~ x * y=, where =z= is a numeric response, and =x= and =y= are numeric values evaluated on a rectangular grid. Once again, the formula may include conditioning variables, for example =z ~ x * y | g1 * g2=. The main function for these graphics is =levelplot=.
+#  - *Finally, this book is not a handbook of data analysis, geostatistics, point pattern analysis, or time series theory*.
 
- The plotting of each panel is performed by the panel function, specified in a high-level function call as the =panel= argument. Each high-level =lattice= function has a default panel function, although the user can create new Trellis displays with custom panel functions.
+#    Instead, this book is focused on the exploration of data with visual methods, so it may be framed in the Exploratory Data Analysis approach. Therefore, this book may be a useful complement for superb bibliographic references where you will find plenty of information about those subjects. For example, cite:Chatfield2003, cite:Cressie.Wikle2011, cite:Slocum.McMaster.ea2005 and cite:Bivand.Pebesma.ea2008.
 
- =lattice= is a member of the recommended packages list so it is commonly distributed with \textsf{R} itself. There are more than 250 packages depending on it, and the most important packages for our purposes (=zoo=, =sp=, and =raster=) define methods to display their classes using =lattice=.
+# *** How to Read This Book
+#  label:sec:how-read
 
-#+INDEX: Packages!latticeExtra@=latticeExtra
+#  This book is organized into three parts, each devoted to different types of data. Each part comprises several chapters according to the various visualization methods or data characteristics. The chapters are structured as independent units so readers can jump directly to a certain chapter according to their needs. Of course, there are several dependencies and redundancies between the sets of chapters that have been conveniently signaled with cross-references. 
 
- On the other hand, the =latticeExtra= package cite:Sarkar.Andrews2012 provides additional flexibility for the somewhat rigid structure of the Trellis framework implemented in =lattice=. This package complements the =lattice= with the implementation of layers via the =layer= function, and
- superposition of =trellis= objects and layers with the =+.trellis= function. Using both packages, you can define a graphic with the formula interface (under the =lattice= model) and overlay additional content as layers (following the =ggplot2= model).
+#  The content of each chapter illustrates how to display a dataset starting with an easy and direct approach. Often this first result is not entirely satisfactory so additional improvements are progressively added. Each step involves additional complexity which, in some cases, can be overwhelming during a first reading. Thus, some sections, marked with the sign \floweroneleft, can be safely skipped for later reading.
+
+#  Although I have done my best to help readers understand the methods and code, you should not expect to understand it after one reading. The key is practical experience, and the best way is to try out the code with the provided data *and* modify it to suit your needs with your own data. There is a website and a code repository to help you in this task.
+
+# **** Website and Code Repository
+#  label:sec:github
+
+#  The book website with the main graphics of this book is located at
+#  #+BEGIN_CENTER
+#    http://oscarperpinan.github.com/spacetime-vis/
+#  #+END_CENTER
+#  The full code is freely available from the repository:
+#  #+BEGIN_CENTER
+#    https://github.com/oscarperpinan/spacetime-vis
+#  #+END_CENTER
+
+#  On the other hand, the datasets used in the examples are either available at the repository or can be freely obtained from other websites. It must be underlined that the combination of code and data freely available allows this book to be fully reproducible.
+
+#  I have chosen the datasets according to two main criteria: 
+#  - They are freely available without restrictions for public use.
+#  - They cover different scientific and professional fields (meteorology and climate research, economy and social sciences,
+#    energy and engineering, environmental research, epidemiology, etc.).
+
+#  The repository and the website can be downloaded as compressed files[fn:13], and if you use =git=, you can clone the repository with
+
+#  #+BEGIN_SRC bash
+# git clone https://github.com/oscarperpinan/spacetime-vis.git
+#  #+END_SRC
+
+# *** =R= Graphics
+#  label:sec:r-graphics
+
+# #+INDEX: Packages!grid@=grid
+#  There are two distinct graphics systems built into =R=, referred to as traditional and grid graphics. Grid graphics are produced with the =grid= package cite:Murrell2011, a flexible low-level graphics toolbox. Compared with the traditional graphics model, it provides more flexibility to modify or add content to an existent graphical output, better support for combining different outputs easily, and more possibilities for interaction. All the graphics in this book have been produced with the grid graphics model.
+
+#  Other packages are constructed over it to provide high-level functions, most notably the =lattice= and =ggplot2= packages.
+
+# **** lattice
+#  label:sec:lattice
+
+# #+INDEX: Packages!lattice@=lattice
+
+#  The =lattice= package cite:Sarkar2010 is an independent implementation of Trellis graphics, which were mostly influenced by /The Elements of Graphing Data/ cite:Cleveland1994. Trellis graphics often consist of a rectangular array of panels. The =lattice= package uses a /formula/ interface to define the structure of the array of panels with the specification of the variables involved in the plot. The result of a =lattice=
+#  high-level function is a =trellis= object.
+
+#  For bivariate graphics, the formula is generally of the form =y ~ x= representing a single panel plot with =y= versus =x=. This formula can also involve expressions. The main function for bivariate graphics is =xyplot=. 
+
+#  Optionally, the formula may be =y ~ x | g1 * g2= and =y= is represented against =x= conditional on the variables =g1= and =g2=. Each unique combination of the levels of these conditioning variables determines a subset of the variables =x= and =y=. Each subset provides the data for a single panel in the Trellis display, an array of panels laid out in columns, rows, and pages.
+
+#  For example, in the following code, the variable =wt= of the dataset =mtcars= is represented against the =mpg=, with a panel for each level of the categorical variable =am=. The points are grouped by the values of the =cyl= variable.
+
+#  #+begin_src R :eval no
+# xyplot(wt ~ mpg | am, data = mtcars, groups = cyl)
+#  #+end_src
+
+
+#  For trivariate graphics, the formula is of the form =z ~ x * y=, where =z= is a numeric response, and =x= and =y= are numeric values evaluated on a rectangular grid. Once again, the formula may include conditioning variables, for example =z ~ x * y | g1 * g2=. The main function for these graphics is =levelplot=.
+
+#  The plotting of each panel is performed by the panel function, specified in a high-level function call as the =panel= argument. Each high-level =lattice= function has a default panel function, although the user can create new Trellis displays with custom panel functions.
+
+#  =lattice= is a member of the recommended packages list so it is commonly distributed with \textsf{R} itself. There are more than 250 packages depending on it, and the most important packages for our purposes (=zoo=, =sp=, and =raster=) define methods to display their classes using =lattice=.
+
+# #+INDEX: Packages!latticeExtra@=latticeExtra
+
+#  On the other hand, the =latticeExtra= package cite:Sarkar.Andrews2012 provides additional flexibility for the somewhat rigid structure of the Trellis framework implemented in =lattice=. This package complements the =lattice= with the implementation of layers via the =layer= function, and
+#  superposition of =trellis= objects and layers with the =+.trellis= function. Using both packages, you can define a graphic with the formula interface (under the =lattice= model) and overlay additional content as layers (following the =ggplot2= model).
  
-*** ggplot2
- label:sec:ggplot2
+# **** ggplot2
+#  label:sec:ggplot2
 
-#+INDEX: Packages!ggplot2@=ggplot2
+# #+INDEX: Packages!ggplot2@=ggplot2
 
- The =ggplot2= package cite:Wickham2009 is an implementation of the system proposed in /The Grammar of Graphics/ cite:Wilkinson1999, a general scheme for data visualization that breaks up graphs into semantic components such as scales and layers. Under this framework, the definition of the graphic with =ggplot2= is done with a combination of several functions that provides the components, instead of the formula interface of
- =lattice=.
+#  The =ggplot2= package cite:Wickham2009 is an implementation of the system proposed in /The Grammar of Graphics/ cite:Wilkinson1999, a general scheme for data visualization that breaks up graphs into semantic components such as scales and layers. Under this framework, the definition of the graphic with =ggplot2= is done with a combination of several functions that provides the components, instead of the formula interface of
+#  =lattice=.
 
- With =ggplot2=, a graphic is composed of:
+#  With =ggplot2=, a graphic is composed of:
 
- - A dataset, =data=, and a set of mappings from variables to aesthetics, =aes=.
- - One or more layers, each composed of: a geometric object, =geom_*=, to control the type of plot you create (points, lines, etc.); a statistical transformation, =stat_*=; and a position adjustment (and optionally, additional dataset and aesthetic mappings).
- - A scale, =scale_*=, to control the mapping from data to aesthetic attributes. Scales are common across layers to ensure a consistent mapping from data to aesthetics. 
- - A coordinate system, =coords_*=.
- - Optionally, a faceting specification, =facet_*=, the equivalent of Trellis graphics with panels.
+#  - A dataset, =data=, and a set of mappings from variables to aesthetics, =aes=.
+#  - One or more layers, each composed of: a geometric object, =geom_*=, to control the type of plot you create (points, lines, etc.); a statistical transformation, =stat_*=; and a position adjustment (and optionally, additional dataset and aesthetic mappings).
+#  - A scale, =scale_*=, to control the mapping from data to aesthetic attributes. Scales are common across layers to ensure a consistent mapping from data to aesthetics. 
+#  - A coordinate system, =coords_*=.
+#  - Optionally, a faceting specification, =facet_*=, the equivalent of Trellis graphics with panels.
 
- The function =ggplot= is typically used to construct a plot incrementally, using the =+= operator to add layers to the existing ggplot object.  For instance, the following code (equivalent to the previous =lattice= example) uses =mtcars= as the dataset, and maps the =mpg= variable on the x-axis and the =wt= variable on the y-axis. The geometric object is the point using the =cyl= variable to control the color. Finally, the levels of the =am= variable define the panels of the graphic. 
+#  The function =ggplot= is typically used to construct a plot incrementally, using the =+= operator to add layers to the existing ggplot object.  For instance, the following code (equivalent to the previous =lattice= example) uses =mtcars= as the dataset, and maps the =mpg= variable on the x-axis and the =wt= variable on the y-axis. The geometric object is the point using the =cyl= variable to control the color. Finally, the levels of the =am= variable define the panels of the graphic. 
 
-#+begin_src R :eval no
-ggplot(mtcars, aes(mpg, wt)) +
-    geom_point(aes(colour=factor(cyl))) +
-    facet_grid(. ~ am)
-#+end_src
+# #+begin_src R :eval no
+# ggplot(mtcars, aes(mpg, wt)) +
+#     geom_point(aes(colour=factor(cyl))) +
+#     facet_grid(. ~ am)
+# #+end_src
  
- This package is increasingly popular, with a list of more than ninety packages depending on it. On the other hand, few packages provide
- method definitions based on =ggplot2= to display their classes. In our context, only the =zoo= package defines the =autoplot= function based on it.
+#  This package is increasingly popular, with a list of more than ninety packages depending on it. On the other hand, few packages provide
+#  method definitions based on =ggplot2= to display their classes. In our context, only the =zoo= package defines the =autoplot= function based on it.
 
-**** Comparison between lattice and ggplot2
- label:sec:comparison
+# **** Comparison between lattice and ggplot2
+#  label:sec:comparison
 
-Which package to choose is, for a wide range of datasets, a question of personal preferences. You may be interested in a comparison between them published in a series of blog posts[fn:1].  However, the major drawback of =ggplot2= is its considerably slower speed when dealing with large datasets[fn:2], so you should be cautious with large spatial and spatiotemporal data.  Consequently, most of the code in Part ref:part:Time contains alternatives defined both with =lattice= and with =ggplot2=. However, because of the speed problem and the absence of =ggplot2= functions in the corresponding packages, only a minor fraction of the code in Parts ref:cha:Spatial and ref:cha:Spatio-Time contains graphics defined with =ggplot2=.
+# Which package to choose is, for a wide range of datasets, a question of personal preferences. You may be interested in a comparison between them published in a series of blog posts[fn:1].  However, the major drawback of =ggplot2= is its considerably slower speed when dealing with large datasets[fn:2], so you should be cautious with large spatial and spatiotemporal data.  Consequently, most of the code in Part ref:part:Time contains alternatives defined both with =lattice= and with =ggplot2=. However, because of the speed problem and the absence of =ggplot2= functions in the corresponding packages, only a minor fraction of the code in Parts ref:cha:Spatial and ref:cha:Spatio-Time contains graphics defined with =ggplot2=.
   
 
-*** Packages
- label:sec:introduction-packages
+# *** Packages
+#  label:sec:introduction-packages
 
- Throughout the book, several \textsf{R} packages are used. All of them are available from \textsf{CRAN}, and you must install them before
- using the code. Most of them are loaded at the start of the code of each chapter, although some of them are loaded later if they are used only inside optional sections (marked with \floweroneleft). You should install the last version available at \textsf{CRAN} to ensure correct functioning of the code.
+#  Throughout the book, several \textsf{R} packages are used. All of them are available from \textsf{CRAN}, and you must install them before
+#  using the code. Most of them are loaded at the start of the code of each chapter, although some of them are loaded later if they are used only inside optional sections (marked with \floweroneleft). You should install the last version available at \textsf{CRAN} to ensure correct functioning of the code.
 
- Although the introductory chapter of each part includes a section with an outline of the most relevant packages, some of them deserve to be
- highlighted here:
+#  Although the introductory chapter of each part includes a section with an outline of the most relevant packages, some of them deserve to be
+#  highlighted here:
 
- - =zoo= cite:Zeileis.Grothendieck2005 provides infrastructure for time series using arbitrary classes for the time
-   stamps (Section ref:sec:zoo).
+#  - =zoo= cite:Zeileis.Grothendieck2005 provides infrastructure for time series using arbitrary classes for the time
+#    stamps (Section ref:sec:zoo).
 
- - =sp= cite:Pebesma2012 provides a coherent set of classes and methods for the major spatial data types: points, lines, polygons, and grids (Section ref:sec:sp). =spacetime= cite:Pebesma2012 defines classes and methods for spatiotemporal  data, and methods for plotting data as map sequences or multiple time series (Section ref:sec:spacetime).
+#  - =sp= cite:Pebesma2012 provides a coherent set of classes and methods for the major spatial data types: points, lines, polygons, and grids (Section ref:sec:sp). =spacetime= cite:Pebesma2012 defines classes and methods for spatiotemporal  data, and methods for plotting data as map sequences or multiple time series (Section ref:sec:spacetime).
 
- - =raster= cite:Hijmans2013 is a major extension of gridded spatial data classes. It provides a unified access method to different raster formats, permitting large objects to be analyzed with the definition of basic and high-level processing functions (Sections ref:sec:raster and ref:sec:rasterST). =rasterVis= cite:Perpinan.Hijmans2013 provides enhanced visualization of raster data with methods for spatiotemporal rasters (Sections ref:sec:rasterVis and ref:sec:rastervisST).
+#  - =raster= cite:Hijmans2013 is a major extension of gridded spatial data classes. It provides a unified access method to different raster formats, permitting large objects to be analyzed with the definition of basic and high-level processing functions (Sections ref:sec:raster and ref:sec:rasterST). =rasterVis= cite:Perpinan.Hijmans2013 provides enhanced visualization of raster data with methods for spatiotemporal rasters (Sections ref:sec:rasterVis and ref:sec:rastervisST).
 
- - =htmlwidgets= R interfaces for JavaScript libraries.
+#  - =htmlwidgets= R interfaces for JavaScript libraries.
 
- - =gridSVG= cite:Murrell.Potter2013 converts any grid scene to an \textsf{SVG} document. The =grid.hyperlink= function allows a hyperlink to be associated with any component of the scene, the =grid.animate= function can be used to animate any component of a scene, and the =grid.garnish= function can be used to add \textsf{SVG} attributes to the components of a scene. By setting event handler attributes on a component, plus possibly using the =grid.script= function to add \textsf{JavaScript} to the scene, it is possible to make the component respond to user input such as mouse clicks.
+#  - =gridSVG= cite:Murrell.Potter2013 converts any grid scene to an \textsf{SVG} document. The =grid.hyperlink= function allows a hyperlink to be associated with any component of the scene, the =grid.animate= function can be used to animate any component of a scene, and the =grid.garnish= function can be used to add \textsf{SVG} attributes to the components of a scene. By setting event handler attributes on a component, plus possibly using the =grid.script= function to add \textsf{JavaScript} to the scene, it is possible to make the component respond to user input such as mouse clicks.
 
 
-*** Software Used to Write This Book
- label:sec:software-book
+# *** Software Used to Write This Book
+#  label:sec:software-book
 
- This book has been written using different computers running Debian GNU Linux and using several gems of open-source software: 
- - \textsf{org-mode} cite:Schulte.Davison.ea2012, \LaTeX{}, and AUC\TeX{}, for authoring text and code.
- - \textsf{R} cite:RDevelopmentCoreTeam2013 with \textsf{Emacs Speaks Statistics} cite:Rossini.Heiberger.ea2004.
- - \textsf{GNU Emacs} as development environment.
+#  This book has been written using different computers running Debian GNU Linux and using several gems of open-source software: 
+#  - \textsf{org-mode} cite:Schulte.Davison.ea2012, \LaTeX{}, and AUC\TeX{}, for authoring text and code.
+#  - \textsf{R} cite:RDevelopmentCoreTeam2013 with \textsf{Emacs Speaks Statistics} cite:Rossini.Heiberger.ea2004.
+#  - \textsf{GNU Emacs} as development environment.
 
-*** About the Author
- label:sec:aboutMe
-During the past 17 years, my main area of expertise has been photovoltaic solar energy systems, with a special interest in solar radiation.
-Initially I worked as an engineer for a private company and I was involved in several commercial and research projects. The project teams were partly integrated by people with low technical skills who relied on the input from engineers to complete their work. I learned how a good visualization output eased the communication process. 
+# *** About the Author
+#  label:sec:aboutMe
+# During the past 17 years, my main area of expertise has been photovoltaic solar energy systems, with a special interest in solar radiation.
+# Initially I worked as an engineer for a private company and I was involved in several commercial and research projects. The project teams were partly integrated by people with low technical skills who relied on the input from engineers to complete their work. I learned how a good visualization output eased the communication process. 
 
-Now I work as a professor and researcher at the university. Data visualization is one of the most important tools I have available. It helps me embrace and share the steps, methods, and results of my research. With students, it is an inestimable partner in helping them understand complex concepts.
+# Now I work as a professor and researcher at the university. Data visualization is one of the most important tools I have available. It helps me embrace and share the steps, methods, and results of my research. With students, it is an inestimable partner in helping them understand complex concepts.
 
-I have been using \textsf{R} to simulate the performance of photovoltaic energy systems and to analyze solar radiation data, both as time series and spatial data. As a result, I have developed packages that include several graphical methods to deal with multivariate time series (namely, =solaR= cite:Perpinan2012b=, =meteoForecast= cite:Perpinan.Almeida2015, and =PVF= cite:Pinho-Almeida2015) and space-time data (=rasterVis= cite:Perpinan.Hijmans2013). 
+# I have been using \textsf{R} to simulate the performance of photovoltaic energy systems and to analyze solar radiation data, both as time series and spatial data. As a result, I have developed packages that include several graphical methods to deal with multivariate time series (namely, =solaR= cite:Perpinan2012b, =meteoForecast= cite:Perpinan.Almeida2015, and =PVF= cite:Pinho-Almeida2015) and space-time data (=rasterVis= cite:Perpinan.Hijmans2013). 
 
-*** Acknowledgments
- label:sec:acknow
+# *** Acknowledgments
+#  label:sec:acknow
 
- Writing a book is often described as a solitary activity. It is certainly difficult to write when you are with friends or spending time with your family,... although with three little children at home I have learned to write prose and code while my baby wants to learn typing and my daughters need help to share a family of dinosaurs. 
+#  Writing a book is often described as a solitary activity. It is certainly difficult to write when you are with friends or spending time with your family,... although with three little children at home I have learned to write prose and code while my baby wants to learn typing and my daughters need help to share a family of dinosaurs. 
 
- Seriously speaking, solitude is the best partner of a writer. But when I am writing or coding I feel I am immersed in a huge collaborative network of past and present contributors. Piotr Kropotkin described it with the following words cite:Kropotkin1906:
+#  Seriously speaking, solitude is the best partner of a writer. But when I am writing or coding I feel I am immersed in a huge collaborative network of past and present contributors. Piotr Kropotkin described it with the following words cite:Kropotkin1906:
 
- #+BEGIN_QUOTE
-   Thousands of writers, of poets, of scholars, have laboured to increase knowledge, to dissipate error, and to create that atmosphere of scientific thought, without which the marvels of our century could never have appeared. And these thousands of philosophers, of poets, of scholars, of inventors, have themselves been supported by the labour of past centuries. They have been upheld and nourished through life, both physically and mentally, by legions of workers and craftsmen of all sorts.
- #+END_QUOTE
+#  #+BEGIN_QUOTE
+#    Thousands of writers, of poets, of scholars, have laboured to increase knowledge, to dissipate error, and to create that atmosphere of scientific thought, without which the marvels of our century could never have appeared. And these thousands of philosophers, of poets, of scholars, of inventors, have themselves been supported by the labour of past centuries. They have been upheld and nourished through life, both physically and mentally, by legions of workers and craftsmen of all sorts.
+#  #+END_QUOTE
 
- And Lewis Mumford claimed cite:Mumford1934:
+#  And Lewis Mumford claimed cite:Mumford1934:
 
- #+BEGIN_QUOTE
-   Socialize Creation! What we need is the realization that the creative life, in all its manifestations, is necessarily a social product.
- #+END_QUOTE
+#  #+BEGIN_QUOTE
+#    Socialize Creation! What we need is the realization that the creative life, in all its manifestations, is necessarily a social product.
+#  #+END_QUOTE
 
- I want to express my deepest gratitude and respect to all those women and men who have contributed and contribute to strengthening the communities of free software, open data, and open science. My special thanks go to the people of the \textsf{R} community: users, members of the \textsf{R} Core Development Team, and package developers.
+#  I want to express my deepest gratitude and respect to all those women and men who have contributed and contribute to strengthening the communities of free software, open data, and open science. My special thanks go to the people of the \textsf{R} community: users, members of the \textsf{R} Core Development Team, and package developers.
 
- With regard to this book in particular, I would like to thank John Kimmel for his constant support, guidance, and patience.
+#  With regard to this book in particular, I would like to thank John Kimmel for his constant support, guidance, and patience.
 
- Last, and most importantly, thanks to Candela, Marina, and Javi, my crazy little shorties, my permanent source of happiness, imagination, and love. Thanks to María, /mi amor, mi cómplice y todo/.
+#  Last, and most importantly, thanks to Candela, Marina, and Javi, my crazy little shorties, my permanent source of happiness, imagination, and love. Thanks to María, /mi amor, mi cómplice y todo/.
 
 
 
@@ -340,10 +341,10 @@ In this chapter, time will be used as a complementary variable which adds inform
 
 #+INCLUDE: "TimeSeries/dataTime.tex" src latex
 
-# * Spatial Data
+* Spatial Data
 
-# ** Displaying Spatial Data: Introduction
-#  label:cha:spatialIntro
+** Displaying Spatial Data: Introduction
+  label:cha:spatialIntro
 
 #  Spatial data (also known as geospatial data) are directly or indirectly referenced to a location on the surface of the Earth. Their spatial reference is composed of coordinate values and a system of reference for these coordinates. Spatial data are often accessed, manipulated, or analyzed through Geographic Information Systems (GIS).
 
@@ -351,8 +352,8 @@ In this chapter, time will be used as a complementary variable which adds inform
 
 #  This part exposes several examples where vector and raster data are displayed to show geographic location of features and physical landscape features of a place (reference and physical maps, Chapter ref:cha:refer-phys-maps) or a specific variable in the context of a geographic reference (thematic maps, Chapter ref:cha:thematicMaps). These examples make use of several datasets (available at the book website) described in Chapter ref:cha:dataSpatial.
 
-# *** Packages
-#  label:sec:spatial-packages
+*** Packages
+  label:sec:spatial-packages
 
 #  The CRAN Tasks View "Analysis of Spatial Data" [fn:19] summarizes the packages for reading, vizualizing, and analyzing spatial data. This section provides a brief introduction to =sp=, =raster=, =rasterVis=, =maptools=, =rgdal=, =gstat=, and =maps=. Most of the information has been extracted from their vignettes, webpages, and help pages. You should read them for detailed information.
 
@@ -486,21 +487,21 @@ In this chapter, time will be used as a complementary variable which adds inform
 
 #  The =maps= cite:Becker.Wilks.ea2013, =mapdata= cite:Becker.Wilks.ea2013b, and =mapproj= cite:McIlroy.Brownrigg.ea2013 packages are useful to draw or create geographical maps. =mapdata= contains higher resolution databases, and =mapproj= converts latitude/longitude coordinates into projected coordinates.
 
-# *** Further Reading
-#  label:cha:further-reading-spatial
+*** Further Reading
+ label:cha:further-reading-spatial
 
-#  -  cite:Slocum.McMaster.ea2005 and cite:Dent.Torguson.ea2008 are comprehensive books on thematic cartography and geovisualization.  They include chapters devoted to data classification, scales, map projections, color theory, typography, and proportional symbol, choropleth, dasymetric, isarithmic, and multivariate mapping. Several resources are available at their accompanying websites [fn:23].
+ # -  cite:Slocum.McMaster.ea2005 and cite:Dent.Torguson.ea2008 are comprehensive books on thematic cartography and geovisualization.  They include chapters devoted to data classification, scales, map projections, color theory, typography, and proportional symbol, choropleth, dasymetric, isarithmic, and multivariate mapping. Several resources are available at their accompanying websites [fn:23].
 
-#  -  cite:Bivand.Pebesma.ea2008 is the essential reference to work with spatial data in =R=. R. Bivand and E. Pebesma are the authors of the fundamental =sp= package, and they are the authors or maintainers of several important packages such as =gstat=, for geostatistical modeling, prediction, and simulation, =rgdal=, =rgeos= and =maptools=. Chapter 3 is devoted to the visualization of spatial data. Code, figures, and data of the book are available at the accompanying website [fn:24].
+ # -  cite:Bivand.Pebesma.ea2008 is the essential reference to work with spatial data in =R=. R. Bivand and E. Pebesma are the authors of the fundamental =sp= package, and they are the authors or maintainers of several important packages such as =gstat=, for geostatistical modeling, prediction, and simulation, =rgdal=, =rgeos= and =maptools=. Chapter 3 is devoted to the visualization of spatial data. Code, figures, and data of the book are available at the accompanying website [fn:24].
 
-#  -  cite:Hengl2009 is an open-access book with seven spatial data analysis exercises. The author is the creator and maintainer of the Spatial-Analyst webpage [fn:25].
+ # -  cite:Hengl2009 is an open-access book with seven spatial data analysis exercises. The author is the creator and maintainer of the Spatial-Analyst webpage [fn:25].
 
-#  -  The CRAN Tasks View "Analysis of Spatial Data" [fn:26] summarizes the packages for reading, vizualizing, and analyzing spatial data. The packages in development published at R-Forge are listed in the "Spatial Data & Statistics" topic view [fn:27]. The R-SIG-Geo mailing list [fn:28] is a powerful resource for obtaining help.
+ # -  The CRAN Tasks View "Analysis of Spatial Data" [fn:26] summarizes the packages for reading, vizualizing, and analyzing spatial data. The packages in development published at R-Forge are listed in the "Spatial Data & Statistics" topic view [fn:27]. The R-SIG-Geo mailing list [fn:28] is a powerful resource for obtaining help.
 
-#  -  The "Spatial Analysis" [fn:29] and "Kartograph" [fn:30] webpages publish a variety of beautiful visualization examples.
+ # -  The "Spatial Analysis" [fn:29] and "Kartograph" [fn:30] webpages publish a variety of beautiful visualization examples.
 
-# ** Thematic Maps
-#  label:cha:thematicMaps
+** Thematic Maps
+ label:cha:thematicMaps
 
 #  A thematic map focuses on a specific theme or variable, commonly using geographic data such as coastlines, boundaries, and places as points of reference for the variable being mapped. These maps provide specific information about particular locations or areas (proportional symbol mapping and choropleth maps) and information about spatial patterns (isarithmic and raster maps). The following sections illustrate the code you need to produce these maps, with a final section devoted to the visualization of vector fields.
 # #+INCLUDE: "Spatial/bubble.tex" src latex
@@ -508,8 +509,8 @@ In this chapter, time will be used as a complementary variable which adds inform
 # #+INCLUDE: "Spatial/raster.tex" src latex
 # #+INCLUDE: "Spatial/vector.tex" src latex
 
-# ** Reference and Physical Maps
-#  label:cha:refer-phys-maps
+** Reference and Physical Maps
+ label:cha:refer-phys-maps
 
 #  A reference map focuses on the geographic location of features. In these maps, cities are named and major transport routes are identified. In addition, natural features such as rivers and mountains are named, and elevation is shown using a simple color shading.
 #  A physical map shows the physical landscape features of a place.  Mountains and elevation changes are usually shown with different colors and shades to show relief, using green to show lower elevations and browns for high elevations.
@@ -518,29 +519,30 @@ In this chapter, time will be used as a complementary variable which adds inform
 # #+INCLUDE: "Spatial/physical.tex" src latex
 # #+INCLUDE: "Spatial/osmar.tex" src latex
 
-# ** About the Data
-#  label:cha:dataSpatial
+** About the Data
+ label:cha:dataSpatial
 
 # #+INCLUDE: "Spatial/dataSpatial.tex" src latex
-# * Space-Time Data
 
-# ** Displaying Spatiotemporal Data: Introduction
-#  label:cha:introductionST
+* Space-Time Data
 
-#  Space-time datasets are indexed both in space and in time. The data may consist of a spatial vector object (for example, points or polygons) or raster data at different times. The first case is representative of data from fixed sensors providing measurements abundant in time but sparse in space. The second case is the typical format of satellite imagery, which produces high spatial resolution data sparse in time cite:Pebesma2012.
+** Displaying Spatiotemporal Data: Introduction
+ label:cha:introductionST
 
-#  There are several visualization approaches of space-time data trying to cope with the four dimensions of the data cite:Cressie.Wikle2011.
+ # Space-time datasets are indexed both in space and in time. The data may consist of a spatial vector object (for example, points or polygons) or raster data at different times. The first case is representative of data from fixed sensors providing measurements abundant in time but sparse in space. The second case is the typical format of satellite imagery, which produces high spatial resolution data sparse in time cite:Pebesma2012.
 
-#  On the one hand, the data can be conceived as a collection of snapshots at different times. These snapshots can be displayed as a sequence of frames to produce an animation, or can be printed on one page with different panels for each snapshot using the small-multiple technique described repeatedly in previous chapters.
+ # There are several visualization approaches of space-time data trying to cope with the four dimensions of the data cite:Cressie.Wikle2011.
 
-#  On the other hand, one of the two spatial dimensions can be collapsed through an appropriate statistic (for example, mean or standard deviation) to produce a space-time plot (also known as a Hovmöller diagram). The axes of this graphic are typically longitude or latitude as the x-axis, and time as the y-axis, with the value of the spatial-averaged value of the raster data represented with color.
+ # On the one hand, the data can be conceived as a collection of snapshots at different times. These snapshots can be displayed as a sequence of frames to produce an animation, or can be printed on one page with different panels for each snapshot using the small-multiple technique described repeatedly in previous chapters.
 
-#  Finally, the space-time object can be reduced to a multivariate time series (where each location is a variable or column of the time series) and displayed with the time series visualization techniques described in the Part ref:part:Time. This approach is directly applicable to space-time data sparse in space (for example, point measurements at different times). However, it is mandatory to use aggregation in the case of raster data. In this case, the multivariate time series is composed of the evolution of the raster data averaged along a certain direction.
+ # On the other hand, one of the two spatial dimensions can be collapsed through an appropriate statistic (for example, mean or standard deviation) to produce a space-time plot (also known as a Hovmöller diagram). The axes of this graphic are typically longitude or latitude as the x-axis, and time as the y-axis, with the value of the spatial-averaged value of the raster data represented with color.
 
-#  The next chapters, focused on raster space-time data (Chapter ref:cha:rasterST) and point space-time data (Chapter ref:cha:pointsST), illustrate with examples how to produce animations, multipanel graphics, hovmöller diagrams, and time-series with =R=.
+ # Finally, the space-time object can be reduced to a multivariate time series (where each location is a variable or column of the time series) and displayed with the time series visualization techniques described in the Part ref:part:Time. This approach is directly applicable to space-time data sparse in space (for example, point measurements at different times). However, it is mandatory to use aggregation in the case of raster data. In this case, the multivariate time series is composed of the evolution of the raster data averaged along a certain direction.
 
-# *** Packages
-#  label:sec:spacetime-packages
+ # The next chapters, focused on raster space-time data (Chapter ref:cha:rasterST) and point space-time data (Chapter ref:cha:pointsST), illustrate with examples how to produce animations, multipanel graphics, hovmöller diagrams, and time-series with =R=.
+
+*** Packages
+ label:sec:spacetime-packages
 
 #  The CRAN Tasks View "Handling and Analyzing Spatiotemporal Data" [fn:31] summarizes the packages for reading, vizualizing, and analyzing space-time data. This section provides a brief introduction to the =spacetime=, =raster=, and =rasterVis= packages. Most of the information has been extracted from their vignettes, webpages, and help pages. You should read them for detailed information.
 
@@ -596,38 +598,38 @@ In this chapter, time will be used as a complementary variable which adds inform
 
 #  On the other hand, the =histogram=, =densityplot=, and =bwplot= methods accept a =FUN= argument to be applied to the =z= slot of =Raster*= object (defined by =setZ=). The result of this function is used as the grouping variable of the plot to create different panels.
 
-# *** Further Reading
-#  label:cha:further-reading-spatiotime
+*** Further Reading
+ label:cha:further-reading-spatiotime
 
-#  -  cite:Cressie.Wikle2011 is a systematic approach to key quantitative techniques on statistics for spatiotemporal data. The book begins with separate treatments of temporal data and spatial data, and later combines these concepts to discuss spatiotemporal statistical methods. There is a chapter devoted to exploratory methods, including visualization techniques.
+ # -  cite:Cressie.Wikle2011 is a systematic approach to key quantitative techniques on statistics for spatiotemporal data. The book begins with separate treatments of temporal data and spatial data, and later combines these concepts to discuss spatiotemporal statistical methods. There is a chapter devoted to exploratory methods, including visualization techniques.
 
-#  -  cite:Pebesma2012 presents the =spacetime= package, which implements a set of classes for spatiotemporal data. This paper includes examples that illustrate how to import, subset, coerce, and export spatiotemporal data, proposes several visualization methods, and discusses spatiotemporal geostatistical interpolation.
+ # -  cite:Pebesma2012 presents the =spacetime= package, which implements a set of classes for spatiotemporal data. This paper includes examples that illustrate how to import, subset, coerce, and export spatiotemporal data, proposes several visualization methods, and discusses spatiotemporal geostatistical interpolation.
 
-#  -  cite:Slocum.McMaster.ea2005 (previously cited in Chapter ref:cha:further-reading-spatial) includes a chapter about map animation, discussing several approaches for displaying spatiotemporal data.
+ # -  cite:Slocum.McMaster.ea2005 (previously cited in Chapter ref:cha:further-reading-spatial) includes a chapter about map animation, discussing several approaches for displaying spatiotemporal data.
 
-#  -  cite:Hengl2009 (previously cited in Chapter ref:cha:further-reading-spatial) includes a working example with spatiotemporal data to illustrate space-time variograms and interpolation.
+ # -  cite:Hengl2009 (previously cited in Chapter ref:cha:further-reading-spatial) includes a working example with spatiotemporal data to illustrate space-time variograms and interpolation.
 
-#  -  cite:Harrower.Fabrikant2008 explore the role of animation in geographic visualization and outline the challenges, both conceptual and technical, involved in the creation and use of animated maps.
+ # -  cite:Harrower.Fabrikant2008 explore the role of animation in geographic visualization and outline the challenges, both conceptual and technical, involved in the creation and use of animated maps.
 
-#  -  The CRAN Tasks View "Handling and Analyzing Spatiotemporal Data" [fn:32] summarizes the packages for reading, vizualizing, and analyzing space-time data. The R-SIG-Geo mailing list [fn:33] is a powerful resource for obtaining help.
+ # -  The CRAN Tasks View "Handling and Analyzing Spatiotemporal Data" [fn:32] summarizes the packages for reading, vizualizing, and analyzing space-time data. The R-SIG-Geo mailing list [fn:33] is a powerful resource for obtaining help.
 
-# ** Spatiotemporal Raster Data
-#  label:cha:rasterST
+** Spatiotemporal Raster Data
+ label:cha:rasterST
 
 # #+INCLUDE: "SpatioTime/rasterST.tex" src latex
 
-# ** Spatiotemporal Point Observations
-#  label:cha:pointsST
+** Spatiotemporal Point Observations
+ label:cha:pointsST
 
 # #+INCLUDE: "SpatioTime/pointsST.tex" src latex
 
-# \backmatter
+\backmatter
 
-# \printbibliography
+\printbibliography
 
-# \clearpage
+\clearpage
 
-# \printindex
+\printindex
 
 * Footnotes
 
