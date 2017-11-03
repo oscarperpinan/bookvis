@@ -1,6 +1,6 @@
 
 \section{Time Graph of Variables with Different Scales  \label{sec:differentVariables}}
-\label{sec:orge7ada9b}
+\label{sec:org3cb2900}
 There is a variety of scientific research interested in the
 relationship among several meteorological variables. A suitable
 approach is to display the time evolution of all of them using a
@@ -23,8 +23,8 @@ load('data/aranjuez.RData')
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  ## The layout argument arranges panels in rows
-  xyplot(aranjuez, layout=c(1, ncol(aranjuez)))
+## The layout argument arranges panels in rows
+xyplot(aranjuez, layout = c(1, ncol(aranjuez)))
 \end{lstlisting}
 
 
@@ -41,7 +41,7 @@ result similar to that obtained with \texttt{xyplot} (Figure \ref{fig:aranjuezNa
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  autoplot(aranjuez) + facet_free()
+autoplot(aranjuez) + facet_free()
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -52,7 +52,7 @@ result similar to that obtained with \texttt{xyplot} (Figure \ref{fig:aranjuezNa
 
 
 \subsection{\floweroneleft Annotations to Enhance the Time Graph}
-\label{sec:org3a934ff}
+\label{sec:org1760140}
 
 These first attempts can be improved with a custom panel function
 that generates the content of each panel using the information
@@ -79,46 +79,48 @@ with the \texttt{panel.xblocks} function.
 Because the functions included in the panel function are executed
 consecutively, their order determines the superposition of graphical
 layers.
+
 \index{Panel function}
 \index{panel.xblocks@\texttt{panel.xblocks}}
 \index{panel.text@\texttt{panel.text}}
 \index{panel.number@\texttt{panel.number}}
 \index{panel.points@\texttt{panel.points}}
 
+
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  library(grid)
-  library(latticeExtra)
+library(grid)
+library(latticeExtra)
   
-  ## Auxiliary function to extract the year value of a POSIXct time
-  ## index
-  Year <- function(x)format(x, "%Y")
+## Auxiliary function to extract the year value of a POSIXct time
+## index
+Year <- function(x)format(x, "%Y")
   
-  xyplot(aranjuez, layout=c(1, ncol(aranjuez)), strip=FALSE,
-         scales=list(y=list(cex=0.6, rot=0)),
-         panel=function(x, y, ...){
+xyplot(aranjuez, layout = c(1, ncol(aranjuez)), strip = FALSE,
+       scales = list(y = list(cex = 0.6, rot = 0)),
+       panel = function(x, y, ...){
            ## Alternation of years
            panel.xblocks(x, Year,
                          col = c("lightgray", "white"),
                          border = "darkgray")
            ## Values under the average highlighted with red regions
-           panel.xblocks(x, y<mean(y, na.rm=TRUE),
+           panel.xblocks(x, y<mean(y, na.rm = TRUE),
                          col = "indianred1",
-                         height=unit(0.1, 'npc'))
+                         height = unit(0.1, 'npc'))
            ## Time series
-           panel.lines(x, y, col='royalblue4', lwd=0.5, ...)
+           panel.lines(x, y, col = 'royalblue4', lwd = 0.5, ...)
            ## Label of each time series
-           panel.text(x[1], min(y, na.rm=TRUE),
+           panel.text(x[1], min(y, na.rm = TRUE),
                       names(aranjuez)[panel.number()],
-                      cex=0.6, adj=c(0, 0), srt=90, ...)
+                      cex = 0.6, adj = c(0, 0), srt = 90, ...)
            ## Triangles to point the maxima and minima 
            idxMax <- which.max(y)
            panel.points(x[idxMax], y[idxMax],
-                        col='black', fill='lightblue', pch=24)
+                        col = 'black', fill = 'lightblue', pch = 24)
            idxMin <- which.min(y)
            panel.points(x[idxMin], y[idxMin],
-                        col='black', fill='lightblue', pch=25)
-         })
+                        col = 'black', fill = 'lightblue', pch = 25)
+       })
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -139,9 +141,9 @@ indicating the \texttt{Series}, and the corresponding \texttt{Value}.
 \end{itemize}
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  timeIdx <- index(aranjuez)
+timeIdx <- index(aranjuez)
   
-  long <- fortify(aranjuez, melt=TRUE)
+long <- fortify(aranjuez, melt = TRUE)
 \end{lstlisting}
 
 \begin{itemize}
@@ -151,31 +153,33 @@ centered.
 \end{itemize}
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  ## Values below mean are negative after being centered
-  scaled <- fortify(scale(aranjuez, scale=FALSE), melt=TRUE)
-  ## The 'scaled' column is the result of the centering.
-  ## The new 'Value' column store the original values.
-  scaled <- transform(scaled, scaled=Value, Value=long$Value)
-  underIdx <- which(scaled$scaled <= 0)
-  ## 'under' is the subset of values below the average
-  under <- scaled[underIdx,]
+## Values below mean are negative after being centered
+scaled <- fortify(scale(aranjuez, scale = FALSE), melt = TRUE)
+## The 'scaled' column is the result of the centering.
+## The new 'Value' column store the original values.
+scaled <- transform(scaled, scaled = Value, Value = long$Value)
+underIdx <- which(scaled$scaled <= 0)
+## 'under' is the subset of values below the average
+under <- scaled[underIdx,]
 \end{lstlisting}
 
 \begin{itemize}
 \item The years bands are defined with the function \texttt{endpoints} from the
 \texttt{xts} package:
 \end{itemize}
+
 \index{Package!xts@\texttt{xts}}
+
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  library(xts)
-  ep <- endpoints(timeIdx, on='years')
-  N <- length(ep[-1])
-  ## 'tsp' is start and 'tep' is the end of each band
-  tep <- timeIdx[ep]
-  tsp <- timeIdx[ep[-(N+1)]+1]
-  ## 'cols' is a vector with the color of each band
-  cols <- rep_len(c('gray', 'white'), N)
+library(xts)
+ep <- endpoints(timeIdx, on = 'years')
+N <- length(ep[-1])
+## 'tsp' is start and 'tep' is the end of each band
+tep <- timeIdx[ep]
+tsp <- timeIdx[ep[-(N+1)]+1]
+## 'cols' is a vector with the color of each band
+cols <- rep_len(c('gray', 'white'), N)
 \end{lstlisting}
 \begin{itemize}
 \item The minima and maxima points of each variable are extracted with
@@ -183,17 +187,17 @@ centered.
 \end{itemize}
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  minIdx <- timeIdx[apply(aranjuez, 2, which.min)]
-  minVals <- apply(aranjuez, 2, min, na.rm=TRUE)
-  mins <- data.frame(Index=minIdx,
-                     Value=minVals,
-                     Series=names(aranjuez))
-  
-  maxIdx <- timeIdx[apply(aranjuez, 2, which.max)]
-  maxVals <- apply(aranjuez, 2, max, na.rm=TRUE)
-  maxs <- data.frame(Index=maxIdx,
-                     Value=maxVals,
-                     Series=names(aranjuez))
+minIdx <- timeIdx[apply(aranjuez, 2, which.min)]
+minVals <- apply(aranjuez, 2, min, na.rm = TRUE)
+mins <- data.frame(Index = minIdx,
+                   Value = minVals,
+                   Series = names(aranjuez))
+
+maxIdx <- timeIdx[apply(aranjuez, 2, which.max)]
+maxVals <- apply(aranjuez, 2, max, na.rm = TRUE)
+maxs <- data.frame(Index = maxIdx,
+                   Value = maxVals,
+                   Series = names(aranjuez))
 \end{lstlisting}
 
 \begin{itemize}
@@ -202,26 +206,26 @@ added successively:
 \end{itemize}
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  ggplot(data=long, aes(Index, Value)) +
-      ## Time series of each variable
-      geom_line(colour = "royalblue4", lwd = 0.5) +
-      ## Year bands
-      annotate(geom='rect', ymin = -Inf, ymax = Inf,
-                xmin=tsp, xmax=tep,
-                fill = cols, alpha = 0.4) +
-      ## Values below average
-      geom_rug(data=under,
-               sides='b', col='indianred1') +
-      ## Minima
-      geom_point(data=mins, pch=25) +
-      ## Maxima
-      geom_point(data=maxs, pch=24) +
-      ## Axis labels and theme definition
-      labs(x='Time', y=NULL) +
-      theme_bw() +
-      ## Each series is displayed in a different panel with an
-      ## independent y scale
-      facet_free()
+ggplot(data = long, aes(Index, Value)) +
+    ## Time series of each variable
+    geom_line(colour = "royalblue4", lwd = 0.5) +
+    ## Year bands
+    annotate(geom='rect', ymin = -Inf, ymax = Inf,
+             xmin = tsp, xmax = tep,
+             fill = cols, alpha = 0.4) +
+    ## Values below average
+    geom_rug(data = under,
+             sides = 'b', col = 'indianred1') +
+    ## Minima
+    geom_point(data = mins, pch = 25) +
+    ## Maxima
+    geom_point(data = maxs, pch = 24) +
+    ## Axis labels and theme definition
+    labs(x = 'Time', y = NULL) +
+    theme_bw() +
+    ## Each series is displayed in a different panel with an
+    ## independent y scale
+    facet_free()
 \end{lstlisting}
 
 Some messages from Figure \ref{fig:aranjuezEnhanced}:
@@ -246,7 +250,7 @@ during this season.
 \end{itemize}
 
 \section{Time Series of Variables with the Same Scale \label{SEC:sameScale}}
-\label{sec:org97a4093}
+\label{sec:orgd1d94c9}
 As an example of time series of variables with the same scale, we will
 use measurements of solar radiation from different meteorological
 stations.
@@ -266,17 +270,16 @@ around the time average (\texttt{avRad}).
 load('data/navarra.RData')
 \end{lstlisting}
 
-
-\index{zoo@\texttt{zoo}} 
+\index{zoo@\texttt{zoo}}
 \index{xyplot.zoo@\texttt{xyplot.zoo}}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  avRad <- zoo(rowMeans(navarra, na.rm=1), index(navarra))
-  pNavarra <- xyplot(navarra - avRad,
-                     superpose=TRUE, auto.key=FALSE,
-                     lwd=0.5, alpha=0.3, col='midnightblue') 
-  pNavarra
+avRad <- zoo(rowMeans(navarra, na.rm = 1), index(navarra))
+pNavarra <- xyplot(navarra - avRad,
+                   superpose = TRUE, auto.key = FALSE,
+                   lwd = 0.5, alpha = 0.3, col = 'midnightblue') 
+pNavarra
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -289,7 +292,7 @@ This result can be improved with different methods: the cut-and-stack
 method, and the horizon graph with \texttt{horizonplot}.
 
 \subsection{Aspect Ratio and Rate of Change}
-\label{sec:orgc403e46}
+\label{sec:orgc259de9}
 When a graphic is intended to inform about the rate of change,
 special attention must be paid to the aspect ratio of the graph,
 defined as the ratio of the height to the width of the graphical
@@ -311,11 +314,11 @@ arguments \texttt{aspect} and \texttt{cut}. The version of Figure
 cut-and-stack method is produced with
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  xyplot(navarra - avRad,
-         aspect='xy', cut=list(n=3, overlap=0.1),
-         strip=FALSE,
-         superpose=TRUE, auto.key=FALSE,
-         lwd=0.5, alpha=0.3, col='midnightblue')
+xyplot(navarra - avRad,
+       aspect = 'xy', cut = list(n = 3, overlap = 0.1),
+       strip = FALSE,
+       superpose = TRUE, auto.key = FALSE,
+       lwd = 0.5, alpha = 0.3, col = 'midnightblue')
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -325,8 +328,8 @@ cut-and-stack method is produced with
 \end{figure}
 
 \subsection{The Horizon Graph \label{sec:horizonplot}}
-\label{sec:org6f09078}
-The horizon graph\index{Horizon graph} is useful in examining how a
+\label{sec:org0416174}
+The horizon graph\#+INDEX: Horizon graph\} is useful in examining how a
 large number of series changes over time, and does so in a way
 that allows both comparisons between the individual time series
 and and independent analysis of each series. Moreover,
@@ -349,7 +352,7 @@ darker bands in front of the ligther ones.
 Because the panels share the same design structure, once this
 technique is understood, it is easy to establish comparisons or spot
 extraordinary events.  This method is what Tufte described as small
-multiples\index{Small multiples} \cite{Tufte1990}.
+multiples\#+INDEX: Small multiples\} \cite{Tufte1990}.
 
 Figure \ref{fig:navarraHorizonplot} displays the variations of
 solar radiation around the time average with an horizon graph
@@ -360,11 +363,11 @@ using a row for each time series.
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  library(latticeExtra)
+library(latticeExtra)
   
-  horizonplot(navarra-avRad,
-              layout=c(1, ncol(navarra)),
-              origin=0, colorkey=TRUE)
+horizonplot(navarra-avRad,
+            layout = c(1, ncol(navarra)),
+            origin = 0, colorkey = TRUE)
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -385,7 +388,7 @@ absolute fluctuations across the set of stations?
 \end{itemize}
 
 \subsection{Time Graph of the Differences between a Time Series and a Reference \label{sec:differences}}
-\label{sec:orge36cfa1}
+\label{sec:org11d40b0}
 
 The horizon graph is also useful in revealing the differences between
 a univariate time series and another reference. For example, we
@@ -400,10 +403,10 @@ with \texttt{ave}.
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  Ta <- aranjuez$TempAvg
-  timeIndex <- index(aranjuez)
-  longTa <- ave(Ta, format(timeIndex, '%j'))
-  diffTa <- (Ta - longTa)
+Ta <- aranjuez$TempAvg
+timeIndex <- index(aranjuez)
+longTa <- ave(Ta, format(timeIndex, '%j'))
+diffTa <- (Ta - longTa)
 \end{lstlisting}
 
 
@@ -413,10 +416,10 @@ method, now using \texttt{screens} to use a different panel for the
 differences time series (Figure \ref{fig:diffTa_xyplot})
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  xyplot(cbind(Ta, longTa, diffTa),
-         col=c('darkgray', 'red', 'midnightblue'),
-         superpose=TRUE, auto.key=list(space='right'),
-         screens=c(rep('Average Temperature', 2), 'Differences'))
+xyplot(cbind(Ta, longTa, diffTa),
+       col = c('darkgray', 'red', 'midnightblue'),
+       superpose = TRUE, auto.key = list(space = 'right'),
+       screens = c(rep('Average Temperature', 2), 'Differences'))
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -434,15 +437,15 @@ below the long-term average but 2011 was more similar to that
 reference.
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  years <- unique(format(timeIndex, '%Y'))
+years <- unique(format(timeIndex, '%Y'))
   
-  horizonplot(diffTa, cut=list(n=8, overlap=0),
-              colorkey=TRUE, layout=c(1, 8),
-              scales=list(draw=FALSE, y=list(relation='same')),
-              origin=0, strip.left=FALSE) +
-      layer(grid.text(years[panel.number()], x = 0, y = 0.1, 
-                      gp=gpar(cex=0.8),
-                      just = "left"))
+horizonplot(diffTa, cut = list(n = 8, overlap = 0),
+            colorkey = TRUE, layout = c(1, 8),
+            scales = list(draw = FALSE, y = list(relation = 'same')),
+            origin = 0, strip.left = FALSE) +
+    layer(grid.text(years[panel.number()], x  =  0, y  =  0.1, 
+                    gp = gpar(cex = 0.8),
+                    just = "left"))
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -468,27 +471,27 @@ the comparison between years in a certain month.
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  year <- function(x)as.numeric(format(x, '%Y'))
-  day <- function(x)as.numeric(format(x, '%d'))
-  month <- function(x)as.numeric(format(x, '%m'))
+year <- function(x)as.numeric(format(x, '%Y'))
+day <- function(x)as.numeric(format(x, '%d'))
+month <- function(x)as.numeric(format(x, '%m'))
 \end{lstlisting}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  myTheme <- modifyList(custom.theme(region=brewer.pal(9, 'RdBu')),
-                                     list(
-                                       strip.background=list(col='gray'),
-                                       panel.background=list(col='gray')))
-  
-  maxZ <- max(abs(diffTa))
-  
-  levelplot(diffTa ~ day(timeIndex) * year(timeIndex) | factor(month(timeIndex)),
-            at=pretty(c(-maxZ, maxZ), n=8),
-            colorkey=list(height=0.3),
-            layout=c(1, 12), strip=FALSE, strip.left=TRUE,
-            xlab='Day', ylab='Month', 
-            par.settings=myTheme)
-  
+myTheme <- modifyList(custom.theme(region = brewer.pal(9, 'RdBu')),
+                      list(
+                          strip.background = list(col = 'gray'),
+                          panel.background = list(col = 'gray')))
+
+maxZ <- max(abs(diffTa))
+
+levelplot(diffTa ~ day(timeIndex) * year(timeIndex) | factor(month(timeIndex)),
+          at = pretty(c(-maxZ, maxZ), n = 8),
+          colorkey = list(height = 0.3),
+          layout = c(1, 12), strip = FALSE, strip.left = TRUE,
+          xlab = 'Day', ylab = 'Month', 
+          par.settings = myTheme)
+
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -527,7 +530,7 @@ ggplot(data = df,
 
 
 \section{Stacked Graphs \label{sec:stacked}}
-\label{sec:orgad542b2}
+\label{sec:orgf56e2aa}
 If the variables of a multivariate time series can be summed to
 produce a meaningful global variable, they may be better displayed
 with stacked graphs. For example, the information on unemployment in
@@ -537,7 +540,7 @@ series.
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  load('data/unemployUSA.RData')
+load('data/unemployUSA.RData')
 \end{lstlisting}
 
 The time series of unemployment can be directly displayed
@@ -545,8 +548,10 @@ with the \texttt{xyplot.zoo} method (Figure \ref{fig:unemployUSAxyplot}).
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  xyplot(unemployUSA, superpose=TRUE, par.settings=custom.theme,
-         auto.key=list(space='right'))
+xyplot(unemployUSA,
+       superpose = TRUE,
+       par.settings = custom.theme,
+       auto.key = list(space = 'right'))
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -569,10 +574,10 @@ easily obtained with \texttt{geom\_area} (Figure \ref{fig:unemployUSAgeomArea}):
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  library(scales) ## scale_x_yearmon needs scales::pretty_breaks
-  autoplot(unemployUSA, facets=NULL, geom='area') +
-      geom_area(aes(fill=Series)) +
-      scale_x_yearmon()  
+library(scales) ## scale_x_yearmon needs scales::pretty_breaks
+autoplot(unemployUSA, facets = NULL, geom = 'area') +
+    geom_area(aes(fill = Series)) +
+    scale_x_yearmon()  
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -599,19 +604,19 @@ one of main milestones of the financial crisis, whose effect on
 the overall unemployment results is clearly evident.
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  library(colorspace)
-  ## We will use a qualitative palette from colorspace
-  nCols <- ncol(unemployUSA)
-  pal <- rainbow_hcl(nCols, c=70, l=75, start=30, end=300)
-  myTheme <- custom.theme(fill=pal, lwd=0.2)
-  
-  sep2008 <- as.numeric(as.yearmon('2008-09'))
-  
-  xyplot(unemployUSA, superpose=TRUE, auto.key=FALSE,
-         panel=panel.flow, prepanel=prepanel.flow,
-         origin='themeRiver', scales=list(y=list(draw=FALSE)),
-         par.settings=myTheme) +
-      layer(panel.abline(v=sep2008, col='gray', lwd=0.7))
+library(colorspace)
+## We will use a qualitative palette from colorspace
+nCols <- ncol(unemployUSA)
+pal <- rainbow_hcl(nCols, c = 70, l = 75, start = 30, end = 300)
+myTheme <- custom.theme(fill = pal, lwd = 0.2)
+
+sep2008 <- as.numeric(as.yearmon('2008-09'))
+
+xyplot(unemployUSA, superpose = TRUE, auto.key = FALSE,
+       panel = panel.flow, prepanel = prepanel.flow,
+       origin = 'themeRiver', scales = list(y = list(draw = FALSE)),
+       par.settings = myTheme) +
+    layer(panel.abline(v = sep2008, col = 'gray', lwd = 0.7))
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -637,7 +642,7 @@ Statistics'' reports from the Bureau of Labor Statistics\footnote{The March 2012
 
 
 \subsection{\floweroneleft Panel and Prepanel Functions to Implement the ThemeRiver with \texttt{xyplot} \label{sec:themeRiverPanel}}
-\label{sec:orgf276a48}
+\label{sec:org10cac17}
 The \texttt{xyplot} function displays information according to the class
 of its first argument (methods) and to the \texttt{panel} function. We
 will use the \texttt{xyplot.zoo} method (equivalent to the \texttt{xyplot.ts}
@@ -710,21 +715,22 @@ polygons and the labels share the same color (\texttt{col[i]}).
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  panel.flow <- function(x, y, groups, origin, ...){
-    dat <- data.frame(x=x, y=y, groups=groups)
+panel.flow <- function(x, y, groups, origin, ...)
+{
+    dat <- data.frame(x = x, y = y, groups = groups)
     nVars <- nlevels(groups)
     groupLevels <- levels(groups)
-  
+    
     ## From long to wide
     yWide <- unstack(dat, y~groups)
     ## Where are the maxima of each variable located? We will use
     ## them to position labels.
     idxMaxes <- apply(yWide, 2, which.max)
-  
+    
     ##Origin calculated following Havr.eHetzler.ea2002
-    if (origin=='themeRiver') origin= -1/2*rowSums(yWide)
-    else origin=0 
-    yWide <- cbind(origin=origin, yWide)
+    if (origin=='themeRiver') origin =  -1/2*rowSums(yWide)
+    else origin = 0 
+    yWide <- cbind(origin = origin, yWide)
     ## Cumulative sums to define the polygon
     yCumSum <- t(apply(yWide, 1, cumsum))
     Y <- as.data.frame(sapply(seq_len(nVars),
@@ -733,57 +739,57 @@ polygons and the labels share the same color (\texttt{col[i]}).
     names(Y) <- levels(groups)
     ## Back to long format, since xyplot works that way
     y <- stack(Y)$values
-  
+    
     ## Similar but easier for x
     xWide <- unstack(dat, x~groups)
     x <- rep(c(xWide[,1], rev(xWide[,1])), nVars)
     ## Groups repeated twice (upper and lower limits of the polygon)
-    groups <- rep(groups, each=2)
+    groups <- rep(groups, each = 2)
     
     ## Graphical parameters
     superpose.polygon <- trellis.par.get("superpose.polygon")
     col = superpose.polygon$col
     border = superpose.polygon$border 
     lwd = superpose.polygon$lwd 
-  
+    
     ## Draw polygons
     for (i in seq_len(nVars)){
-      xi <- x[groups==groupLevels[i]]
-      yi <- y[groups==groupLevels[i]]
-      panel.polygon(xi, yi, border=border,
-                    lwd=lwd, col=col[i])
+        xi <- x[groups==groupLevels[i]]
+        yi <- y[groups==groupLevels[i]]
+        panel.polygon(xi, yi, border = border,
+                      lwd = lwd, col = col[i])
     }
-  
+    
     ## Print labels
     for (i in seq_len(nVars)){
-      xi <- x[groups==groupLevels[i]]
-      yi <- y[groups==groupLevels[i]]
-      N <- length(xi)/2
-      ## Height available for the label
-      h <- unit(yi[idxMaxes[i]], 'native') -
-        unit(yi[idxMaxes[i] + 2*(N-idxMaxes[i]) +1], 'native')
-      ##...converted to "char" units
-      hChar <- convertHeight(h, 'char', TRUE)
-      ## If there is enough space and we are not at the first or
-      ## last variable, then the label is printed inside the polygon.
-      if((hChar >= 1) && !(i %in% c(1, nVars))){
-        grid.text(groupLevels[i],
-                  xi[idxMaxes[i]],
-                  (yi[idxMaxes[i]] +
-                   yi[idxMaxes[i] + 2*(N-idxMaxes[i]) +1])/2,
-                  gp = gpar(col='white', alpha=0.7, cex=0.7),
-                  default.units='native')
-      } else {
-        ## Elsewhere, the label is printed outside
-  
-        grid.text(groupLevels[i],
-                  xi[N],
-                  (yi[N] + yi[N+1])/2,
-                  gp=gpar(col=col[i], cex=0.7),
-                  just='left', default.units='native')
-      }          
+        xi <- x[groups==groupLevels[i]]
+        yi <- y[groups==groupLevels[i]]
+        N <- length(xi)/2
+        ## Height available for the label
+        h <- unit(yi[idxMaxes[i]], 'native') -
+            unit(yi[idxMaxes[i] + 2*(N-idxMaxes[i]) +1], 'native')
+        ##...converted to "char" units
+        hChar <- convertHeight(h, 'char', TRUE)
+        ## If there is enough space and we are not at the first or
+        ## last variable, then the label is printed inside the polygon.
+        if((hChar >= 1) && !(i %in% c(1, nVars))){
+            grid.text(groupLevels[i],
+                      xi[idxMaxes[i]],
+                      (yi[idxMaxes[i]] +
+                       yi[idxMaxes[i] + 2*(N-idxMaxes[i]) +1])/2,
+                      gp = gpar(col = 'white', alpha = 0.7, cex = 0.7),
+                      default.units = 'native')
+        } else {
+            ## Elsewhere, the label is printed outside
+            
+            grid.text(groupLevels[i],
+                      xi[N],
+                      (yi[N] + yi[N+1])/2,
+                      gp = gpar(col = col[i], cex = 0.7),
+                      just = 'left', default.units = 'native')
+        }          
     }
-  }
+}
   
 \end{lstlisting}
 
@@ -794,10 +800,10 @@ large enough, and part of the polygons fall out of it. Why?
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  xyplot(unemployUSA, superpose=TRUE, auto.key=FALSE,
-         panel=panel.flow, origin='themeRiver',
-         par.settings=myTheme, cex=0.4, offset=0,
-         scales=list(y=list(draw=FALSE)))
+xyplot(unemployUSA, superpose = TRUE, auto.key = FALSE,
+       panel = panel.flow, origin = 'themeRiver',
+       par.settings = myTheme, cex = 0.4, offset = 0,
+       scales = list(y = list(draw = FALSE)))
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -824,26 +830,27 @@ its last column (the upper line of the cumulative sum).
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  prepanel.flow <- function(x, y, groups, origin,...){
-    dat <- data.frame(x=x, y=y, groups=groups)
+prepanel.flow <- function(x, y, groups, origin,...)
+{
+    dat <- data.frame(x = x, y = y, groups = groups)
     nVars <- nlevels(groups)
     groupLevels <- levels(groups)
     yWide <- unstack(dat, y~groups)
-    if (origin=='themeRiver') origin= -1/2*rowSums(yWide)
-    else origin=0
-    yWide <- cbind(origin=origin, yWide)
+    if (origin=='themeRiver') origin =  -1/2*rowSums(yWide)
+    else origin = 0
+    yWide <- cbind(origin = origin, yWide)
     yCumSum <- t(apply(yWide, 1, cumsum))
-  
-    list(xlim=range(x),
-         ylim=c(min(yCumSum[,1]), max(yCumSum[,nVars+1])),
-         dx=diff(x),
-         dy=diff(c(yCumSum[,-1])))
-  }
+    
+    list(xlim = range(x),
+         ylim = c(min(yCumSum[,1]), max(yCumSum[,nVars+1])),
+         dx = diff(x),
+         dy = diff(c(yCumSum[,-1])))
+}
 \end{lstlisting}
 
 
 \section{Interactive graphics \label{sec:interactive_horizontal}}
-\label{sec:org87cf8db}
+\label{sec:org4f6bfd9}
 This section describes the interactive alternatives of the static
 figures included in the previous sections with four packages:
 \texttt{dygraphs}, \texttt{highcharter}, \texttt{plotly}, and \texttt{gridSVG}.
@@ -853,7 +860,7 @@ JavaScript libraries based on the \texttt{htmlwidgets} package, while the
 \texttt{gridSVG} package converts a \texttt{grid} graphic object into an SVG file.
 
 \subsection{Dygraphs \label{sec:dygraphs}}
-\label{sec:org773b777}
+\label{sec:org11293b1}
 The \texttt{dygraphs} package is an interface to the \texttt{dygraphs} JavaScript
 library, and provides facilities for charting time-series. It works
 automatically with \texttt{xts} time series objects, or with objects than can
@@ -861,6 +868,8 @@ be coerced to this class. The result is an interactive graph, where
 values are displayed according to the mouse position over the time
 series. Regions can be selected to zoom into a time period. The figure
 \label{fig:dygraphs} is an snapshot of the interactive graph.
+
+\index{Packages!dygraphs@\texttt{dygraphs}}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
@@ -918,7 +927,7 @@ dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
 \end{figure}
 
 \subsection{Highcharter \label{sec:highcharter}}
-\label{sec:org4b5803f}
+\label{sec:orga1df30e}
 
 The \texttt{highcharter} package is an interface to the \texttt{highcharts}
 JavaScript library, with a wide spectrum of graphics
@@ -929,6 +938,7 @@ operator.  Once again, the result is an interactive graph with
 selection and zoom capabilities. Figure \label{fig:highcharter} is an
 snapshot of the interactive graph.
 
+\index{Packages!highcharter@\texttt{highcharter}}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
@@ -962,7 +972,7 @@ highchart() %>%
 
 
 \subsection{plotly \label{sec:plotly}}
-\label{sec:org507a778}
+\label{sec:org128dbc8}
 
 The \texttt{plotly} package is an interface to the \texttt{plotly} JavaScript
 library, also with a wide spectrum of graphics solutions. This package
@@ -976,6 +986,9 @@ for values, and a column for variable names) only one call to
 \texttt{add\_lines} is required. The next code follows this approach using the
 combination of \texttt{fortify}, to convert the \texttt{zoo} object into a
 \texttt{data.frame}, and \texttt{melt}, to transform from wide to long format.
+
+\index{Packages!plotly@\texttt{plotly}}
+\index{Packages!reshape2\texttt{reshape2}}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
@@ -1017,7 +1030,7 @@ plot_ly(aranjuezDF) %>%
 
 
 \subsection{\floweroneleft Interaction with \texttt{gridSVG}}
-\label{sec:org1d2f271}
+\label{sec:orgf4dee19}
 The \texttt{gridSVG} package provides functions to convert \texttt{grid}-based \texttt{R}
 graphics to an SVG format. It provides several functions to add
 dynamic and interactive capabilities to \texttt{R} graphics. In this section
@@ -1035,14 +1048,14 @@ code.
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  library(gridSVG)
-  ## grobs in the graphical output
-  pNavarra
-  grobs <- grid.ls(print=FALSE)
-  ## only interested in some of them
-  nms <- grobs$name[grobs$type == "grobListing"]
-  idxNames <- grep('lines', nms)
-  IDs <- nms[idxNames]
+library(gridSVG)
+## grobs in the graphical output
+pNavarra
+grobs <- grid.ls(print = FALSE)
+## only interested in some of them
+nms <- grobs$name[grobs$type == "grobListing"]
+idxNames <- grep('lines', nms)
+IDs <- nms[idxNames]
 \end{lstlisting}
 
 The second step is to modify each \texttt{grob} (graphical object) to add
@@ -1064,22 +1077,23 @@ sets this attribute to \texttt{info}.
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  for (id in unique(IDs)){
+for (id in unique(IDs))
+{
     ## extract information from the data
     ## according to the ID value
     i <- strsplit(id, '\\.')
     i <- sapply(i, function(x)as.numeric(x[5]))
     ## Information to be attached to each line: annual mean of daily
     ## radiation and abbreviated name of the station
-    dat <- round(mean(navarra[,i], na.rm=TRUE), 2)
-    info <- paste(names(navarra)[i], paste(dat, collapse=','),
-                  sep=': ')
+    dat <- round(mean(navarra[,i], na.rm = TRUE), 2)
+    info <- paste(names(navarra)[i], paste(dat, collapse = ','),
+                  sep = ': ')
     ## attach SVG attributes
     grid.garnish(id,
-                 onmouseover="highlight(evt)",
-                 onmouseout="hide(evt)",
-                 title=info)
-  }
+                 onmouseover = "highlight(evt)",
+                 onmouseout = "hide(evt)",
+                 title = info)
+}
 \end{lstlisting}
 
 These JavaScript functions are included in a script file named
@@ -1090,20 +1104,20 @@ added as an additional object with \texttt{grid.script}.
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  grid.script(filename="highlight.js")
+grid.script(filename="highlight.js")
 \end{lstlisting}
 
 This script is easy to understand, even without previous
 JavaScript knowledge:
 \index{JavaScript}
 \begin{verbatim}
-  highlight = function(evt){',
+highlight = function(evt){',
       evt.target.setAttribute('opacity', '1');
       evt.target.setAttribute('stroke', 'red');
       evt.target.setAttribute('stroke-width', '1');
   }
   
-  hide = function(evt){
+hide = function(evt){
       evt.target.setAttribute('opacity', '0.3');
       evt.target.setAttribute('stroke', green');
       evt.target.setAttribute('stroke-width', '0.3');
@@ -1111,11 +1125,12 @@ JavaScript knowledge:
 \end{verbatim}
 
 Finally, \texttt{gridToSVG} exports the whole scene to SVG. 
-\index{grid.export@\texttt{grid.export}} 
+
+\index{grid.export@\texttt{grid.export}}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  grid.export('figs/navarraRadiation.svg')
+grid.export('figs/navarraRadiation.svg')
 \end{lstlisting}
 
 A snapshot of the result, as viewed in a browser with a line
@@ -1131,7 +1146,7 @@ questions raised with that graphic.
 \end{figure}
 
 \subsection{streamgraph \label{sec:interactive_streamgraph}}
-\label{sec:org3cf8855}
+\label{sec:orgc9daa39}
 
 The \texttt{streamgraph} package\footnote{The \texttt{streamgraph} package, \url{http://hrbrmstr.github.io/streamgraph/}, is not available in CRAN. It can be installed using the \texttt{devtools} or the \texttt{remotes} package.} creates interactive stream graphs based on
 the \texttt{htmlwidgets} package and the \texttt{D3.js} JavaScript library. Its main
@@ -1139,6 +1154,10 @@ function, \texttt{streamgraph}, requires a \texttt{data.frame} as the first
 argument. Besides, its three next arguments, \texttt{key}, \texttt{value}, and
 \texttt{date}, makes this function a good candidate to work together with
 \texttt{fortify} and \texttt{melt}.
+
+
+\index{Packages!streamgraph\texttt{streamgraph}}
+\index{Packages!reshape2\texttt{reshape2}}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}

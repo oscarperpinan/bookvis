@@ -1,12 +1,10 @@
 
 \section{Polylines}
-\label{sec:org0978822}
+\label{sec:org0c565c6}
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  load('data/CO2.RData')
+load('data/CO2.RData')
 \end{lstlisting}
-
-
 
 \index{Data!CO2@$CO_2$}
 \index{Data!World Bank}
@@ -17,11 +15,11 @@ country are connected with polylines to reveal the time evolution
 (Figure \ref{fig:CO2-GNI}).
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  ## lattice version
-  xyplot(GNI.capita  ~ CO2.capita, data=CO2data,
-         xlab="Carbon dioxide emissions (metric tons per capita)",
-         ylab="GNI per capita, PPP (current international $)",
-         groups=Country.Name, type='b')
+## lattice version
+xyplot(GNI.capita  ~ CO2.capita, data=CO2data,
+       xlab="Carbon dioxide emissions (metric tons per capita)",
+       ylab="GNI per capita, PPP (current international $)",
+       groups=Country.Name, type='b')
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -32,12 +30,12 @@ country are connected with polylines to reveal the time evolution
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  ## ggplot2 version
-  ggplot(data=CO2data, aes(x=CO2.capita, y=GNI.capita,
-             color=Country.Name)) +
-      xlab("Carbon dioxide emissions (metric tons per capita)") +
-      ylab("GNI per capita, PPP (current international $)") +
-      geom_point() + geom_path() + theme_bw()
+## ggplot2 version
+ggplot(data=CO2data, aes(x=CO2.capita, y=GNI.capita,
+                         color=Country.Name)) +
+    xlab("Carbon dioxide emissions (metric tons per capita)") +
+    ylab("GNI per capita, PPP (current international $)") +
+    geom_point() + geom_path() + theme_bw()
 \end{lstlisting}
 
 Three improvements can be added to this graphical result: 
@@ -49,7 +47,7 @@ countries.
 \end{enumerate}
 
 \section{Choosing Colors}
-\label{sec:orgc74a42f}
+\label{sec:org8e11acd}
 The \texttt{Country.Name} categorical variable will be encoded with a
 qualitative palette, namely the first five colors of \texttt{Set1}
 palette\footnote{\url{http://colorbrewer2.org/}} from the \texttt{RColorBrewer} package
@@ -65,11 +63,11 @@ same color will be displayed at enough distance.
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  library(RColorBrewer)
-  
-  nCountries <- nlevels(CO2data$Country.Name)
-  pal <- brewer.pal(n=5, 'Set1')
-  pal <- rep(pal, length = nCountries)
+library(RColorBrewer)
+
+nCountries <- nlevels(CO2data$Country.Name)
+pal <- brewer.pal(n=5, 'Set1')
+pal <- rep(pal, length = nCountries)
 \end{lstlisting}
 
 Adjacent colors of this palette are chosen to be easily
@@ -86,9 +84,9 @@ value.
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  ## Rank of average values of CO2 per capita
-  CO2mean <- aggregate(CO2.capita ~ Country.Name, data=CO2data, FUN=mean)
-  palOrdered <- pal[rank(CO2mean$CO2.capita)]  
+## Rank of average values of CO2 per capita
+CO2mean <- aggregate(CO2.capita ~ Country.Name, data=CO2data, FUN=mean)
+palOrdered <- pal[rank(CO2mean$CO2.capita)]  
 \end{lstlisting}
 
 A more sophisticated solution is to use the ordered results of a
@@ -100,14 +98,19 @@ original \(\mathrm{CO_2}\) \texttt{data.frame}.
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  CO2capita <- CO2data[, c('Country.Name', 'Year', 'CO2.capita')]
-  CO2capita <- reshape(CO2capita, idvar='Country.Name', timevar='Year', direction='wide')
-  hCO2 <- hclust(dist(CO2capita[, -1]))
-  
-  oldpar <- par(mar=c(0, 2, 0, 0) + .1)
-  plot(hCO2, labels=CO2capita$Country.Name,
-       xlab='', ylab='', sub='', main='')
-  par(oldpar)
+CO2capita <- CO2data[, c('Country.Name',
+                         'Year',
+                         'CO2.capita')]
+CO2capita <- reshape(CO2capita,
+                     idvar='Country.Name',
+                     timevar='Year',
+                     direction='wide')
+hCO2 <- hclust(dist(CO2capita[, -1]))
+
+oldpar <- par(mar=c(0, 2, 0, 0) + .1)
+plot(hCO2, labels=CO2capita$Country.Name,
+     xlab='', ylab='', sub='', main='')
+par(oldpar)
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -123,9 +126,9 @@ names in alphabetical order in the country names ordered according to
 the hierarchical clustering.
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  idx <- match(levels(CO2data$Country.Name), 
-               CO2capita$Country.Name[hCO2$order])
-  palOrdered <- pal[idx]  
+idx <- match(levels(CO2data$Country.Name), 
+             CO2capita$Country.Name[hCO2$order])
+palOrdered <- pal[idx]  
 \end{lstlisting}
 It must be highlighted that this palette links colors with the levels
 of \texttt{Country.Name} (country names in alphabetical order), which is
@@ -134,33 +137,35 @@ produces a curve for each country using different colors to
 distinguish them.
 
 \index{simpleTheme@\texttt{simpleTheme}}
-
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  ## simpleTheme encapsulates the palette in a new theme for xyplot
-  myTheme <- simpleTheme(pch=19, cex=0.6, col=palOrdered)
-  
-  pCO2.capita <- xyplot(GNI.capita  ~ CO2.capita,
-                        xlab="Carbon dioxide emissions (metric tons per capita)",
-                        ylab="GNI per capita, PPP (current international $)",
-                        groups=Country.Name, data=CO2data,
-                        par.settings=myTheme,
-                        type='b')
+## simpleTheme encapsulates the palette in a new theme for xyplot
+myTheme <- simpleTheme(pch=19, cex=0.6, col=palOrdered)
+
+pCO2.capita <- xyplot(GNI.capita  ~ CO2.capita,
+                      data = CO2data,
+                      xlab = "Carbon dioxide emissions (metric tons per capita)",
+                      ylab = "GNI per capita, PPP (current international $)",
+                      groups = Country.Name,
+                      par.settings = myTheme,
+                      type='b')
 \end{lstlisting}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  gCO2.capita <- ggplot(data=CO2data, aes(x=CO2.capita, y=GNI.capita,
-                        color=Country.Name)) +
-      geom_point() + geom_path() +
-      scale_color_manual(values=palOrdered, guide=FALSE) +
-      xlab('CO2 emissions (metric tons per capita)') +
-      ylab('GNI per capita, PPP (current international $)') +
-      theme_bw()
+gCO2.capita <- ggplot(data = CO2data,
+                      aes(x = CO2.capita,
+                          y = GNI.capita,
+                          color = Country.Name)) +
+    geom_point() + geom_path() +
+    scale_color_manual(values=palOrdered, guide=FALSE) +
+    xlab('CO2 emissions (metric tons per capita)') +
+    ylab('GNI per capita, PPP (current international $)') +
+    theme_bw()
 \end{lstlisting}
 
 \section{Labels to Show Time Information}
-\label{sec:orgb1d6814}
+\label{sec:org06fa9e5}
 This result can be improved with labels displaying the years to show
 the time evolution.  A panel function with \texttt{panel.text} to print the
 year labels and \texttt{panel.superpose} to display the lines for each group
@@ -169,24 +174,26 @@ the integer indices representing the rows of the \texttt{data.frame} to be
 displayed in the panel.
 
 \index{panel.text@\texttt{panel.text}}
-\index{subscripts@\texttt{subscripts}} \index{Panel function}
+\index{subscripts@\texttt{subscripts}}
+\index{Panel function}
 \index{panel.superpose@\texttt{panel.superpose}}
+
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  xyplot(GNI.capita  ~ CO2.capita,
-         xlab="Carbon dioxide emissions (metric tons per capita)",
-         ylab="GNI per capita, PPP (current international $)",
-         groups=Country.Name, data=CO2data,
-         par.settings=myTheme,
-         type='b', 
-         panel=function(x, y, ..., subscripts, groups){
+xyplot(GNI.capita  ~ CO2.capita,
+       data = CO2data
+       xlab = "Carbon dioxide emissions (metric tons per capita)",
+       ylab = "GNI per capita, PPP (current international $)",
+       groups = Country.Name,
+       par.settings = myTheme,
+       type='b',
+       panel = function(x, y, ..., subscripts, groups){
            panel.text(x, y, ...,
-                      labels=CO2data$Year[subscripts],
-                      pos=2, cex=0.5, col='gray')
+                      labels = CO2data$Year[subscripts],
+                      pos = 2, cex = 0.5, col = 'gray')
            panel.superpose(x, y, subscripts, groups,...)
-         }
-         )
+       })
 \end{lstlisting}
 
 The same result with a clearer code is obtained with the combination
@@ -199,22 +206,23 @@ of \texttt{+.trellis}, \texttt{glayer\_} and \texttt{panel.text}. Using \texttt{
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  pCO2.capita <- pCO2.capita +
-      glayer_(panel.text(..., labels=CO2data$Year[subscripts],
-                         pos=2, cex=0.5, col='gray'))
+pCO2.capita <- pCO2.capita +
+    glayer_(panel.text(...,
+                       labels = CO2data$Year[subscripts],
+                         pos = 2, cex = 0.5, col = 'gray'))
 \end{lstlisting}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  gCO2.capita <- gCO2.capita + geom_text(aes(label=Year),
-                                         colour='gray',
-                                         size=2.5,
-                                         hjust=0, vjust=0)
+gCO2.capita <- gCO2.capita + geom_text(aes(label = Year),
+                                       colour = 'gray',
+                                       size = 2.5,
+                                       hjust = 0, vjust = 0)
   
 \end{lstlisting}
 
 \section{Country Names: Positioning Labels}
-\label{sec:org45c0d39}
+\label{sec:org7621bb0}
 The common solution to link each curve with the group value is to add
 a legend. However, a legend can be confusing with too many items. In
 addition, the reader must carry out a complex task: Choose the line,
@@ -234,15 +242,16 @@ overlaps.
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  library(maptools)  
-  ## group.value provides the country name; group.number is the
-  ## index of each country to choose the color from the palette.
-  pCO2.capita +
-      glayer(panel.pointLabel(mean(x), mean(y),
-                              labels= group.value,
-                              col=palOrdered[group.number],
-                              cex=.8,
-                              fontface=2, fontfamily='Palatino'))
+library(maptools)  
+## group.value provides the country name; group.number is the index
+## of each country to choose the color from the palette.
+pCO2.capita +
+    glayer(panel.pointLabel(mean(x), mean(y),
+                            labels = group.value,
+                            col = palOrdered[group.number],
+                            cex = .8,
+                            fontface = 2,
+                            fontfamily = 'Palatino'))
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -265,8 +274,10 @@ object, I have obtained the best results with \texttt{extreme.grid} (Figure
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  library(directlabels)
-  direct.label(pCO2.capita, method='extreme.grid')
+library(directlabels)
+
+direct.label(pCO2.capita,
+             method = 'extreme.grid')
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -277,11 +288,11 @@ object, I have obtained the best results with \texttt{extreme.grid} (Figure
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  direct.label(gCO2.capita, method='extreme.grid')
+direct.label(gCO2.capita, method='extreme.grid')
 \end{lstlisting}
 
 \section{A Panel for Each Year}
-\label{sec:org485a375}
+\label{sec:orgc320f09}
 Time can be used as a conditioning variable (as shown in previous
 sections) to display subsets of the data in different panels. Figure
 \ref{fig:CO2-GNI-panel} is produced with the same code as in Figure
@@ -290,11 +301,12 @@ version and \texttt{facet\_wrap(\textasciitilde{} Year)} in the \texttt{ggplot2}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  xyplot(GNI.capita  ~ CO2.capita | factor(Year), data=CO2data,
-         xlab="Carbon dioxide emissions (metric tons per capita)",
-         ylab="GNI per capita, PPP (current international $)",
-         groups=Country.Name, type='b',
-         auto.key=list(space='right'))
+xyplot(GNI.capita  ~ CO2.capita | factor(Year),
+       data = CO2data,
+       xlab = "Carbon dioxide emissions (metric tons per capita)",
+       ylab = "GNI per capita, PPP (current international $)",
+       groups = Country.Name, type = 'b',
+       auto.key = list(space = 'right'))
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -305,11 +317,14 @@ version and \texttt{facet\_wrap(\textasciitilde{} Year)} in the \texttt{ggplot2}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  ggplot(data=CO2data, aes(x=CO2.capita, y=GNI.capita, colour=Country.Name)) +
-      facet_wrap(~ Year) + geom_point(pch=19) + 
-      xlab('CO2 emissions (metric tons per capita)') +
-      ylab('GNI per capita, PPP (current international $)') +
-      theme_bw()
+ggplot(data = CO2data,
+       aes(x = CO2.capita,
+           y = GNI.capita,
+           colour = Country.Name)) +
+    facet_wrap(~ Year) + geom_point(pch = 19) + 
+    xlab('CO2 emissions (metric tons per capita)') +
+    ylab('GNI per capita, PPP (current international $)') +
+    theme_bw()
 \end{lstlisting}
 
 Because the grouping variable, \texttt{Country.Name}, has many levels, the
@@ -318,13 +333,16 @@ legend is not very useful. Once again, point labeling is recommended
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  xyplot(GNI.capita  ~ CO2.capita | factor(Year), data=CO2data,
-         xlab="Carbon dioxide emissions (metric tons per capita)",
-         ylab="GNI per capita, PPP (current international $)",
-         groups=Country.Name, type='b',
-         par.settings=myTheme) + 
-      glayer(panel.pointLabel(x, y, labels=group.value,
-                              col=palOrdered[group.number], cex=0.7))
+xyplot(GNI.capita  ~ CO2.capita | factor(Year),
+       data = CO2data,
+       xlab = "Carbon dioxide emissions (metric tons per capita)",
+       ylab = "GNI per capita, PPP (current international $)",
+       groups = Country.Name, type = 'b',
+       par.settings = myTheme) + 
+    glayer(panel.pointLabel(x, y,
+                            labels = group.value,
+                            col = palOrdered[group.number],
+                            cex = 0.7))
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -334,7 +352,7 @@ legend is not very useful. Once again, point labeling is recommended
 \end{figure}
 
 \subsection{\floweroneleft Using Variable Size to Encode an Additional Variable}
-\label{sec:orgd72398b}
+\label{sec:orgdc1eae6}
 Instead of using simple points, we can display circles of
 different radius to encode a new variable. This new variable is
 \texttt{CO2.PPP}, the ratio of \(\mathrm{CO_2}\) emissions to the Gross Domestic
@@ -347,30 +365,34 @@ To use this numeric variable as an additional grouping factor, its range must be
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  library(classInt)
-  z <- CO2data$CO2.PPP
-  intervals <- classIntervals(z, n=4, style='fisher')
+library(classInt)
+z <- CO2data$CO2.PPP
+intervals <- classIntervals(z, n = 4, style = 'fisher')
 \end{lstlisting}
 
 Although the functions of this package are mainly intended to create color palettes for maps, the results can also be associated to point sizes. \texttt{cex.key} defines the sequence of sizes (to be displayed in the legend) associated with each \texttt{CO2.PPP} using the \texttt{findCols} function.
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  nInt <- length(intervals$brks) - 1
-  cex.key <- seq(0.5, 1.8, length=nInt)
-  
-  idx <- findCols(intervals)
-  CO2data$cexPoints <- cex.key[idx]
+nInt <- length(intervals$brks) - 1
+cex.key <- seq(0.5, 1.8, length = nInt)
+
+idx <- findCols(intervals)
+CO2data$cexPoints <- cex.key[idx]
 \end{lstlisting}
 
 The graphic will display information on two variables (\texttt{GNI.capita} and \texttt{CO2.capita} in the vertical and horizontal axes, respectively) with a conditioning variable (\texttt{Year}) and two grouping variables (\texttt{Country.Name}, and \texttt{CO2.PPP} through \texttt{cexPoints}) (Figure \ref{fig:CO2pointsGG}).
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  ggplot(data=CO2data, aes(x=CO2.capita, y=GNI.capita, colour=Country.Name)) +
-      facet_wrap(~ Year) + geom_point(aes(size=cexPoints), pch=19) +
-      xlab('Carbon dioxide emissions (metric tons per capita)') +
-      ylab('GNI per capita, PPP (current international $)') +
-      theme_bw()
+ggplot(data = CO2data,
+       aes(x = CO2.capita,
+           y = GNI.capita,
+           colour = Country.Name)) +
+    facet_wrap(~ Year) +
+    geom_point(aes(size = cexPoints), pch = 19) +
+    xlab('Carbon dioxide emissions (metric tons per capita)') +
+    ylab('GNI per capita, PPP (current international $)') +
+    theme_bw()
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -387,33 +409,33 @@ The \texttt{auto.key} mechanism of the \texttt{lattice} version is not able to c
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-op <- options(digits=2)
+op <- options(digits = 2)
 tab <- print(intervals)
 options(op)
   
-key <- list(space='right',
-            title=expression(CO[2]/GNI.PPP),
-            cex.title=1,
+key <- list(space = 'right',
+            title = expression(CO[2]/GNI.PPP),
+            cex.title = 1,
             ## Labels of the key are the intervals strings
-            text=list(labels=names(tab), cex=0.85),
+            text = list(labels = names(tab), cex = 0.85),
             ## Points sizes are defined with cex.key
-            points=list(col='black', pch=19,
-                cex=cex.key, alpha=0.7))
+            points = list(col = 'black', pch = 19,
+                cex = cex.key, alpha = 0.7))
 
   
-xyplot(GNI.capita ~ CO2.capita|factor(Year), data=CO2data,
-       xlab="Carbon dioxide emissions (metric tons per capita)",
-       ylab="GNI per capita, PPP (current international $)",
-       groups=Country.Name, key=key, alpha=0.7,
-       panel = panel.superpose,
-       panel.groups = function(x, y,
+xyplot(GNI.capita ~ CO2.capita|factor(Year), data = CO2data,
+       xlab = "Carbon dioxide emissions (metric tons per capita)",
+       ylab = "GNI per capita, PPP (current international $)",
+       groups = Country.Name, key = key, alpha = 0.7,
+       panel  =  panel.superpose,
+       panel.groups  =  function(x, y,
            subscripts, group.number, group.value, ...){
            panel.xyplot(x, y,
-                        col = palOrdered[group.number],
-                        cex = CO2data$cexPoints[subscripts])
-           panel.pointLabel(x, y, labels=group.value,
-                            col=palOrdered[group.number],
-                            cex=0.7)
+                        col  =  palOrdered[group.number],
+                        cex  =  CO2data$cexPoints[subscripts])
+           panel.pointLabel(x, y, labels = group.value,
+                            col = palOrdered[group.number],
+                            cex = 0.7)
        }
        ) 
 \end{lstlisting}
@@ -425,9 +447,9 @@ xyplot(GNI.capita ~ CO2.capita|factor(Year), data=CO2data,
 \end{figure}
 
 \section{Interactive}
-\label{sec:org43562c9}
+\label{sec:orgefcc066}
 \subsection{\texttt{googleVis}}
-\label{sec:org00e9c57}
+\label{sec:org472c658}
 The first solution is a Motion Chart the \texttt{googleVis} package
 \cite{Gesmann.deCastillo2011}, an interface between R and the Google
 Visualisation API. With its \texttt{gvisMotionChart} function it is easy to
@@ -435,11 +457,12 @@ produce a Motion Chart that can be displayed using a browser with
 Flash enabled (Figure \ref{fig:googleVis}).
 
 \index{Packages!googleVis@\texttt{googleVis}}
-
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  library(googleVis)
-  pgvis <- gvisMotionChart(CO2data, idvar='Country.Name', timevar='Year')
+library(googleVis)
+pgvis <- gvisMotionChart(CO2data,
+                         idvar='Country.Name',
+                         timevar='Year')
 \end{lstlisting}
 
 \begin{figure}
@@ -458,7 +481,7 @@ before using it for public distribution.
 
 
 \subsection{plotly}
-\label{sec:org5de0add}
+\label{sec:orga5a0d6e}
 
 \index{Packages!plotlyG@\texttt{plotly}}
 
@@ -495,7 +518,7 @@ p
 \end{figure}
 
 \subsection{\floweroneleft gridSVG}
-\label{sec:org00d79b1}
+\label{sec:org8efc594}
 The final solution to display this multivariate time series is with
 animation via the function \texttt{grid.animate} of the \texttt{gridSVG}
 package. We will mimic the Trendalyzer/Motion Chart solution, using
@@ -513,37 +536,38 @@ of \texttt{CO2data\$CO2.PPP}.
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  library(gridSVG)
-  
-  xyplot(GNI.capita ~ CO2.capita, data=CO2data,
-         xlab="Carbon dioxide emissions (metric tons per capita)",
-         ylab="GNI per capita, PPP (current international $)",
-         subset=Year==2000, groups=Country.Name,
-         ## The limits of the graphic are defined
-         ## with the entire dataset
-         xlim=extendrange(CO2data$CO2.capita),
-         ylim=extendrange(CO2data$GNI.capita),
-         panel=function(x, y, ..., subscripts, groups) {
+library(gridSVG)
+
+xyplot(GNI.capita ~ CO2.capita,
+       data = CO2data,
+       xlab = "Carbon dioxide emissions (metric tons per capita)",
+       ylab = "GNI per capita, PPP (current international $)",
+       subset = Year==2000, groups = Country.Name,
+       ## The limits of the graphic are defined
+       ## with the entire dataset
+       xlim = extendrange(CO2data$CO2.capita),
+       ylim = extendrange(CO2data$GNI.capita),
+       panel = function(x, y, ..., subscripts, groups) {
            color <- palOrdered[groups[subscripts]]
            radius <- CO2data$CO2.PPP[subscripts]
            ## Size of labels
            cex <- 1.1*sqrt(radius)
            ## Bubbles
-           grid.circle(x, y, default.units="native",
-                       r=radius*unit(.25, "inch"),
-                       name=trellis.grobname("points", type="panel"),
-                       gp=gpar(col=color,
-                         ## Fill color ligther than border
-                         fill=adjustcolor(color, alpha=.5),
-                         lwd=2))
+           grid.circle(x, y, default.units = "native",
+                       r = radius*unit(.25, "inch"),
+                       name = trellis.grobname("points", type = "panel"),
+                       gp = gpar(col = color,
+                               ## Fill color ligther than border
+                               fill = adjustcolor(color, alpha = .5),
+                               lwd = 2))
            ## Country labels
-           grid.text(label=groups[subscripts],
-                     x=unit(x, 'native'),
+           grid.text(label = groups[subscripts],
+                     x = unit(x, 'native'),
                      ## Labels above each bubble
-                     y=unit(y, 'native') + 1.5 * radius *unit(.25, 'inch'),
-                     name=trellis.grobname('labels', type='panel'),
-                     gp=gpar(col=color, cex=cex))
-         })
+                     y = unit(y, 'native') + 1.5 * radius *unit(.25, 'inch'),
+                     name = trellis.grobname('labels', type = 'panel'),
+                     gp = gpar(col = color, cex = cex))
+       })
 \end{lstlisting}
 
 From this initial state, \texttt{grid.animate} creates a collection of
@@ -562,39 +586,39 @@ indefinitely.
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  ## Duration in seconds of the animation
-  duration <- 20
+## Duration in seconds of the animation
+duration <- 20
   
-  nCountries <- nlevels(CO2data$Country.Name)
-  years <- unique(CO2data$Year)
-  nYears <- length(years)
-  
-  ## Intermediate positions of the bubbles
-  x_points <- animUnit(unit(CO2data$CO2.capita, 'native'),
-                       id=rep(seq_len(nCountries), each=nYears))
-  y_points <- animUnit(unit(CO2data$GNI.capita, 'native'),
-                       id=rep(seq_len(nCountries), each=nYears))
-  ## Intermediate positions of the labels
-  y_labels <- animUnit(unit(CO2data$GNI.capita, 'native') +
-                       1.5 * CO2data$CO2.PPP * unit(.25, 'inch'),
-                       id=rep(seq_len(nCountries), each=nYears))
-  ## Intermediate sizes of the bubbles
-  size <- animUnit(CO2data$CO2.PPP * unit(.25, 'inch'),
-                       id=rep(seq_len(nCountries), each=nYears))
-  
-  grid.animate(trellis.grobname("points", type="panel", row=1, col=1),
-               duration=duration,
-               x=x_points,
-               y=y_points,
-               r=size,
-               rep=TRUE)
-  
-  grid.animate(trellis.grobname("labels", type="panel", row=1, col=1),
-               duration=duration,
-               x=x_points,
-               y=y_labels,
-               rep=TRUE)
-  
+nCountries <- nlevels(CO2data$Country.Name)
+years <- unique(CO2data$Year)
+nYears <- length(years)
+
+## Intermediate positions of the bubbles
+x_points <- animUnit(unit(CO2data$CO2.capita, 'native'),
+                     id = rep(seq_len(nCountries), each = nYears))
+y_points <- animUnit(unit(CO2data$GNI.capita, 'native'),
+                     id = rep(seq_len(nCountries), each = nYears))
+## Intermediate positions of the labels
+y_labels <- animUnit(unit(CO2data$GNI.capita, 'native') +
+                     1.5 * CO2data$CO2.PPP * unit(.25, 'inch'),
+                     id = rep(seq_len(nCountries), each = nYears))
+## Intermediate sizes of the bubbles
+size <- animUnit(CO2data$CO2.PPP * unit(.25, 'inch'),
+                 id = rep(seq_len(nCountries), each = nYears))
+
+grid.animate(trellis.grobname("points", type = "panel", row = 1, col = 1),
+             duration = duration,
+             x = x_points,
+             y = y_points,
+             r = size,
+             rep = TRUE)
+
+grid.animate(trellis.grobname("labels", type = "panel", row = 1, col = 1),
+             duration = duration,
+             x = x_points,
+             y = y_labels,
+             rep = TRUE)
+
 \end{lstlisting}
 
 A bit of interactivity can be added with the \texttt{grid.hyperlink}
@@ -605,10 +629,10 @@ Wikipedia link to a mouse click on each bubble.
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  countries <- unique(CO2data$Country.Name)
-  URL <- paste('http://en.wikipedia.org/wiki/', countries, sep='')
-  grid.hyperlink(trellis.grobname('points', type='panel', row=1, col=1),
-                 URL, group=FALSE)
+countries <- unique(CO2data$Country.Name)
+URL <- paste('http://en.wikipedia.org/wiki/', countries, sep = '')
+grid.hyperlink(trellis.grobname('points', type = 'panel', row = 1, col = 1),
+               URL, group = FALSE)
   
 \end{lstlisting}
 
@@ -617,16 +641,16 @@ right corner, using the \texttt{visibility} attribute of an animated
 \texttt{textGrob} object to show and hide the values.
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  visibility <- matrix("hidden", nrow=nYears, ncol=nYears)
-  diag(visibility) <- "visible"
-  yearText <- animateGrob(garnishGrob(textGrob(years, .9, .15,
-                                               name="year",
-                                               gp=gpar(cex=2, col="grey")),
-                                      visibility="hidden"),
-                          duration=20,
-                          visibility=visibility,
-                          rep=TRUE)
-  grid.draw(yearText)
+visibility <- matrix("hidden", nrow = nYears, ncol = nYears)
+diag(visibility) <- "visible"
+yearText <- animateGrob(garnishGrob(textGrob(years, .9, .15,
+                                             name = "year",
+                                             gp = gpar(cex = 2, col = "grey")),
+                                    visibility = "hidden"),
+                        duration = 20,
+                        visibility = visibility,
+                        rep = TRUE)
+grid.draw(yearText)
 \end{lstlisting}
 
 The SVG file produced with \texttt{grid.export} is available at the website
@@ -638,7 +662,7 @@ information as a static complement.
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  grid.export("figs/bubbles.svg")
+grid.export("figs/bubbles.svg")
 \end{lstlisting}
 
 \begin{figure}

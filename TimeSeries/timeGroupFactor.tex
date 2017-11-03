@@ -1,6 +1,6 @@
 
 \section{Scatterplot Matrix: Time as a Grouping Variable \label{SEC:groupVariable}}
-\label{sec:orgb27f715}
+\label{sec:org74c8961}
 
 The scatterplot matrices are based on the technique of small multiples
 \cite{Tufte1990}: small, thumbnail-sized representations of multiple
@@ -44,12 +44,12 @@ colors <- colors[c(6:1, 12:7)]
 \begin{lstlisting}
 splom(~ aranjuezDF, 
       groups = aranjuezDF$Month,
-      auto.key=list(space='right', 
-                    title='Month', cex.title=1),
-      pscale=0, varname.cex=0.7, xlab='',
-      par.settings=custom.theme(symbol=colors,
-                                pch=19),
-      cex=0.3, alpha=0.1)
+      auto.key = list(space = 'right', 
+                    title = 'Month', cex.title = 1),
+      pscale = 0, varname.cex = 0.7, xlab = '',
+      par.settings = custom.theme(symbol = colors,
+                                pch = 19),
+      cex = 0.3, alpha = 0.1)
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -106,7 +106,7 @@ exponential function.
 \end{itemize}
 
 \subsection{Hexagonal Binning \label{SEC:hexbin}}
-\label{sec:org35616a5}
+\label{sec:org7703232}
 
 For large datasets, the display of a large number of points in a
 scatterplot produces hidden point density, long computation times,
@@ -139,12 +139,12 @@ empty regions, with a gradient of blue hues for intermediate values).
 \end{itemize}
 
 
-\index{Packages!hexbin@\texttt{hexbin}}}
-\index{panel.hexbinplot@\texttt{panel.hexbinplot}}}
-\index{panel.loess@\texttt{panel.loess}}}
-\index{diag.panel.splom@\texttt{diag.panel.splom}}}
-\index{current.panel.limits@\texttt{current.panel.limits}}}
-\index{Panel function}}
+\index{Packages!hexbin@\texttt{hexbin}}
+\index{panel.hexbinplot@\texttt{panel.hexbinplot}}
+\index{panel.loess@\texttt{panel.loess}}
+\index{diag.panel.splom@\texttt{diag.panel.splom}}
+\index{current.panel.limits@\texttt{current.panel.limits}}
+\index{Panel function}
 
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
@@ -152,11 +152,11 @@ empty regions, with a gradient of blue hues for intermediate values).
 library(hexbin)
   
 splom(~as.data.frame(aranjuez),
-      panel=panel.hexbinplot,
-      colramp=BTC,
+      panel = panel.hexbinplot,
+      colramp = BTC,
       diag.panel = function(x, ...){
           yrng <- current.panel.limits()$ylim
-          d <- density(x, na.rm=TRUE)
+          d <- density(x, na.rm = TRUE)
           d$y <- with(d, yrng[1] + 0.95 * diff(yrng) * y / max(y))
           panel.lines(d)
           diag.panel.splom(x, ...)
@@ -165,8 +165,8 @@ splom(~as.data.frame(aranjuez),
           panel.hexbinplot(x, y, ...)
           panel.loess(x, y, ..., col = 'red')
       },
-      xlab='',
-      pscale=0, varname.cex=0.7)
+      xlab = '',
+      pscale = 0, varname.cex = 0.7)
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -207,7 +207,7 @@ aranjuezRshp <- melt(aranjuezDF,
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  head(aranjuezRshp)
+head(aranjuezRshp)
 \end{lstlisting}
 
 The \texttt{hexbinplot} displays this dataset with a different panel for
@@ -246,7 +246,7 @@ ggplot(data = aranjuezRshp,
 \end{lstlisting}
 
 \section{Scatterplot with Time as a Conditioning Variable \label{SEC:conditionVariable}}
-\label{sec:orgda573dd}
+\label{sec:orgc5550a4}
 
 After discussing the hexagonal binning, let's recover the time
 variable. Figure \ref{fig:aranjuezSplom} uses colors to encode
@@ -261,12 +261,12 @@ segments (\texttt{geom\_rug}) to display points density on both variables, and
 a smooth line in each panel.
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  ggplot(data=aranjuezRshp, aes(Radiation, Temperature)) +
-      facet_grid(Statistic ~ month) +
-      geom_point(col='skyblue4', pch=19, cex=0.5, alpha=0.3) +
-      geom_rug() +
-      stat_smooth(se=FALSE, method='loess', col='indianred1', lwd=1.2) +
-      theme_bw()
+ggplot(data = aranjuezRshp, aes(Radiation, Temperature)) +
+    facet_grid(Statistic ~ month) +
+    geom_point(col = 'skyblue4', pch = 19, cex = 0.5, alpha = 0.3) +
+    geom_rug() +
+    stat_smooth(se = FALSE, method = 'loess', col = 'indianred1', lwd = 1.2) +
+    theme_bw()
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -287,15 +287,15 @@ variables on the top and left outer margins (Figure
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  useOuterStrips(xyplot(Temperature ~ Radiation | month * Statistic,
-                        data=aranjuezRshp,
-                        between=list(x=0),
-                        col='skyblue4', pch=19,
-                        cex=0.5, alpha=0.3)) +
-      layer({
-          panel.rug(..., col.line='indianred1', end=0.05, alpha=0.6)
-          panel.loess(..., col='indianred1', lwd=1.5, alpha=1)
-      })
+useOuterStrips(xyplot(Temperature ~ Radiation | month * Statistic,
+                      data = aranjuezRshp,
+                      between = list(x = 0),
+                      col = 'skyblue4', pch = 19,
+                      cex = 0.5, alpha = 0.3)) +
+    layer({
+        panel.rug(..., col.line = 'indianred1', end = 0.05, alpha = 0.6)
+        panel.loess(..., col = 'indianred1', lwd = 1.5, alpha = 1)
+    })
 \end{lstlisting}
 
 \begin{figure}[htbp]

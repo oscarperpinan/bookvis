@@ -3,58 +3,58 @@
 #+BIND: org-export-latex-image-default-option "height=0.45\\textheight"
 
 #+begin_src R :exports none :tangle no
-  setwd('~/github/bookvis')
+setwd('~/github/bookvis')
 #+end_src
 
 #+begin_src R :exports none  
-  ##################################################################
-  ## Initial configuration
-  ##################################################################
-  ## Clone or download the repository and set the working directory
-  ## with setwd to the folder where the repository is located.
-  
+##################################################################
+## Initial configuration
+##################################################################
+## Clone or download the repository and set the working directory
+## with setwd to the folder where the repository is located.
+
  
-  library(lattice)
-  library(ggplot2)
-  library(latticeExtra)
-  library(zoo)
-  
-  myTheme <- custom.theme.2(pch=19, cex=0.7,
-                            region=rev(brewer.pal(9, 'YlOrRd')),
-                            symbol = brewer.pal(n=8, name = "Dark2"))
-  myTheme$strip.background$col='transparent'
-  myTheme$strip.shingle$col='transparent'
-  myTheme$strip.border$col='transparent'
-  
-  xscale.components.custom <- function(...){
-      ans <- xscale.components.default(...)
-      ans$top=FALSE
-      ans
-  }
+library(lattice)
+library(ggplot2)
+library(latticeExtra)
+library(zoo)
 
-  yscale.components.custom <- function(...){
+myTheme <- custom.theme.2(pch = 19, cex = 0.7,
+                          region = rev(brewer.pal(9, 'YlOrRd')),
+                          symbol = brewer.pal(n = 8, name = "Dark2"))
+myTheme$strip.background$col = 'transparent'
+myTheme$strip.shingle$col = 'transparent'
+myTheme$strip.border$col = 'transparent'
+
+xscale.components.custom <- function(...){
+    ans <- xscale.components.default(...)
+    ans$top = FALSE
+    ans
+}
+
+yscale.components.custom <- function(...){
       ans <- yscale.components.default(...)
-      ans$right=FALSE
+      ans$right = FALSE
       ans
-  }
+}
 
-  myArgs <- list(as.table=TRUE,
-                 between=list(x=0.5, y=0.2),
-                 xscale.components = xscale.components.custom,
-                 yscale.components = yscale.components.custom)
-  defaultArgs <- lattice.options()$default.args
-  
-  lattice.options(default.theme = myTheme,
-                  default.args = modifyList(defaultArgs, myArgs))
-  ##################################################################
+myArgs <- list(as.table = TRUE,
+               between = list(x = 0.5, y = 0.2),
+               xscale.components = xscale.components.custom,
+               yscale.components = yscale.components.custom)
+defaultArgs <- lattice.options()$default.args
+
+lattice.options(default.theme = myTheme,
+                default.args = modifyList(defaultArgs, myArgs))
+##################################################################
 #+end_src
 
 
 * Time Graph of Variables with Different Scales  label:sec:differentVariables
 #+begin_src R :exports none
-  ##################################################################
-  ## Time graph of variables with different scales
-  ##################################################################
+##################################################################
+## Time graph of variables with different scales
+##################################################################
 #+end_src
 There is a variety of scientific research interested in the
 relationship among several meteorological variables. A suitable
@@ -79,8 +79,8 @@ load('data/aranjuez.RData')
 : aranjuez
 
 #+begin_src R :results output graphics :exports both :file figs/aranjuez.pdf
-  ## The layout argument arranges panels in rows
-  xyplot(aranjuez, layout=c(1, ncol(aranjuez)))
+## The layout argument arranges panels in rows
+xyplot(aranjuez, layout = c(1, ncol(aranjuez)))
 #+end_src
 
 
@@ -94,7 +94,7 @@ package =zoo= provides an =autoplot= method for the =zoo= class with a
 result similar to that obtained with =xyplot= (Figure [[ref:fig:aranjuezNaiveGG]])
 
 #+begin_src R :results output graphics :exports both :file figs/aranjuezGG.pdf
-  autoplot(aranjuez) + facet_free()
+autoplot(aranjuez) + facet_free()
 #+end_src
 
 #+CAPTION: Time plot of the collection of meteorological time series of the Aranjuez station (=ggplot2= version). label:fig:aranjuezNaiveGG 
@@ -133,51 +133,51 @@ is displayed in Figure ref:fig:aranjuezEnhanced:
 Because the functions included in the panel function are executed
 consecutively, their order determines the superposition of graphical
 layers.
-#+BEGIN_EXPORT latex
-\index{Panel function}
-\index{panel.xblocks@\texttt{panel.xblocks}}
-\index{panel.text@\texttt{panel.text}}
-\index{panel.number@\texttt{panel.number}}
-\index{panel.points@\texttt{panel.points}}
-#+END_EXPORT
+
+#+INDEX: Panel function
+#+INDEX: panel.xblocks@\texttt{panel.xblocks}
+#+INDEX: panel.text@\texttt{panel.text}
+#+INDEX: panel.number@\texttt{panel.number}
+#+INDEX: panel.points@\texttt{panel.points}
+
 
 #+begin_src R :exports none
 ## lattice version
 #+end_src
 
 #+begin_src R :results output graphics :exports both :file figs/aranjuezXblocks.pdf
-  library(grid)
-  library(latticeExtra)
+library(grid)
+library(latticeExtra)
   
-  ## Auxiliary function to extract the year value of a POSIXct time
-  ## index
-  Year <- function(x)format(x, "%Y")
+## Auxiliary function to extract the year value of a POSIXct time
+## index
+Year <- function(x)format(x, "%Y")
   
-  xyplot(aranjuez, layout=c(1, ncol(aranjuez)), strip=FALSE,
-         scales=list(y=list(cex=0.6, rot=0)),
-         panel=function(x, y, ...){
+xyplot(aranjuez, layout = c(1, ncol(aranjuez)), strip = FALSE,
+       scales = list(y = list(cex = 0.6, rot = 0)),
+       panel = function(x, y, ...){
            ## Alternation of years
            panel.xblocks(x, Year,
                          col = c("lightgray", "white"),
                          border = "darkgray")
            ## Values under the average highlighted with red regions
-           panel.xblocks(x, y<mean(y, na.rm=TRUE),
+           panel.xblocks(x, y<mean(y, na.rm = TRUE),
                          col = "indianred1",
-                         height=unit(0.1, 'npc'))
+                         height = unit(0.1, 'npc'))
            ## Time series
-           panel.lines(x, y, col='royalblue4', lwd=0.5, ...)
+           panel.lines(x, y, col = 'royalblue4', lwd = 0.5, ...)
            ## Label of each time series
-           panel.text(x[1], min(y, na.rm=TRUE),
+           panel.text(x[1], min(y, na.rm = TRUE),
                       names(aranjuez)[panel.number()],
-                      cex=0.6, adj=c(0, 0), srt=90, ...)
+                      cex = 0.6, adj = c(0, 0), srt = 90, ...)
            ## Triangles to point the maxima and minima 
            idxMax <- which.max(y)
            panel.points(x[idxMax], y[idxMax],
-                        col='black', fill='lightblue', pch=24)
+                        col = 'black', fill = 'lightblue', pch = 24)
            idxMin <- which.min(y)
            panel.points(x[idxMin], y[idxMin],
-                        col='black', fill='lightblue', pch=25)
-         })
+                        col = 'black', fill = 'lightblue', pch = 25)
+       })
 #+end_src
 
 #+CAPTION: Enhanced time plot of the collection of meteorological time series of the Aranjuez station. label:fig:aranjuezEnhanced 
@@ -197,79 +197,79 @@ the corresponding bands (years and regions below the average values):
   =data.frame= with three columns: the time =Index=, a factor
   indicating the =Series=, and the corresponding =Value=.
 #+begin_src R :eval no-export
-  timeIdx <- index(aranjuez)
+timeIdx <- index(aranjuez)
   
-  long <- fortify(aranjuez, melt=TRUE)
+long <- fortify(aranjuez, melt = TRUE)
 #+end_src
 
 - The bands of values below the average can be easily extracted with
   =scale= because these regions are negative when the =data.frame= is
   centered.
 #+begin_src R :eval no-export
-  ## Values below mean are negative after being centered
-  scaled <- fortify(scale(aranjuez, scale=FALSE), melt=TRUE)
-  ## The 'scaled' column is the result of the centering.
-  ## The new 'Value' column store the original values.
-  scaled <- transform(scaled, scaled=Value, Value=long$Value)
-  underIdx <- which(scaled$scaled <= 0)
-  ## 'under' is the subset of values below the average
-  under <- scaled[underIdx,]
+## Values below mean are negative after being centered
+scaled <- fortify(scale(aranjuez, scale = FALSE), melt = TRUE)
+## The 'scaled' column is the result of the centering.
+## The new 'Value' column store the original values.
+scaled <- transform(scaled, scaled = Value, Value = long$Value)
+underIdx <- which(scaled$scaled <= 0)
+## 'under' is the subset of values below the average
+under <- scaled[underIdx,]
 #+end_src
 
 - The years bands are defined with the function =endpoints= from the
   =xts= package:
-#+BEGIN_EXPORT latex
-  \index{Package!xts@\texttt{xts}}
-#+END_EXPORT
+
+#+INDEX: Package!xts@\texttt{xts}
+
 #+begin_src R :eval no-export
-  library(xts)
-  ep <- endpoints(timeIdx, on='years')
-  N <- length(ep[-1])
-  ## 'tsp' is start and 'tep' is the end of each band
-  tep <- timeIdx[ep]
-  tsp <- timeIdx[ep[-(N+1)]+1]
-  ## 'cols' is a vector with the color of each band
-  cols <- rep_len(c('gray', 'white'), N)
+library(xts)
+ep <- endpoints(timeIdx, on = 'years')
+N <- length(ep[-1])
+## 'tsp' is start and 'tep' is the end of each band
+tep <- timeIdx[ep]
+tsp <- timeIdx[ep[-(N+1)]+1]
+## 'cols' is a vector with the color of each band
+cols <- rep_len(c('gray', 'white'), N)
 #+end_src
 - The minima and maxima points of each variable are extracted with
   =apply=:
 #+begin_src R :eval no-export
-  minIdx <- timeIdx[apply(aranjuez, 2, which.min)]
-  minVals <- apply(aranjuez, 2, min, na.rm=TRUE)
-  mins <- data.frame(Index=minIdx,
-                     Value=minVals,
-                     Series=names(aranjuez))
-  
-  maxIdx <- timeIdx[apply(aranjuez, 2, which.max)]
-  maxVals <- apply(aranjuez, 2, max, na.rm=TRUE)
-  maxs <- data.frame(Index=maxIdx,
-                     Value=maxVals,
-                     Series=names(aranjuez))
+minIdx <- timeIdx[apply(aranjuez, 2, which.min)]
+minVals <- apply(aranjuez, 2, min, na.rm = TRUE)
+mins <- data.frame(Index = minIdx,
+                   Value = minVals,
+                   Series = names(aranjuez))
+
+maxIdx <- timeIdx[apply(aranjuez, 2, which.max)]
+maxVals <- apply(aranjuez, 2, max, na.rm = TRUE)
+maxs <- data.frame(Index = maxIdx,
+                   Value = maxVals,
+                   Series = names(aranjuez))
 #+end_src
 
 - With =ggplot= we define the canvas, and the layers of information are
   added successively:
 #+begin_src R :eval no-export
-  ggplot(data=long, aes(Index, Value)) +
-      ## Time series of each variable
-      geom_line(colour = "royalblue4", lwd = 0.5) +
-      ## Year bands
-      annotate(geom='rect', ymin = -Inf, ymax = Inf,
-                xmin=tsp, xmax=tep,
-                fill = cols, alpha = 0.4) +
-      ## Values below average
-      geom_rug(data=under,
-               sides='b', col='indianred1') +
-      ## Minima
-      geom_point(data=mins, pch=25) +
-      ## Maxima
-      geom_point(data=maxs, pch=24) +
-      ## Axis labels and theme definition
-      labs(x='Time', y=NULL) +
-      theme_bw() +
-      ## Each series is displayed in a different panel with an
-      ## independent y scale
-      facet_free()
+ggplot(data = long, aes(Index, Value)) +
+    ## Time series of each variable
+    geom_line(colour = "royalblue4", lwd = 0.5) +
+    ## Year bands
+    annotate(geom='rect', ymin = -Inf, ymax = Inf,
+             xmin = tsp, xmax = tep,
+             fill = cols, alpha = 0.4) +
+    ## Values below average
+    geom_rug(data = under,
+             sides = 'b', col = 'indianred1') +
+    ## Minima
+    geom_point(data = mins, pch = 25) +
+    ## Maxima
+    geom_point(data = maxs, pch = 24) +
+    ## Axis labels and theme definition
+    labs(x = 'Time', y = NULL) +
+    theme_bw() +
+    ## Each series is displayed in a different panel with an
+    ## independent y scale
+    facet_free()
 #+end_src
 
 Some messages from Figure ref:fig:aranjuezEnhanced:
@@ -293,9 +293,9 @@ Some messages from Figure ref:fig:aranjuezEnhanced:
   
 * Time Series of Variables with the Same Scale label:SEC:sameScale
 #+begin_src R :exports none
-  ##################################################################
-  ## Time series of variables with the same scale
-  ##################################################################
+##################################################################
+## Time series of variables with the same scale
+##################################################################
 #+end_src
 
 As an example of time series of variables with the same scale, we will
@@ -316,18 +316,15 @@ around the time average (=avRad=).
 load('data/navarra.RData')
 #+end_src
 
-
-#+BEGIN_EXPORT latex
-\index{zoo@\texttt{zoo}} 
-\index{xyplot.zoo@\texttt{xyplot.zoo}}
-#+END_EXPORT
+#+INDEX: zoo@\texttt{zoo}
+#+INDEX: xyplot.zoo@\texttt{xyplot.zoo}
 
 #+begin_src R :results output graphics :exports both :file figs/navarra.pdf
-  avRad <- zoo(rowMeans(navarra, na.rm=1), index(navarra))
-  pNavarra <- xyplot(navarra - avRad,
-                     superpose=TRUE, auto.key=FALSE,
-                     lwd=0.5, alpha=0.3, col='midnightblue') 
-  pNavarra
+avRad <- zoo(rowMeans(navarra, na.rm = 1), index(navarra))
+pNavarra <- xyplot(navarra - avRad,
+                   superpose = TRUE, auto.key = FALSE,
+                   lwd = 0.5, alpha = 0.3, col = 'midnightblue') 
+pNavarra
 #+end_src
 
 #+CAPTION: Time plot of the variations around time average of solar radiation measurements from the meteorological stations of Navarra. label:fig:navarraNaive
@@ -339,9 +336,9 @@ method, and the horizon graph with =horizonplot=.
 
 ** Aspect Ratio and Rate of Change
 #+begin_src R :exports none
-  ##################################################################
-  ## Aspect ratio and rate of change
-  ##################################################################
+##################################################################
+## Aspect ratio and rate of change
+##################################################################
 #+end_src
 
 When a graphic is intended to inform about the rate of change,
@@ -364,11 +361,11 @@ arguments =aspect= and =cut=. The version of Figure
 ref:fig:navarraNaive using banking to $\SI{45}{\degree}$ and the
 cut-and-stack method is produced with
 #+begin_src R :results output graphics :exports both :file figs/navarraBanking.pdf
-  xyplot(navarra - avRad,
-         aspect='xy', cut=list(n=3, overlap=0.1),
-         strip=FALSE,
-         superpose=TRUE, auto.key=FALSE,
-         lwd=0.5, alpha=0.3, col='midnightblue')
+xyplot(navarra - avRad,
+       aspect = 'xy', cut = list(n = 3, overlap = 0.1),
+       strip = FALSE,
+       superpose = TRUE, auto.key = FALSE,
+       lwd = 0.5, alpha = 0.3, col = 'midnightblue')
 #+end_src
 
 #+CAPTION: Cut-and-stack plot with banking to $\SI{45}{\degree}$. label:fig:navarraBanking
@@ -377,12 +374,12 @@ cut-and-stack method is produced with
 
 ** The Horizon Graph label:sec:horizonplot
 #+begin_src R :exports none
-  ##################################################################
-  ## The horizon graph
-  ##################################################################
+##################################################################
+## The horizon graph
+##################################################################
 #+end_src
 
-The horizon graph\index{Horizon graph} is useful in examining how a
+The horizon graph#+INDEX: Horizon graph} is useful in examining how a
 large number of series changes over time, and does so in a way
 that allows both comparisons between the individual time series
 and and independent analysis of each series. Moreover,
@@ -403,23 +400,21 @@ to free vertical space:
 Because the panels share the same design structure, once this
 technique is understood, it is easy to establish comparisons or spot
 extraordinary events.  This method is what Tufte described as small
-multiples\index{Small multiples} cite:Tufte1990.
+multiples#+INDEX: Small multiples} cite:Tufte1990.
 
 Figure ref:fig:navarraHorizonplot displays the variations of
 solar radiation around the time average with an horizon graph
 using a row for each time series.
 
-#+BEGIN_EXPORT latex
-\index{Packages!latticeExtra@\texttt{latticeExtra}}
-\index{horizonplot@\texttt{horizonplot}}
-#+END_EXPORT
+#+INDEX: Packages!latticeExtra@\texttt{latticeExtra}
+#+INDEX: horizonplot@\texttt{horizonplot}
 
 #+begin_src R :results output graphics :exports both :file figs/navarraHorizonplot.pdf
-  library(latticeExtra)
+library(latticeExtra)
   
-  horizonplot(navarra-avRad,
-              layout=c(1, ncol(navarra)),
-              origin=0, colorkey=TRUE)
+horizonplot(navarra-avRad,
+            layout = c(1, ncol(navarra)),
+            origin = 0, colorkey = TRUE)
 #+end_src
 
 #+CAPTION: Horizon plot of variations around time average of solar radiation measurements from the meteorological stations of Navarra. label:fig:navarraHorizonplot
@@ -455,10 +450,10 @@ Aranjuez. The reference is the long-term daily average calculated
 with =ave=.
 
 #+begin_src R 
-  Ta <- aranjuez$TempAvg
-  timeIndex <- index(aranjuez)
-  longTa <- ave(Ta, format(timeIndex, '%j'))
-  diffTa <- (Ta - longTa)
+Ta <- aranjuez$TempAvg
+timeIndex <- index(aranjuez)
+longTa <- ave(Ta, format(timeIndex, '%j'))
+diffTa <- (Ta - longTa)
 #+end_src
 
 #+RESULTS:
@@ -469,10 +464,10 @@ differences between them can be displayed with the =xyplot=
 method, now using =screens= to use a different panel for the
 differences time series (Figure ref:fig:diffTa_xyplot)
 #+begin_src R :results output graphics :exports both :file figs/diffTa_xyplot.pdf
-  xyplot(cbind(Ta, longTa, diffTa),
-         col=c('darkgray', 'red', 'midnightblue'),
-         superpose=TRUE, auto.key=list(space='right'),
-         screens=c(rep('Average Temperature', 2), 'Differences'))
+xyplot(cbind(Ta, longTa, diffTa),
+       col = c('darkgray', 'red', 'midnightblue'),
+       superpose = TRUE, auto.key = list(space = 'right'),
+       screens = c(rep('Average Temperature', 2), 'Differences'))
 #+end_src
 
 #+CAPTION: Daily temperature time series, its long-term average and the differences between them. label:fig:diffTa_xyplot
@@ -487,15 +482,15 @@ average while 2005 and 2009 did the contrary. Year 2007 was frequently
 below the long-term average but 2011 was more similar to that
 reference.
 #+begin_src R :results output graphics :exports both :file figs/diffTa_horizon.pdf
-  years <- unique(format(timeIndex, '%Y'))
+years <- unique(format(timeIndex, '%Y'))
   
-  horizonplot(diffTa, cut=list(n=8, overlap=0),
-              colorkey=TRUE, layout=c(1, 8),
-              scales=list(draw=FALSE, y=list(relation='same')),
-              origin=0, strip.left=FALSE) +
-      layer(grid.text(years[panel.number()], x = 0, y = 0.1, 
-                      gp=gpar(cex=0.8),
-                      just = "left"))
+horizonplot(diffTa, cut = list(n = 8, overlap = 0),
+            colorkey = TRUE, layout = c(1, 8),
+            scales = list(draw = FALSE, y = list(relation = 'same')),
+            origin = 0, strip.left = FALSE) +
+    layer(grid.text(years[panel.number()], x  =  0, y  =  0.1, 
+                    gp = gpar(cex = 0.8),
+                    just = "left"))
 #+end_src
 
 #+CAPTION: Horizon graph displaying differences between a daily temperature time series and its long-term average. label:fig:diffTa_horizon
@@ -516,28 +511,28 @@ evolution, the combination of variables of the level plot focuses on
 the comparison between years in a certain month.
 
 #+begin_src R 
-  year <- function(x)as.numeric(format(x, '%Y'))
-  day <- function(x)as.numeric(format(x, '%d'))
-  month <- function(x)as.numeric(format(x, '%m'))
+year <- function(x)as.numeric(format(x, '%Y'))
+day <- function(x)as.numeric(format(x, '%d'))
+month <- function(x)as.numeric(format(x, '%m'))
 #+end_src
 
 #+RESULTS:
 
 #+begin_src R :results output graphics :exports both :file figs/diffTa_levelplot.pdf
-  myTheme <- modifyList(custom.theme(region=brewer.pal(9, 'RdBu')),
-                                     list(
-                                       strip.background=list(col='gray'),
-                                       panel.background=list(col='gray')))
-  
-  maxZ <- max(abs(diffTa))
-  
-  levelplot(diffTa ~ day(timeIndex) * year(timeIndex) | factor(month(timeIndex)),
-            at=pretty(c(-maxZ, maxZ), n=8),
-            colorkey=list(height=0.3),
-            layout=c(1, 12), strip=FALSE, strip.left=TRUE,
-            xlab='Day', ylab='Month', 
-            par.settings=myTheme)
-  
+myTheme <- modifyList(custom.theme(region = brewer.pal(9, 'RdBu')),
+                      list(
+                          strip.background = list(col = 'gray'),
+                          panel.background = list(col = 'gray')))
+
+maxZ <- max(abs(diffTa))
+
+levelplot(diffTa ~ day(timeIndex) * year(timeIndex) | factor(month(timeIndex)),
+          at = pretty(c(-maxZ, maxZ), n = 8),
+          colorkey = list(height = 0.3),
+          layout = c(1, 12), strip = FALSE, strip.left = TRUE,
+          xlab = 'Day', ylab = 'Month', 
+          par.settings = myTheme)
+
 #+end_src
 
 #+CAPTION: Level plot of differences between a daily temperature time series and its long-term average. label:fig:diffTa_level
@@ -573,9 +568,9 @@ ggplot(data = df,
 
 * Stacked Graphs label:sec:stacked
 #+begin_src R :exports none
-  ##################################################################
-  ## Stacked graphs
-  ##################################################################
+##################################################################
+## Stacked graphs
+##################################################################
 #+end_src
 
 If the variables of a multivariate time series can be summed to
@@ -586,15 +581,17 @@ class of workers, and can be summed to give a total unemployment time
 series.
 
 #+begin_src R
-  load('data/unemployUSA.RData')
+load('data/unemployUSA.RData')
 #+end_src
 
 The time series of unemployment can be directly displayed
 with the =xyplot.zoo= method (Figure ref:fig:unemployUSAxyplot).
 
 #+begin_src R :results output graphics :exports both :file "figs/unemployUSAxyplot.pdf" 
-  xyplot(unemployUSA, superpose=TRUE, par.settings=custom.theme,
-         auto.key=list(space='right'))
+xyplot(unemployUSA,
+       superpose = TRUE,
+       par.settings = custom.theme,
+       auto.key = list(space = 'right'))
 #+end_src
 
 #+CAPTION: Time series of unemployment  with =xyplot= using the default panel function. label:fig:unemployUSAxyplot
@@ -614,10 +611,10 @@ time series and also display their sum. A traditional stacked graph is
 easily obtained with =geom_area= (Figure ref:fig:unemployUSAgeomArea):
 
 #+begin_src R :results output graphics :exports both :file "figs/unemployUSAgeomArea.pdf" 
-  library(scales) ## scale_x_yearmon needs scales::pretty_breaks
-  autoplot(unemployUSA, facets=NULL, geom='area') +
-      geom_area(aes(fill=Series)) +
-      scale_x_yearmon()  
+library(scales) ## scale_x_yearmon needs scales::pretty_breaks
+autoplot(unemployUSA, facets = NULL, geom = 'area') +
+    geom_area(aes(fill = Series)) +
+    scale_x_yearmon()  
 #+end_src
 
 #+CAPTION: Time series of unemployment with stacked areas using =geom_area=. label:fig:unemployUSAgeomArea
@@ -641,21 +638,22 @@ one of main milestones of the financial crisis, whose effect on
 the overall unemployment results is clearly evident.
 #+NAME: panelFlow
 #+begin_src R :exports none
-  panel.flow <- function(x, y, groups, origin, ...){
-    dat <- data.frame(x=x, y=y, groups=groups)
+panel.flow <- function(x, y, groups, origin, ...)
+{
+    dat <- data.frame(x = x, y = y, groups = groups)
     nVars <- nlevels(groups)
     groupLevels <- levels(groups)
-  
+    
     ## From long to wide
     yWide <- unstack(dat, y~groups)
     ## Where are the maxima of each variable located? We will use
     ## them to position labels.
     idxMaxes <- apply(yWide, 2, which.max)
-  
+    
     ##Origin calculated following Havr.eHetzler.ea2002
-    if (origin=='themeRiver') origin= -1/2*rowSums(yWide)
-    else origin=0 
-    yWide <- cbind(origin=origin, yWide)
+    if (origin=='themeRiver') origin =  -1/2*rowSums(yWide)
+    else origin = 0 
+    yWide <- cbind(origin = origin, yWide)
     ## Cumulative sums to define the polygon
     yCumSum <- t(apply(yWide, 1, cumsum))
     Y <- as.data.frame(sapply(seq_len(nVars),
@@ -664,93 +662,94 @@ the overall unemployment results is clearly evident.
     names(Y) <- levels(groups)
     ## Back to long format, since xyplot works that way
     y <- stack(Y)$values
-  
+    
     ## Similar but easier for x
     xWide <- unstack(dat, x~groups)
     x <- rep(c(xWide[,1], rev(xWide[,1])), nVars)
     ## Groups repeated twice (upper and lower limits of the polygon)
-    groups <- rep(groups, each=2)
+    groups <- rep(groups, each = 2)
     
     ## Graphical parameters
     superpose.polygon <- trellis.par.get("superpose.polygon")
     col = superpose.polygon$col
     border = superpose.polygon$border 
     lwd = superpose.polygon$lwd 
-  
+    
     ## Draw polygons
     for (i in seq_len(nVars)){
-      xi <- x[groups==groupLevels[i]]
-      yi <- y[groups==groupLevels[i]]
-      panel.polygon(xi, yi, border=border,
-                    lwd=lwd, col=col[i])
+        xi <- x[groups==groupLevels[i]]
+        yi <- y[groups==groupLevels[i]]
+        panel.polygon(xi, yi, border = border,
+                      lwd = lwd, col = col[i])
     }
-  
+    
     ## Print labels
     for (i in seq_len(nVars)){
-      xi <- x[groups==groupLevels[i]]
-      yi <- y[groups==groupLevels[i]]
-      N <- length(xi)/2
-      ## Height available for the label
-      h <- unit(yi[idxMaxes[i]], 'native') -
-        unit(yi[idxMaxes[i] + 2*(N-idxMaxes[i]) +1], 'native')
-      ##...converted to "char" units
-      hChar <- convertHeight(h, 'char', TRUE)
-      ## If there is enough space and we are not at the first or
-      ## last variable, then the label is printed inside the polygon.
-      if((hChar >= 1) && !(i %in% c(1, nVars))){
-        grid.text(groupLevels[i],
-                  xi[idxMaxes[i]],
-                  (yi[idxMaxes[i]] +
-                   yi[idxMaxes[i] + 2*(N-idxMaxes[i]) +1])/2,
-                  gp = gpar(col='white', alpha=0.7, cex=0.7),
-                  default.units='native')
-      } else {
-        ## Elsewhere, the label is printed outside
-  
-        grid.text(groupLevels[i],
-                  xi[N],
-                  (yi[N] + yi[N+1])/2,
-                  gp=gpar(col=col[i], cex=0.7),
-                  just='left', default.units='native')
-      }          
+        xi <- x[groups==groupLevels[i]]
+        yi <- y[groups==groupLevels[i]]
+        N <- length(xi)/2
+        ## Height available for the label
+        h <- unit(yi[idxMaxes[i]], 'native') -
+            unit(yi[idxMaxes[i] + 2*(N-idxMaxes[i]) +1], 'native')
+        ##...converted to "char" units
+        hChar <- convertHeight(h, 'char', TRUE)
+        ## If there is enough space and we are not at the first or
+        ## last variable, then the label is printed inside the polygon.
+        if((hChar >= 1) && !(i %in% c(1, nVars))){
+            grid.text(groupLevels[i],
+                      xi[idxMaxes[i]],
+                      (yi[idxMaxes[i]] +
+                       yi[idxMaxes[i] + 2*(N-idxMaxes[i]) +1])/2,
+                      gp = gpar(col = 'white', alpha = 0.7, cex = 0.7),
+                      default.units = 'native')
+        } else {
+            ## Elsewhere, the label is printed outside
+            
+            grid.text(groupLevels[i],
+                      xi[N],
+                      (yi[N] + yi[N+1])/2,
+                      gp = gpar(col = col[i], cex = 0.7),
+                      just = 'left', default.units = 'native')
+        }          
     }
-  }
+}
   
 #+end_src
 
 #+NAME: prepanelFlow
 #+begin_src R :exports none
-  prepanel.flow <- function(x, y, groups, origin,...){
-    dat <- data.frame(x=x, y=y, groups=groups)
+prepanel.flow <- function(x, y, groups, origin,...)
+{
+    dat <- data.frame(x = x, y = y, groups = groups)
     nVars <- nlevels(groups)
     groupLevels <- levels(groups)
     yWide <- unstack(dat, y~groups)
-    if (origin=='themeRiver') origin= -1/2*rowSums(yWide)
-    else origin=0
-    yWide <- cbind(origin=origin, yWide)
+    if (origin=='themeRiver') origin =  -1/2*rowSums(yWide)
+    else origin = 0
+    yWide <- cbind(origin = origin, yWide)
     yCumSum <- t(apply(yWide, 1, cumsum))
-  
-    list(xlim=range(x),
-         ylim=c(min(yCumSum[,1]), max(yCumSum[,nVars+1])),
-         dx=diff(x),
-         dy=diff(c(yCumSum[,-1])))
-  }
+    
+    list(xlim = range(x),
+         ylim = c(min(yCumSum[,1]), max(yCumSum[,nVars+1])),
+         dx = diff(x),
+         dy = diff(c(yCumSum[,-1])))
+}
 #+end_src
 
 #+begin_src R :results output graphics :exports both :file "figs/unemployUSAThemeRiver.pdf" 
-  library(colorspace)
-  ## We will use a qualitative palette from colorspace
-  nCols <- ncol(unemployUSA)
-  pal <- rainbow_hcl(nCols, c=70, l=75, start=30, end=300)
-  myTheme <- custom.theme(fill=pal, lwd=0.2)
-  
-  sep2008 <- as.numeric(as.yearmon('2008-09'))
-  
-  xyplot(unemployUSA, superpose=TRUE, auto.key=FALSE,
-         panel=panel.flow, prepanel=prepanel.flow,
-         origin='themeRiver', scales=list(y=list(draw=FALSE)),
-         par.settings=myTheme) +
-      layer(panel.abline(v=sep2008, col='gray', lwd=0.7))
+library(colorspace)
+## We will use a qualitative palette from colorspace
+nCols <- ncol(unemployUSA)
+pal <- rainbow_hcl(nCols, c = 70, l = 75, start = 30, end = 300)
+myTheme <- custom.theme(fill = pal, lwd = 0.2)
+
+sep2008 <- as.numeric(as.yearmon('2008-09'))
+
+xyplot(unemployUSA, superpose = TRUE, auto.key = FALSE,
+       panel = panel.flow, prepanel = prepanel.flow,
+       origin = 'themeRiver', scales = list(y = list(draw = FALSE)),
+       par.settings = myTheme) +
+    layer(panel.abline(v = sep2008, col = 'gray', lwd = 0.7))
 #+end_src
 
 #+CAPTION: ThemeRiver of unemployment in the United States. label:fig:unemployUSAThemeRiver
@@ -839,16 +838,14 @@ enough room for the text (=hChar>1=) or at the right if the polygon is
 too small, or if it is the first or last variable of the set. Both the
 polygons and the labels share the same color (=col[i]=).
 
-#+BEGIN_EXPORT latex
-\index{Panel function}
-\index{superpose.polygon@\texttt{superpose.polygon}}
-\index{trellis.par.get@\texttt{trellis.par.get}}
-\index{apply@\texttt{apply}}
-\index{sapply@\texttt{sapply}}
-\index{unstack@\texttt{unstack}}
-\index{panel.text@\texttt{panel.text}}
-\index{panel.polygon@\texttt{panel.polygon}}
-#+END_EXPORT
+#+INDEX: Panel function
+#+INDEX: superpose.polygon@\texttt{superpose.polygon}
+#+INDEX: trellis.par.get@\texttt{trellis.par.get}
+#+INDEX: apply@\texttt{apply}
+#+INDEX: sapply@\texttt{sapply}
+#+INDEX: unstack@\texttt{unstack}
+#+INDEX: panel.text@\texttt{panel.text}
+#+INDEX: panel.polygon@\texttt{panel.polygon}
 
 #+begin_src R :noweb yes :tangle no
 <<panelFlow>>
@@ -860,10 +857,10 @@ ref:fig:themeRiverError). However, the graphical window is not
 large enough, and part of the polygons fall out of it. Why?
 
 #+begin_src R :results output graphics :tangle no :exports both :file "figs/ThemeRiverError.pdf" 
-  xyplot(unemployUSA, superpose=TRUE, auto.key=FALSE,
-         panel=panel.flow, origin='themeRiver',
-         par.settings=myTheme, cex=0.4, offset=0,
-         scales=list(y=list(draw=FALSE)))
+xyplot(unemployUSA, superpose = TRUE, auto.key = FALSE,
+       panel = panel.flow, origin = 'themeRiver',
+       par.settings = myTheme, cex = 0.4, offset = 0,
+       scales = list(y = list(draw = FALSE)))
 #+end_src
 
 #+CAPTION: First attempt of ThemeRiver. label:fig:themeRiverError
@@ -909,6 +906,8 @@ be coerced to this class. The result is an interactive graph, where
 values are displayed according to the mouse position over the time
 series. Regions can be selected to zoom into a time period. The figure
 label:fig:dygraphs is an snapshot of the interactive graph.
+
+#+INDEX: Packages!dygraphs@\texttt{dygraphs}
 
 #+begin_src R
 library(dygraphs)
@@ -965,6 +964,7 @@ operator.  Once again, the result is an interactive graph with
 selection and zoom capabilities. Figure label:fig:highcharter is an
 snapshot of the interactive graph.
 
+#+INDEX: Packages!highcharter@\texttt{highcharter}
 
 #+begin_src R
 library(highcharter)
@@ -1005,6 +1005,9 @@ for values, and a column for variable names) only one call to
 combination of =fortify=, to convert the =zoo= object into a
 =data.frame=, and =melt=, to transform from wide to long format.
 
+#+INDEX: Packages!plotly@\texttt{plotly}
+#+INDEX: Packages!reshape2\texttt{reshape2}
+
 #+begin_src R
 library(reshape2)
 
@@ -1038,9 +1041,9 @@ plot_ly(aranjuezDF) %>%
 
 ** \floweroneleft Interaction with =gridSVG=
 #+begin_src R :exports none
-  ##################################################################
-  ## Interaction with gridSVG
-  ##################################################################
+##################################################################
+## Interaction with gridSVG
+##################################################################
 #+end_src
 
 The =gridSVG= package provides functions to convert =grid=-based =R=
@@ -1055,20 +1058,18 @@ listing of the names of grobs or viewports included in the graphic
 output: only the lines will be connected with the JavaScript
 code. 
 
-#+BEGIN_EXPORT latex
-\index{Packages!gridSVG@\texttt{gridSVG}}
-\index{grid.ls@\texttt{grid.ls}}
-#+END_EXPORT
+#+INDEX: Packages!gridSVG@\texttt{gridSVG}
+#+INDEX: grid.ls@\texttt{grid.ls}
 
 #+begin_src R
-  library(gridSVG)
-  ## grobs in the graphical output
-  pNavarra
-  grobs <- grid.ls(print=FALSE)
-  ## only interested in some of them
-  nms <- grobs$name[grobs$type == "grobListing"]
-  idxNames <- grep('lines', nms)
-  IDs <- nms[idxNames]
+library(gridSVG)
+## grobs in the graphical output
+pNavarra
+grobs <- grid.ls(print = FALSE)
+## only interested in some of them
+nms <- grobs$name[grobs$type == "grobListing"]
+idxNames <- grep('lines', nms)
+IDs <- nms[idxNames]
 #+end_src
 
 The second step is to modify each =grob= (graphical object) to add
@@ -1086,52 +1087,49 @@ been already visited. In addition, because the browsers display the
 content of the title attribute with a default tooltip, =grid.garnish=
 sets this attribute to =info=.
 
-#+BEGIN_EXPORT latex
-\index{grid.garnish@\texttt{grid.garnish}}
-#+END_EXPORT
+#+INDEX: grid.garnish@\texttt{grid.garnish}
 
 #+begin_src R
-  for (id in unique(IDs)){
+for (id in unique(IDs))
+{
     ## extract information from the data
     ## according to the ID value
     i <- strsplit(id, '\\.')
     i <- sapply(i, function(x)as.numeric(x[5]))
     ## Information to be attached to each line: annual mean of daily
     ## radiation and abbreviated name of the station
-    dat <- round(mean(navarra[,i], na.rm=TRUE), 2)
-    info <- paste(names(navarra)[i], paste(dat, collapse=','),
-                  sep=': ')
+    dat <- round(mean(navarra[,i], na.rm = TRUE), 2)
+    info <- paste(names(navarra)[i], paste(dat, collapse = ','),
+                  sep = ': ')
     ## attach SVG attributes
     grid.garnish(id,
-                 onmouseover="highlight(evt)",
-                 onmouseout="hide(evt)",
-                 title=info)
-  }
+                 onmouseover = "highlight(evt)",
+                 onmouseout = "hide(evt)",
+                 title = info)
+}
 #+end_src
 
 These JavaScript functions are included in a script file named
 =highlight.js= (available at the website of the book). It can be
 added as an additional object with =grid.script=.
 
-#+BEGIN_EXPORT latex
-\index{grid.script@\texttt{grid.script}}
-#+END_EXPORT
+#+INDEX: grid.script@\texttt{grid.script}
 
 #+begin_src R 
-  grid.script(filename="highlight.js")
+grid.script(filename="highlight.js")
 #+end_src
 
 This script is easy to understand, even without previous
 JavaScript knowledge:
-\index{JavaScript}
+#+INDEX: JavaScript
 #+begin_example
-  highlight = function(evt){',
+highlight = function(evt){',
       evt.target.setAttribute('opacity', '1');
       evt.target.setAttribute('stroke', 'red');
       evt.target.setAttribute('stroke-width', '1');
   }
   
-  hide = function(evt){
+hide = function(evt){
       evt.target.setAttribute('opacity', '0.3');
       evt.target.setAttribute('stroke', green');
       evt.target.setAttribute('stroke-width', '0.3');
@@ -1139,12 +1137,11 @@ JavaScript knowledge:
 #+end_example
 
 Finally, =gridToSVG= exports the whole scene to SVG. 
-#+BEGIN_EXPORT latex
-\index{grid.export@\texttt{grid.export}} 
-#+END_EXPORT
+
+#+INDEX: grid.export@\texttt{grid.export}
 
 #+begin_src R
-  grid.export('figs/navarraRadiation.svg')
+grid.export('figs/navarraRadiation.svg')
 #+end_src
 
 A snapshot of the result, as viewed in a browser with a line
@@ -1169,6 +1166,10 @@ function, =streamgraph=, requires a =data.frame= as the first
 argument. Besides, its three next arguments, =key=, =value=, and
 =date=, makes this function a good candidate to work together with
 =fortify= and =melt=.
+
+
+#+INDEX: Packages!streamgraph\texttt{streamgraph}
+#+INDEX: Packages!reshape2\texttt{reshape2}
 
 #+begin_src R
 ## remotes::install_github("hrbrmstr/streamgraph")

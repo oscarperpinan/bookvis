@@ -3,45 +3,46 @@
 #+BIND: org-export-latex-image-default-option "height=0.45\\textheight"
 
 #+begin_src R :exports none :tangle no
-  setwd('~/github/bookvis')
+setwd('~/github/bookvis')
 #+end_src
 
 #+begin_src R :exports none  
-    ##################################################################
-    ## Initial configuration
-    ##################################################################
-    ## Clone or download the repository and set the working directory
-    ## with setwd to the folder where the repository is located.
+##################################################################
+## Initial configuration
+##################################################################
+## Clone or download the repository and set the working directory
+## with setwd to the folder where the repository is located.
   
-    library(lattice)
-    library(ggplot2)
-    library(latticeExtra)
-    library(zoo)
+library(lattice)
+library(ggplot2)
+library(latticeExtra)
+library(zoo)
+
+myTheme <- custom.theme.2(pch = 19, cex = 0.7,
+                          region = rev(brewer.pal(9, 'YlOrRd')),
+                          symbol = brewer.pal(n = 8, name = "Dark2"))
+myTheme$strip.background$col = 'transparent'
+myTheme$strip.shingle$col = 'transparent'
+myTheme$strip.border$col = 'transparent'
     
-    myTheme <- custom.theme.2(pch=19, cex=0.7,
-                              region=rev(brewer.pal(9, 'YlOrRd')),
-                              symbol = brewer.pal(n=8, name = "Dark2"))
-    myTheme$strip.background$col='transparent'
-    myTheme$strip.shingle$col='transparent'
-    myTheme$strip.border$col='transparent'
-    
-    xscale.components.custom <- function(...){
-        ans <- xscale.components.default(...)
-        ans$top=FALSE
-        ans}
-    yscale.components.custom <- function(...){
-        ans <- yscale.components.default(...)
-        ans$right=FALSE
-        ans}
-    myArgs <- list(as.table=TRUE,
-                   between=list(x=0.5, y=0.2),
-                   xscale.components = xscale.components.custom,
-                   yscale.components = yscale.components.custom)
-    defaultArgs <- lattice.options()$default.args
-    
-    lattice.options(default.theme = myTheme,
-                    default.args = modifyList(defaultArgs, myArgs))
-  ##################################################################
+xscale.components.custom <- function(...){
+    ans <- xscale.components.default(...)
+    ans$top = FALSE
+    ans}
+yscale.components.custom <- function(...){
+    ans <- yscale.components.default(...)
+    ans$right = FALSE
+    ans}
+
+myArgs <- list(as.table = TRUE,
+               between = list(x = 0.5, y = 0.2),
+               xscale.components = xscale.components.custom,
+               yscale.components = yscale.components.custom)
+defaultArgs <- lattice.options()$default.args
+
+lattice.options(default.theme = myTheme,
+                default.args = modifyList(defaultArgs, myArgs))
+##################################################################
 #+end_src
 
 * Polylines
@@ -52,28 +53,24 @@
 #+end_src
 
 #+begin_src R
-  load('data/CO2.RData')
+load('data/CO2.RData')
 #+end_src
 
 #+RESULTS:
 
-
-
-#+BEGIN_EXPORT latex
-\index{Data!CO2@$CO_2$}
-\index{Data!World Bank}
-#+END_EXPORT
+#+INDEX: Data!CO2@$CO_2$
+#+INDEX: Data!World Bank
 
 Our first approach is to display the entire data in a panel with a
 scatterplot using country names as the grouping factor. Points of each
 country are connected with polylines to reveal the time evolution
 (Figure ref:fig:CO2-GNI).
 #+begin_src R :results output graphics :exports both :file "figs/CO2_GNI.pdf" 
-  ## lattice version
-  xyplot(GNI.capita  ~ CO2.capita, data=CO2data,
-         xlab="Carbon dioxide emissions (metric tons per capita)",
-         ylab="GNI per capita, PPP (current international $)",
-         groups=Country.Name, type='b')
+## lattice version
+xyplot(GNI.capita  ~ CO2.capita, data=CO2data,
+       xlab="Carbon dioxide emissions (metric tons per capita)",
+       ylab="GNI per capita, PPP (current international $)",
+       groups=Country.Name, type='b')
 #+end_src
 
 #+CAPTION: GNI per capita versus $\mathrm{CO_2}$ emissions per capita (=lattice= version). label:fig:CO2-GNI
@@ -81,12 +78,12 @@ country are connected with polylines to reveal the time evolution
 [[file:figs/CO2_GNI.pdf]]
 
 #+begin_src R :eval no-export
-  ## ggplot2 version
-  ggplot(data=CO2data, aes(x=CO2.capita, y=GNI.capita,
-             color=Country.Name)) +
-      xlab("Carbon dioxide emissions (metric tons per capita)") +
-      ylab("GNI per capita, PPP (current international $)") +
-      geom_point() + geom_path() + theme_bw()
+## ggplot2 version
+ggplot(data=CO2data, aes(x=CO2.capita, y=GNI.capita,
+                         color=Country.Name)) +
+    xlab("Carbon dioxide emissions (metric tons per capita)") +
+    ylab("GNI per capita, PPP (current international $)") +
+    geom_point() + geom_path() + theme_bw()
 #+end_src
 
 Three improvements can be added to this graphical result: 
@@ -97,9 +94,9 @@ Three improvements can be added to this graphical result:
  
 * Choosing Colors
 #+begin_src R :exports none
-  ##################################################################
-  ## Choosing colors
-  ##################################################################
+##################################################################
+## Choosing colors
+##################################################################
 #+end_src
 
 The =Country.Name= categorical variable will be encoded with a
@@ -112,17 +109,15 @@ colors, and thus some countries will share the same color. This is not
 a problem because the curves will be labeled, and countries with the
 same color will be displayed at enough distance.
 
-#+BEGIN_EXPORT latex
-\index{Packages!RColorBrewer@\texttt{RColorBrewer}}
-\index{brewer.pal@\texttt{brewer.pal}}
-#+END_EXPORT
+#+INDEX: Packages!RColorBrewer@\texttt{RColorBrewer}
+#+INDEX: brewer.pal@\texttt{brewer.pal}
 
 #+begin_src R 
-  library(RColorBrewer)
-  
-  nCountries <- nlevels(CO2data$Country.Name)
-  pal <- brewer.pal(n=5, 'Set1')
-  pal <- rep(pal, length = nCountries)
+library(RColorBrewer)
+
+nCountries <- nlevels(CO2data$Country.Name)
+pal <- brewer.pal(n=5, 'Set1')
+pal <- rep(pal, length = nCountries)
 #+end_src
 
 Adjacent colors of this palette are chosen to be easily
@@ -135,14 +130,12 @@ variable to be represented along the x-axis (=CO2.capita=), and
 extract colors from the palette according to the order of this
 value.  
 
-#+BEGIN_EXPORT latex
-\index{aggregate@\texttt{aggregate}}
-#+END_EXPORT
+#+INDEX: aggregate@\texttt{aggregate}
 
 #+begin_src R 
-  ## Rank of average values of CO2 per capita
-  CO2mean <- aggregate(CO2.capita ~ Country.Name, data=CO2data, FUN=mean)
-  palOrdered <- pal[rank(CO2mean$CO2.capita)]  
+## Rank of average values of CO2 per capita
+CO2mean <- aggregate(CO2.capita ~ Country.Name, data=CO2data, FUN=mean)
+palOrdered <- pal[rank(CO2mean$CO2.capita)]  
 #+end_src
 
 A more sophisticated solution is to use the ordered results of a
@@ -150,19 +143,22 @@ hierarchical clustering of the time evolution of the $\mathrm{CO_2}$ per capita
 values (Figure ref:fig:hclustCO2). The data is extracted from the
 original $\mathrm{CO_2}$ =data.frame=.  
 
-#+BEGIN_EXPORT latex
-\index{hclust@\texttt{hclust}}
-#+END_EXPORT
+#+INDEX: hclust@\texttt{hclust}
 
 #+begin_src R :results output graphics :exports both :file "figs/hclust.pdf" 
-  CO2capita <- CO2data[, c('Country.Name', 'Year', 'CO2.capita')]
-  CO2capita <- reshape(CO2capita, idvar='Country.Name', timevar='Year', direction='wide')
-  hCO2 <- hclust(dist(CO2capita[, -1]))
-  
-  oldpar <- par(mar=c(0, 2, 0, 0) + .1)
-  plot(hCO2, labels=CO2capita$Country.Name,
-       xlab='', ylab='', sub='', main='')
-  par(oldpar)
+CO2capita <- CO2data[, c('Country.Name',
+                         'Year',
+                         'CO2.capita')]
+CO2capita <- reshape(CO2capita,
+                     idvar='Country.Name',
+                     timevar='Year',
+                     direction='wide')
+hCO2 <- hclust(dist(CO2capita[, -1]))
+
+oldpar <- par(mar=c(0, 2, 0, 0) + .1)
+plot(hCO2, labels=CO2capita$Country.Name,
+     xlab='', ylab='', sub='', main='')
+par(oldpar)
 #+end_src
 
 #+CAPTION: Hierarchical clustering of the time evolution of $\mathrm{CO_2}$ per capita values. label:fig:hclustCO2
@@ -175,9 +171,9 @@ which returns a vector of the positions of the matches of the country
 names in alphabetical order in the country names ordered according to
 the hierarchical clustering.
 #+begin_src R 
-  idx <- match(levels(CO2data$Country.Name), 
-               CO2capita$Country.Name[hCO2$order])
-  palOrdered <- pal[idx]  
+idx <- match(levels(CO2data$Country.Name), 
+             CO2capita$Country.Name[hCO2$order])
+palOrdered <- pal[idx]  
 #+end_src
 It must be highlighted that this palette links colors with the levels
 of =Country.Name= (country names in alphabetical order), which is
@@ -185,30 +181,30 @@ exactly what the =groups= argument provides. The following code
 produces a curve for each country using different colors to
 distinguish them.
 
-#+BEGIN_EXPORT latex
-\index{simpleTheme@\texttt{simpleTheme}}
-#+END_EXPORT
-
+#+INDEX: simpleTheme@\texttt{simpleTheme}
 #+begin_src R 
-  ## simpleTheme encapsulates the palette in a new theme for xyplot
-  myTheme <- simpleTheme(pch=19, cex=0.6, col=palOrdered)
-  
-  pCO2.capita <- xyplot(GNI.capita  ~ CO2.capita,
-                        xlab="Carbon dioxide emissions (metric tons per capita)",
-                        ylab="GNI per capita, PPP (current international $)",
-                        groups=Country.Name, data=CO2data,
-                        par.settings=myTheme,
-                        type='b')
+## simpleTheme encapsulates the palette in a new theme for xyplot
+myTheme <- simpleTheme(pch=19, cex=0.6, col=palOrdered)
+
+pCO2.capita <- xyplot(GNI.capita  ~ CO2.capita,
+                      data = CO2data,
+                      xlab = "Carbon dioxide emissions (metric tons per capita)",
+                      ylab = "GNI per capita, PPP (current international $)",
+                      groups = Country.Name,
+                      par.settings = myTheme,
+                      type='b')
 #+end_src
 
 #+begin_src R 
-  gCO2.capita <- ggplot(data=CO2data, aes(x=CO2.capita, y=GNI.capita,
-                        color=Country.Name)) +
-      geom_point() + geom_path() +
-      scale_color_manual(values=palOrdered, guide=FALSE) +
-      xlab('CO2 emissions (metric tons per capita)') +
-      ylab('GNI per capita, PPP (current international $)') +
-      theme_bw()
+gCO2.capita <- ggplot(data = CO2data,
+                      aes(x = CO2.capita,
+                          y = GNI.capita,
+                          color = Country.Name)) +
+    geom_point() + geom_path() +
+    scale_color_manual(values=palOrdered, guide=FALSE) +
+    xlab('CO2 emissions (metric tons per capita)') +
+    ylab('GNI per capita, PPP (current international $)') +
+    theme_bw()
 #+end_src
 
 * Labels to Show Time Information
@@ -224,57 +220,56 @@ is a solution. In the panel function, =subscripts= is a vector with
 the integer indices representing the rows of the =data.frame= to be
 displayed in the panel.
 
-#+BEGIN_EXPORT latex
-\index{panel.text@\texttt{panel.text}}
-\index{subscripts@\texttt{subscripts}} \index{Panel function}
-\index{panel.superpose@\texttt{panel.superpose}}
-#+END_EXPORT
+#+INDEX: panel.text@\texttt{panel.text}
+#+INDEX: subscripts@\texttt{subscripts}
+#+INDEX: Panel function
+#+INDEX: panel.superpose@\texttt{panel.superpose}
+
 
 #+begin_src R :eval no-export
-  xyplot(GNI.capita  ~ CO2.capita,
-         xlab="Carbon dioxide emissions (metric tons per capita)",
-         ylab="GNI per capita, PPP (current international $)",
-         groups=Country.Name, data=CO2data,
-         par.settings=myTheme,
-         type='b', 
-         panel=function(x, y, ..., subscripts, groups){
+xyplot(GNI.capita  ~ CO2.capita,
+       data = CO2data
+       xlab = "Carbon dioxide emissions (metric tons per capita)",
+       ylab = "GNI per capita, PPP (current international $)",
+       groups = Country.Name,
+       par.settings = myTheme,
+       type='b',
+       panel = function(x, y, ..., subscripts, groups){
            panel.text(x, y, ...,
-                      labels=CO2data$Year[subscripts],
-                      pos=2, cex=0.5, col='gray')
+                      labels = CO2data$Year[subscripts],
+                      pos = 2, cex = 0.5, col = 'gray')
            panel.superpose(x, y, subscripts, groups,...)
-         }
-         )
+       })
 #+end_src
 
 The same result with a clearer code is obtained with the combination
 of =+.trellis=, =glayer_= and =panel.text=. Using =glayer_= instead of
 =glayer=, we ensure that the labels are printed below the lines.
 
-#+BEGIN_EXPORT latex
-\index{Packages!latticeExtra@\texttt{latticeExtra}}
-\index{glayer@\texttt{glayer}}
-\index{+.trellis@\texttt{+.trellis}}
-#+END_EXPORT
+#+INDEX: Packages!latticeExtra@\texttt{latticeExtra}
+#+INDEX: glayer@\texttt{glayer}
+#+INDEX: +.trellis@\texttt{+.trellis}
 
 #+begin_src R
-  pCO2.capita <- pCO2.capita +
-      glayer_(panel.text(..., labels=CO2data$Year[subscripts],
-                         pos=2, cex=0.5, col='gray'))
+pCO2.capita <- pCO2.capita +
+    glayer_(panel.text(...,
+                       labels = CO2data$Year[subscripts],
+                         pos = 2, cex = 0.5, col = 'gray'))
 #+end_src
 
 #+begin_src R 
-  gCO2.capita <- gCO2.capita + geom_text(aes(label=Year),
-                                         colour='gray',
-                                         size=2.5,
-                                         hjust=0, vjust=0)
+gCO2.capita <- gCO2.capita + geom_text(aes(label = Year),
+                                       colour = 'gray',
+                                       size = 2.5,
+                                       hjust = 0, vjust = 0)
   
 #+end_src
 
 * Country Names: Positioning Labels
 #+begin_src R :exports none
-  ##################################################################
-  ## Country names: positioning labels
-  ##################################################################
+##################################################################
+## Country names: positioning labels
+##################################################################
 #+end_src
 
 The common solution to link each curve with the group value is to add
@@ -291,21 +286,20 @@ ref:fig:CO2-GNI-glayer). Labels are placed with the
 function use optimization routines to find locations without
 overlaps.
 
-#+BEGIN_EXPORT latex
-\index{group.value@\texttt{group.value}}
-\index{group.number@\texttt{group.number}}
-#+END_EXPORT
+#+INDEX: group.value@\texttt{group.value}
+#+INDEX: group.number@\texttt{group.number}
 
 #+begin_src R :results output graphics :exports both :file "figs/CO2_capita.pdf" 
-  library(maptools)  
-  ## group.value provides the country name; group.number is the
-  ## index of each country to choose the color from the palette.
-  pCO2.capita +
-      glayer(panel.pointLabel(mean(x), mean(y),
-                              labels= group.value,
-                              col=palOrdered[group.number],
-                              cex=.8,
-                              fontface=2, fontfamily='Palatino'))
+library(maptools)  
+## group.value provides the country name; group.number is the index
+## of each country to choose the color from the palette.
+pCO2.capita +
+    glayer(panel.pointLabel(mean(x), mean(y),
+                            labels = group.value,
+                            col = palOrdered[group.number],
+                            cex = .8,
+                            fontface = 2,
+                            fontfamily = 'Palatino'))
 #+end_src
 
 #+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita. Labels are placed with =panel.pointLabel=. label:fig:CO2-GNI-glayer
@@ -325,14 +319,14 @@ the collection or even define a custom method. For the =pCO2.capita=
 object, I have obtained the best results with =extreme.grid= (Figure
 ref:fig:CO2-GNI-DL).
 
-#+BEGIN_EXPORT latex
-\index{Packages!directlabels@\texttt{directlabels}}
-\index{direct.label@\texttt{direct.label}}
-#+END_EXPORT
+#+INDEX: Packages!directlabels@\texttt{directlabels}
+#+INDEX: direct.label@\texttt{direct.label}
 
 #+begin_src R :results output graphics :exports both :file "figs/CO2_capitaDL.pdf"
-  library(directlabels)
-  direct.label(pCO2.capita, method='extreme.grid')
+library(directlabels)
+
+direct.label(pCO2.capita,
+             method = 'extreme.grid')
 #+end_src
 
 #+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita. Labels are placed with the \texttt{extreme.grid} method of the \texttt{directlabels} package. label:fig:CO2-GNI-DL 
@@ -340,7 +334,7 @@ ref:fig:CO2-GNI-DL).
 [[file:figs/CO2_capitaDL.pdf]]
 
 #+begin_src R 
-  direct.label(gCO2.capita, method='extreme.grid')
+direct.label(gCO2.capita, method='extreme.grid')
 #+end_src
 
 * A Panel for Each Year
@@ -357,11 +351,12 @@ ref:fig:CO2-GNI, now including =|factor(Year)= in the lattice
 version and =facet_wrap(~ Year)= in the =ggplot2= version.
 
 #+begin_src R :results output graphics :exports both :file "figs/CO2_capita_panel.pdf"
-  xyplot(GNI.capita  ~ CO2.capita | factor(Year), data=CO2data,
-         xlab="Carbon dioxide emissions (metric tons per capita)",
-         ylab="GNI per capita, PPP (current international $)",
-         groups=Country.Name, type='b',
-         auto.key=list(space='right'))
+xyplot(GNI.capita  ~ CO2.capita | factor(Year),
+       data = CO2data,
+       xlab = "Carbon dioxide emissions (metric tons per capita)",
+       ylab = "GNI per capita, PPP (current international $)",
+       groups = Country.Name, type = 'b',
+       auto.key = list(space = 'right'))
 #+end_src
 
 #+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita with a panel for each year. label:fig:CO2-GNI-panel
@@ -369,11 +364,14 @@ version and =facet_wrap(~ Year)= in the =ggplot2= version.
 [[file:figs/CO2_capita_panel.pdf]]
 
 #+begin_src R :eval no-export
-  ggplot(data=CO2data, aes(x=CO2.capita, y=GNI.capita, colour=Country.Name)) +
-      facet_wrap(~ Year) + geom_point(pch=19) + 
-      xlab('CO2 emissions (metric tons per capita)') +
-      ylab('GNI per capita, PPP (current international $)') +
-      theme_bw()
+ggplot(data = CO2data,
+       aes(x = CO2.capita,
+           y = GNI.capita,
+           colour = Country.Name)) +
+    facet_wrap(~ Year) + geom_point(pch = 19) + 
+    xlab('CO2 emissions (metric tons per capita)') +
+    ylab('GNI per capita, PPP (current international $)') +
+    theme_bw()
 #+end_src
 
 Because the grouping variable, =Country.Name=, has many levels, the
@@ -381,13 +379,16 @@ legend is not very useful. Once again, point labeling is recommended
 (Figure ref:fig:CO2-GNI-panel-labels).
 
 #+begin_src R :results output graphics :exports both :file "figs/CO2_capita_panel_labels.pdf"
-  xyplot(GNI.capita  ~ CO2.capita | factor(Year), data=CO2data,
-         xlab="Carbon dioxide emissions (metric tons per capita)",
-         ylab="GNI per capita, PPP (current international $)",
-         groups=Country.Name, type='b',
-         par.settings=myTheme) + 
-      glayer(panel.pointLabel(x, y, labels=group.value,
-                              col=palOrdered[group.number], cex=0.7))
+xyplot(GNI.capita  ~ CO2.capita | factor(Year),
+       data = CO2data,
+       xlab = "Carbon dioxide emissions (metric tons per capita)",
+       ylab = "GNI per capita, PPP (current international $)",
+       groups = Country.Name, type = 'b',
+       par.settings = myTheme) + 
+    glayer(panel.pointLabel(x, y,
+                            labels = group.value,
+                            col = palOrdered[group.number],
+                            cex = 0.7))
 #+end_src
 
 #+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita with a panel for each year. label:fig:CO2-GNI-panel-labels
@@ -407,34 +408,36 @@ Product with purchasing power parity (PPP) estimations.
 
 To use this numeric variable as an additional grouping factor, its range must be divided into different classes. The typical solution is to use =cut= to coerce the numeric variable into a =factor= whose levels correspond to uniform intervals, which could be unrelated to the data distribution. The =classInt= package cite:Bivand2013 provides several methods to partition data into classes based on natural groups in the data distribution.
 
-#+BEGIN_EXPORT latex
-\index{Packages!classInt@\texttt{classInt}}
-\index{classIntervals@\texttt{classIntervals}}
-#+END_EXPORT
+#+INDEX: Packages!classInt@\texttt{classInt}
+#+INDEX: classIntervals@\texttt{classIntervals}
 
 #+begin_src R 
-  library(classInt)
-  z <- CO2data$CO2.PPP
-  intervals <- classIntervals(z, n=4, style='fisher')
+library(classInt)
+z <- CO2data$CO2.PPP
+intervals <- classIntervals(z, n = 4, style = 'fisher')
 #+end_src
 
 Although the functions of this package are mainly intended to create color palettes for maps, the results can also be associated to point sizes. =cex.key= defines the sequence of sizes (to be displayed in the legend) associated with each =CO2.PPP= using the =findCols= function.
 #+begin_src R 
-  nInt <- length(intervals$brks) - 1
-  cex.key <- seq(0.5, 1.8, length=nInt)
-  
-  idx <- findCols(intervals)
-  CO2data$cexPoints <- cex.key[idx]
+nInt <- length(intervals$brks) - 1
+cex.key <- seq(0.5, 1.8, length = nInt)
+
+idx <- findCols(intervals)
+CO2data$cexPoints <- cex.key[idx]
 #+end_src
 
 The graphic will display information on two variables (=GNI.capita= and =CO2.capita= in the vertical and horizontal axes, respectively) with a conditioning variable (=Year=) and two grouping variables (=Country.Name=, and =CO2.PPP= through =cexPoints=) (Figure ref:fig:CO2pointsGG).
 
 #+begin_src R :results output graphics :exports both :file "figs/CO2pointsGG.pdf" 
-  ggplot(data=CO2data, aes(x=CO2.capita, y=GNI.capita, colour=Country.Name)) +
-      facet_wrap(~ Year) + geom_point(aes(size=cexPoints), pch=19) +
-      xlab('Carbon dioxide emissions (metric tons per capita)') +
-      ylab('GNI per capita, PPP (current international $)') +
-      theme_bw()
+ggplot(data = CO2data,
+       aes(x = CO2.capita,
+           y = GNI.capita,
+           colour = Country.Name)) +
+    facet_wrap(~ Year) +
+    geom_point(aes(size = cexPoints), pch = 19) +
+    xlab('Carbon dioxide emissions (metric tons per capita)') +
+    ylab('GNI per capita, PPP (current international $)') +
+    theme_bw()
 #+end_src
 
 #+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita for different intervals of the ratio of $\mathrm{CO_2}$ emissions to the GDP PPP estimations. label:fig:CO2pointsGG
@@ -443,40 +446,38 @@ The graphic will display information on two variables (=GNI.capita= and =CO2.cap
 
 The =auto.key= mechanism of the =lattice= version is not able to cope with two grouping variables. Therefore, the legend, whose main componens are the labels (=intervals=) and the point sizes (=cex.key=), should be defined manually (Figure ref:fig:CO2points). 
 
-#+BEGIN_EXPORT latex
-\index{panel.text@\texttt{panel.text}}
-\index{panel.groups@\texttt{panel.groups}}
-\index{panel.superpose@\texttt{panel.superpose}}
-#+END_EXPORT
+#+INDEX: panel.text@\texttt{panel.text}
+#+INDEX: panel.groups@\texttt{panel.groups}
+#+INDEX: panel.superpose@\texttt{panel.superpose}
 
 #+begin_src R :results output graphics :exports both :file "figs/CO2points.pdf" 
-op <- options(digits=2)
+op <- options(digits = 2)
 tab <- print(intervals)
 options(op)
   
-key <- list(space='right',
-            title=expression(CO[2]/GNI.PPP),
-            cex.title=1,
+key <- list(space = 'right',
+            title = expression(CO[2]/GNI.PPP),
+            cex.title = 1,
             ## Labels of the key are the intervals strings
-            text=list(labels=names(tab), cex=0.85),
+            text = list(labels = names(tab), cex = 0.85),
             ## Points sizes are defined with cex.key
-            points=list(col='black', pch=19,
-                cex=cex.key, alpha=0.7))
+            points = list(col = 'black', pch = 19,
+                cex = cex.key, alpha = 0.7))
 
   
-xyplot(GNI.capita ~ CO2.capita|factor(Year), data=CO2data,
-       xlab="Carbon dioxide emissions (metric tons per capita)",
-       ylab="GNI per capita, PPP (current international $)",
-       groups=Country.Name, key=key, alpha=0.7,
-       panel = panel.superpose,
-       panel.groups = function(x, y,
+xyplot(GNI.capita ~ CO2.capita|factor(Year), data = CO2data,
+       xlab = "Carbon dioxide emissions (metric tons per capita)",
+       ylab = "GNI per capita, PPP (current international $)",
+       groups = Country.Name, key = key, alpha = 0.7,
+       panel  =  panel.superpose,
+       panel.groups  =  function(x, y,
            subscripts, group.number, group.value, ...){
            panel.xyplot(x, y,
-                        col = palOrdered[group.number],
-                        cex = CO2data$cexPoints[subscripts])
-           panel.pointLabel(x, y, labels=group.value,
-                            col=palOrdered[group.number],
-                            cex=0.7)
+                        col  =  palOrdered[group.number],
+                        cex  =  CO2data$cexPoints[subscripts])
+           panel.pointLabel(x, y, labels = group.value,
+                            col = palOrdered[group.number],
+                            cex = 0.7)
        }
        ) 
 #+end_src
@@ -488,9 +489,9 @@ xyplot(GNI.capita ~ CO2.capita|factor(Year), data=CO2data,
 * Interactive
 ** =googleVis=
 #+begin_src R :exports none
-  ##################################################################
-  ## Interactive
-  ##################################################################
+##################################################################
+## googleVis
+##################################################################
 #+end_src
 The first solution is a Motion Chart the =googleVis= package
 cite:Gesmann.deCastillo2011, an interface between R and the Google
@@ -498,13 +499,12 @@ Visualisation API. With its =gvisMotionChart= function it is easy to
 produce a Motion Chart that can be displayed using a browser with
 Flash enabled (Figure ref:fig:googleVis).
 
-#+BEGIN_EXPORT latex
-\index{Packages!googleVis@\texttt{googleVis}}
-#+END_EXPORT
-
+#+INDEX: Packages!googleVis@\texttt{googleVis}
 #+begin_src R :eval no-export
-  library(googleVis)
-  pgvis <- gvisMotionChart(CO2data, idvar='Country.Name', timevar='Year')
+library(googleVis)
+pgvis <- gvisMotionChart(CO2data,
+                         idvar='Country.Name',
+                         timevar='Year')
 #+end_src
 
 #+BEGIN_EXPORT latex
@@ -538,9 +538,7 @@ before using it for public distribution.
 
 ** plotly
 
-#+BEGIN_EXPORT latex
-\index{Packages!plotlyG@\texttt{plotly}}
-#+END_EXPORT
+#+INDEX: Packages!plotlyG@\texttt{plotly}
 
 #+begin_src R
 library(plotly)
@@ -587,42 +585,41 @@ there will not be a legend, there is no need to define class
 intervals, and thus the radius is directly proportional to the value
 of =CO2data$CO2.PPP=.
 
-#+BEGIN_EXPORT latex
-\index{Packages!gridSVG@\texttt{gridSVG}}
-#+END_EXPORT
+#+INDEX: Packages!gridSVG@\texttt{gridSVG}
 
 #+begin_src R 
-  library(gridSVG)
-  
-  xyplot(GNI.capita ~ CO2.capita, data=CO2data,
-         xlab="Carbon dioxide emissions (metric tons per capita)",
-         ylab="GNI per capita, PPP (current international $)",
-         subset=Year==2000, groups=Country.Name,
-         ## The limits of the graphic are defined
-         ## with the entire dataset
-         xlim=extendrange(CO2data$CO2.capita),
-         ylim=extendrange(CO2data$GNI.capita),
-         panel=function(x, y, ..., subscripts, groups) {
+library(gridSVG)
+
+xyplot(GNI.capita ~ CO2.capita,
+       data = CO2data,
+       xlab = "Carbon dioxide emissions (metric tons per capita)",
+       ylab = "GNI per capita, PPP (current international $)",
+       subset = Year==2000, groups = Country.Name,
+       ## The limits of the graphic are defined
+       ## with the entire dataset
+       xlim = extendrange(CO2data$CO2.capita),
+       ylim = extendrange(CO2data$GNI.capita),
+       panel = function(x, y, ..., subscripts, groups) {
            color <- palOrdered[groups[subscripts]]
            radius <- CO2data$CO2.PPP[subscripts]
            ## Size of labels
            cex <- 1.1*sqrt(radius)
            ## Bubbles
-           grid.circle(x, y, default.units="native",
-                       r=radius*unit(.25, "inch"),
-                       name=trellis.grobname("points", type="panel"),
-                       gp=gpar(col=color,
-                         ## Fill color ligther than border
-                         fill=adjustcolor(color, alpha=.5),
-                         lwd=2))
+           grid.circle(x, y, default.units = "native",
+                       r = radius*unit(.25, "inch"),
+                       name = trellis.grobname("points", type = "panel"),
+                       gp = gpar(col = color,
+                               ## Fill color ligther than border
+                               fill = adjustcolor(color, alpha = .5),
+                               lwd = 2))
            ## Country labels
-           grid.text(label=groups[subscripts],
-                     x=unit(x, 'native'),
+           grid.text(label = groups[subscripts],
+                     x = unit(x, 'native'),
                      ## Labels above each bubble
-                     y=unit(y, 'native') + 1.5 * radius *unit(.25, 'inch'),
-                     name=trellis.grobname('labels', type='panel'),
-                     gp=gpar(col=color, cex=cex))
-         })
+                     y = unit(y, 'native') + 1.5 * radius *unit(.25, 'inch'),
+                     name = trellis.grobname('labels', type = 'panel'),
+                     gp = gpar(col = color, cex = cex))
+       })
 #+end_src
 
 From this initial state, =grid.animate= creates a collection of
@@ -636,60 +633,56 @@ object. Thus, the bubbles will travel across the values defined by
 The use of =rep=TRUE= ensures that the animation will be repeated
 indefinitely.
 
-#+BEGIN_EXPORT latex
-\index{animUnit@\texttt{animUnit}}
-\index{grid.animate@\texttt{grid.animate}}
-#+END_EXPORT
+#+INDEX: animUnit@\texttt{animUnit}
+#+INDEX: grid.animate@\texttt{grid.animate}
 
 #+begin_src R  
-  ## Duration in seconds of the animation
-  duration <- 20
+## Duration in seconds of the animation
+duration <- 20
   
-  nCountries <- nlevels(CO2data$Country.Name)
-  years <- unique(CO2data$Year)
-  nYears <- length(years)
-  
-  ## Intermediate positions of the bubbles
-  x_points <- animUnit(unit(CO2data$CO2.capita, 'native'),
-                       id=rep(seq_len(nCountries), each=nYears))
-  y_points <- animUnit(unit(CO2data$GNI.capita, 'native'),
-                       id=rep(seq_len(nCountries), each=nYears))
-  ## Intermediate positions of the labels
-  y_labels <- animUnit(unit(CO2data$GNI.capita, 'native') +
-                       1.5 * CO2data$CO2.PPP * unit(.25, 'inch'),
-                       id=rep(seq_len(nCountries), each=nYears))
-  ## Intermediate sizes of the bubbles
-  size <- animUnit(CO2data$CO2.PPP * unit(.25, 'inch'),
-                       id=rep(seq_len(nCountries), each=nYears))
-  
-  grid.animate(trellis.grobname("points", type="panel", row=1, col=1),
-               duration=duration,
-               x=x_points,
-               y=y_points,
-               r=size,
-               rep=TRUE)
-  
-  grid.animate(trellis.grobname("labels", type="panel", row=1, col=1),
-               duration=duration,
-               x=x_points,
-               y=y_labels,
-               rep=TRUE)
-  
+nCountries <- nlevels(CO2data$Country.Name)
+years <- unique(CO2data$Year)
+nYears <- length(years)
+
+## Intermediate positions of the bubbles
+x_points <- animUnit(unit(CO2data$CO2.capita, 'native'),
+                     id = rep(seq_len(nCountries), each = nYears))
+y_points <- animUnit(unit(CO2data$GNI.capita, 'native'),
+                     id = rep(seq_len(nCountries), each = nYears))
+## Intermediate positions of the labels
+y_labels <- animUnit(unit(CO2data$GNI.capita, 'native') +
+                     1.5 * CO2data$CO2.PPP * unit(.25, 'inch'),
+                     id = rep(seq_len(nCountries), each = nYears))
+## Intermediate sizes of the bubbles
+size <- animUnit(CO2data$CO2.PPP * unit(.25, 'inch'),
+                 id = rep(seq_len(nCountries), each = nYears))
+
+grid.animate(trellis.grobname("points", type = "panel", row = 1, col = 1),
+             duration = duration,
+             x = x_points,
+             y = y_points,
+             r = size,
+             rep = TRUE)
+
+grid.animate(trellis.grobname("labels", type = "panel", row = 1, col = 1),
+             duration = duration,
+             x = x_points,
+             y = y_labels,
+             rep = TRUE)
+
 #+end_src
 
 A bit of interactivity can be added with the =grid.hyperlink=
 function. For example, the following code adds the corresponding
 Wikipedia link to a mouse click on each bubble.
 
-#+BEGIN_EXPORT latex
-\index{grid.hyperlink@\texttt{grid.hyperlink}}
-#+END_EXPORT
+#+INDEX: grid.hyperlink@\texttt{grid.hyperlink}
 
 #+begin_src R
-  countries <- unique(CO2data$Country.Name)
-  URL <- paste('http://en.wikipedia.org/wiki/', countries, sep='')
-  grid.hyperlink(trellis.grobname('points', type='panel', row=1, col=1),
-                 URL, group=FALSE)
+countries <- unique(CO2data$Country.Name)
+URL <- paste('http://en.wikipedia.org/wiki/', countries, sep = '')
+grid.hyperlink(trellis.grobname('points', type = 'panel', row = 1, col = 1),
+               URL, group = FALSE)
   
 #+end_src
 
@@ -697,16 +690,16 @@ Finally, the time information: The year is printed in the lower
 right corner, using the =visibility= attribute of an animated
 =textGrob= object to show and hide the values.
 #+begin_src R
-  visibility <- matrix("hidden", nrow=nYears, ncol=nYears)
-  diag(visibility) <- "visible"
-  yearText <- animateGrob(garnishGrob(textGrob(years, .9, .15,
-                                               name="year",
-                                               gp=gpar(cex=2, col="grey")),
-                                      visibility="hidden"),
-                          duration=20,
-                          visibility=visibility,
-                          rep=TRUE)
-  grid.draw(yearText)
+visibility <- matrix("hidden", nrow = nYears, ncol = nYears)
+diag(visibility) <- "visible"
+yearText <- animateGrob(garnishGrob(textGrob(years, .9, .15,
+                                             name = "year",
+                                             gp = gpar(cex = 2, col = "grey")),
+                                    visibility = "hidden"),
+                        duration = 20,
+                        visibility = visibility,
+                        rep = TRUE)
+grid.draw(yearText)
 #+end_src
 
 The SVG file produced with =grid.export= is available at the website
@@ -714,12 +707,10 @@ of the book (Figure ref:fig:bubblesSVG). Because this animation does
 not trace the paths, Figure ref:fig:CO2-GNI-DL provides this
 information as a static complement.
 
-#+BEGIN_EXPORT latex
-\index{grid.export@\texttt{grid.export}}
-#+END_EXPORT
+#+INDEX: grid.export@\texttt{grid.export}
 
 #+begin_src R
-  grid.export("figs/bubbles.svg")
+grid.export("figs/bubbles.svg")
 #+end_src
 
 #+BEGIN_EXPORT latex
