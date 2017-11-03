@@ -71,8 +71,8 @@ multivariate time series can be displayed with the =xyplot= method of
 [[ref:fig:aranjuezNaive]]).
 
 #+begin_src R
-  library(zoo)
-  load('data/aranjuez.RData')
+library(zoo)
+load('data/aranjuez.RData')
 #+end_src
 
 #+RESULTS:
@@ -313,7 +313,7 @@ darker. Figure ref:fig:navarraNaive displays the variations
 around the time average (=avRad=).
 
 #+begin_src R
-  load('data/navarra.RData')
+load('data/navarra.RData')
 #+end_src
 
 
@@ -568,255 +568,6 @@ ggplot(data = df,
     theme(panel.grid.major = element_blank(),
           panel.grid.minor = element_blank())
 #+end_src
-
-
-* Interactive graphics label:sec:interactive_horizontal
-This section describes the interactive alternatives of the static
-figures included in the previous sections with four packages:
-=dygraphs=, =highcharter=, =plotly=, and =gridSVG=.
-
-=dygraphs=, =highcharter=, and =plotly= are =R= interfaces to
-JavaScript libraries based on the =htmlwidgets= package, while the
-=gridSVG= package converts a =grid= graphic object into an SVG file.
-
-** Dygraphs label:sec:dygraphs
-The =dygraphs= package is an interface to the =dygraphs= JavaScript
-library, and provides facilities for charting time-series. It works
-automatically with =xts= time series objects, or with objects than can
-be coerced to this class. The result is an interactive graph, where
-values are displayed according to the mouse position over the time
-series. Regions can be selected to zoom into a time period. The figure
-label:fig:dygraphs is an snapshot of the interactive graph.
-
-#+begin_src R
-library(dygraphs)
-
-dyTemp <- dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
-                  main = "Temperature in Aranjuez",
-                  ylab = "ºC")
-
-dyTemp
-#+end_src
-
-#+CAPTION: dygraphs label:fig:dygraphs
-[[file:figs/dygraphs_aranjuez.png]]
-
-
-
-You can customize dygraphs by piping additional commands onto the original dygraph object. 
-
-#+begin_src R
-dyTemp %>%
-    dyHighlight(highlightSeriesBackgroundAlpha = 0.2)
-#+end_src
-
-#+RESULTS:
-
-#+CAPTION: dygraphs selected label:fig:dygraphs_selected
-[[file:figs/dygraphs_aranjuez_selected.png]]
-
-#+begin_src R
-dyTemp %>%
-    dyHighlight(highlightSeriesOpts = list(strokeWidth = 2))
-#+end_src
-
-
-#+begin_src R
-dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
-        main = "Temperature in Aranjuez",
-        ylab = "ºC") %>%
-    dySeries(c("TempMin", "TempAvg", "TempMax"),
-             label = "Temperature")
-#+end_src
-
-#+CAPTION: dygraphs maxmin label:fig:dygraphs_maxmin
-[[file:figs/dygraphs_aranjuez_maxmin.png]]
-
-** Highcharter label:sec:highcharter
-
-#+begin_src R
-library(highcharter)
-library(xts)
-
-aranjuezXTS <- as.xts(aranjuez)
-
-highchart() %>%
-    hc_add_series_xts(name = 'TempMax',
-                      aranjuezXTS[, "TempMax"]) %>%
-    hc_add_series_xts(name = 'TempMin',
-                      aranjuezXTS[, "TempMin"]) %>%
-    hc_add_series_xts(name = 'TempAvg',
-                      aranjuezXTS[, "TempAvg"])
-
-#+end_src
-
-#+CAPTION: highcharter label:fig:highcharter
-[[file:figs/highcharter_aranjuez.png]]
-
-#+CAPTION: highcharter zoom label:fig:highcharter_zoom
-[[file:figs/highcharter_aranjuez_zoom.png]]
-
-
-
-** plotly label:sec:plotly
-
-#+begin_src R
-library(reshape2)
-df <- fortify(navarra - avRad)
-df <- melt(df, id.vars = 'Index', variable.name = 'Station')
-#+end_src
-
-#+RESULTS:
-
-#+begin_src R
-## Number of stations
-N <- ncol(navarra)
-## Color palette
-pal <- colorRampPalette(
-    brewer.pal(9, 'Set1'))(N)
-#+end_src
-
-
-#+begin_src R
-library(plotly)
-
-plot_ly(df,
-        x = ~ Index,
-        y = ~ value,
-        color = ~ Station) %>%
-    add_lines(alpha = 0.5, colors = pal)
-#+end_src
-#+CAPTION: plotly label:fig:plotly
-[[file:figs/plotly_navarra.png]]
-
-#+CAPTION: plotly zoom label:fig:plotly_zoom
-[[file:figs/plotly_navarra_zoom.png]]
-
-
-** \floweroneleft Interaction with =gridSVG=
-#+begin_src R :exports none
-  ##################################################################
-  ## Interaction with gridSVG
-  ##################################################################
-#+end_src
-
-The =gridSVG= package provides functions to convert =grid=-based =R=
-graphics to an SVG format. It provides several functions to add
-dynamic and interactive capabilities to =R= graphics. In this section
-we will use =grid.script=, a function to add JavaScript code to a
-plot.
-
-The first step is to specify which component of the scene
-will run the JavaScript code. The =grid.ls= function  returns a
-listing of the names of grobs or viewports included in the graphic
-output: only the lines will be connected with the JavaScript
-code. 
-
-#+BEGIN_EXPORT latex
-\index{Packages!gridSVG@\texttt{gridSVG}}
-\index{grid.ls@\texttt{grid.ls}}
-#+END_EXPORT
-
-#+begin_src R
-  library(gridSVG)
-  ## grobs in the graphical output
-  pNavarra
-  grobs <- grid.ls(print=FALSE)
-  ## only interested in some of them
-  nms <- grobs$name[grobs$type == "grobListing"]
-  idxNames <- grep('lines', nms)
-  IDs <- nms[idxNames]
-#+end_src
-
-The second step is to modify each =grob= (graphical object) to add
-attributes that specify when it will call JavaScript code. For each
-line identified with the elements of the =IDs= vector and associated
-to a meteorological station, the =navarra= object is accessed to
-extract the annual mean value of the daily radiation and the
-abbreviated name of the corresponding station (=info=).  The
-=grid.garnish= function adds attributes to the =grob= of each line so
-that when the mouse moves over a =grob=, the line is highlighted and
-colored in red (=highlight=). When the mouse hovers out of the =grob=,
-the =hide= function sets back the default values of line width and
-transparency, but uses the green color to denote that this line has
-been already visited. In addition, because the browsers display the
-content of the title attribute with a default tooltip, =grid.garnish=
-sets this attribute to =info=.
-
-#+BEGIN_EXPORT latex
-\index{grid.garnish@\texttt{grid.garnish}}
-#+END_EXPORT
-
-#+begin_src R
-  for (id in unique(IDs)){
-    ## extract information from the data
-    ## according to the ID value
-    i <- strsplit(id, '\\.')
-    i <- sapply(i, function(x)as.numeric(x[5]))
-    ## Information to be attached to each line: annual mean of daily
-    ## radiation and abbreviated name of the station
-    dat <- round(mean(navarra[,i], na.rm=TRUE), 2)
-    info <- paste(names(navarra)[i], paste(dat, collapse=','),
-                  sep=': ')
-    ## attach SVG attributes
-    grid.garnish(id,
-                 onmouseover="highlight(evt)",
-                 onmouseout="hide(evt)",
-                 title=info)
-  }
-#+end_src
-
-These JavaScript functions are included in a script file named
-=highlight.js= (available at the website of the book). It can be
-added as an additional object with =grid.script=.
-
-#+BEGIN_EXPORT latex
-\index{grid.script@\texttt{grid.script}}
-#+END_EXPORT
-
-#+begin_src R 
-  grid.script(filename="highlight.js")
-#+end_src
-
-This script is easy to understand, even without previous
-JavaScript knowledge:
-\index{JavaScript}
-#+begin_example
-  highlight = function(evt){',
-      evt.target.setAttribute('opacity', '1');
-      evt.target.setAttribute('stroke', 'red');
-      evt.target.setAttribute('stroke-width', '1');
-  }
-  
-  hide = function(evt){
-      evt.target.setAttribute('opacity', '0.3');
-      evt.target.setAttribute('stroke', green');
-      evt.target.setAttribute('stroke-width', '0.3');
-  }
-#+end_example
-
-Finally, =gridToSVG= exports the whole scene to SVG. 
-#+BEGIN_EXPORT latex
-\index{grid.export@\texttt{grid.export}} 
-#+END_EXPORT
-
-#+begin_src R
-  grid.export('figs/navarraRadiation.svg')
-#+end_src
-
-A snapshot of the result, as viewed in a browser with a line
-highlighted, is shown in Figure ref:fig:navarraSVG. Open the SVG
-file with your browser, explore it using the horizon graph (Figure
-ref:fig:navarraHorizonplot) as a reference, and try to answer the
-questions raised with that graphic.
-
-#+BEGIN_EXPORT latex
-  \begin{figure}
-    \centering
-    \includegraphics[width=0.9\textwidth]{figs/navarraSVG_captura.png}
-    \caption{\label{fig:navarraSVG}Snapshot of an SVG graphic produced with \texttt{gridSVG}.}
-  \end{figure}
-#+END_EXPORT
 
 
 
@@ -1140,7 +891,284 @@ its last column (the upper line of the cumulative sum).
 <<prepanelFlow>>
 #+end_src
 
-** Interactive label:sec:interactive
+
+* Interactive graphics label:sec:interactive_horizontal
+This section describes the interactive alternatives of the static
+figures included in the previous sections with four packages:
+=dygraphs=, =highcharter=, =plotly=, and =gridSVG=.
+
+=dygraphs=, =highcharter=, and =plotly= are =R= interfaces to
+JavaScript libraries based on the =htmlwidgets= package, while the
+=gridSVG= package converts a =grid= graphic object into an SVG file.
+
+** Dygraphs label:sec:dygraphs
+The =dygraphs= package is an interface to the =dygraphs= JavaScript
+library, and provides facilities for charting time-series. It works
+automatically with =xts= time series objects, or with objects than can
+be coerced to this class. The result is an interactive graph, where
+values are displayed according to the mouse position over the time
+series. Regions can be selected to zoom into a time period. The figure
+label:fig:dygraphs is an snapshot of the interactive graph.
+
+#+begin_src R
+library(dygraphs)
+
+dyTemp <- dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
+                  main = "Temperature in Aranjuez",
+                  ylab = "ºC")
+
+dyTemp
+#+end_src
+
+#+CAPTION: dygraphs label:fig:dygraphs
+[[file:figs/dygraphs_aranjuez.png]]
+
+
+
+You can customize dygraphs by piping additional commands onto the original dygraph object. 
+
+#+begin_src R
+dyTemp %>%
+    dyHighlight(highlightSeriesBackgroundAlpha = 0.2)
+#+end_src
+
+#+RESULTS:
+
+#+CAPTION: dygraphs selected label:fig:dygraphs_selected
+[[file:figs/dygraphs_aranjuez_selected.png]]
+
+#+begin_src R
+dyTemp %>%
+    dyHighlight(highlightSeriesOpts = list(strokeWidth = 2))
+#+end_src
+
+
+#+begin_src R
+dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
+        main = "Temperature in Aranjuez",
+        ylab = "ºC") %>%
+    dySeries(c("TempMin", "TempAvg", "TempMax"),
+             label = "Temperature")
+#+end_src
+
+#+CAPTION: dygraphs maxmin label:fig:dygraphs_maxmin
+[[file:figs/dygraphs_aranjuez_maxmin.png]]
+
+** Highcharter label:sec:highcharter
+
+The =highcharter= package is an interface to the =highcharts=
+JavaScript library, with a wide spectrum of graphics
+solutions. Displaying time series with this package can be achieved
+with the combination of the generic =highchart= function and several
+calls to the =hc_add_series_xts= function through the pipe =%>%=
+operator.  Once again, the result is an interactive graph with
+selection and zoom capabilities. Figure label:fig:highcharter is an
+snapshot of the interactive graph.
+
+
+#+begin_src R
+library(highcharter)
+library(xts)
+
+aranjuezXTS <- as.xts(aranjuez)
+
+highchart() %>%
+    hc_add_series_xts(name = 'TempMax',
+                      aranjuezXTS[, "TempMax"]) %>%
+    hc_add_series_xts(name = 'TempMin',
+                      aranjuezXTS[, "TempMin"]) %>%
+    hc_add_series_xts(name = 'TempAvg',
+                      aranjuezXTS[, "TempAvg"])
+
+#+end_src
+
+#+CAPTION: highcharter label:fig:highcharter
+[[file:figs/highcharter_aranjuez.png]]
+
+#+CAPTION: highcharter zoom label:fig:highcharter_zoom
+[[file:figs/highcharter_aranjuez_zoom.png]]
+
+
+
+** plotly label:sec:plotly
+
+The =plotly= package is an interface to the =plotly= JavaScript
+library, also with a wide spectrum of graphics solutions. This package
+does not provide any function specifically focused on time
+series. Thus, the time series object has to be transformed in a
+=data.frame= including a column for the time index. If the
+=data.frame= is in /wide/ format (one column per variable), each
+variable will be represented with a call to the =add_lines=
+function. However, if the =data.frame= is in /long/ format (a column
+for values, and a column for variable names) only one call to
+=add_lines= is required. The next code follows this approach using the
+combination of =fortify=, to convert the =zoo= object into a
+=data.frame=, and =melt=, to transform from wide to long format.
+
+#+begin_src R
+library(reshape2)
+
+aranjuezDF <- fortify(aranjuez[,
+                               c("TempMax",
+                                 "TempAvg",
+                                 "TempMin")])
+
+aranjuezDF <- melt(aranjuezDF, id.vars = 'Index')
+#+end_src
+
+Figure ref:fig:plotly is a snapshot of the interactive graphic produce
+with the generic function =plot_ly= connected with =add_lines= through
+the pipe operator, =%>%=.
+#+begin_src R
+library(plotly)
+
+plot_ly(aranjuezDF) %>%
+    add_lines(x = ~ Index,
+              y = ~ value,
+              color = ~ variable)
+
+#+end_src
+
+#+CAPTION: plotly label:fig:plotly
+[[file:figs/plotly_aranjuez.png]]
+
+#+CAPTION: plotly zoom label:fig:plotly_zoom
+[[file:figs/plotly_aranjuez_zoom.png]]
+
+
+** \floweroneleft Interaction with =gridSVG=
+#+begin_src R :exports none
+  ##################################################################
+  ## Interaction with gridSVG
+  ##################################################################
+#+end_src
+
+The =gridSVG= package provides functions to convert =grid=-based =R=
+graphics to an SVG format. It provides several functions to add
+dynamic and interactive capabilities to =R= graphics. In this section
+we will use =grid.script=, a function to add JavaScript code to a
+plot.
+
+The first step is to specify which component of the scene
+will run the JavaScript code. The =grid.ls= function  returns a
+listing of the names of grobs or viewports included in the graphic
+output: only the lines will be connected with the JavaScript
+code. 
+
+#+BEGIN_EXPORT latex
+\index{Packages!gridSVG@\texttt{gridSVG}}
+\index{grid.ls@\texttt{grid.ls}}
+#+END_EXPORT
+
+#+begin_src R
+  library(gridSVG)
+  ## grobs in the graphical output
+  pNavarra
+  grobs <- grid.ls(print=FALSE)
+  ## only interested in some of them
+  nms <- grobs$name[grobs$type == "grobListing"]
+  idxNames <- grep('lines', nms)
+  IDs <- nms[idxNames]
+#+end_src
+
+The second step is to modify each =grob= (graphical object) to add
+attributes that specify when it will call JavaScript code. For each
+line identified with the elements of the =IDs= vector and associated
+to a meteorological station, the =navarra= object is accessed to
+extract the annual mean value of the daily radiation and the
+abbreviated name of the corresponding station (=info=).  The
+=grid.garnish= function adds attributes to the =grob= of each line so
+that when the mouse moves over a =grob=, the line is highlighted and
+colored in red (=highlight=). When the mouse hovers out of the =grob=,
+the =hide= function sets back the default values of line width and
+transparency, but uses the green color to denote that this line has
+been already visited. In addition, because the browsers display the
+content of the title attribute with a default tooltip, =grid.garnish=
+sets this attribute to =info=.
+
+#+BEGIN_EXPORT latex
+\index{grid.garnish@\texttt{grid.garnish}}
+#+END_EXPORT
+
+#+begin_src R
+  for (id in unique(IDs)){
+    ## extract information from the data
+    ## according to the ID value
+    i <- strsplit(id, '\\.')
+    i <- sapply(i, function(x)as.numeric(x[5]))
+    ## Information to be attached to each line: annual mean of daily
+    ## radiation and abbreviated name of the station
+    dat <- round(mean(navarra[,i], na.rm=TRUE), 2)
+    info <- paste(names(navarra)[i], paste(dat, collapse=','),
+                  sep=': ')
+    ## attach SVG attributes
+    grid.garnish(id,
+                 onmouseover="highlight(evt)",
+                 onmouseout="hide(evt)",
+                 title=info)
+  }
+#+end_src
+
+These JavaScript functions are included in a script file named
+=highlight.js= (available at the website of the book). It can be
+added as an additional object with =grid.script=.
+
+#+BEGIN_EXPORT latex
+\index{grid.script@\texttt{grid.script}}
+#+END_EXPORT
+
+#+begin_src R 
+  grid.script(filename="highlight.js")
+#+end_src
+
+This script is easy to understand, even without previous
+JavaScript knowledge:
+\index{JavaScript}
+#+begin_example
+  highlight = function(evt){',
+      evt.target.setAttribute('opacity', '1');
+      evt.target.setAttribute('stroke', 'red');
+      evt.target.setAttribute('stroke-width', '1');
+  }
+  
+  hide = function(evt){
+      evt.target.setAttribute('opacity', '0.3');
+      evt.target.setAttribute('stroke', green');
+      evt.target.setAttribute('stroke-width', '0.3');
+  }
+#+end_example
+
+Finally, =gridToSVG= exports the whole scene to SVG. 
+#+BEGIN_EXPORT latex
+\index{grid.export@\texttt{grid.export}} 
+#+END_EXPORT
+
+#+begin_src R
+  grid.export('figs/navarraRadiation.svg')
+#+end_src
+
+A snapshot of the result, as viewed in a browser with a line
+highlighted, is shown in Figure ref:fig:navarraSVG. Open the SVG
+file with your browser, explore it using the horizon graph (Figure
+ref:fig:navarraHorizonplot) as a reference, and try to answer the
+questions raised with that graphic.
+
+#+BEGIN_EXPORT latex
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/navarraSVG_captura.png}
+    \caption{\label{fig:navarraSVG}Snapshot of an SVG graphic produced with \texttt{gridSVG}.}
+  \end{figure}
+#+END_EXPORT
+
+** streamgraph label:sec:interactive_streamgraph
+
+The =streamgraph= package[fn:1] creates interactive stream graphs based on
+the =htmlwidgets= package and the =D3.js= JavaScript library. Its main
+function, =streamgraph=, requires a =data.frame= as the first
+argument. Besides, its three next arguments, =key=, =value=, and
+=date=, makes this function a good candidate to work together with
+=fortify= and =melt=.
 
 #+begin_src R
 ## remotes::install_github("hrbrmstr/streamgraph")
@@ -1151,8 +1179,15 @@ library(reshape2)
 #+begin_src R
 unemployDF <- fortify(unemployUSA)
 
-unemployDF <- melt(unemployDF, id.vars = 'Index')
+unemployDF <- melt(unemployDF,
+                   id.vars = 'Index')
 #+end_src
+
+Figures ref:fig:streamgraph_interactive and
+ref:fig:streamgraph_interactive_selected are snapshots of the
+interactive graphic created with the functions =streamgraph=,
+=sg_axis=, and =sg_fill_brewer=, connected through the pipe operator,
+=%>%=.
 
 #+begin_src R
 streamgraph(unemployDF,
@@ -1169,8 +1204,10 @@ streamgraph(unemployDF,
 #+CAPTION: Streamgraph created with the =streamgraph= package, with a selection. label:fig:streamgraph_interactive_selected
 [[file:figs/streamgraph_interactive_selected.png]]
 
-
 * Footnotes
+
+[fn:1] The =streamgraph= package, http://hrbrmstr.github.io/streamgraph/, is not available in CRAN. It can be installed using the =devtools= or the =remotes= package.
+
 [fn:2] The March 2012 highlights report is available at http://www.bls.gov/ces/highlights032012.pdf.
 
 [fn:3] A similar result can be obtained with =autoplot= using =facets=NULL=. 

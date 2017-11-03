@@ -1,6 +1,6 @@
 
-\section{Time Graph of Different Meteorological Variables \label{sec:differentVariables}}
-\label{sec:org8f9b9dc}
+\section{Time Graph of Variables with Different Scales  \label{sec:differentVariables}}
+\label{sec:orge7ada9b}
 There is a variety of scientific research interested in the
 relationship among several meteorological variables. A suitable
 approach is to display the time evolution of all of them using a
@@ -15,11 +15,14 @@ multivariate time series can be displayed with the \texttt{xyplot} method of
 \texttt{lattice} for \texttt{zoo} objects with a panel for each variable (Figure
 \ref{fig:aranjuezNaive}).
 
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+library(zoo)
+load('data/aranjuez.RData')
+\end{lstlisting}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  load('data/aranjuez.RData')
-  library(zoo)
   ## The layout argument arranges panels in rows
   xyplot(aranjuez, layout=c(1, ncol(aranjuez)))
 \end{lstlisting}
@@ -49,7 +52,7 @@ result similar to that obtained with \texttt{xyplot} (Figure \ref{fig:aranjuezNa
 
 
 \subsection{\floweroneleft Annotations to Enhance the Time Graph}
-\label{sec:org25249c7}
+\label{sec:org3a934ff}
 
 These first attempts can be improved with a custom panel function
 that generates the content of each panel using the information
@@ -243,7 +246,7 @@ during this season.
 \end{itemize}
 
 \section{Time Series of Variables with the Same Scale \label{SEC:sameScale}}
-\label{sec:orgdf3c644}
+\label{sec:org97a4093}
 As an example of time series of variables with the same scale, we will
 use measurements of solar radiation from different meteorological
 stations.
@@ -260,7 +263,7 @@ around the time average (\texttt{avRad}).
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  load('data/navarra.RData')
+load('data/navarra.RData')
 \end{lstlisting}
 
 
@@ -283,11 +286,10 @@ around the time average (\texttt{avRad}).
 \end{figure}
 
 This result can be improved with different methods: the cut-and-stack
-method, the horizon graph with \texttt{horizonplot}, and dynamic labeling
-with the \texttt{gridSVG} package.
+method, and the horizon graph with \texttt{horizonplot}.
 
 \subsection{Aspect Ratio and Rate of Change}
-\label{sec:orgcbd31b9}
+\label{sec:orgc403e46}
 When a graphic is intended to inform about the rate of change,
 special attention must be paid to the aspect ratio of the graph,
 defined as the ratio of the height to the width of the graphical
@@ -323,7 +325,7 @@ cut-and-stack method is produced with
 \end{figure}
 
 \subsection{The Horizon Graph \label{sec:horizonplot}}
-\label{sec:org21c12c1}
+\label{sec:org6f09078}
 The horizon graph\index{Horizon graph} is useful in examining how a
 large number of series changes over time, and does so in a way
 that allows both comparisons between the individual time series
@@ -383,7 +385,7 @@ absolute fluctuations across the set of stations?
 \end{itemize}
 
 \subsection{Time Graph of the Differences between a Time Series and a Reference \label{sec:differences}}
-\label{sec:org2d0f619}
+\label{sec:orge36cfa1}
 
 The horizon graph is also useful in revealing the differences between
 a univariate time series and another reference. For example, we
@@ -495,305 +497,37 @@ the comparison between years in a certain month.
 \caption{Level plot of differences between a daily temperature time series and its long-term average. \label{fig:diffTa_level}}
 \end{figure}
 
-ggplot version.
+The \texttt{ggplot} version of the Figure  \ref{fig:diffTa_level} requires a \texttt{data.frame} with the day, year, and month arranged in different columns.
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 df <- data.frame(Vals = diffTa,
                  Day = day(timeIndex),
                  Year = year(timeIndex),
                  Month = month(timeIndex))
+\end{lstlisting}
+
+The values (\texttt{Vals} column of this \texttt{data.frame}) are displayed as a level plot thanks to the \texttt{geom\_raster} function.
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+library(scales) 
+## The packages scales is needed for the pretty_breaks function.
 
 ggplot(data = df,
        aes(fill = Vals,
            x = Day,
            y = Year)) +
-    facet_wrap(~ Month, ncol = 1, switch = 'y') +
+    facet_wrap(~ Month, ncol = 1, strip.position = 'left') +
     scale_y_continuous(breaks = pretty_breaks()) + 
     scale_fill_distiller(palette = 'RdBu', direction = 1) + 
-    geom_tile(color = "white", size = 0.4) +
+    geom_raster() +
     theme(panel.grid.major = element_blank(),
           panel.grid.minor = element_blank())
 \end{lstlisting}
 
 
-\section{Interactive}
-\label{sec:orgc05d485}
-
-\subsection{Dygraphs \label{sec:dygraphs}}
-\label{sec:orga94cdc9}
-The dygraphs JavaScript charting library:
-
-\begin{itemize}
-\item Plots time series without using an external server or Flash
-\item Supports error bands around data series
-\item Interactive pan and zoom
-\item Displays values on mouseover
-\item Adjustable averaging period
-\item Extensive set of options for customization.
-\item Compatible with the Google Visualization API
-\end{itemize}
-
-The dygraphs package is an R interface to the dygraphs JavaScript charting library. It provides rich facilities for charting time-series data in R, including:
-
-\begin{itemize}
-\item Automatically plots xts time series objects (or any object convertible to xts).
-\item Highly configurable axis and series display (including optional second Y-axis).
-\item Rich interactive features including zoom/pan and series/point highlighting.
-\item Display upper/lower bars (e.g. prediction intervals) around series.
-\item Various graph overlays including shaded regions, event lines, and point annotations.
-\item Use at the R console just like conventional R plots (via RStudio Viewer).
-\item Seamless embedding within R Markdown documents and Shiny web applications.
-\end{itemize}
-
-\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-library(dygraphs)
-
-dyTemp <- dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
-                  main = "Temperature in Aranjuez",
-                  ylab = "ºC")
-
-dyTemp
-\end{lstlisting}
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.9\linewidth]{figs/dygraphs_aranjuez.png}
-\caption{dygraphs \label{fig:dygraphs}}
-\end{figure}
-
-Note that this graph is fully interactive: as your mouse moves over the series individual values are displayed. You can also select regions of the graph to zoom into (double-click zooms out).
-
-You can customize dygraphs by piping additional commands onto the original dygraph object. 
-
-\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-dyTemp %>%
-    dyHighlight(highlightSeriesBackgroundAlpha = 0.2)
-\end{lstlisting}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.9\linewidth]{figs/dygraphs_aranjuez_selected.png}
-\caption{dygraphs selected \label{fig:dygraphs_selected}}
-\end{figure}
-
-\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-dyTemp %>%
-    dyHighlight(highlightSeriesOpts = list(strokeWidth = 2))
-\end{lstlisting}
-
-
-\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
-        main = "Temperature in Aranjuez",
-        ylab = "ºC") %>%
-    dySeries(c("TempMin", "TempAvg", "TempMax"),
-             label = "Temperature")
-\end{lstlisting}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.9\linewidth]{figs/dygraphs_aranjuez_maxmin.png}
-\caption{dygraphs maxmin \label{fig:dygraphs_maxmin}}
-\end{figure}
-
-\subsection{Highcharter \label{sec:highcharter}}
-\label{sec:org2d7d949}
-
-\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-library(highcharter)
-library(xts)
-
-aranjuezXTS <- as.xts(aranjuez)
-
-highchart() %>%
-    hc_add_series_xts(name = 'TempMax',
-                      aranjuezXTS[, "TempMax"]) %>%
-    hc_add_series_xts(name = 'TempMin',
-                      aranjuezXTS[, "TempMin"]) %>%
-    hc_add_series_xts(name = 'TempAvg',
-                      aranjuezXTS[, "TempAvg"])
-
-\end{lstlisting}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.9\linewidth]{figs/highcharter_aranjuez.png}
-\caption{highcharter \label{fig:highcharter}}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.9\linewidth]{figs/highcharter_aranjuez_zoom.png}
-\caption{highcharter zoom \label{fig:highcharter_zoom}}
-\end{figure}
-
-
-
-\subsection{plotly \label{sec:plotly}}
-\label{sec:org6390a09}
-
-\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-library(reshape2)
-df <- fortify(navarra - avRad)
-df <- melt(df, id.vars = 'Index', variable.name = 'Station')
-\end{lstlisting}
-
-\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-## Number of stations
-N <- ncol(navarra)
-## Color palette
-pal <- colorRampPalette(
-    brewer.pal(9, 'Set1'))(N)
-\end{lstlisting}
-
-
-\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-library(plotly)
-
-plot_ly(df,
-        x = ~ Index,
-        y = ~ value,
-        color = ~ Station) %>%
-    add_lines(alpha = 0.5, colors = pal)
-\end{lstlisting}
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.9\linewidth]{figs/plotly_navarra.png}
-\caption{plotly \label{fig:plotly}}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.9\linewidth]{figs/plotly_navarra_zoom.png}
-\caption{plotly zoom \label{fig:plotly_zoom}}
-\end{figure}
-
-
-\subsection{\floweroneleft Interaction with \texttt{gridSVG}}
-\label{sec:orgffddf53}
-The \texttt{gridSVG} package provides functions to convert \texttt{grid}-based \texttt{R}
-graphics to an SVG format. It provides several functions to add
-dynamic and interactive capabilities to \texttt{R} graphics. In this section
-we will use \texttt{grid.script}, a function to add JavaScript code to a
-plot.
-
-The first step is to specify which component of the scene
-will run the JavaScript code. The \texttt{grid.ls} function  returns a
-listing of the names of grobs or viewports included in the graphic
-output: only the lines will be connected with the JavaScript
-code. 
-
-\index{Packages!gridSVG@\texttt{gridSVG}}
-\index{grid.ls@\texttt{grid.ls}}
-
-\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-  library(gridSVG)
-  ## grobs in the graphical output
-  pNavarra
-  grobs <- grid.ls(print=FALSE)
-  ## only interested in some of them
-  nms <- grobs$name[grobs$type == "grobListing"]
-  idxNames <- grep('lines', nms)
-  IDs <- nms[idxNames]
-\end{lstlisting}
-
-The second step is to modify each \texttt{grob} (graphical object) to add
-attributes that specify when it will call JavaScript code. For each
-line identified with the elements of the \texttt{IDs} vector and associated
-to a meteorological station, the \texttt{navarra} object is accessed to
-extract the annual mean value of the daily radiation and the
-abbreviated name of the corresponding station (\texttt{info}).  The
-\texttt{grid.garnish} function adds attributes to the \texttt{grob} of each line so
-that when the mouse moves over a \texttt{grob}, the line is highlighted and
-colored in red (\texttt{highlight}). When the mouse hovers out of the \texttt{grob},
-the \texttt{hide} function sets back the default values of line width and
-transparency, but uses the green color to denote that this line has
-been already visited. In addition, because the browsers display the
-content of the title attribute with a default tooltip, \texttt{grid.garnish}
-sets this attribute to \texttt{info}.
-
-\index{grid.garnish@\texttt{grid.garnish}}
-
-\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-  for (id in unique(IDs)){
-    ## extract information from the data
-    ## according to the ID value
-    i <- strsplit(id, '\\.')
-    i <- sapply(i, function(x)as.numeric(x[5]))
-    ## Information to be attached to each line: annual mean of daily
-    ## radiation and abbreviated name of the station
-    dat <- round(mean(navarra[,i], na.rm=TRUE), 2)
-    info <- paste(names(navarra)[i], paste(dat, collapse=','),
-                  sep=': ')
-    ## attach SVG attributes
-    grid.garnish(id,
-                 onmouseover="highlight(evt)",
-                 onmouseout="hide(evt)",
-                 title=info)
-  }
-\end{lstlisting}
-
-These JavaScript functions are included in a script file named
-\texttt{highlight.js} (available at the website of the book). It can be
-added as an additional object with \texttt{grid.script}.
-
-\index{grid.script@\texttt{grid.script}}
-
-\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-  grid.script(filename="highlight.js")
-\end{lstlisting}
-
-This script is easy to understand, even without previous
-JavaScript knowledge:
-\index{JavaScript}
-\begin{verbatim}
-  highlight = function(evt){',
-      evt.target.setAttribute('opacity', '1');
-      evt.target.setAttribute('stroke', 'red');
-      evt.target.setAttribute('stroke-width', '1');
-  }
-  
-  hide = function(evt){
-      evt.target.setAttribute('opacity', '0.3');
-      evt.target.setAttribute('stroke', green');
-      evt.target.setAttribute('stroke-width', '0.3');
-  }
-\end{verbatim}
-
-Finally, \texttt{gridToSVG} exports the whole scene to SVG. 
-\index{grid.export@\texttt{grid.export}} 
-
-\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-  grid.export('figs/navarraRadiation.svg')
-\end{lstlisting}
-
-A snapshot of the result, as viewed in a browser with a line
-highlighted, is shown in Figure \ref{fig:navarraSVG}. Open the SVG
-file with your browser, explore it using the horizon graph (Figure
-\ref{fig:navarraHorizonplot}) as a reference, and try to answer the
-questions raised with that graphic.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.9\textwidth]{figs/navarraSVG_captura.png}
-  \caption{\label{fig:navarraSVG}Snapshot of an SVG graphic produced with \texttt{gridSVG}.}
-\end{figure}
-
-
 
 \section{Stacked Graphs \label{sec:stacked}}
-\label{sec:org526e9b9}
+\label{sec:orgad542b2}
 If the variables of a multivariate time series can be summed to
 produce a meaningful global variable, they may be better displayed
 with stacked graphs. For example, the information on unemployment in
@@ -903,7 +637,7 @@ Statistics'' reports from the Bureau of Labor Statistics\footnote{The March 2012
 
 
 \subsection{\floweroneleft Panel and Prepanel Functions to Implement the ThemeRiver with \texttt{xyplot} \label{sec:themeRiverPanel}}
-\label{sec:orgf031799}
+\label{sec:orgf276a48}
 The \texttt{xyplot} function displays information according to the class
 of its first argument (methods) and to the \texttt{panel} function. We
 will use the \texttt{xyplot.zoo} method (equivalent to the \texttt{xyplot.ts}
@@ -1107,8 +841,304 @@ its last column (the upper line of the cumulative sum).
   }
 \end{lstlisting}
 
-\subsection{Interactive \label{sec:interactive}}
-\label{sec:orgfdeed7f}
+
+\section{Interactive graphics \label{sec:interactive_horizontal}}
+\label{sec:org87cf8db}
+This section describes the interactive alternatives of the static
+figures included in the previous sections with four packages:
+\texttt{dygraphs}, \texttt{highcharter}, \texttt{plotly}, and \texttt{gridSVG}.
+
+\texttt{dygraphs}, \texttt{highcharter}, and \texttt{plotly} are \texttt{R} interfaces to
+JavaScript libraries based on the \texttt{htmlwidgets} package, while the
+\texttt{gridSVG} package converts a \texttt{grid} graphic object into an SVG file.
+
+\subsection{Dygraphs \label{sec:dygraphs}}
+\label{sec:org773b777}
+The \texttt{dygraphs} package is an interface to the \texttt{dygraphs} JavaScript
+library, and provides facilities for charting time-series. It works
+automatically with \texttt{xts} time series objects, or with objects than can
+be coerced to this class. The result is an interactive graph, where
+values are displayed according to the mouse position over the time
+series. Regions can be selected to zoom into a time period. The figure
+\label{fig:dygraphs} is an snapshot of the interactive graph.
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+library(dygraphs)
+
+dyTemp <- dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
+                  main = "Temperature in Aranjuez",
+                  ylab = "ºC")
+
+dyTemp
+\end{lstlisting}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/dygraphs_aranjuez.png}
+\caption{dygraphs \label{fig:dygraphs}}
+\end{figure}
+
+
+
+You can customize dygraphs by piping additional commands onto the original dygraph object. 
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+dyTemp %>%
+    dyHighlight(highlightSeriesBackgroundAlpha = 0.2)
+\end{lstlisting}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/dygraphs_aranjuez_selected.png}
+\caption{dygraphs selected \label{fig:dygraphs_selected}}
+\end{figure}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+dyTemp %>%
+    dyHighlight(highlightSeriesOpts = list(strokeWidth = 2))
+\end{lstlisting}
+
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
+        main = "Temperature in Aranjuez",
+        ylab = "ºC") %>%
+    dySeries(c("TempMin", "TempAvg", "TempMax"),
+             label = "Temperature")
+\end{lstlisting}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/dygraphs_aranjuez_maxmin.png}
+\caption{dygraphs maxmin \label{fig:dygraphs_maxmin}}
+\end{figure}
+
+\subsection{Highcharter \label{sec:highcharter}}
+\label{sec:org4b5803f}
+
+The \texttt{highcharter} package is an interface to the \texttt{highcharts}
+JavaScript library, with a wide spectrum of graphics
+solutions. Displaying time series with this package can be achieved
+with the combination of the generic \texttt{highchart} function and several
+calls to the \texttt{hc\_add\_series\_xts} function through the pipe \texttt{\%>\%}
+operator.  Once again, the result is an interactive graph with
+selection and zoom capabilities. Figure \label{fig:highcharter} is an
+snapshot of the interactive graph.
+
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+library(highcharter)
+library(xts)
+
+aranjuezXTS <- as.xts(aranjuez)
+
+highchart() %>%
+    hc_add_series_xts(name = 'TempMax',
+                      aranjuezXTS[, "TempMax"]) %>%
+    hc_add_series_xts(name = 'TempMin',
+                      aranjuezXTS[, "TempMin"]) %>%
+    hc_add_series_xts(name = 'TempAvg',
+                      aranjuezXTS[, "TempAvg"])
+
+\end{lstlisting}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/highcharter_aranjuez.png}
+\caption{highcharter \label{fig:highcharter}}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/highcharter_aranjuez_zoom.png}
+\caption{highcharter zoom \label{fig:highcharter_zoom}}
+\end{figure}
+
+
+
+\subsection{plotly \label{sec:plotly}}
+\label{sec:org507a778}
+
+The \texttt{plotly} package is an interface to the \texttt{plotly} JavaScript
+library, also with a wide spectrum of graphics solutions. This package
+does not provide any function specifically focused on time
+series. Thus, the time series object has to be transformed in a
+\texttt{data.frame} including a column for the time index. If the
+\texttt{data.frame} is in \emph{wide} format (one column per variable), each
+variable will be represented with a call to the \texttt{add\_lines}
+function. However, if the \texttt{data.frame} is in \emph{long} format (a column
+for values, and a column for variable names) only one call to
+\texttt{add\_lines} is required. The next code follows this approach using the
+combination of \texttt{fortify}, to convert the \texttt{zoo} object into a
+\texttt{data.frame}, and \texttt{melt}, to transform from wide to long format.
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+library(reshape2)
+
+aranjuezDF <- fortify(aranjuez[,
+                               c("TempMax",
+                                 "TempAvg",
+                                 "TempMin")])
+
+aranjuezDF <- melt(aranjuezDF, id.vars = 'Index')
+\end{lstlisting}
+
+Figure \ref{fig:plotly} is a snapshot of the interactive graphic produce
+with the generic function \texttt{plot\_ly} connected with \texttt{add\_lines} through
+the pipe operator, \texttt{\%>\%}.
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+library(plotly)
+
+plot_ly(aranjuezDF) %>%
+    add_lines(x = ~ Index,
+              y = ~ value,
+              color = ~ variable)
+
+\end{lstlisting}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/plotly_aranjuez.png}
+\caption{plotly \label{fig:plotly}}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/plotly_aranjuez_zoom.png}
+\caption{plotly zoom \label{fig:plotly_zoom}}
+\end{figure}
+
+
+\subsection{\floweroneleft Interaction with \texttt{gridSVG}}
+\label{sec:org1d2f271}
+The \texttt{gridSVG} package provides functions to convert \texttt{grid}-based \texttt{R}
+graphics to an SVG format. It provides several functions to add
+dynamic and interactive capabilities to \texttt{R} graphics. In this section
+we will use \texttt{grid.script}, a function to add JavaScript code to a
+plot.
+
+The first step is to specify which component of the scene
+will run the JavaScript code. The \texttt{grid.ls} function  returns a
+listing of the names of grobs or viewports included in the graphic
+output: only the lines will be connected with the JavaScript
+code. 
+
+\index{Packages!gridSVG@\texttt{gridSVG}}
+\index{grid.ls@\texttt{grid.ls}}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+  library(gridSVG)
+  ## grobs in the graphical output
+  pNavarra
+  grobs <- grid.ls(print=FALSE)
+  ## only interested in some of them
+  nms <- grobs$name[grobs$type == "grobListing"]
+  idxNames <- grep('lines', nms)
+  IDs <- nms[idxNames]
+\end{lstlisting}
+
+The second step is to modify each \texttt{grob} (graphical object) to add
+attributes that specify when it will call JavaScript code. For each
+line identified with the elements of the \texttt{IDs} vector and associated
+to a meteorological station, the \texttt{navarra} object is accessed to
+extract the annual mean value of the daily radiation and the
+abbreviated name of the corresponding station (\texttt{info}).  The
+\texttt{grid.garnish} function adds attributes to the \texttt{grob} of each line so
+that when the mouse moves over a \texttt{grob}, the line is highlighted and
+colored in red (\texttt{highlight}). When the mouse hovers out of the \texttt{grob},
+the \texttt{hide} function sets back the default values of line width and
+transparency, but uses the green color to denote that this line has
+been already visited. In addition, because the browsers display the
+content of the title attribute with a default tooltip, \texttt{grid.garnish}
+sets this attribute to \texttt{info}.
+
+\index{grid.garnish@\texttt{grid.garnish}}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+  for (id in unique(IDs)){
+    ## extract information from the data
+    ## according to the ID value
+    i <- strsplit(id, '\\.')
+    i <- sapply(i, function(x)as.numeric(x[5]))
+    ## Information to be attached to each line: annual mean of daily
+    ## radiation and abbreviated name of the station
+    dat <- round(mean(navarra[,i], na.rm=TRUE), 2)
+    info <- paste(names(navarra)[i], paste(dat, collapse=','),
+                  sep=': ')
+    ## attach SVG attributes
+    grid.garnish(id,
+                 onmouseover="highlight(evt)",
+                 onmouseout="hide(evt)",
+                 title=info)
+  }
+\end{lstlisting}
+
+These JavaScript functions are included in a script file named
+\texttt{highlight.js} (available at the website of the book). It can be
+added as an additional object with \texttt{grid.script}.
+
+\index{grid.script@\texttt{grid.script}}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+  grid.script(filename="highlight.js")
+\end{lstlisting}
+
+This script is easy to understand, even without previous
+JavaScript knowledge:
+\index{JavaScript}
+\begin{verbatim}
+  highlight = function(evt){',
+      evt.target.setAttribute('opacity', '1');
+      evt.target.setAttribute('stroke', 'red');
+      evt.target.setAttribute('stroke-width', '1');
+  }
+  
+  hide = function(evt){
+      evt.target.setAttribute('opacity', '0.3');
+      evt.target.setAttribute('stroke', green');
+      evt.target.setAttribute('stroke-width', '0.3');
+  }
+\end{verbatim}
+
+Finally, \texttt{gridToSVG} exports the whole scene to SVG. 
+\index{grid.export@\texttt{grid.export}} 
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+  grid.export('figs/navarraRadiation.svg')
+\end{lstlisting}
+
+A snapshot of the result, as viewed in a browser with a line
+highlighted, is shown in Figure \ref{fig:navarraSVG}. Open the SVG
+file with your browser, explore it using the horizon graph (Figure
+\ref{fig:navarraHorizonplot}) as a reference, and try to answer the
+questions raised with that graphic.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.9\textwidth]{figs/navarraSVG_captura.png}
+  \caption{\label{fig:navarraSVG}Snapshot of an SVG graphic produced with \texttt{gridSVG}.}
+\end{figure}
+
+\subsection{streamgraph \label{sec:interactive_streamgraph}}
+\label{sec:org3cf8855}
+
+The \texttt{streamgraph} package\footnote{The \texttt{streamgraph} package, \url{http://hrbrmstr.github.io/streamgraph/}, is not available in CRAN. It can be installed using the \texttt{devtools} or the \texttt{remotes} package.} creates interactive stream graphs based on
+the \texttt{htmlwidgets} package and the \texttt{D3.js} JavaScript library. Its main
+function, \texttt{streamgraph}, requires a \texttt{data.frame} as the first
+argument. Besides, its three next arguments, \texttt{key}, \texttt{value}, and
+\texttt{date}, makes this function a good candidate to work together with
+\texttt{fortify} and \texttt{melt}.
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
@@ -1121,8 +1151,15 @@ library(reshape2)
 \begin{lstlisting}
 unemployDF <- fortify(unemployUSA)
 
-unemployDF <- melt(unemployDF, id.vars = 'Index')
+unemployDF <- melt(unemployDF,
+                   id.vars = 'Index')
 \end{lstlisting}
+
+Figures \ref{fig:streamgraph_interactive} and
+\ref{fig:streamgraph_interactive_selected} are snapshots of the
+interactive graphic created with the functions \texttt{streamgraph},
+\texttt{sg\_axis}, and \texttt{sg\_fill\_brewer}, connected through the pipe operator,
+\texttt{\%>\%}.
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
