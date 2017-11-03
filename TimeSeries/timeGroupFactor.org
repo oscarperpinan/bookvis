@@ -75,9 +75,8 @@ intense colors and to distinguish between the first and second
 half of the year with red and blue, respectively (Figure
 ref:fig:aranjuezSplom).
 
-#+BEGIN_EXPORT latex
-\index{splom@\texttt{splom}}
-#+END_EXPORT
+#+INDEX: splom@\texttt{splom}
+
 
 #+begin_src R
 load('data/aranjuez.RData')
@@ -116,10 +115,8 @@ highlighted in green). Clicks other than left-clicks terminate the
 procedure. The output of this function is the index of chosen
 points.
 
-#+BEGIN_EXPORT latex
-\index{panel.link.splom@\texttt{panel.link.splom}}
-\index{trellis.focus@\texttt{trellis.focus}}
-#+END_EXPORT
+#+INDEX: panel.link.splom@\texttt{panel.link.splom}
+#+INDEX: trellis.focus@\texttt{trellis.focus}
 
 #+begin_src R :results silent :exports code :eval no-export
 trellis.focus('panel', 1, 1)
@@ -130,22 +127,25 @@ aranjuez[idx,]
 The =ggplot2= version of Figure ref:fig:aranjuezSplom is produced
 thanks to the =ggpairs= function provided by the =GGally= package.
 
-#+begin_src R
+#+INDEX: ggpairs@\texttt{ggpairs}
+#+INDEX: Packages!GGally@\texttt{GGally}
+
+#+begin_src R :results silent :exports code :eval no-export
 library(GGally)
 
-p <- ggpairs(aranjuezDF,
-             columns = 1:10, ## Do not include "Month"
-             upper = list(continuous = "points"),
-             mapping = aes(colour = Month, alpha = 0.1))
+ggpairs(aranjuezDF,
+        columns = 1:10, ## Do not include "Month"
+        upper = list(continuous = "points"),
+        mapping = aes(colour = Month, alpha = 0.1))
 #+end_src
 
 Let's explore Figure ref:fig:aranjuezSplom. For example,
 - The highest values of ambient temperature (average, maximum, and
-  mimimun), solar radiation, and evotranspiration can be found
-  during the summer.
-- These variables are almost linearly related. The relation
-  between radiation and temperature is different during both
-  halves of the year (red and blue regions can be easily distinguished).
+  minimum), solar radiation, and evotranspiration can be found during
+  the summer.
+- These variables are almost linearly related. The relation between
+  radiation and temperature is different during both halves of the
+  year (red and blue regions can be easily distinguished).
 - The humidity reaches its highest values during winter without
   appreciable differences between the first and second half of the
   year. The temperature and humidity may be related with an
@@ -187,14 +187,14 @@ attempt with =splom= can be improved with several modifications
   colors for high density values and darker colors for almost
   empty regions, with a gradient of blue hues for intermediate values).
 
-#+BEGIN_EXPORT latex
-\index{Packages!hexbin@\texttt{hexbin}}
-\index{panel.hexbinplot@\texttt{panel.hexbinplot}}
-\index{panel.loess@\texttt{panel.loess}}
-\index{diag.panel.splom@\texttt{diag.panel.splom}}
-\index{current.panel.limits@\texttt{current.panel.limits}}
-\index{Panel function}
-#+END_EXPORT
+
+#+INDEX: Packages!hexbin@\texttt{hexbin}}
+#+INDEX: panel.hexbinplot@\texttt{panel.hexbinplot}}
+#+INDEX: panel.loess@\texttt{panel.loess}}
+#+INDEX: diag.panel.splom@\texttt{diag.panel.splom}}
+#+INDEX: current.panel.limits@\texttt{current.panel.limits}}
+#+INDEX: Panel function}
+
 
 #+begin_src R :results output graphics :exports both :file figs/aranjuezSplomHexbin.pdf
 library(hexbin)
@@ -235,10 +235,8 @@ the temperature values with one row for each observation). This task
 is easily accomplished with the =melt= function included in the
 =reshape2= package.
 
-#+BEGIN_EXPORT latex
-\index{melt\texttt{melt}}
-\index{Packages!reshape2@\texttt{reshape2}}
-#+END_EXPORT
+#+INDEX: melt\texttt{melt}
+#+INDEX: Packages!reshape2@\texttt{reshape2}
 
 #+begin_src R
 library(reshape2)
@@ -261,10 +259,9 @@ each type of temperature (average, maximum, and minimum) but with a
 common color key encoding the point density (Figure
 ref:fig:aranjuezHexbin). Now, two cells with the same color in
 different panels encode the same value. 
-#+BEGIN_EXPORT latex
-\index{hexbinplot@\texttt{hexbinplot}}
-\index{Panel function}
-#+END_EXPORT
+
+#+INDEX: hexbinplot@\texttt{hexbinplot}
+#+INDEX: Panel function
 
 #+begin_src R :results output graphics :exports both :file figs/aranjuezHexbinplot.pdf
 hexbinplot(Radiation ~ Temperature | Statistic,
@@ -278,7 +275,7 @@ hexbinplot(Radiation ~ Temperature | Statistic,
 #+RESULTS:
 [[file:figs/aranjuezHexbinplot.pdf]]
 
-The ggplot2 version uses =stat_binhex=.
+The ggplot2 version is based on the =stat_binhex= function.
 #+begin_src R :eval no-export
 ggplot(data = aranjuezRshp,
        aes(Temperature, Radiation)) +
@@ -325,12 +322,10 @@ the =latticeExtra= package, which prints the names of the conditioning
 variables on the top and left outer margins (Figure
  ref:fig:aranjuezOuterStrips).
 
-#+BEGIN_EXPORT latex
-\index{useOuterStrips@\texttt{useOuterStrips}}
-\index{panel.rug@\texttt{panel.rug}}
-\index{panel.loess@\texttt{panel.loess}}
-\index{Packages!latticeExtra@\texttt{latticeExtra}}
-#+END_EXPORT
+#+INDEX: useOuterStrips@\texttt{useOuterStrips}
+#+INDEX: panel.rug@\texttt{panel.rug}
+#+INDEX: panel.loess@\texttt{panel.loess}
+#+INDEX: Packages!latticeExtra@\texttt{latticeExtra}
 
 #+begin_src R :results output graphics :exports both :file figs/aranjuezOuterStrips.pdf
   useOuterStrips(xyplot(Temperature ~ Radiation | month * Statistic,

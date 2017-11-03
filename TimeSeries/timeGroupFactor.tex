@@ -1,6 +1,6 @@
 
 \section{Scatterplot Matrix: Time as a Grouping Variable \label{SEC:groupVariable}}
-\label{sec:org3632fd6}
+\label{sec:orgb27f715}
 
 The scatterplot matrices are based on the technique of small multiples
 \cite{Tufte1990}: small, thumbnail-sized representations of multiple
@@ -24,25 +24,32 @@ half of the year with red and blue, respectively (Figure
 
 \index{splom@\texttt{splom}}
 
+
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  load('data/aranjuez.RData')
-  
-  ## Red-Blue palette with black added (12 colors)
-  colors <- c(brewer.pal(n=11, 'RdBu'), '#000000')
-  ## Rearrange according to months (darkest for summer)
-  colors <- colors[c(6:1, 12:7)]
+load('data/aranjuez.RData')
+aranjuezDF <- as.data.frame(aranjuez)
+aranjuezDF$Month <- format(index(aranjuez), '%m')
 \end{lstlisting}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  splom(~as.data.frame(aranjuez),
-          groups=format(index(aranjuez), '%m'),
-        auto.key=list(space='right', 
-            title='Month', cex.title=1),
-        pscale=0, varname.cex=0.7, xlab='',
-          par.settings=custom.theme(symbol=colors,
-              pch=19), cex=0.3, alpha=0.1)
+## Red-Blue palette with black added (12 colors)
+colors <- c(brewer.pal(n=11, 'RdBu'), '#000000')
+## Rearrange according to months (darkest for summer)
+colors <- colors[c(6:1, 12:7)]
+\end{lstlisting}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+splom(~ aranjuezDF, 
+      groups = aranjuezDF$Month,
+      auto.key=list(space='right', 
+                    title='Month', cex.title=1),
+      pscale=0, varname.cex=0.7, xlab='',
+      par.settings=custom.theme(symbol=colors,
+                                pch=19),
+      cex=0.3, alpha=0.1)
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -50,35 +57,6 @@ half of the year with red and blue, respectively (Figure
 \includegraphics[width=.9\linewidth]{figs/aranjuezSplom.png}
 \caption{Scatter plot matrix of the collection of meteorological time series of the Aranjuez station. \label{fig:aranjuezSplom}}
 \end{figure}
-
-\textbf{ggplot version}
-
-\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-library(GGally)
-
-df <- as.data.frame(aranjuez)
-df$Month <- format(index(aranjuez), '%m')
- 
-p <- ggpairs(df,
-             columns = 1:10, ## Do not include "Month"
-             upper = list(continuous = "points"),
-             mapping = aes(colour = Month, alpha = 0.1))
-\end{lstlisting}
-
-Let's explore Figure \ref{fig:aranjuezSplom}. For example,
-\begin{itemize}
-\item The highest values of ambient temperature (average, maximum, and
-mimimun), solar radiation, and evotranspiration can be found
-during the summer.
-\item These variables are almost linearly related. The relation
-between radiation and temperature is different during both
-halves of the year (red and blue regions can be easily distinguished).
-\item The humidity reaches its highest values during winter without
-appreciable differences between the first and second half of the
-year. The temperature and humidity may be related with an
-exponential function.
-\end{itemize}
 
 A bit of interactivity can be added to this plot with the
 identification of some points. This task is easy with
@@ -97,9 +75,38 @@ idx <- panel.link.splom(pch=13, cex=0.6, col='green')
 aranjuez[idx,]
 \end{lstlisting}
 
+The \texttt{ggplot2} version of Figure \ref{fig:aranjuezSplom} is produced
+thanks to the \texttt{ggpairs} function provided by the \texttt{GGally} package.
+
+\index{ggpairs@\texttt{ggpairs}}
+\index{Packages!GGally@\texttt{GGally}}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+library(GGally)
+
+ggpairs(aranjuezDF,
+        columns = 1:10, ## Do not include "Month"
+        upper = list(continuous = "points"),
+        mapping = aes(colour = Month, alpha = 0.1))
+\end{lstlisting}
+
+Let's explore Figure \ref{fig:aranjuezSplom}. For example,
+\begin{itemize}
+\item The highest values of ambient temperature (average, maximum, and
+minimum), solar radiation, and evotranspiration can be found during
+the summer.
+\item These variables are almost linearly related. The relation between
+radiation and temperature is different during both halves of the
+year (red and blue regions can be easily distinguished).
+\item The humidity reaches its highest values during winter without
+appreciable differences between the first and second half of the
+year. The temperature and humidity may be related with an
+exponential function.
+\end{itemize}
 
 \subsection{Hexagonal Binning \label{SEC:hexbin}}
-\label{sec:orgbb598f3}
+\label{sec:org35616a5}
 
 For large datasets, the display of a large number of points in a
 scatterplot produces hidden point density, long computation times,
@@ -131,34 +138,35 @@ colors for high density values and darker colors for almost
 empty regions, with a gradient of blue hues for intermediate values).
 \end{itemize}
 
-\index{Packages!hexbin@\texttt{hexbin}}
-\index{panel.hexbinplot@\texttt{panel.hexbinplot}}
-\index{panel.loess@\texttt{panel.loess}}
-\index{diag.panel.splom@\texttt{diag.panel.splom}}
-\index{current.panel.limits@\texttt{current.panel.limits}}
-\index{Panel function}
+
+\index{Packages!hexbin@\texttt{hexbin}}}
+\index{panel.hexbinplot@\texttt{panel.hexbinplot}}}
+\index{panel.loess@\texttt{panel.loess}}}
+\index{diag.panel.splom@\texttt{diag.panel.splom}}}
+\index{current.panel.limits@\texttt{current.panel.limits}}}
+\index{Panel function}}
+
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  library(hexbin)
+library(hexbin)
   
-  splom(~as.data.frame(aranjuez),
-             panel=panel.hexbinplot, xlab='',
-             colramp=BTC,
-             diag.panel = function(x, ...){
-               yrng <- current.panel.limits()$ylim
-               d <- density(x, na.rm=TRUE)
-               d$y <- with(d, yrng[1] + 0.95 * diff(yrng) * y / max(y))
-               panel.lines(d)
-               diag.panel.splom(x, ...)
-             },
-             lower.panel = function(x, y, ...){
-               panel.hexbinplot(x, y, ...)
-               panel.loess(x, y, ..., col = 'red')
-             },
-             pscale=0, varname.cex=0.7
-             )
-  
+splom(~as.data.frame(aranjuez),
+      panel=panel.hexbinplot,
+      colramp=BTC,
+      diag.panel = function(x, ...){
+          yrng <- current.panel.limits()$ylim
+          d <- density(x, na.rm=TRUE)
+          d$y <- with(d, yrng[1] + 0.95 * diff(yrng) * y / max(y))
+          panel.lines(d)
+          diag.panel.splom(x, ...)
+      },
+      lower.panel = function(x, y, ...){
+          panel.hexbinplot(x, y, ...)
+          panel.loess(x, y, ..., col = 'red')
+      },
+      xlab='',
+      pscale=0, varname.cex=0.7)
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -173,32 +181,27 @@ a common color key for all of them. In other words, two cells with
 exactly the same color in different panels encode different point
 densities.
 
-It is possible to display a reduced set of variables against
-another one and generate a common color key using the \texttt{hexbinplot}
+It is possible to display a reduced set of variables against another
+one and generate a common color key using the \texttt{hexbinplot}
 function. First, the dataset must be reshaped from the wide format
 (one colum for each variable) to the long format (only one column for
-the values with one row for each observation). 
+the temperature values with one row for each observation). This task
+is easily accomplished with the \texttt{melt} function included in the
+\texttt{reshape2} package.
 
-The \texttt{reshape} function needs several arguments to perform the
-conversion. The most important is the \texttt{data.frame} to be
-transformed. Then there are the names of variables to be mapped to
-a single variable in the long dataset (the three ambient
-temperatures). The name of this variable can be set with
-\texttt{v.names}. Finally, \texttt{timevar} is the name of the column in long format that
-differentiates multiple observations from the same variable. The
-values of this column are defined with the \texttt{times} argument.
-
-\index{reshape@\texttt{reshape}}
+\index{melt\texttt{melt}}
+\index{Packages!reshape2@\texttt{reshape2}}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  aranjuezDF <- data.frame(aranjuez,
-                           month=format(index(aranjuez), '%m'))
-  aranjuezRshp <- reshape(aranjuezDF, direction='long',
-                          varying=list(names(aranjuez)[1:3]),
-                          v.names='Temperature',
-                          times=names(aranjuez)[1:3],
-                          timevar='Statistic')
+library(reshape2)
+
+aranjuezRshp <- melt(aranjuezDF,
+                     measure.vars = c('TempMax',
+                                      'TempAvg',
+                                      'TempMin'),
+                     variable.name = 'Statistic',
+                     value.name = 'Temperature')
 \end{lstlisting}
 
 
@@ -212,14 +215,17 @@ each type of temperature (average, maximum, and minimum) but with a
 common color key encoding the point density (Figure
 \ref{fig:aranjuezHexbin}). Now, two cells with the same color in
 different panels encode the same value. 
+
 \index{hexbinplot@\texttt{hexbinplot}}
 \index{Panel function}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  hexbinplot(Radiation~Temperature|Statistic, data=aranjuezRshp,
-             layout=c(1, 3), colramp=BTC) +
-      layer(panel.loess(..., col = 'red'))
+hexbinplot(Radiation ~ Temperature | Statistic,
+           data = aranjuezRshp,
+           layout = c(1, 3),
+           colramp = BTC) +
+    layer(panel.loess(..., col = 'red'))
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -228,18 +234,19 @@ different panels encode the same value.
 \caption{Scatterplot with hexagonal binning of temperature versus solar radiation using data of the Aranjuez station (\texttt{lattice} version). \label{fig:aranjuezHexbin}}
 \end{figure}
 
-The ggplot2 version uses \texttt{stat\_binhex}.
+The ggplot2 version is based on the \texttt{stat\_binhex} function.
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-  ggplot(data=aranjuezRshp, aes(Temperature, Radiation)) +
-      stat_binhex(ncol=1) + 
-      stat_smooth(se=FALSE, method='loess', col='red') +
-      facet_wrap(~Statistic, ncol=1) +
-      theme_bw()
+ggplot(data = aranjuezRshp,
+       aes(Temperature, Radiation)) +
+    stat_binhex(ncol = 1) + 
+    stat_smooth(se = FALSE, method = 'loess', col = 'red') +
+    facet_wrap(~ Statistic, ncol = 1) +
+    theme_bw()
 \end{lstlisting}
 
 \section{Scatterplot with Time as a Conditioning Variable \label{SEC:conditionVariable}}
-\label{sec:org0c82a77}
+\label{sec:orgda573dd}
 
 After discussing the hexagonal binning, let's recover the time
 variable. Figure \ref{fig:aranjuezSplom} uses colors to encode
