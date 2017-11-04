@@ -1,6 +1,6 @@
 
 \section{Polylines}
-\label{sec:org014ae63}
+\label{sec:org9fde468}
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 library(zoo)
@@ -51,7 +51,7 @@ countries.
 \end{enumerate}
 
 \section{Choosing Colors}
-\label{sec:org2764a99}
+\label{sec:org10e7bff}
 The \texttt{Country.Name} categorical variable will be encoded with a
 qualitative palette, namely the first five colors of \texttt{Set1}
 palette\footnote{\url{http://colorbrewer2.org/}} from the \texttt{RColorBrewer} package
@@ -206,7 +206,7 @@ gCO2.capita <- ggplot(data = CO2data,
 \end{lstlisting}
 
 \section{Labels to Show Time Information}
-\label{sec:org5a88b13}
+\label{sec:org8b19cae}
 This result can be improved with labels displaying the years to show
 the time evolution.  A panel function with \texttt{panel.text} to print the
 year labels and \texttt{panel.superpose} to display the lines for each group
@@ -265,7 +265,7 @@ gCO2.capita <- gCO2.capita + geom_text(aes(label = Year),
 \end{lstlisting}
 
 \section{Country Names: Positioning Labels}
-\label{sec:org4616e34}
+\label{sec:org53cce82}
 The common solution to link each curve with the group value is to add
 a legend. However, a legend can be confusing with too many items. In
 addition, the reader must carry out a complex task: Choose the line,
@@ -337,7 +337,7 @@ direct.label(gCO2.capita, method='extreme.grid')
 \end{lstlisting}
 
 \section{A Panel for Each Year}
-\label{sec:org05cce9f}
+\label{sec:org1bc2de8}
 Time can be used as a conditioning variable (as shown in previous
 sections) to display subsets of the data in different panels. Figure
 \ref{fig:CO2-GNI-panel} is produced with the same code as in Figure
@@ -400,7 +400,7 @@ xyplot(GNI.capita  ~ CO2.capita | factor(Year),
 \end{figure}
 
 \subsection{\floweroneleft Using Variable Size to Encode an Additional Variable}
-\label{sec:org5ea9f6c}
+\label{sec:org6e78f47}
 Instead of using simple points, we can display circles of
 different radius to encode a new variable. This new variable is
 \texttt{CO2.PPP}, the ratio of \(\mathrm{CO_2}\) emissions to the Gross Domestic
@@ -495,7 +495,7 @@ xyplot(GNI.capita ~ CO2.capita|factor(Year), data = CO2data,
 \end{figure}
 
 \section{Interactive graphics: animation \label{sec:timeseries_animation}}
-\label{sec:org7a8e07d}
+\label{sec:org98d37a3}
 
 Previous sections have been focused on static graphics. This section
 describes several solutions to display the data through animation with
@@ -509,7 +509,7 @@ Three packages are used here: \texttt{googleVis}, \texttt{plotly}, and \texttt{g
 
 
 \subsection{plotly \label{sec:plotly_animation}}
-\label{sec:org2a9218c}
+\label{sec:org881d768}
 The \texttt{plotly} package has already been used in Section
 \ref{sec:plotly_horizontal} to create an interactive graphic
 representing time in the x-axis. In this section this package produces
@@ -562,11 +562,11 @@ p
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/plotly_animation.png}
-\caption{plotly animation \label{fig:plotly_animation}}
+\caption{Snapshot of a Motion Chart produced with \texttt{plotly}. \label{fig:plotly_animation}}
 \end{figure}
 
 \subsection{\texttt{googleVis} \label{sec:googlevis}}
-\label{sec:orge36543c}
+\label{sec:org0ac0b8e}
 The \texttt{googleVis} package \cite{Gesmann.deCastillo2011} is an interface
 between R and the Google Visualisation API. With its \texttt{gvisMotionChart}
 function it is easy to produce a Motion Chart that can be displayed
@@ -585,11 +585,11 @@ pgvis <- gvisMotionChart(CO2data,
                          timevar = 'Year')
 \end{lstlisting}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=\textwidth]{figs/googleVis}
-  \caption{Snapshot of a Motion Chart produced with googleVis.}
-  \label{fig:googleVis}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/googleVis.png}
+\caption{Snapshot of a Motion Chart produced with googleVis. \label{fig:googleVis}}
 \end{figure}
 
 
@@ -600,7 +600,7 @@ API\footnote{You should read the Google API Terms of Service before using
 before using it for public distribution.
 
 \subsection{\floweroneleft gridSVG \label{sec:gridSVG}}
-\label{sec:org5edc07b}
+\label{sec:orgb93555d}
 The final solution to create an animation is based on the function
 \texttt{grid.animate} of the \texttt{gridSVG} package. 
 
@@ -744,9 +744,8 @@ information as a static complement.
 grid.export("figs/bubbles.svg")
 \end{lstlisting}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=\textwidth]{figs/bubbles.png}
-  \caption{Animated bubbles produced with \texttt{gridSVG}.}
-  \label{fig:bubblesSVG}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/bubbles.png}
+\caption{Animated bubbles produced with \texttt{gridSVG}. \label{fig:bubblesSVG}}
 \end{figure}

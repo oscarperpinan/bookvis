@@ -593,7 +593,7 @@ p <- animation_slider(p,
 p
 #+end_src
 
-#+CAPTION: plotly animation label:fig:plotly_animation
+#+CAPTION: Snapshot of a Motion Chart produced with \texttt{plotly}. label:fig:plotly_animation
 [[file:figs/plotly_animation.png]]
 
 
@@ -622,14 +622,9 @@ pgvis <- gvisMotionChart(CO2data,
                          timevar = 'Year')
 #+end_src
 
-#+BEGIN_EXPORT latex
-  \begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{figs/googleVis}
-    \caption{Snapshot of a Motion Chart produced with googleVis.}
-    \label{fig:googleVis}
-  \end{figure}
-#+END_EXPORT
+
+#+CAPTION: Snapshot of a Motion Chart produced with googleVis. label:fig:googleVis
+[[file:figs/googleVis.png]]
 
 
 #+begin_src R :exports none :eval no-export
@@ -789,14 +784,8 @@ information as a static complement.
 grid.export("figs/bubbles.svg")
 #+end_src
 
-#+BEGIN_EXPORT latex
-\begin{figure}
-  \centering
-  \includegraphics[width=\textwidth]{figs/bubbles.png}
-  \caption{Animated bubbles produced with \texttt{gridSVG}.}
-  \label{fig:bubblesSVG}
-\end{figure}
-#+END_EXPORT
+#+CAPTION: Animated bubbles produced with \texttt{gridSVG}. label:fig:bubblesSVG
+[[file:figs/bubbles.png]]
 
 
 * Footnotes

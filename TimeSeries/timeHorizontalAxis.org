@@ -927,7 +927,7 @@ automatically with =xts= time series objects, or with objects than can
 be coerced to this class. The result is an interactive graph, where
 values are displayed according to the mouse position over the time
 series. Regions can be selected to zoom into a time period. The figure
-label:fig:dygraphs is an snapshot of the interactive graph.
+ref:fig:dygraphs is an snapshot of the interactive graph.
 
 #+INDEX: Packages!dygraphs@\texttt{dygraphs}
 
@@ -941,29 +941,23 @@ dyTemp <- dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
 dyTemp
 #+end_src
 
-#+CAPTION: dygraphs label:fig:dygraphs
+#+CAPTION: Snapshot of an interactive graphic produced with \texttt{dygraphs}. label:fig:dygraphs
 [[file:figs/dygraphs_aranjuez.png]]
 
 
 
-You can customize dygraphs by piping additional commands onto the original dygraph object. 
+You can customize =dygraphs= by piping additional commands onto the original graphic.  The function =dyOptions= provides several choices for the graphic, and the function =dyHighlight= configures options for data series mouse-over highlighting. For example, with the next code the semi-transparency value of the non-selected lines is reduced and the width of selected line is increased (Figure ref:fig:dygraphs_selected).
 
 #+begin_src R
 dyTemp %>%
-    dyHighlight(highlightSeriesBackgroundAlpha = 0.2)
+    dyHighlight(highlightSeriesBackgroundAlpha = 0.2,
+                highlightSeriesOpts = list(strokeWidth = 2))
 #+end_src
 
-#+RESULTS:
-
-#+CAPTION: dygraphs selected label:fig:dygraphs_selected
+#+CAPTION: Snapshot of a selection in an interactive graphic produced with \texttt{dygraphs}. label:fig:dygraphs_selected
 [[file:figs/dygraphs_aranjuez_selected.png]]
 
-#+begin_src R
-dyTemp %>%
-    dyHighlight(highlightSeriesOpts = list(strokeWidth = 2))
-#+end_src
-
-
+An alternative approach to depict the upper and lower variables of this time series is with a shaded region. The =dySeries= function accepts a character vector of length 3 that specifies a set of input column names to use as the lower, value, and upper for a series with a shaded region  around it (Figure ref:fig:dygraphs_maxmin).
 #+begin_src R
 dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
         main = "Temperature in Aranjuez",
@@ -972,7 +966,7 @@ dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
              label = "Temperature")
 #+end_src
 
-#+CAPTION: dygraphs maxmin label:fig:dygraphs_maxmin
+#+CAPTION: Shaded region between upper and lower values around a time series. label:fig:dygraphs_maxmin
 [[file:figs/dygraphs_aranjuez_maxmin.png]]
 
 ** Highcharter label:sec:highcharter
@@ -983,8 +977,10 @@ solutions. Displaying time series with this package can be achieved
 with the combination of the generic =highchart= function and several
 calls to the =hc_add_series_xts= function through the pipe =%>%=
 operator.  Once again, the result is an interactive graph with
-selection and zoom capabilities. Figure label:fig:highcharter is an
-snapshot of the interactive graph.
+selection and zoom capabilities. Figure ref:fig:highcharter is an
+snapshot of the interactive graph, and Figure
+ref:fig:highcharter_zoom is an snapshot of this same graph with
+zoom.
 
 #+INDEX: Packages!highcharter@\texttt{highcharter}
 
@@ -1004,10 +1000,10 @@ highchart() %>%
 
 #+end_src
 
-#+CAPTION: highcharter label:fig:highcharter
+#+CAPTION: Snapshot of an interactive graphic produced with \texttt{highcharter}. label:fig:highcharter
 [[file:figs/highcharter_aranjuez.png]]
 
-#+CAPTION: highcharter zoom label:fig:highcharter_zoom
+#+CAPTION: Snapshot of a zoom in an interactive graphic produced with \texttt{highcharter}. label:fig:highcharter_zoom
 [[file:figs/highcharter_aranjuez_zoom.png]]
 
 
@@ -1067,10 +1063,10 @@ plot_ly(aranjuezDF) %>%
 
 #+end_src
 
-#+CAPTION: plotly label:fig:plotly
+#+CAPTION: Snapshot of an interactive graphic produced with \texttt{plotly}. label:fig:plotly
 [[file:figs/plotly_aranjuez.png]]
 
-#+CAPTION: plotly zoom label:fig:plotly_zoom
+#+CAPTION: Snapshot of a zoom in an interactive graphic produced with \texttt{plotly}. label:fig:plotly_zoom
 [[file:figs/plotly_aranjuez_zoom.png]]
 
 
@@ -1185,13 +1181,9 @@ file with your browser, explore it using the horizon graph (Figure
 ref:fig:navarraHorizonplot) as a reference, and try to answer the
 questions raised with that graphic.
 
-#+BEGIN_EXPORT latex
-  \begin{figure}
-    \centering
-    \includegraphics[width=0.9\textwidth]{figs/navarraSVG_captura.png}
-    \caption{\label{fig:navarraSVG}Snapshot of an SVG graphic produced with \texttt{gridSVG}.}
-  \end{figure}
-#+END_EXPORT
+#+CAPTION: Snapshot of an SVG graphic produced with \texttt{gridSVG}. label:fig:navarraSVG 
+[[file:figs/navarraSVG_captura.png]]
+
 
 ** streamgraph label:sec:interactive_streamgraph
 

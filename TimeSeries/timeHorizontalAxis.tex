@@ -1,6 +1,6 @@
 
 \section{Time Graph of Variables with Different Scales  \label{sec:differentVariables}}
-\label{sec:orgb0728bb}
+\label{sec:orgc552ecd}
 There is a variety of scientific research interested in the
 relationship among several meteorological variables. A suitable
 approach is to display the time evolution of all of them using a
@@ -52,7 +52,7 @@ autoplot(aranjuez) + facet_free()
 
 
 \subsection{\floweroneleft Annotations to Enhance the Time Graph}
-\label{sec:org662f85b}
+\label{sec:org4436557}
 
 These first attempts can be improved with a custom panel function
 that generates the content of each panel using the information
@@ -271,7 +271,7 @@ during this season.
 \end{itemize}
 
 \section{Time Series of Variables with the Same Scale \label{SEC:sameScale}}
-\label{sec:orgd50b27f}
+\label{sec:orgb0f2415}
 As an example of time series of variables with the same scale, we will
 use measurements of solar radiation from different meteorological
 stations.
@@ -313,7 +313,7 @@ This result can be improved with different methods: the cut-and-stack
 method, and the horizon graph with \texttt{horizonplot}.
 
 \subsection{Aspect Ratio and Rate of Change}
-\label{sec:orge849b2f}
+\label{sec:org361fb83}
 When a graphic is intended to inform about the rate of change,
 special attention must be paid to the aspect ratio of the graph,
 defined as the ratio of the height to the width of the graphical
@@ -349,7 +349,7 @@ xyplot(navarra - avRad,
 \end{figure}
 
 \subsection{The Horizon Graph \label{sec:horizonplot}}
-\label{sec:org8a87a58}
+\label{sec:org6ed98e1}
 \index{Horizon graph}
 The horizon graph is useful in examining how a large number of series
 changes over time, and does so in a way that allows both comparisons
@@ -409,7 +409,7 @@ absolute fluctuations across the set of stations?
 \end{itemize}
 
 \subsection{Time Graph of the Differences between a Time Series and a Reference \label{sec:differences}}
-\label{sec:orge5ebf1b}
+\label{sec:org9df903c}
 
 The horizon graph is also useful in revealing the differences between
 a univariate time series and another reference. For example, we
@@ -551,7 +551,7 @@ ggplot(data = df,
 
 
 \section{Stacked Graphs \label{sec:stacked}}
-\label{sec:org2809c38}
+\label{sec:org652b770}
 If the variables of a multivariate time series can be summed to
 produce a meaningful global variable, they may be better displayed
 with stacked graphs. For example, the information on unemployment in
@@ -663,7 +663,7 @@ Statistics'' reports from the Bureau of Labor Statistics\footnote{The March 2012
 
 
 \subsection{\floweroneleft Panel and Prepanel Functions to Implement the ThemeRiver with \texttt{xyplot} \label{sec:themeRiverPanel}}
-\label{sec:org554f6a7}
+\label{sec:org08573b1}
 The \texttt{xyplot} function displays information according to the class
 of its first argument (methods) and to the \texttt{panel} function. We
 will use the \texttt{xyplot.zoo} method (equivalent to the \texttt{xyplot.ts}
@@ -871,7 +871,7 @@ prepanel.flow <- function(x, y, groups, origin,...)
 
 
 \section{Interactive graphics \label{sec:interactive_horizontal}}
-\label{sec:org61f1153}
+\label{sec:org45710f2}
 This section describes the interactive alternatives of the static
 figures included in the previous sections with several packages:
 \texttt{dygraphs}, \texttt{highcharter}, \texttt{plotly}, \texttt{streamgraph}, and \texttt{gridSVG}.
@@ -881,14 +881,14 @@ JavaScript libraries based on the \texttt{htmlwidgets} package, while the
 \texttt{gridSVG} package converts a \texttt{grid} graphic object into an SVG file.
 
 \subsection{Dygraphs \label{sec:dygraphs}}
-\label{sec:org75fef7b}
+\label{sec:orga0ce4c1}
 The \texttt{dygraphs} package is an interface to the \texttt{dygraphs} JavaScript
 library, and provides facilities for charting time-series. It works
 automatically with \texttt{xts} time series objects, or with objects than can
 be coerced to this class. The result is an interactive graph, where
 values are displayed according to the mouse position over the time
 series. Regions can be selected to zoom into a time period. The figure
-\label{fig:dygraphs} is an snapshot of the interactive graph.
+\ref{fig:dygraphs} is an snapshot of the interactive graph.
 
 \index{Packages!dygraphs@\texttt{dygraphs}}
 
@@ -906,32 +906,27 @@ dyTemp
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/dygraphs_aranjuez.png}
-\caption{dygraphs \label{fig:dygraphs}}
+\caption{Snapshot of an interactive graphic produced with \texttt{dygraphs}. \label{fig:dygraphs}}
 \end{figure}
 
 
 
-You can customize dygraphs by piping additional commands onto the original dygraph object. 
+You can customize \texttt{dygraphs} by piping additional commands onto the original graphic.  The function \texttt{dyOptions} provides several choices for the graphic, and the function \texttt{dyHighlight} configures options for data series mouse-over highlighting. For example, with the next code the semi-transparency value of the non-selected lines is reduced and the width of selected line is increased (Figure \ref{fig:dygraphs_selected}).
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 dyTemp %>%
-    dyHighlight(highlightSeriesBackgroundAlpha = 0.2)
+    dyHighlight(highlightSeriesBackgroundAlpha = 0.2,
+                highlightSeriesOpts = list(strokeWidth = 2))
 \end{lstlisting}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/dygraphs_aranjuez_selected.png}
-\caption{dygraphs selected \label{fig:dygraphs_selected}}
+\caption{Snapshot of a selection in an interactive graphic produced with \texttt{dygraphs}. \label{fig:dygraphs_selected}}
 \end{figure}
 
-\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-dyTemp %>%
-    dyHighlight(highlightSeriesOpts = list(strokeWidth = 2))
-\end{lstlisting}
-
-
+An alternative approach to depict the upper and lower variables of this time series is with a shaded region. The \texttt{dySeries} function accepts a character vector of length 3 that specifies a set of input column names to use as the lower, value, and upper for a series with a shaded region  around it (Figure \ref{fig:dygraphs_maxmin}).
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
@@ -944,11 +939,11 @@ dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/dygraphs_aranjuez_maxmin.png}
-\caption{dygraphs maxmin \label{fig:dygraphs_maxmin}}
+\caption{Shaded region between upper and lower values around a time series. \label{fig:dygraphs_maxmin}}
 \end{figure}
 
 \subsection{Highcharter \label{sec:highcharter}}
-\label{sec:orgf735d6d}
+\label{sec:orgc05f188}
 
 The \texttt{highcharter} package is an interface to the \texttt{highcharts}
 JavaScript library, with a wide spectrum of graphics
@@ -956,8 +951,10 @@ solutions. Displaying time series with this package can be achieved
 with the combination of the generic \texttt{highchart} function and several
 calls to the \texttt{hc\_add\_series\_xts} function through the pipe \texttt{\%>\%}
 operator.  Once again, the result is an interactive graph with
-selection and zoom capabilities. Figure \label{fig:highcharter} is an
-snapshot of the interactive graph.
+selection and zoom capabilities. Figure \ref{fig:highcharter} is an
+snapshot of the interactive graph, and Figure
+\ref{fig:highcharter_zoom} is an snapshot of this same graph with
+zoom.
 
 \index{Packages!highcharter@\texttt{highcharter}}
 
@@ -981,19 +978,19 @@ highchart() %>%
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/highcharter_aranjuez.png}
-\caption{highcharter \label{fig:highcharter}}
+\caption{Snapshot of an interactive graphic produced with \texttt{highcharter}. \label{fig:highcharter}}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/highcharter_aranjuez_zoom.png}
-\caption{highcharter zoom \label{fig:highcharter_zoom}}
+\caption{Snapshot of a zoom in an interactive graphic produced with \texttt{highcharter}. \label{fig:highcharter_zoom}}
 \end{figure}
 
 
 
-\subsection{plotly \label{sec:plotly}}
-\label{sec:orgb814416}
+\subsection{plotly \label{sec:plotly_horizontal}}
+\label{sec:org107af49}
 
 The \texttt{plotly} package is an interface to the \texttt{plotly} JavaScript
 library, also with a wide spectrum of graphics solutions. This package
@@ -1054,18 +1051,18 @@ plot_ly(aranjuezDF) %>%
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/plotly_aranjuez.png}
-\caption{plotly \label{fig:plotly}}
+\caption{Snapshot of an interactive graphic produced with \texttt{plotly}. \label{fig:plotly}}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{figs/plotly_aranjuez_zoom.png}
-\caption{plotly zoom \label{fig:plotly_zoom}}
+\caption{Snapshot of a zoom in an interactive graphic produced with \texttt{plotly}. \label{fig:plotly_zoom}}
 \end{figure}
 
 
 \subsection{\floweroneleft Interaction with \texttt{gridSVG}}
-\label{sec:orgc934232}
+\label{sec:org6664283}
 The \texttt{gridSVG} package provides functions to convert \texttt{grid}-based \texttt{R}
 graphics to an SVG format. It provides several functions to add
 dynamic and interactive capabilities to \texttt{R} graphics. In this section
@@ -1174,14 +1171,15 @@ file with your browser, explore it using the horizon graph (Figure
 \ref{fig:navarraHorizonplot}) as a reference, and try to answer the
 questions raised with that graphic.
 
-\begin{figure}
-  \centering
-  \includegraphics[width=0.9\textwidth]{figs/navarraSVG_captura.png}
-  \caption{\label{fig:navarraSVG}Snapshot of an SVG graphic produced with \texttt{gridSVG}.}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/navarraSVG_captura.png}
+\caption{Snapshot of an SVG graphic produced with \texttt{gridSVG}. \label{fig:navarraSVG}}
 \end{figure}
 
+
 \subsection{streamgraph \label{sec:interactive_streamgraph}}
-\label{sec:org049b8c8}
+\label{sec:orge1606b4}
 
 The \texttt{streamgraph} package\footnote{The \texttt{streamgraph} package, \url{http://hrbrmstr.github.io/streamgraph/}, is not available in CRAN. It can be installed using the \texttt{devtools} or the \texttt{remotes} package.} creates interactive stream graphs based on
 the \texttt{htmlwidgets} package and the \texttt{D3.js} JavaScript library. Its main
