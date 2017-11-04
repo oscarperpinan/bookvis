@@ -1,6 +1,6 @@
 
 \section{Time Graph of Variables with Different Scales  \label{sec:differentVariables}}
-\label{sec:org3cb2900}
+\label{sec:org2c89d6b}
 There is a variety of scientific research interested in the
 relationship among several meteorological variables. A suitable
 approach is to display the time evolution of all of them using a
@@ -52,7 +52,7 @@ autoplot(aranjuez) + facet_free()
 
 
 \subsection{\floweroneleft Annotations to Enhance the Time Graph}
-\label{sec:org1760140}
+\label{sec:org3c74094}
 
 These first attempts can be improved with a custom panel function
 that generates the content of each panel using the information
@@ -139,18 +139,39 @@ object into a \texttt{data.frame} in long format. \texttt{fortify} returns a
 \texttt{data.frame} with three columns: the time \texttt{Index}, a factor
 indicating the \texttt{Series}, and the corresponding \texttt{Value}.
 \end{itemize}
+
+\index{fortify@\texttt{fortify}}
+\index{melt\texttt{melt}}
+
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 timeIdx <- index(aranjuez)
   
-long <- fortify(aranjuez, melt = TRUE)
+aranjuezLong <- fortify(aranjuez, melt = TRUE)
+
+summary(aranjuezLong)
 \end{lstlisting}
+
+\begin{verbatim}
+    Index                 Series          Value       
+Min.   :2004-01-01   TempAvg : 2898   Min.   :-12.98  
+1st Qu.:2005-12-29   TempMax : 2898   1st Qu.:  1.99  
+Median :2008-01-09   TempMin : 2898   Median :  8.52  
+Mean   :2008-01-03   HumidAvg: 2898   Mean   : 22.09  
+3rd Qu.:2010-01-03   HumidMax: 2898   3rd Qu.: 27.71  
+Max.   :2011-12-31   WindAvg : 2898   Max.   :100.00  
+                     (Other) :11592   NA's   :152
+\end{verbatim}
 
 \begin{itemize}
 \item The bands of values below the average can be easily extracted with
 \texttt{scale} because these regions are negative when the \texttt{data.frame} is
 centered.
 \end{itemize}
+
+\index{fortify@\texttt{fortify}}
+\index{melt\texttt{melt}}
+
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 ## Values below mean are negative after being centered
@@ -250,7 +271,7 @@ during this season.
 \end{itemize}
 
 \section{Time Series of Variables with the Same Scale \label{SEC:sameScale}}
-\label{sec:orgd1d94c9}
+\label{sec:org5d9562c}
 As an example of time series of variables with the same scale, we will
 use measurements of solar radiation from different meteorological
 stations.
@@ -292,7 +313,7 @@ This result can be improved with different methods: the cut-and-stack
 method, and the horizon graph with \texttt{horizonplot}.
 
 \subsection{Aspect Ratio and Rate of Change}
-\label{sec:orgc259de9}
+\label{sec:org398c316}
 When a graphic is intended to inform about the rate of change,
 special attention must be paid to the aspect ratio of the graph,
 defined as the ratio of the height to the width of the graphical
@@ -328,13 +349,13 @@ xyplot(navarra - avRad,
 \end{figure}
 
 \subsection{The Horizon Graph \label{sec:horizonplot}}
-\label{sec:org0416174}
-The horizon graph\#+INDEX: Horizon graph\} is useful in examining how a
-large number of series changes over time, and does so in a way
-that allows both comparisons between the individual time series
-and and independent analysis of each series. Moreover,
-extraordinary behaviors and predominant patterns are easily
-distinguished \cite{Heer.Kong.ea2009,Few2008}.
+\label{sec:orgec3fc34}
+\index{Horizon graph}
+The horizon graph is useful in examining how a large number of series
+changes over time, and does so in a way that allows both comparisons
+between the individual time series and and independent analysis of
+each series. Moreover, extraordinary behaviors and predominant
+patterns are easily distinguished \cite{Heer.Kong.ea2009,Few2008}.
 
 This graph displays several stacked series collapsing the y-axis
 to free vertical space:
@@ -388,7 +409,7 @@ absolute fluctuations across the set of stations?
 \end{itemize}
 
 \subsection{Time Graph of the Differences between a Time Series and a Reference \label{sec:differences}}
-\label{sec:org11d40b0}
+\label{sec:orgea74b41}
 
 The horizon graph is also useful in revealing the differences between
 a univariate time series and another reference. For example, we
@@ -530,7 +551,7 @@ ggplot(data = df,
 
 
 \section{Stacked Graphs \label{sec:stacked}}
-\label{sec:orgf56e2aa}
+\label{sec:org5cfe655}
 If the variables of a multivariate time series can be summed to
 produce a meaningful global variable, they may be better displayed
 with stacked graphs. For example, the information on unemployment in
@@ -642,7 +663,7 @@ Statistics'' reports from the Bureau of Labor Statistics\footnote{The March 2012
 
 
 \subsection{\floweroneleft Panel and Prepanel Functions to Implement the ThemeRiver with \texttt{xyplot} \label{sec:themeRiverPanel}}
-\label{sec:org10cac17}
+\label{sec:orgcc16797}
 The \texttt{xyplot} function displays information according to the class
 of its first argument (methods) and to the \texttt{panel} function. We
 will use the \texttt{xyplot.zoo} method (equivalent to the \texttt{xyplot.ts}
@@ -850,7 +871,7 @@ prepanel.flow <- function(x, y, groups, origin,...)
 
 
 \section{Interactive graphics \label{sec:interactive_horizontal}}
-\label{sec:org4f6bfd9}
+\label{sec:orgf248422}
 This section describes the interactive alternatives of the static
 figures included in the previous sections with four packages:
 \texttt{dygraphs}, \texttt{highcharter}, \texttt{plotly}, and \texttt{gridSVG}.
@@ -860,7 +881,7 @@ JavaScript libraries based on the \texttt{htmlwidgets} package, while the
 \texttt{gridSVG} package converts a \texttt{grid} graphic object into an SVG file.
 
 \subsection{Dygraphs \label{sec:dygraphs}}
-\label{sec:org11293b1}
+\label{sec:org7b2fa2e}
 The \texttt{dygraphs} package is an interface to the \texttt{dygraphs} JavaScript
 library, and provides facilities for charting time-series. It works
 automatically with \texttt{xts} time series objects, or with objects than can
@@ -927,7 +948,7 @@ dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
 \end{figure}
 
 \subsection{Highcharter \label{sec:highcharter}}
-\label{sec:orga1df30e}
+\label{sec:org07583f1}
 
 The \texttt{highcharter} package is an interface to the \texttt{highcharts}
 JavaScript library, with a wide spectrum of graphics
@@ -972,7 +993,7 @@ highchart() %>%
 
 
 \subsection{plotly \label{sec:plotly}}
-\label{sec:org128dbc8}
+\label{sec:orgc0df6b6}
 
 The \texttt{plotly} package is an interface to the \texttt{plotly} JavaScript
 library, also with a wide spectrum of graphics solutions. This package
@@ -987,32 +1008,46 @@ for values, and a column for variable names) only one call to
 combination of \texttt{fortify}, to convert the \texttt{zoo} object into a
 \texttt{data.frame}, and \texttt{melt}, to transform from wide to long format.
 
-\index{Packages!plotly@\texttt{plotly}}
-\index{Packages!reshape2\texttt{reshape2}}
+\index{fortify@\texttt{fortify}}
+\index{melt\texttt{melt}}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-library(reshape2)
-
 aranjuezDF <- fortify(aranjuez[,
                                c("TempMax",
                                  "TempAvg",
-                                 "TempMin")])
+                                 "TempMin")],
+                      melt = TRUE)
 
-aranjuezDF <- melt(aranjuezDF, id.vars = 'Index')
+summary(aranjuezDF)
 \end{lstlisting}
+
+\begin{verbatim}
+    Index                Series         Value        
+Min.   :2004-01-01   TempMax:2898   Min.   :-12.980  
+1st Qu.:2005-12-29   TempAvg:2898   1st Qu.:  7.107  
+Median :2008-01-09   TempMin:2898   Median : 13.560  
+Mean   :2008-01-03                  Mean   : 14.617  
+3rd Qu.:2010-01-03                  3rd Qu.: 21.670  
+Max.   :2011-12-31                  Max.   : 41.910  
+                                    NA's   :10
+\end{verbatim}
+
 
 Figure \ref{fig:plotly} is a snapshot of the interactive graphic produce
 with the generic function \texttt{plot\_ly} connected with \texttt{add\_lines} through
 the pipe operator, \texttt{\%>\%}.
+
+\index{Packages!plotly@\texttt{plotly}}
+
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 library(plotly)
 
 plot_ly(aranjuezDF) %>%
     add_lines(x = ~ Index,
-              y = ~ value,
-              color = ~ variable)
+              y = ~ Value,
+              color = ~ Series)
 
 \end{lstlisting}
 
@@ -1030,7 +1065,7 @@ plot_ly(aranjuezDF) %>%
 
 
 \subsection{\floweroneleft Interaction with \texttt{gridSVG}}
-\label{sec:orgf4dee19}
+\label{sec:orgddd9fba}
 The \texttt{gridSVG} package provides functions to convert \texttt{grid}-based \texttt{R}
 graphics to an SVG format. It provides several functions to add
 dynamic and interactive capabilities to \texttt{R} graphics. In this section
@@ -1146,7 +1181,7 @@ questions raised with that graphic.
 \end{figure}
 
 \subsection{streamgraph \label{sec:interactive_streamgraph}}
-\label{sec:orgc9daa39}
+\label{sec:org9d562b4}
 
 The \texttt{streamgraph} package\footnote{The \texttt{streamgraph} package, \url{http://hrbrmstr.github.io/streamgraph/}, is not available in CRAN. It can be installed using the \texttt{devtools} or the \texttt{remotes} package.} creates interactive stream graphs based on
 the \texttt{htmlwidgets} package and the \texttt{D3.js} JavaScript library. Its main
@@ -1155,24 +1190,25 @@ argument. Besides, its three next arguments, \texttt{key}, \texttt{value}, and
 \texttt{date}, makes this function a good candidate to work together with
 \texttt{fortify} and \texttt{melt}.
 
-
-\index{Packages!streamgraph\texttt{streamgraph}}
-\index{Packages!reshape2\texttt{reshape2}}
-
-\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-## remotes::install_github("hrbrmstr/streamgraph")
-library(streamgraph)
-library(reshape2)
-\end{lstlisting}
+\index{fortify@\texttt{fortify}}
+\index{melt\texttt{melt}}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-unemployDF <- fortify(unemployUSA)
+unemployDF <- fortify(unemployUSA, melt = TRUE)
 
-unemployDF <- melt(unemployDF,
-                   id.vars = 'Index')
+head(unemployDF)
 \end{lstlisting}
+
+\begin{verbatim}
+     Index Series Value
+1 ene 2000  32230    19
+2 feb 2000  32230    25
+3 mar 2000  32230    17
+4 abr 2000  32230    20
+5 may 2000  32230    27
+6 jun 2000  32230    13
+\end{verbatim}
 
 Figures \ref{fig:streamgraph_interactive} and
 \ref{fig:streamgraph_interactive_selected} are snapshots of the
@@ -1180,11 +1216,19 @@ interactive graphic created with the functions \texttt{streamgraph},
 \texttt{sg\_axis}, and \texttt{sg\_fill\_brewer}, connected through the pipe operator,
 \texttt{\%>\%}.
 
+\index{Packages!streamgraph\texttt{streamgraph}}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+## remotes::install_github("hrbrmstr/streamgraph")
+library(streamgraph)
+\end{lstlisting}
+
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 streamgraph(unemployDF,
-            key = "variable",
-            value = "value",
+            key = "Series",
+            value = "Value",
             date = "Index") %>%
     sg_axis_x(1, "year", "%Y") %>%
     sg_fill_brewer("Set1")

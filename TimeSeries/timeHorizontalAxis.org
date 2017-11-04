@@ -49,6 +49,8 @@ lattice.options(default.theme = myTheme,
 ##################################################################
 #+end_src
 
+#+RESULTS:
+
 
 * Time Graph of Variables with Different Scales  label:sec:differentVariables
 #+begin_src R :exports none
@@ -196,16 +198,36 @@ the corresponding bands (years and regions below the average values):
   object into a =data.frame= in long format. =fortify= returns a
   =data.frame= with three columns: the time =Index=, a factor
   indicating the =Series=, and the corresponding =Value=.
-#+begin_src R :eval no-export
+
+#+INDEX: fortify@\texttt{fortify}
+#+INDEX: melt\texttt{melt}
+
+#+begin_src R :results output :exports both
 timeIdx <- index(aranjuez)
   
-long <- fortify(aranjuez, melt = TRUE)
+aranjuezLong <- fortify(aranjuez, melt = TRUE)
+
+summary(aranjuezLong)
 #+end_src
+
+#+RESULTS:
+:      Index                 Series          Value       
+:  Min.   :2004-01-01   TempAvg : 2898   Min.   :-12.98  
+:  1st Qu.:2005-12-29   TempMax : 2898   1st Qu.:  1.99  
+:  Median :2008-01-09   TempMin : 2898   Median :  8.52  
+:  Mean   :2008-01-03   HumidAvg: 2898   Mean   : 22.09  
+:  3rd Qu.:2010-01-03   HumidMax: 2898   3rd Qu.: 27.71  
+:  Max.   :2011-12-31   WindAvg : 2898   Max.   :100.00  
+:                       (Other) :11592   NA's   :152
 
 - The bands of values below the average can be easily extracted with
   =scale= because these regions are negative when the =data.frame= is
   centered.
-#+begin_src R :eval no-export
+
+#+INDEX: fortify@\texttt{fortify}
+#+INDEX: melt\texttt{melt}
+
+#+begin_src R
 ## Values below mean are negative after being centered
 scaled <- fortify(scale(aranjuez, scale = FALSE), melt = TRUE)
 ## The 'scaled' column is the result of the centering.
@@ -221,7 +243,7 @@ under <- scaled[underIdx,]
 
 #+INDEX: Package!xts@\texttt{xts}
 
-#+begin_src R :eval no-export
+#+begin_src R
 library(xts)
 ep <- endpoints(timeIdx, on = 'years')
 N <- length(ep[-1])
@@ -233,7 +255,7 @@ cols <- rep_len(c('gray', 'white'), N)
 #+end_src
 - The minima and maxima points of each variable are extracted with
   =apply=:
-#+begin_src R :eval no-export
+#+begin_src R
 minIdx <- timeIdx[apply(aranjuez, 2, which.min)]
 minVals <- apply(aranjuez, 2, min, na.rm = TRUE)
 mins <- data.frame(Index = minIdx,
@@ -249,7 +271,7 @@ maxs <- data.frame(Index = maxIdx,
 
 - With =ggplot= we define the canvas, and the layers of information are
   added successively:
-#+begin_src R :eval no-export
+#+begin_src R
 ggplot(data = long, aes(Index, Value)) +
     ## Time series of each variable
     geom_line(colour = "royalblue4", lwd = 0.5) +
@@ -379,12 +401,12 @@ xyplot(navarra - avRad,
 ##################################################################
 #+end_src
 
-The horizon graph#+INDEX: Horizon graph} is useful in examining how a
-large number of series changes over time, and does so in a way
-that allows both comparisons between the individual time series
-and and independent analysis of each series. Moreover,
-extraordinary behaviors and predominant patterns are easily
-distinguished cite:Heer.Kong.ea2009,Few2008.
+#+INDEX: Horizon graph
+The horizon graph is useful in examining how a large number of series
+changes over time, and does so in a way that allows both comparisons
+between the individual time series and and independent analysis of
+each series. Moreover, extraordinary behaviors and predominant
+patterns are easily distinguished cite:Heer.Kong.ea2009,Few2008.
 
 This graph displays several stacked series collapsing the y-axis
 to free vertical space:
@@ -1005,30 +1027,43 @@ for values, and a column for variable names) only one call to
 combination of =fortify=, to convert the =zoo= object into a
 =data.frame=, and =melt=, to transform from wide to long format.
 
-#+INDEX: Packages!plotly@\texttt{plotly}
-#+INDEX: Packages!reshape2\texttt{reshape2}
+#+INDEX: fortify@\texttt{fortify}
+#+INDEX: melt\texttt{melt}
 
-#+begin_src R
-library(reshape2)
-
+#+begin_src R :results output :exports both
 aranjuezDF <- fortify(aranjuez[,
                                c("TempMax",
                                  "TempAvg",
-                                 "TempMin")])
+                                 "TempMin")],
+                      melt = TRUE)
 
-aranjuezDF <- melt(aranjuezDF, id.vars = 'Index')
+summary(aranjuezDF)
 #+end_src
+
+#+RESULTS:
+:      Index                Series         Value        
+:  Min.   :2004-01-01   TempMax:2898   Min.   :-12.980  
+:  1st Qu.:2005-12-29   TempAvg:2898   1st Qu.:  7.107  
+:  Median :2008-01-09   TempMin:2898   Median : 13.560  
+:  Mean   :2008-01-03                  Mean   : 14.617  
+:  3rd Qu.:2010-01-03                  3rd Qu.: 21.670  
+:  Max.   :2011-12-31                  Max.   : 41.910  
+:                                      NA's   :10
+
 
 Figure ref:fig:plotly is a snapshot of the interactive graphic produce
 with the generic function =plot_ly= connected with =add_lines= through
 the pipe operator, =%>%=.
+
+#+INDEX: Packages!plotly@\texttt{plotly}
+
 #+begin_src R
 library(plotly)
 
 plot_ly(aranjuezDF) %>%
     add_lines(x = ~ Index,
-              y = ~ value,
-              color = ~ variable)
+              y = ~ Value,
+              color = ~ Series)
 
 #+end_src
 
@@ -1167,22 +1202,23 @@ argument. Besides, its three next arguments, =key=, =value=, and
 =date=, makes this function a good candidate to work together with
 =fortify= and =melt=.
 
+#+INDEX: fortify@\texttt{fortify}
+#+INDEX: melt\texttt{melt}
 
-#+INDEX: Packages!streamgraph\texttt{streamgraph}
-#+INDEX: Packages!reshape2\texttt{reshape2}
+#+begin_src R :results output :exports both
+unemployDF <- fortify(unemployUSA, melt = TRUE)
 
-#+begin_src R
-## remotes::install_github("hrbrmstr/streamgraph")
-library(streamgraph)
-library(reshape2)
+head(unemployDF)
 #+end_src
 
-#+begin_src R
-unemployDF <- fortify(unemployUSA)
-
-unemployDF <- melt(unemployDF,
-                   id.vars = 'Index')
-#+end_src
+#+RESULTS:
+:      Index Series Value
+: 1 ene 2000  32230    19
+: 2 feb 2000  32230    25
+: 3 mar 2000  32230    17
+: 4 abr 2000  32230    20
+: 5 may 2000  32230    27
+: 6 jun 2000  32230    13
 
 Figures ref:fig:streamgraph_interactive and
 ref:fig:streamgraph_interactive_selected are snapshots of the
@@ -1190,10 +1226,17 @@ interactive graphic created with the functions =streamgraph=,
 =sg_axis=, and =sg_fill_brewer=, connected through the pipe operator,
 =%>%=.
 
+#+INDEX: Packages!streamgraph\texttt{streamgraph}
+
+#+begin_src R
+## remotes::install_github("hrbrmstr/streamgraph")
+library(streamgraph)
+#+end_src
+
 #+begin_src R
 streamgraph(unemployDF,
-            key = "variable",
-            value = "value",
+            key = "Series",
+            value = "Value",
             date = "Index") %>%
     sg_axis_x(1, "year", "%Y") %>%
     sg_fill_brewer("Set1")

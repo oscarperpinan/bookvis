@@ -17,7 +17,6 @@ setwd('~/github/bookvis/')
 library(lattice)
 library(ggplot2)
 library(latticeExtra)
-library(zoo)
 
 myTheme <- custom.theme.2(pch = 19, cex = 0.7,
                           region = rev(brewer.pal(9, 'YlOrRd')),
@@ -79,6 +78,8 @@ ref:fig:aranjuezSplom).
 
 
 #+begin_src R
+library(zoo)
+
 load('data/aranjuez.RData')
 aranjuezDF <- as.data.frame(aranjuez)
 aranjuezDF$Month <- format(index(aranjuez), '%m')
@@ -238,7 +239,7 @@ is easily accomplished with the =melt= function included in the
 #+INDEX: melt\texttt{melt}
 #+INDEX: Packages!reshape2@\texttt{reshape2}
 
-#+begin_src R
+#+begin_src R :results output :exports both
 library(reshape2)
 
 aranjuezRshp <- melt(aranjuezDF,
@@ -247,12 +248,37 @@ aranjuezRshp <- melt(aranjuezDF,
                                       'TempMin'),
                      variable.name = 'Statistic',
                      value.name = 'Temperature')
+
+summary(aranjuezRshp)
 #+end_src
 
-
-#+begin_src R :results output :exports both
-head(aranjuezRshp)
-#+end_src
+#+RESULTS:
+#+begin_example
+    HumidAvg        HumidMax         WindAvg         WindMax      
+ Min.   :19.89   Min.   : 35.88   Min.   :0.250   Min.   : 1.550  
+ 1st Qu.:47.04   1st Qu.: 81.60   1st Qu.:0.670   1st Qu.: 3.780  
+ Median :62.49   Median : 90.90   Median :0.920   Median : 5.030  
+ Mean   :62.11   Mean   : 87.20   Mean   :1.166   Mean   : 5.216  
+ 3rd Qu.:77.30   3rd Qu.: 94.90   3rd Qu.:1.430   3rd Qu.: 6.540  
+ Max.   :99.50   Max.   :100.00   Max.   :6.450   Max.   :10.000  
+ NA's   :6       NA's   :33                       NA's   :345     
+   Radiation          Rain              ET           Month          
+ Min.   : 0.28   Min.   : 0.000   Min.   :0.000   Length:8694       
+ 1st Qu.: 9.37   1st Qu.: 0.000   1st Qu.:1.160   Class :character  
+ Median :16.67   Median : 0.000   Median :2.750   Mode  :character  
+ Mean   :16.73   Mean   : 1.046   Mean   :3.088                     
+ 3rd Qu.:24.63   3rd Qu.: 0.200   3rd Qu.:4.923                     
+ Max.   :32.74   Max.   :49.730   Max.   :8.560                     
+                                  NA's   :42                        
+   Statistic     Temperature     
+ TempMax:2898   Min.   :-12.980  
+ TempAvg:2898   1st Qu.:  7.107  
+ TempMin:2898   Median : 13.560  
+                Mean   : 14.617  
+                3rd Qu.: 21.670  
+                Max.   : 41.910  
+                NA's   :10
+#+end_example
 
 The =hexbinplot= displays this dataset with a different panel for
 each type of temperature (average, maximum, and minimum) but with a
