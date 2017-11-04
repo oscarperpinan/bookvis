@@ -913,10 +913,10 @@ its last column (the upper line of the cumulative sum).
 
 * Interactive graphics label:sec:interactive_horizontal
 This section describes the interactive alternatives of the static
-figures included in the previous sections with four packages:
-=dygraphs=, =highcharter=, =plotly=, and =gridSVG=.
+figures included in the previous sections with several packages:
+=dygraphs=, =highcharter=, =plotly=, =streamgraph=, and =gridSVG=.
 
-=dygraphs=, =highcharter=, and =plotly= are =R= interfaces to
+=dygraphs=, =highcharter=, =plotly=, and =streamgraph= are =R= interfaces to
 JavaScript libraries based on the =htmlwidgets= package, while the
 =gridSVG= package converts a =grid= graphic object into an SVG file.
 
