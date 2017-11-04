@@ -1,4 +1,4 @@
-#+PROPERTY:  header-args :tangle /home/oscar/github/spacetime-vis/timeComplementary.R :eval no-export
+#+PROPERTY:  header-args :session *R* :tangle /home/oscar/github/spacetime-vis/timeComplementary.R :eval no-export
 #+OPTIONS: ^:nil
 #+BIND: org-export-latex-image-default-option "height=0.45\\textheight"
 
@@ -16,7 +16,6 @@ setwd('~/github/bookvis')
 library(lattice)
 library(ggplot2)
 library(latticeExtra)
-library(zoo)
 
 myTheme <- custom.theme.2(pch = 19, cex = 0.7,
                           region = rev(brewer.pal(9, 'YlOrRd')),
@@ -53,10 +52,12 @@ lattice.options(default.theme = myTheme,
 #+end_src
 
 #+begin_src R
+library(zoo)
+
 load('data/CO2.RData')
 #+end_src
 
-#+RESULTS:
+
 
 #+INDEX: Data!CO2@$CO_2$
 #+INDEX: Data!World Bank
@@ -67,10 +68,10 @@ country are connected with polylines to reveal the time evolution
 (Figure ref:fig:CO2-GNI).
 #+begin_src R :results output graphics :exports both :file "figs/CO2_GNI.pdf" 
 ## lattice version
-xyplot(GNI.capita  ~ CO2.capita, data=CO2data,
-       xlab="Carbon dioxide emissions (metric tons per capita)",
-       ylab="GNI per capita, PPP (current international $)",
-       groups=Country.Name, type='b')
+xyplot(GNI.capita  ~ CO2.capita, data = CO2data,
+       xlab = "Carbon dioxide emissions (metric tons per capita)",
+       ylab = "GNI per capita, PPP (current international $)",
+       groups = Country.Name, type = 'b')
 #+end_src
 
 #+CAPTION: GNI per capita versus $\mathrm{CO_2}$ emissions per capita (=lattice= version). label:fig:CO2-GNI
@@ -79,8 +80,8 @@ xyplot(GNI.capita  ~ CO2.capita, data=CO2data,
 
 #+begin_src R :eval no-export
 ## ggplot2 version
-ggplot(data=CO2data, aes(x=CO2.capita, y=GNI.capita,
-                         color=Country.Name)) +
+ggplot(data = CO2data, aes(x = CO2.capita, y = GNI.capita,
+                         color = Country.Name)) +
     xlab("Carbon dioxide emissions (metric tons per capita)") +
     ylab("GNI per capita, PPP (current international $)") +
     geom_point() + geom_path() + theme_bw()
@@ -134,25 +135,62 @@ value.
 
 #+begin_src R 
 ## Rank of average values of CO2 per capita
-CO2mean <- aggregate(CO2.capita ~ Country.Name, data=CO2data, FUN=mean)
+CO2mean <- aggregate(CO2.capita ~ Country.Name,
+                     data = CO2data, FUN = mean)
 palOrdered <- pal[rank(CO2mean$CO2.capita)]  
 #+end_src
+
+#+RESULTS:
 
 A more sophisticated solution is to use the ordered results of a
 hierarchical clustering of the time evolution of the $\mathrm{CO_2}$ per capita
 values (Figure ref:fig:hclustCO2). The data is extracted from the
 original $\mathrm{CO_2}$ =data.frame=.  
+#+INDEX: Packages!reshape2\texttt{reshape2}
+#+INDEX: dcast\texttt{dcast}
+
+#+begin_src R :results output :exports both
+library(reshape2)
+
+CO2capita <- CO2data[, c('Country.Name',
+                         'Year',
+                         'CO2.capita')]
+CO2capita <- dcast(CO2capita, Country.Name ~ Year)
+
+summary(CO2capita)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Using CO2.capita as value column: use value.var to override.
+  Country.Name      2000             2001             2002       
+ Brazil :1     Min.   : 1.139   Min.   : 1.136   Min.   : 1.139  
+ China  :1     1st Qu.: 3.523   1st Qu.: 3.629   1st Qu.: 3.704  
+ Finland:1     Median : 7.852   Median : 7.940   Median : 7.930  
+ France :1     Mean   : 7.648   Mean   : 7.796   Mean   : 7.786  
+ Germany:1     3rd Qu.: 9.715   3rd Qu.:10.051   3rd Qu.: 9.667  
+ Greece :1     Max.   :20.249   Max.   :19.656   Max.   :19.647  
+ (Other):4                                                       
+      2003             2004             2005             2006       
+ Min.   : 1.172   Min.   : 1.214   Min.   : 1.252   Min.   : 1.316  
+ 1st Qu.: 4.191   1st Qu.: 4.615   1st Qu.: 4.882   1st Qu.: 5.173  
+ Median : 8.165   Median : 8.367   Median : 8.516   Median : 8.330  
+ Mean   : 8.124   Mean   : 8.199   Mean   : 7.989   Mean   : 8.185  
+ 3rd Qu.: 9.908   3rd Qu.: 9.830   3rd Qu.: 9.631   3rd Qu.: 9.738  
+ Max.   :19.585   Max.   :19.777   Max.   :19.716   Max.   :19.229  
+                                                                    
+      2007             2008             2009             2010       
+ Min.   : 1.390   Min.   : 1.542   Min.   : 1.666   Min.   : 1.666  
+ 1st Qu.: 5.333   1st Qu.: 5.430   1st Qu.: 5.582   1st Qu.: 5.630  
+ Median : 8.380   Median : 7.966   Median : 7.345   Median : 6.932  
+ Mean   : 8.164   Mean   : 7.994   Mean   : 7.551   Mean   : 7.900  
+ 3rd Qu.: 9.564   3rd Qu.:10.301   3rd Qu.: 9.547   3rd Qu.:10.927  
+ Max.   :19.350   Max.   :18.602   Max.   :17.315   Max.   :17.564
+#+end_example
 
 #+INDEX: hclust@\texttt{hclust}
 
 #+begin_src R :results output graphics :exports both :file "figs/hclust.pdf" 
-CO2capita <- CO2data[, c('Country.Name',
-                         'Year',
-                         'CO2.capita')]
-CO2capita <- reshape(CO2capita,
-                     idvar='Country.Name',
-                     timevar='Year',
-                     direction='wide')
 hCO2 <- hclust(dist(CO2capita[, -1]))
 
 oldpar <- par(mar=c(0, 2, 0, 0) + .1)
