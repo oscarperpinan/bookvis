@@ -1012,7 +1012,7 @@ highchart() %>%
 
 
 
-** plotly label:sec:plotly
+** plotly label:sec:plotly_horizontal
 
 The =plotly= package is an interface to the =plotly= JavaScript
 library, also with a wide spectrum of graphics solutions. This package

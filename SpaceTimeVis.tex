@@ -1,4 +1,4 @@
-% Created 2017-11-04 sáb 13:11
+% Created 2017-11-04 sáb 14:05
 % Intended LaTeX compiler: pdflatex
 \documentclass[smallroyalvopaper]{memoir}
 \usepackage[utf8]{inputenc}
@@ -42,16 +42,16 @@
 \mainmatter
 
 \chapter{Introduction}
-\label{sec:org4955747}
+\label{sec:org3aefca3}
 \label{sec:introduction}
 
 
 
 \part{Time Series}
-\label{sec:orge5e8f39}
+\label{sec:org42d6c7f}
 
 \chapter{Displaying Time Series: Introduction}
-\label{sec:orgac21d60}
+\label{sec:org2b76ff0}
 \label{cha:timeIntro}
 
 A time series is a sequence of observations registered at consecutive time instants. When these time instants are evenly spaced, the distance between them is called the sampling interval. The visualization of time series is intended to reveal changes of one or more quantitative variables through time, and to display the relationships between the variables and their evolution through time.
@@ -61,7 +61,7 @@ The standard time series graph displays the time along the horizontal axis. Seve
 These chapters provide a variety of examples to illustrate a set of useful techniques. These examples make use of several datasets (available at the book website) described in Chapter \ref{cha:dataTime}.
 
 \section{Packages}
-\label{sec:org8069185}
+\label{sec:org404d89f}
 \label{sec:time-series-packages}
 
 The CRAN Tasks View ``Time Series Analysis'' \footnote{\url{http://CRAN.R-project.org/view=TimeSeries}} summarizes the packages for reading, vizualizing, and analyzing time series. This section provides a brief introduction to the \texttt{zoo} and \texttt{xts} packages. Most of the information has been extracted from their vignettes, webpages, and help pages. You should read them for detailed information.
@@ -69,7 +69,7 @@ The CRAN Tasks View ``Time Series Analysis'' \footnote{\url{http://CRAN.R-projec
 Both packages extensively use the time classes defined in \texttt{R}. The interested reader will find an overview of the different time classes in \texttt{R} in \cite{Ripley.Hornik2001} and \cite{Grothendieck.Petzoldt2004}.
 
 \subsection{zoo}
-\label{sec:orgbb4f3f9}
+\label{sec:org9387180}
 \label{sec:zoo}
 
 \index{Packages!zoo@\texttt{zoo}}
@@ -103,7 +103,7 @@ This package provides four methods for dealing with missing observations:
 The package defines interfaces to \texttt{read.table} and \texttt{write.table} for reading, \texttt{read.zoo}, and writing, \texttt{write.zoo}, \texttt{zoo} series from or to text files. The \texttt{read.zoo} function expects either a text file or connection as input or a \texttt{data.frame}. \texttt{write.zoo} first coerces its argument to a \texttt{data.frame}, adds a column with the index, and then calls \texttt{write.table}.
 
 \subsection{xts}
-\label{sec:org5b8609c}
+\label{sec:org288669a}
 \label{sec:xts}
 
 \index{Packages!xts@\texttt{xts}}
@@ -121,7 +121,7 @@ Furthermore, this package provides several time-based tools:
 \end{itemize}
 
 \section{Further Reading}
-\label{sec:orgfc6ad14}
+\label{sec:org7ac4636}
 \label{cha:further-reading-time}
 
 \begin{itemize}
@@ -143,13 +143,13 @@ Furthermore, this package provides several time-based tools:
 \end{itemize}
 
 \chapter{Time on the Horizontal Axis}
-\label{sec:org2f1cb8d}
+\label{sec:org0ff8b52}
 \label{cha:timeHorizontalAxis}
 
 The most frequent visualization method of a time series uses the horizontal axis to depict the time index. This chapter illustrates several variants to display multivariate time series: multiple time series with different scales, variables with the same scale, and stacked graphs.
 
 \section{Time Graph of Variables with Different Scales  \label{sec:differentVariables}}
-\label{sec:org2c89d6b}
+\label{sec:orgb0728bb}
 There is a variety of scientific research interested in the
 relationship among several meteorological variables. A suitable
 approach is to display the time evolution of all of them using a
@@ -201,7 +201,7 @@ autoplot(aranjuez) + facet_free()
 
 
 \subsection{\floweroneleft Annotations to Enhance the Time Graph}
-\label{sec:org3c74094}
+\label{sec:org662f85b}
 
 These first attempts can be improved with a custom panel function
 that generates the content of each panel using the information
@@ -420,7 +420,7 @@ during this season.
 \end{itemize}
 
 \section{Time Series of Variables with the Same Scale \label{SEC:sameScale}}
-\label{sec:org5d9562c}
+\label{sec:orgd50b27f}
 As an example of time series of variables with the same scale, we will
 use measurements of solar radiation from different meteorological
 stations.
@@ -462,7 +462,7 @@ This result can be improved with different methods: the cut-and-stack
 method, and the horizon graph with \texttt{horizonplot}.
 
 \subsection{Aspect Ratio and Rate of Change}
-\label{sec:org398c316}
+\label{sec:orge849b2f}
 When a graphic is intended to inform about the rate of change,
 special attention must be paid to the aspect ratio of the graph,
 defined as the ratio of the height to the width of the graphical
@@ -498,7 +498,7 @@ xyplot(navarra - avRad,
 \end{figure}
 
 \subsection{The Horizon Graph \label{sec:horizonplot}}
-\label{sec:orgec3fc34}
+\label{sec:org8a87a58}
 \index{Horizon graph}
 The horizon graph is useful in examining how a large number of series
 changes over time, and does so in a way that allows both comparisons
@@ -558,7 +558,7 @@ absolute fluctuations across the set of stations?
 \end{itemize}
 
 \subsection{Time Graph of the Differences between a Time Series and a Reference \label{sec:differences}}
-\label{sec:orgea74b41}
+\label{sec:orge5ebf1b}
 
 The horizon graph is also useful in revealing the differences between
 a univariate time series and another reference. For example, we
@@ -700,7 +700,7 @@ ggplot(data = df,
 
 
 \section{Stacked Graphs \label{sec:stacked}}
-\label{sec:org5cfe655}
+\label{sec:org2809c38}
 If the variables of a multivariate time series can be summed to
 produce a meaningful global variable, they may be better displayed
 with stacked graphs. For example, the information on unemployment in
@@ -812,7 +812,7 @@ Statistics'' reports from the Bureau of Labor Statistics\footnote{The March 2012
 
 
 \subsection{\floweroneleft Panel and Prepanel Functions to Implement the ThemeRiver with \texttt{xyplot} \label{sec:themeRiverPanel}}
-\label{sec:orgcc16797}
+\label{sec:org554f6a7}
 The \texttt{xyplot} function displays information according to the class
 of its first argument (methods) and to the \texttt{panel} function. We
 will use the \texttt{xyplot.zoo} method (equivalent to the \texttt{xyplot.ts}
@@ -1020,17 +1020,17 @@ prepanel.flow <- function(x, y, groups, origin,...)
 
 
 \section{Interactive graphics \label{sec:interactive_horizontal}}
-\label{sec:orgf248422}
+\label{sec:org61f1153}
 This section describes the interactive alternatives of the static
-figures included in the previous sections with four packages:
-\texttt{dygraphs}, \texttt{highcharter}, \texttt{plotly}, and \texttt{gridSVG}.
+figures included in the previous sections with several packages:
+\texttt{dygraphs}, \texttt{highcharter}, \texttt{plotly}, \texttt{streamgraph}, and \texttt{gridSVG}.
 
-\texttt{dygraphs}, \texttt{highcharter}, and \texttt{plotly} are \texttt{R} interfaces to
+\texttt{dygraphs}, \texttt{highcharter}, \texttt{plotly}, and \texttt{streamgraph} are \texttt{R} interfaces to
 JavaScript libraries based on the \texttt{htmlwidgets} package, while the
 \texttt{gridSVG} package converts a \texttt{grid} graphic object into an SVG file.
 
 \subsection{Dygraphs \label{sec:dygraphs}}
-\label{sec:org7b2fa2e}
+\label{sec:org75fef7b}
 The \texttt{dygraphs} package is an interface to the \texttt{dygraphs} JavaScript
 library, and provides facilities for charting time-series. It works
 automatically with \texttt{xts} time series objects, or with objects than can
@@ -1097,7 +1097,7 @@ dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
 \end{figure}
 
 \subsection{Highcharter \label{sec:highcharter}}
-\label{sec:org07583f1}
+\label{sec:orgf735d6d}
 
 The \texttt{highcharter} package is an interface to the \texttt{highcharts}
 JavaScript library, with a wide spectrum of graphics
@@ -1142,7 +1142,7 @@ highchart() %>%
 
 
 \subsection{plotly \label{sec:plotly}}
-\label{sec:orgc0df6b6}
+\label{sec:orgb814416}
 
 The \texttt{plotly} package is an interface to the \texttt{plotly} JavaScript
 library, also with a wide spectrum of graphics solutions. This package
@@ -1214,7 +1214,7 @@ plot_ly(aranjuezDF) %>%
 
 
 \subsection{\floweroneleft Interaction with \texttt{gridSVG}}
-\label{sec:orgddd9fba}
+\label{sec:orgc934232}
 The \texttt{gridSVG} package provides functions to convert \texttt{grid}-based \texttt{R}
 graphics to an SVG format. It provides several functions to add
 dynamic and interactive capabilities to \texttt{R} graphics. In this section
@@ -1330,7 +1330,7 @@ questions raised with that graphic.
 \end{figure}
 
 \subsection{streamgraph \label{sec:interactive_streamgraph}}
-\label{sec:org9d562b4}
+\label{sec:org049b8c8}
 
 The \texttt{streamgraph} package\footnote{The \texttt{streamgraph} package, \url{http://hrbrmstr.github.io/streamgraph/}, is not available in CRAN. It can be installed using the \texttt{devtools} or the \texttt{remotes} package.} creates interactive stream graphs based on
 the \texttt{htmlwidgets} package and the \texttt{D3.js} JavaScript library. Its main
@@ -1396,7 +1396,7 @@ streamgraph(unemployDF,
 \end{figure}
 
 \chapter{Time as a Conditioning or Grouping Variable}
-\label{sec:org4d61629}
+\label{sec:org4a78521}
 \label{cha:timeGroupFactor}
 
 In Section \ref{sec:differentVariables} we learned to display the time evolution of multiple time series with different scales. But, what if instead of displaying the time evolution we want to confront the variables between them? Section \ref{SEC:groupVariable} proposes the scatterplot matrix solution with time as a grouping variable. Section \ref{SEC:conditionVariable} uses an enhanced scatterplot with time as a conditioning variable. Section \ref{SEC:hexbin} includes a digression about the hexagonal binning for large datasets.
@@ -1737,7 +1737,7 @@ same relations between radiation and temperature already discussed
 with Figure \ref{fig:aranjuezHexbin}.
 
 \chapter{Time as a Complementary Variable}
-\label{sec:orgcad7741}
+\label{sec:org83d4a98}
 \label{cha:timeComplementary}
 
 Gapminder \footnote{\url{http://www.gapminder.org/}} is an independent foundation based in Stockholm, Sweden.  Its mission is ``to debunk devastating myths about the world by offering free access to a fact-based world view.'' They provide free online tools, data, and videos ``to better understand the changing world.'' The initial development of Gapminder was the Trendalyzer software, used by Hans Rosling in several sequences of his documentary ``The Joy of Stats.''
@@ -1749,11 +1749,15 @@ This software was acquired by Google in 2007, and is now available as a Motion C
 In this chapter, time will be used as a complementary variable which adds information to a graph where several variables are confronted. We will illustrate this approach with the evolution of the relationship between Gross National Income (GNI) and carbon dioxide (\(CO_2\)) emissions for a set of countries extracted from the database of the World Bank Open Data. We will try several solutions to display the relationship between \(CO_2\) emissions and GNI over the years using time as a complementary variable. The final method will produce an animated plot resembling the Trendalyzer solution.
 
 \section{Polylines}
-\label{sec:org642cdb8}
+\label{sec:org014ae63}
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
+library(zoo)
+
 load('data/CO2.RData')
 \end{lstlisting}
+
+
 
 \index{Data!CO2@$CO_2$}
 \index{Data!World Bank}
@@ -1765,10 +1769,10 @@ country are connected with polylines to reveal the time evolution
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 ## lattice version
-xyplot(GNI.capita  ~ CO2.capita, data=CO2data,
-       xlab="Carbon dioxide emissions (metric tons per capita)",
-       ylab="GNI per capita, PPP (current international $)",
-       groups=Country.Name, type='b')
+xyplot(GNI.capita  ~ CO2.capita, data = CO2data,
+       xlab = "Carbon dioxide emissions (metric tons per capita)",
+       ylab = "GNI per capita, PPP (current international $)",
+       groups = Country.Name, type = 'b')
 \end{lstlisting}
 
 \begin{figure}[htbp]
@@ -1780,8 +1784,8 @@ xyplot(GNI.capita  ~ CO2.capita, data=CO2data,
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 ## ggplot2 version
-ggplot(data=CO2data, aes(x=CO2.capita, y=GNI.capita,
-                         color=Country.Name)) +
+ggplot(data = CO2data, aes(x = CO2.capita, y = GNI.capita,
+                         color = Country.Name)) +
     xlab("Carbon dioxide emissions (metric tons per capita)") +
     ylab("GNI per capita, PPP (current international $)") +
     geom_point() + geom_path() + theme_bw()
@@ -1796,7 +1800,7 @@ countries.
 \end{enumerate}
 
 \section{Choosing Colors}
-\label{sec:org89622e3}
+\label{sec:org2764a99}
 The \texttt{Country.Name} categorical variable will be encoded with a
 qualitative palette, namely the first five colors of \texttt{Set1}
 palette\footnote{\url{http://colorbrewer2.org/}} from the \texttt{RColorBrewer} package
@@ -1834,7 +1838,8 @@ value.
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 ## Rank of average values of CO2 per capita
-CO2mean <- aggregate(CO2.capita ~ Country.Name, data=CO2data, FUN=mean)
+CO2mean <- aggregate(CO2.capita ~ Country.Name,
+                     data = CO2data, FUN = mean)
 palOrdered <- pal[rank(CO2mean$CO2.capita)]  
 \end{lstlisting}
 
@@ -1842,18 +1847,52 @@ A more sophisticated solution is to use the ordered results of a
 hierarchical clustering of the time evolution of the \(\mathrm{CO_2}\) per capita
 values (Figure \ref{fig:hclustCO2}). The data is extracted from the
 original \(\mathrm{CO_2}\) \texttt{data.frame}.  
+\index{Packages!reshape2\texttt{reshape2}}
+\index{dcast\texttt{dcast}}
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+library(reshape2)
+
+CO2capita <- CO2data[, c('Country.Name',
+                         'Year',
+                         'CO2.capita')]
+CO2capita <- dcast(CO2capita, Country.Name ~ Year)
+
+summary(CO2capita)
+\end{lstlisting}
+
+\begin{verbatim}
+Using CO2.capita as value column: use value.var to override.
+  Country.Name      2000             2001             2002       
+ Brazil :1     Min.   : 1.139   Min.   : 1.136   Min.   : 1.139  
+ China  :1     1st Qu.: 3.523   1st Qu.: 3.629   1st Qu.: 3.704  
+ Finland:1     Median : 7.852   Median : 7.940   Median : 7.930  
+ France :1     Mean   : 7.648   Mean   : 7.796   Mean   : 7.786  
+ Germany:1     3rd Qu.: 9.715   3rd Qu.:10.051   3rd Qu.: 9.667  
+ Greece :1     Max.   :20.249   Max.   :19.656   Max.   :19.647  
+ (Other):4                                                       
+      2003             2004             2005             2006       
+ Min.   : 1.172   Min.   : 1.214   Min.   : 1.252   Min.   : 1.316  
+ 1st Qu.: 4.191   1st Qu.: 4.615   1st Qu.: 4.882   1st Qu.: 5.173  
+ Median : 8.165   Median : 8.367   Median : 8.516   Median : 8.330  
+ Mean   : 8.124   Mean   : 8.199   Mean   : 7.989   Mean   : 8.185  
+ 3rd Qu.: 9.908   3rd Qu.: 9.830   3rd Qu.: 9.631   3rd Qu.: 9.738  
+ Max.   :19.585   Max.   :19.777   Max.   :19.716   Max.   :19.229  
+                                                                    
+      2007             2008             2009             2010       
+ Min.   : 1.390   Min.   : 1.542   Min.   : 1.666   Min.   : 1.666  
+ 1st Qu.: 5.333   1st Qu.: 5.430   1st Qu.: 5.582   1st Qu.: 5.630  
+ Median : 8.380   Median : 7.966   Median : 7.345   Median : 6.932  
+ Mean   : 8.164   Mean   : 7.994   Mean   : 7.551   Mean   : 7.900  
+ 3rd Qu.: 9.564   3rd Qu.:10.301   3rd Qu.: 9.547   3rd Qu.:10.927  
+ Max.   :19.350   Max.   :18.602   Max.   :17.315   Max.   :17.564
+\end{verbatim}
 
 \index{hclust@\texttt{hclust}}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
-CO2capita <- CO2data[, c('Country.Name',
-                         'Year',
-                         'CO2.capita')]
-CO2capita <- reshape(CO2capita,
-                     idvar='Country.Name',
-                     timevar='Year',
-                     direction='wide')
 hCO2 <- hclust(dist(CO2capita[, -1]))
 
 oldpar <- par(mar=c(0, 2, 0, 0) + .1)
@@ -1888,6 +1927,7 @@ distinguish them.
 \index{simpleTheme@\texttt{simpleTheme}}
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
+## lattice version
 ## simpleTheme encapsulates the palette in a new theme for xyplot
 myTheme <- simpleTheme(pch=19, cex=0.6, col=palOrdered)
 
@@ -1902,6 +1942,7 @@ pCO2.capita <- xyplot(GNI.capita  ~ CO2.capita,
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
+## ggplot2 version
 gCO2.capita <- ggplot(data = CO2data,
                       aes(x = CO2.capita,
                           y = GNI.capita,
@@ -1914,7 +1955,7 @@ gCO2.capita <- ggplot(data = CO2data,
 \end{lstlisting}
 
 \section{Labels to Show Time Information}
-\label{sec:org8215fc3}
+\label{sec:org5a88b13}
 This result can be improved with labels displaying the years to show
 the time evolution.  A panel function with \texttt{panel.text} to print the
 year labels and \texttt{panel.superpose} to display the lines for each group
@@ -1955,6 +1996,7 @@ of \texttt{+.trellis}, \texttt{glayer\_} and \texttt{panel.text}. Using \texttt{
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
+## lattice version
 pCO2.capita <- pCO2.capita +
     glayer_(panel.text(...,
                        labels = CO2data$Year[subscripts],
@@ -1963,6 +2005,7 @@ pCO2.capita <- pCO2.capita +
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
+## ggplot2 version
 gCO2.capita <- gCO2.capita + geom_text(aes(label = Year),
                                        colour = 'gray',
                                        size = 2.5,
@@ -1971,7 +2014,7 @@ gCO2.capita <- gCO2.capita + geom_text(aes(label = Year),
 \end{lstlisting}
 
 \section{Country Names: Positioning Labels}
-\label{sec:org974853f}
+\label{sec:org4616e34}
 The common solution to link each curve with the group value is to add
 a legend. However, a legend can be confusing with too many items. In
 addition, the reader must carry out a complex task: Choose the line,
@@ -2025,6 +2068,7 @@ object, I have obtained the best results with \texttt{extreme.grid} (Figure
 \begin{lstlisting}
 library(directlabels)
 
+## lattice version
 direct.label(pCO2.capita,
              method = 'extreme.grid')
 \end{lstlisting}
@@ -2037,11 +2081,12 @@ direct.label(pCO2.capita,
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
+## ggplot2 version
 direct.label(gCO2.capita, method='extreme.grid')
 \end{lstlisting}
 
 \section{A Panel for Each Year}
-\label{sec:orga81495a}
+\label{sec:org05cce9f}
 Time can be used as a conditioning variable (as shown in previous
 sections) to display subsets of the data in different panels. Figure
 \ref{fig:CO2-GNI-panel} is produced with the same code as in Figure
@@ -2050,6 +2095,7 @@ version and \texttt{facet\_wrap(\textasciitilde{} Year)} in the \texttt{ggplot2}
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
+## lattice version
 xyplot(GNI.capita  ~ CO2.capita | factor(Year),
        data = CO2data,
        xlab = "Carbon dioxide emissions (metric tons per capita)",
@@ -2066,6 +2112,7 @@ xyplot(GNI.capita  ~ CO2.capita | factor(Year),
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
+## ggplot2 version
 ggplot(data = CO2data,
        aes(x = CO2.capita,
            y = GNI.capita,
@@ -2082,6 +2129,7 @@ legend is not very useful. Once again, point labeling is recommended
 
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
+## lattice version
 xyplot(GNI.capita  ~ CO2.capita | factor(Year),
        data = CO2data,
        xlab = "Carbon dioxide emissions (metric tons per capita)",
@@ -2101,7 +2149,7 @@ xyplot(GNI.capita  ~ CO2.capita | factor(Year),
 \end{figure}
 
 \subsection{\floweroneleft Using Variable Size to Encode an Additional Variable}
-\label{sec:orgfd6cb66}
+\label{sec:org5ea9f6c}
 Instead of using simple points, we can display circles of
 different radius to encode a new variable. This new variable is
 \texttt{CO2.PPP}, the ratio of \(\mathrm{CO_2}\) emissions to the Gross Domestic
@@ -2195,23 +2243,95 @@ xyplot(GNI.capita ~ CO2.capita|factor(Year), data = CO2data,
 \caption{\(\mathrm{CO_2}\) emissions versus GNI per capita for different intervals of the ratio of \(\mathrm{CO_2}\) emissions to the GDP PPP estimations. \label{fig:CO2points}}
 \end{figure}
 
-\section{Interactive}
-\label{sec:org624e844}
-\subsection{\texttt{googleVis}}
-\label{sec:org3273f4d}
-The first solution is a Motion Chart the \texttt{googleVis} package
-\cite{Gesmann.deCastillo2011}, an interface between R and the Google
-Visualisation API. With its \texttt{gvisMotionChart} function it is easy to
-produce a Motion Chart that can be displayed using a browser with
-Flash enabled (Figure \ref{fig:googleVis}).
+\section{Interactive graphics: animation \label{sec:timeseries_animation}}
+\label{sec:org7a8e07d}
+
+Previous sections have been focused on static graphics. This section
+describes several solutions to display the data through animation with
+interactive functionalities. We will mimic the Trendalyzer/Motion
+Chart solution, using traveling bubbles of different colors and with
+radius proportional to the values of the variable
+\texttt{CO2.PPP}. Previously, you should watch the magistral video ``200
+Countries, 200 Years, 4 Minutes''\footnote{\url{http://www.gapminder.org/videos/200-years-that-changed-the-world-bbc/}}.
+
+Three packages are used here: \texttt{googleVis}, \texttt{plotly}, and \texttt{gridSVG}.
+
+
+\subsection{plotly \label{sec:plotly_animation}}
+\label{sec:org2a9218c}
+The \texttt{plotly} package has already been used in Section
+\ref{sec:plotly_horizontal} to create an interactive graphic
+representing time in the x-axis. In this section this package produces
+an animation piping the result of the \texttt{plot\_ly} and \texttt{add\_markers}
+functions through the \texttt{animation\_slider} function.
+
+\index{Packages!plotlyG@\texttt{plotly}}
+
+Variables \texttt{CO2.capita} and \texttt{GNI.capita} are represented in the x-axis
+and y-axis, respectively.
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+library(plotly)
+p <- plot_ly(CO2data,
+             x = ~CO2.capita,
+             y = ~GNI.capita)
+\end{lstlisting}
+
+\texttt{CO2.PPP} is encoded with the circle sizes, while \texttt{Country.Name} is
+represented with colours and labels.
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+p <- add_markers(p,
+                 size = ~CO2.PPP,
+                 color = ~Country.Name,
+                 text = ~Country.Name, hoverinfo = "text",
+                 ids = ~Country.Name,
+                 frame = ~Year,
+                 showlegend = FALSE)
+\end{lstlisting}
+
+Finally, animation is created with \texttt{animation\_opts}, to customize the
+frame and transition times, and with \texttt{animation\_slider} to define the
+slider. Figure \ref{fig:plotly_animation} is an snapshot of this
+animation.
+
+\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
+\begin{lstlisting}
+p <- animation_opts(p,
+                    frame = 1000,
+                    transition = 800,
+                    redraw = FALSE)
+
+p <- animation_slider(p,
+                      currentvalue = list(prefix = "Year "))
+
+p
+\end{lstlisting}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{figs/plotly_animation.png}
+\caption{plotly animation \label{fig:plotly_animation}}
+\end{figure}
+
+\subsection{\texttt{googleVis} \label{sec:googlevis}}
+\label{sec:orge36543c}
+The \texttt{googleVis} package \cite{Gesmann.deCastillo2011} is an interface
+between R and the Google Visualisation API. With its \texttt{gvisMotionChart}
+function it is easy to produce a Motion Chart that can be displayed
+using a browser with Flash enabled (Figure \ref{fig:googleVis}).
 
 \index{Packages!googleVis@\texttt{googleVis}}
 \lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
 \begin{lstlisting}
 library(googleVis)
+
 pgvis <- gvisMotionChart(CO2data,
-                         idvar='Country.Name',
-                         timevar='Year')
+                         xvar = 'CO2.capita',
+                         yvar = 'GNI.capita',
+                         sizevar = 'CO2.PPP',
+                         idvar = 'Country.Name',
+                         timevar = 'Year')
 \end{lstlisting}
 
 \begin{figure}
@@ -2228,51 +2348,10 @@ API\footnote{You should read the Google API Terms of Service before using
 \texttt{googleVis}: \url{https://developers.google.com/terms/}.}. Moreover, you should carefully read their Terms of Use
 before using it for public distribution.
 
-
-\subsection{plotly}
-\label{sec:org218155b}
-
-\index{Packages!plotlyG@\texttt{plotly}}
-
-\lstset{language=r,label= ,caption= ,captionpos=b,numbers=none}
-\begin{lstlisting}
-library(plotly)
-
-p <- plot_ly(CO2data,
-             x = ~CO2.capita,
-             y = ~GNI.capita,
-             size = ~CO2.PPP, 
-             text = ~Country.Name, hoverinfo = "text")
-
-p <- add_markers(p,
-                 color = ~Country.Name,
-                 frame = ~Year,
-                 ids = ~Country.Name,
-                 showlegend = FALSE)
-
-p <- animation_opts(p,
-                    frame = 1000,
-                    transition = 800,
-                    redraw = FALSE) %>%
-    animation_slider(
-        currentvalue = list(prefix = "Year "))
-
-p
-\end{lstlisting}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.9\linewidth]{figs/plotly_animation.png}
-\caption{plotly animation \label{fig:plotly_animation}}
-\end{figure}
-
-\subsection{\floweroneleft gridSVG}
-\label{sec:orgf89937b}
-The final solution to display this multivariate time series is with
-animation via the function \texttt{grid.animate} of the \texttt{gridSVG}
-package. We will mimic the Trendalyzer/Motion Chart solution, using
-traveling bubbles of different colors and with radius proportional to
-\texttt{CO2.PPP}.
+\subsection{\floweroneleft gridSVG \label{sec:gridSVG}}
+\label{sec:org5edc07b}
+The final solution to create an animation is based on the function
+\texttt{grid.animate} of the \texttt{gridSVG} package. 
 
 The first step is to draw the initial state of the bubbles. Their
 colors are again defined by the \texttt{palOrdered} palette, although the
@@ -2421,13 +2500,8 @@ grid.export("figs/bubbles.svg")
   \label{fig:bubblesSVG}
 \end{figure}
 
-Now, sit down in your favorite easy chair and watch the magistral
-video ``200 Countries, 200 Years, 4 Minutes''\footnote{\url{http://www.gapminder.org/videos/200-years-that-changed-the-world-bbc/}}. After that, you are
-ready to open the SVG file of traveling bubbles: It is easier, a short
-time period with less than twenty countries.
-
 \chapter{About the Data}
-\label{sec:org78c24c7}
+\label{sec:org5d3cef2}
 \label{cha:dataTime}
 
 \section{SIAR}
@@ -2880,53 +2954,53 @@ summary(CO2data)
 \end{verbatim}
 
 \part{Spatial Data}
-\label{sec:orgb6f1649}
+\label{sec:org0cb49f8}
 
 \chapter{Displaying Spatial Data: Introduction}
-\label{sec:orgd19e247}
+\label{sec:orgaaa1832}
 \label{cha:spatialIntro}
 
 \section{Packages}
-\label{sec:org57e58e7}
+\label{sec:org40f36e3}
 \label{sec:spatial-packages}
 
 \section{Further Reading}
-\label{sec:org12d0730}
+\label{sec:org5e547fd}
 \label{cha:further-reading-spatial}
 
 \chapter{Thematic Maps}
-\label{sec:org4430e6e}
+\label{sec:org0e0f8a6}
 \label{cha:thematicMaps}
 
 \chapter{Reference and Physical Maps}
-\label{sec:orgb447588}
+\label{sec:orgbf9e66e}
 \label{cha:refer-phys-maps}
 
 \chapter{About the Data}
-\label{sec:orgd5bcd81}
+\label{sec:orgaeb13c5}
 \label{cha:dataSpatial}
 
 \part{Space-Time Data}
-\label{sec:orgc621743}
+\label{sec:org1910bd3}
 
 \chapter{Displaying Spatiotemporal Data: Introduction}
-\label{sec:orge15def4}
+\label{sec:org42fc957}
 \label{cha:introductionST}
 
 \section{Packages}
-\label{sec:orgb300db5}
+\label{sec:org6d014f2}
 \label{sec:spacetime-packages}
 
 \section{Further Reading}
-\label{sec:org934692c}
+\label{sec:org52f28c3}
 \label{cha:further-reading-spatiotime}
 
 \chapter{Spatiotemporal Raster Data}
-\label{sec:org17a39b5}
+\label{sec:org81cf62f}
 \label{cha:rasterST}
 
 \chapter{Spatiotemporal Point Observations}
-\label{sec:orgceead09}
+\label{sec:org8ee3f66}
 \label{cha:pointsST}
 
 \backmatter

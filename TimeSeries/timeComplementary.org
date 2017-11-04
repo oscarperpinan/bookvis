@@ -221,6 +221,7 @@ distinguish them.
 
 #+INDEX: simpleTheme@\texttt{simpleTheme}
 #+begin_src R 
+## lattice version
 ## simpleTheme encapsulates the palette in a new theme for xyplot
 myTheme <- simpleTheme(pch=19, cex=0.6, col=palOrdered)
 
@@ -234,6 +235,7 @@ pCO2.capita <- xyplot(GNI.capita  ~ CO2.capita,
 #+end_src
 
 #+begin_src R 
+## ggplot2 version
 gCO2.capita <- ggplot(data = CO2data,
                       aes(x = CO2.capita,
                           y = GNI.capita,
@@ -289,6 +291,7 @@ of =+.trellis=, =glayer_= and =panel.text=. Using =glayer_= instead of
 #+INDEX: +.trellis@\texttt{+.trellis}
 
 #+begin_src R
+## lattice version
 pCO2.capita <- pCO2.capita +
     glayer_(panel.text(...,
                        labels = CO2data$Year[subscripts],
@@ -296,6 +299,7 @@ pCO2.capita <- pCO2.capita +
 #+end_src
 
 #+begin_src R 
+## ggplot2 version
 gCO2.capita <- gCO2.capita + geom_text(aes(label = Year),
                                        colour = 'gray',
                                        size = 2.5,
@@ -363,6 +367,7 @@ ref:fig:CO2-GNI-DL).
 #+begin_src R :results output graphics :exports both :file "figs/CO2_capitaDL.pdf"
 library(directlabels)
 
+## lattice version
 direct.label(pCO2.capita,
              method = 'extreme.grid')
 #+end_src
@@ -372,6 +377,7 @@ direct.label(pCO2.capita,
 [[file:figs/CO2_capitaDL.pdf]]
 
 #+begin_src R 
+## ggplot2 version
 direct.label(gCO2.capita, method='extreme.grid')
 #+end_src
 
@@ -389,6 +395,7 @@ ref:fig:CO2-GNI, now including =|factor(Year)= in the lattice
 version and =facet_wrap(~ Year)= in the =ggplot2= version.
 
 #+begin_src R :results output graphics :exports both :file "figs/CO2_capita_panel.pdf"
+## lattice version
 xyplot(GNI.capita  ~ CO2.capita | factor(Year),
        data = CO2data,
        xlab = "Carbon dioxide emissions (metric tons per capita)",
@@ -402,6 +409,7 @@ xyplot(GNI.capita  ~ CO2.capita | factor(Year),
 [[file:figs/CO2_capita_panel.pdf]]
 
 #+begin_src R :eval no-export
+## ggplot2 version
 ggplot(data = CO2data,
        aes(x = CO2.capita,
            y = GNI.capita,
@@ -417,6 +425,7 @@ legend is not very useful. Once again, point labeling is recommended
 (Figure ref:fig:CO2-GNI-panel-labels).
 
 #+begin_src R :results output graphics :exports both :file "figs/CO2_capita_panel_labels.pdf"
+## lattice version
 xyplot(GNI.capita  ~ CO2.capita | factor(Year),
        data = CO2data,
        xlab = "Carbon dioxide emissions (metric tons per capita)",
@@ -524,25 +533,93 @@ xyplot(GNI.capita ~ CO2.capita|factor(Year), data = CO2data,
 #+RESULTS:
 [[file:figs/CO2points.pdf]]
 
-* Interactive
-** =googleVis=
+* Interactive graphics: animation label:sec:timeseries_animation
+
+Previous sections have been focused on static graphics. This section
+describes several solutions to display the data through animation with
+interactive functionalities. We will mimic the Trendalyzer/Motion
+Chart solution, using traveling bubbles of different colors and with
+radius proportional to the values of the variable
+=CO2.PPP=. Previously, you should watch the magistral video "200
+Countries, 200 Years, 4 Minutes"[fn:4].
+
+Three packages are used here: =googleVis=, =plotly=, and =gridSVG=.
+
+
+** plotly label:sec:plotly_animation
+The =plotly= package has already been used in Section
+ref:sec:plotly_horizontal to create an interactive graphic
+representing time in the x-axis. In this section this package produces
+an animation piping the result of the =plot_ly= and =add_markers=
+functions through the =animation_slider= function.
+
+#+INDEX: Packages!plotlyG@\texttt{plotly}
+
+Variables =CO2.capita= and =GNI.capita= are represented in the x-axis
+and y-axis, respectively.
+#+begin_src R
+library(plotly)
+p <- plot_ly(CO2data,
+             x = ~CO2.capita,
+             y = ~GNI.capita)
+#+end_src
+
+=CO2.PPP= is encoded with the circle sizes, while =Country.Name= is
+represented with colours and labels.
+#+begin_src R
+p <- add_markers(p,
+                 size = ~CO2.PPP,
+                 color = ~Country.Name,
+                 text = ~Country.Name, hoverinfo = "text",
+                 ids = ~Country.Name,
+                 frame = ~Year,
+                 showlegend = FALSE)
+#+end_src
+
+Finally, animation is created with =animation_opts=, to customize the
+frame and transition times, and with =animation_slider= to define the
+slider. Figure ref:fig:plotly_animation is an snapshot of this
+animation.
+
+#+begin_src R
+p <- animation_opts(p,
+                    frame = 1000,
+                    transition = 800,
+                    redraw = FALSE)
+
+p <- animation_slider(p,
+                      currentvalue = list(prefix = "Year "))
+
+p
+#+end_src
+
+#+CAPTION: plotly animation label:fig:plotly_animation
+[[file:figs/plotly_animation.png]]
+
+
+#+RESULTS:
+
+** =googleVis= label:sec:googlevis
 #+begin_src R :exports none
 ##################################################################
 ## googleVis
 ##################################################################
 #+end_src
-The first solution is a Motion Chart the =googleVis= package
-cite:Gesmann.deCastillo2011, an interface between R and the Google
-Visualisation API. With its =gvisMotionChart= function it is easy to
-produce a Motion Chart that can be displayed using a browser with
-Flash enabled (Figure ref:fig:googleVis).
+The =googleVis= package cite:Gesmann.deCastillo2011 is an interface
+between R and the Google Visualisation API. With its =gvisMotionChart=
+function it is easy to produce a Motion Chart that can be displayed
+using a browser with Flash enabled (Figure ref:fig:googleVis).
 
 #+INDEX: Packages!googleVis@\texttt{googleVis}
 #+begin_src R :eval no-export
 library(googleVis)
+
 pgvis <- gvisMotionChart(CO2data,
-                         idvar='Country.Name',
-                         timevar='Year')
+                         xvar = 'CO2.capita',
+                         yvar = 'GNI.capita',
+                         sizevar = 'CO2.PPP',
+                         idvar = 'Country.Name',
+                         timevar = 'Year')
 #+end_src
 
 #+BEGIN_EXPORT latex
@@ -573,48 +650,9 @@ appearance and behavior are completely determined by Google
 API[fn:3]. Moreover, you should carefully read their Terms of Use
 before using it for public distribution.
 
-
-** plotly
-
-#+INDEX: Packages!plotlyG@\texttt{plotly}
-
-#+begin_src R
-library(plotly)
-
-p <- plot_ly(CO2data,
-             x = ~CO2.capita,
-             y = ~GNI.capita,
-             size = ~CO2.PPP, 
-             text = ~Country.Name, hoverinfo = "text")
-
-p <- add_markers(p,
-                 color = ~Country.Name,
-                 frame = ~Year,
-                 ids = ~Country.Name,
-                 showlegend = FALSE)
-
-p <- animation_opts(p,
-                    frame = 1000,
-                    transition = 800,
-                    redraw = FALSE) %>%
-    animation_slider(
-        currentvalue = list(prefix = "Year "))
-
-p
-#+end_src
-
-#+CAPTION: plotly animation label:fig:plotly_animation
-[[file:figs/plotly_animation.png]]
-
-
-#+RESULTS:
-
-** \floweroneleft gridSVG
-The final solution to display this multivariate time series is with
-animation via the function =grid.animate= of the =gridSVG=
-package. We will mimic the Trendalyzer/Motion Chart solution, using
-traveling bubbles of different colors and with radius proportional to
-=CO2.PPP=.
+** \floweroneleft gridSVG label:sec:gridSVG
+The final solution to create an animation is based on the function
+=grid.animate= of the =gridSVG= package. 
 
 The first step is to draw the initial state of the bubbles. Their
 colors are again defined by the =palOrdered= palette, although the
@@ -760,10 +798,6 @@ grid.export("figs/bubbles.svg")
 \end{figure}
 #+END_EXPORT
 
-Now, sit down in your favorite easy chair and watch the magistral
-video "200 Countries, 200 Years, 4 Minutes"[fn:4]. After that, you are
-ready to open the SVG file of traveling bubbles: It is easier, a short
-time period with less than twenty countries.
 
 * Footnotes
 
