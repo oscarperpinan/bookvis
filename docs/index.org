@@ -7,3 +7,5 @@ Hello World!
 [[file:../figs/plotly_aranjuez.png]]
 
 [[file:figs/plotly.png]]
+
+#+INCLUDE: "R/dataTime.R" src R

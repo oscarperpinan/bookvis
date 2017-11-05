@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-11-05 dom 13:30 -->
+<!-- 2017-11-05 dom 13:34 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Hello World!</title>
@@ -246,10 +246,123 @@ Hello World!
 <p><img src="figs/plotly.png" alt="plotly.png" />
 </p>
 </div>
+
+<div class="org-src-container">
+<pre class="src src-R"><span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Source code for the book: "Displaying time series, spatial and</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">space-time data with R"</span>
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Copyright (C) 2012 Oscar Perpi&#241;&#225;n Lamigueiro</span>
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">This program is free software you can redistribute it and/or modify</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">it under the terms of the GNU General Public License as published</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">by the Free Software Foundation; either version 2 of the License,</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">or (at your option) any later version.</span>
+ 
+<span class="org-comment-delimiter">## </span><span class="org-comment">This program is distributed in the hope that it will be useful, but</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">General Public License for more details.</span>
+ 
+<span class="org-comment-delimiter">## </span><span class="org-comment">You should have received a copy of the GNU General Public License</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">along with this program; if not, write to the Free Software</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">02111-1307, USA.</span>
+<span class="org-comment-delimiter">####################################################################</span>
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">SIAR</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Daily data of different meteorological variables </span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(zoo)
+
+aranjuez <span class="org-constant">&lt;-</span> read.zoo(<span class="org-string">"data/aranjuez.gz"</span>,
+                     index.column = 3, format = <span class="org-string">"%d/%m/%Y"</span>,
+                     fileEncoding = <span class="org-string">'UTF-16LE'</span>,
+                     header = <span class="org-type">TRUE</span>, fill = <span class="org-type">TRUE</span>,
+                     sep = <span class="org-string">';'</span>, dec = <span class="org-string">","</span>, as.is = <span class="org-type">TRUE</span>)
+aranjuez <span class="org-constant">&lt;-</span> aranjuez[, -c(1:4)]
+
+names(aranjuez) <span class="org-constant">&lt;-</span> c(<span class="org-string">'TempAvg'</span>, <span class="org-string">'TempMax'</span>, <span class="org-string">'TempMin'</span>,
+                     <span class="org-string">'HumidAvg'</span>, <span class="org-string">'HumidMax'</span>,
+                     <span class="org-string">'WindAvg'</span>, <span class="org-string">'WindMax'</span>,
+                     <span class="org-string">'Radiation'</span>, <span class="org-string">'Rain'</span>, <span class="org-string">'ET'</span>)
+
+
+summary(aranjuez)
+
+aranjuezClean <span class="org-constant">&lt;-</span> within(as.data.frame(aranjuez),{
+  TempMin[TempMin&gt;40] <span class="org-constant">&lt;-</span> <span class="org-type">NA</span>
+  HumidMax[HumidMax&gt;100] <span class="org-constant">&lt;-</span> <span class="org-type">NA</span>
+  WindAvg[WindAvg&gt;10] <span class="org-constant">&lt;-</span> <span class="org-type">NA</span>
+  WindMax[WindMax&gt;10] <span class="org-constant">&lt;-</span> <span class="org-type">NA</span>
+})
+
+aranjuez <span class="org-constant">&lt;-</span> zoo(aranjuezClean, index(aranjuez))
+
+save(aranjuez, file=<span class="org-string">'data/aranjuez.RData'</span>)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Solar radiation measurements from different locations</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Unemployment in the United States</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+unemployUSA <span class="org-constant">&lt;-</span> read.csv(<span class="org-string">'data/unemployUSA.csv'</span>)
+nms <span class="org-constant">&lt;-</span> unemployUSA$Series.ID
+<span class="org-comment-delimiter">##</span><span class="org-comment">columns of annual summaries</span>
+annualCols <span class="org-constant">&lt;-</span> 14 + 13*(0:12)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Transpose. Remove annual summaries</span>
+unemployUSA <span class="org-constant">&lt;-</span> as.data.frame(t(unemployUSA[,-c(1, annualCols)]))
+<span class="org-comment-delimiter">## </span><span class="org-comment">First 7 characters can be suppressed</span>
+names(unemployUSA) <span class="org-constant">&lt;-</span> substring(nms, 7)
+head(unemployUSA)
+
+<span class="org-constant">library</span>(zoo)
+
+Sys.setlocale(<span class="org-string">"LC_TIME"</span>, <span class="org-string">'C'</span>)
+idx <span class="org-constant">&lt;-</span> as.yearmon(row.names(unemployUSA), format=<span class="org-string">'%b.%Y'</span>)
+unemployUSA <span class="org-constant">&lt;-</span> zoo(unemployUSA, idx)
+
+isNA <span class="org-constant">&lt;-</span> apply(is.na(unemployUSA), 1, any)
+unemployUSA <span class="org-constant">&lt;-</span> unemployUSA[!isNA,]
+
+save(unemployUSA, file=<span class="org-string">'data/unemployUSA.RData'</span>)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Gross National Income and $CO_2$ emissions</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(WDI)
+  
+CO2data <span class="org-constant">&lt;-</span> WDI(indicator=c(<span class="org-string">'EN.ATM.CO2E.PC'</span>, <span class="org-string">'EN.ATM.CO2E.PP.GD'</span>,
+              <span class="org-string">'NY.GNP.MKTP.PP.CD'</span>, <span class="org-string">'NY.GNP.PCAP.PP.CD'</span>),
+          start=2000, end=2011,
+          country=c(<span class="org-string">'BR'</span>, <span class="org-string">'CN'</span>, <span class="org-string">'DE'</span>, <span class="org-string">'ES'</span>,
+              <span class="org-string">'FI'</span>, <span class="org-string">'FR'</span>, <span class="org-string">'GR'</span>, <span class="org-string">'IN'</span>, <span class="org-string">'NO'</span>, <span class="org-string">'US'</span>))
+
+names(CO2data) <span class="org-constant">&lt;-</span> c(<span class="org-string">'iso2c'</span>, <span class="org-string">'Country.Name'</span>, <span class="org-string">'Year'</span>,
+                    <span class="org-string">'CO2.capita'</span>, <span class="org-string">'CO2.PPP'</span>,
+                    <span class="org-string">'GNI.PPP'</span>, <span class="org-string">'GNI.capita'</span>)
+
+isNA <span class="org-constant">&lt;-</span> apply(is.na(CO2data), 1, any)
+CO2data <span class="org-constant">&lt;-</span> CO2data[!isNA, ]
+
+CO2data$Country.Name <span class="org-constant">&lt;-</span> factor(CO2data$Country.Name)
+
+save(CO2data, file=<span class="org-string">'data/CO2.RData'</span>)
+</pre>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Oscar Perpiñán Lamigueiro</p>
-<p class="date">Created: 2017-11-05 dom 13:30</p>
+<p class="date">Created: 2017-11-05 dom 13:34</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
