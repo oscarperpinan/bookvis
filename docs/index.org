@@ -1,0 +1,6 @@
+#+TITLE: Hello World!
+#+AUTHOR: Oscar Perpiñán Lamigueiro
+
+Hello World!
+
+[[file:../figs/plotly_aranjuez.png]]
