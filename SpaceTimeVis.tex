@@ -1,4 +1,4 @@
-% Created 2017-11-04 sáb 18:12
+% Created 2017-11-05 dom 16:53
 % Intended LaTeX compiler: pdflatex
 \documentclass[smallroyalvopaper]{memoir}
 \usepackage[utf8]{inputenc}
@@ -20,7 +20,7 @@
 \aliaspagestyle{part}{empty}
 \input{preamble.tex}
 \author{Oscar Perpiñán Lamigueiro}
-\date{}
+\date{November 2017}
 \title{Displaying Time Series, Spatial, and Space-Time Data with \texttt{R}}
 \hypersetup{
  pdfauthor={Oscar Perpiñán Lamigueiro},
@@ -42,16 +42,16 @@
 \mainmatter
 
 \chapter{Introduction}
-\label{sec:org800a89f}
+\label{sec:org5086718}
 \label{sec:introduction}
 
 
 
 \part{Time Series}
-\label{sec:org43704c7}
+\label{sec:org82c7598}
 
 \chapter{Displaying Time Series: Introduction}
-\label{sec:orgd481dfc}
+\label{sec:org8885ffe}
 \label{cha:timeIntro}
 
 A time series is a sequence of observations registered at consecutive time instants. When these time instants are evenly spaced, the distance between them is called the sampling interval. The visualization of time series is intended to reveal changes of one or more quantitative variables through time, and to display the relationships between the variables and their evolution through time.
@@ -61,7 +61,7 @@ The standard time series graph displays the time along the horizontal axis. Seve
 These chapters provide a variety of examples to illustrate a set of useful techniques. These examples make use of several datasets (available at the book website) described in Chapter \ref{cha:dataTime}.
 
 \section{Packages}
-\label{sec:org0bcab1a}
+\label{sec:orgc30a2d7}
 \label{sec:time-series-packages}
 
 The CRAN Tasks View ``Time Series Analysis'' \footnote{\url{http://CRAN.R-project.org/view=TimeSeries}} summarizes the packages for reading, vizualizing, and analyzing time series. This section provides a brief introduction to the \texttt{zoo} and \texttt{xts} packages. Most of the information has been extracted from their vignettes, webpages, and help pages. You should read them for detailed information.
@@ -69,7 +69,7 @@ The CRAN Tasks View ``Time Series Analysis'' \footnote{\url{http://CRAN.R-projec
 Both packages extensively use the time classes defined in \texttt{R}. The interested reader will find an overview of the different time classes in \texttt{R} in \cite{Ripley.Hornik2001} and \cite{Grothendieck.Petzoldt2004}.
 
 \subsection{zoo}
-\label{sec:org0cdba21}
+\label{sec:org6d78729}
 \label{sec:zoo}
 
 \index{Packages!zoo@\texttt{zoo}}
@@ -103,7 +103,7 @@ This package provides four methods for dealing with missing observations:
 The package defines interfaces to \texttt{read.table} and \texttt{write.table} for reading, \texttt{read.zoo}, and writing, \texttt{write.zoo}, \texttt{zoo} series from or to text files. The \texttt{read.zoo} function expects either a text file or connection as input or a \texttt{data.frame}. \texttt{write.zoo} first coerces its argument to a \texttt{data.frame}, adds a column with the index, and then calls \texttt{write.table}.
 
 \subsection{xts}
-\label{sec:org1e31f89}
+\label{sec:orgd60ab49}
 \label{sec:xts}
 
 \index{Packages!xts@\texttt{xts}}
@@ -121,7 +121,7 @@ Furthermore, this package provides several time-based tools:
 \end{itemize}
 
 \section{Further Reading}
-\label{sec:org6f22095}
+\label{sec:orgc5a7abd}
 \label{cha:further-reading-time}
 
 \begin{itemize}
@@ -143,7 +143,7 @@ Furthermore, this package provides several time-based tools:
 \end{itemize}
 
 \chapter{Time on the Horizontal Axis}
-\label{sec:org11e15b8}
+\label{sec:orga00040f}
 \label{cha:timeHorizontalAxis}
 
 The most frequent visualization method of a time series uses the horizontal axis to depict the time index. This chapter illustrates several variants to display multivariate time series: multiple time series with different scales, variables with the same scale, and stacked graphs.
@@ -1394,7 +1394,7 @@ streamgraph(unemployDF,
 \end{figure}
 
 \chapter{Time as a Conditioning or Grouping Variable}
-\label{sec:orgf47859a}
+\label{sec:orgad3a3ab}
 \label{cha:timeGroupFactor}
 
 In Section \ref{sec:differentVariables} we learned to display the time evolution of multiple time series with different scales. But, what if instead of displaying the time evolution we want to confront the variables between them? Section \ref{SEC:groupVariable} proposes the scatterplot matrix solution with time as a grouping variable. Section \ref{SEC:conditionVariable} uses an enhanced scatterplot with time as a conditioning variable. Section \ref{SEC:hexbin} includes a digression about the hexagonal binning for large datasets.
@@ -1735,7 +1735,7 @@ same relations between radiation and temperature already discussed
 with Figure \ref{fig:aranjuezHexbin}.
 
 \chapter{Time as a Complementary Variable}
-\label{sec:org3fecde4}
+\label{sec:org4ab2de2}
 \label{cha:timeComplementary}
 
 Gapminder \footnote{\url{http://www.gapminder.org/}} is an independent foundation based in Stockholm, Sweden.  Its mission is ``to debunk devastating myths about the world by offering free access to a fact-based world view.'' They provide free online tools, data, and videos ``to better understand the changing world.'' The initial development of Gapminder was the Trendalyzer software, used by Hans Rosling in several sequences of his documentary ``The Joy of Stats.''
@@ -2498,7 +2498,7 @@ grid.export("figs/bubbles.svg")
 \end{figure}
 
 \chapter{About the Data}
-\label{sec:org4786b22}
+\label{sec:orge2d60cc}
 \label{cha:dataTime}
 
 \section{SIAR}
@@ -2951,54 +2951,13 @@ summary(CO2data)
 \end{verbatim}
 
 \part{Spatial Data}
-\label{sec:orgfe6a76f}
-
-\chapter{Displaying Spatial Data: Introduction}
-\label{sec:org73d4002}
-\label{cha:spatialIntro}
-
-\section{Packages}
-\label{sec:orgeda55e8}
-\label{sec:spatial-packages}
-
-\section{Further Reading}
-\label{sec:org8eae5ad}
-\label{cha:further-reading-spatial}
-
-\chapter{Thematic Maps}
-\label{sec:org6e92f37}
-\label{cha:thematicMaps}
-
-\chapter{Reference and Physical Maps}
-\label{sec:org157de6c}
-\label{cha:refer-phys-maps}
-
-\chapter{About the Data}
-\label{sec:org2bbc6ff}
-\label{cha:dataSpatial}
+\label{sec:orga1743fb}
 
 \part{Space-Time Data}
-\label{sec:orgfa51bb3}
+\label{sec:org3c33a8f}
 
-\chapter{Displaying Spatiotemporal Data: Introduction}
-\label{sec:org4099548}
-\label{cha:introductionST}
-
-\section{Packages}
-\label{sec:org7d30385}
-\label{sec:spacetime-packages}
-
-\section{Further Reading}
-\label{sec:orge98901f}
-\label{cha:further-reading-spatiotime}
-
-\chapter{Spatiotemporal Raster Data}
-\label{sec:orgedea46c}
-\label{cha:rasterST}
-
-\chapter{Spatiotemporal Point Observations}
-\label{sec:org38c7c03}
-\label{cha:pointsST}
+\part{Bibliography and Index}
+\label{sec:orge3749c1}
 
 \backmatter
 

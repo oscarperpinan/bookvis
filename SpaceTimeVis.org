@@ -2,7 +2,7 @@
 
 #+AUTHOR: Oscar Perpiñán Lamigueiro
 
-#+DATE: 
+#+DATE: November 2017
 
 #+SETUPFILE: config.org
 
@@ -343,285 +343,287 @@ In this chapter, time will be used as a complementary variable which adds inform
 
 * Spatial Data
 
-** Displaying Spatial Data: Introduction
+** COMMENT Displaying Spatial Data: Introduction
   label:cha:spatialIntro
 
-#  Spatial data (also known as geospatial data) are directly or indirectly referenced to a location on the surface of the Earth. Their spatial reference is composed of coordinate values and a system of reference for these coordinates. Spatial data are often accessed, manipulated, or analyzed through Geographic Information Systems (GIS).
+ Spatial data (also known as geospatial data) are directly or indirectly referenced to a location on the surface of the Earth. Their spatial reference is composed of coordinate values and a system of reference for these coordinates. Spatial data are often accessed, manipulated, or analyzed through Geographic Information Systems (GIS).
 
-#  Real objects represented by GIS data can be divided into two abstractions: discrete objects (e.g., a road or a river) represented with vector data (points, lines, and polygons), and continuous fields (such as elevation or solar radiation) represented with raster data. The =sp= package is the preferred option to use vector data in =R=, and the =raster= package is the choice for raster data [fn:18].
+ Real objects represented by GIS data can be divided into two abstractions: discrete objects (e.g., a road or a river) represented with vector data (points, lines, and polygons), and continuous fields (such as elevation or solar radiation) represented with raster data. The =sp= package is the preferred option to use vector data in =R=, and the =raster= package is the choice for raster data [fn:18].
 
-#  This part exposes several examples where vector and raster data are displayed to show geographic location of features and physical landscape features of a place (reference and physical maps, Chapter ref:cha:refer-phys-maps) or a specific variable in the context of a geographic reference (thematic maps, Chapter ref:cha:thematicMaps). These examples make use of several datasets (available at the book website) described in Chapter ref:cha:dataSpatial.
+ This part exposes several examples where vector and raster data are displayed to show geographic location of features and physical landscape features of a place (reference and physical maps, Chapter ref:cha:refer-phys-maps) or a specific variable in the context of a geographic reference (thematic maps, Chapter ref:cha:thematicMaps). These examples make use of several datasets (available at the book website) described in Chapter ref:cha:dataSpatial.
 
 *** Packages
   label:sec:spatial-packages
 
-#  The CRAN Tasks View "Analysis of Spatial Data" [fn:19] summarizes the packages for reading, vizualizing, and analyzing spatial data. This section provides a brief introduction to =sp=, =raster=, =rasterVis=, =maptools=, =rgdal=, =gstat=, and =maps=. Most of the information has been extracted from their vignettes, webpages, and help pages. You should read them for detailed information.
+ The CRAN Tasks View "Analysis of Spatial Data" [fn:19] summarizes the packages for reading, vizualizing, and analyzing spatial data. This section provides a brief introduction to =sp=, =raster=, =rasterVis=, =maptools=, =rgdal=, =gstat=, and =maps=. Most of the information has been extracted from their vignettes, webpages, and help pages. You should read them for detailed information.
 
-# **** sp
-#  label:sec:sp
+**** sp
+ label:sec:sp
 
-# #+INDEX: Packages!sp@\texttt{sp}
+#+INDEX: Packages!sp@\texttt{sp}
 
-#  The =sp= package cite:Pebesma.Bivand2005 provides classes and methods for dealing with spatial data in =R=. The spatial data classes implemented are points (=SpatialPoints=), grids (=SpatialPixels= and =SpatialGrid=), lines (=Line=, =Lines= and =SpatialLines=), rings, and polygons (=Polygon=, =Polygons=, and =SpatialPolygons=), each of them without data or with data (for example, =SpatialPointsDataFrame= or =SpatialLinesDataFrame=).
+ The =sp= package cite:Pebesma.Bivand2005 provides classes and methods for dealing with spatial data in =R=. The spatial data classes implemented are points (=SpatialPoints=), grids (=SpatialPixels= and =SpatialGrid=), lines (=Line=, =Lines= and =SpatialLines=), rings, and polygons (=Polygon=, =Polygons=, and =SpatialPolygons=), each of them without data or with data (for example, =SpatialPointsDataFrame= or =SpatialLinesDataFrame=).
 
-#  Selecting, retrieving, or replacing certain attributes in spatial objects with data is done using standard methods:
+ Selecting, retrieving, or replacing certain attributes in spatial objects with data is done using standard methods:
 
-#  -  =[= selects rows (items) and columns in the =data.frame=.
+ -  =[= selects rows (items) and columns in the =data.frame=.
 
-#  -  =[[= selects a column from the =data.frame=
+ -  =[[= selects a column from the =data.frame=
 
-#  -  =[[<-= assigns or replaces values to a column in the =data.frame=.
+ -  =[[<-= assigns or replaces values to a column in the =data.frame=.
 
-#  A number of spatial methods are available for the classes in =sp=:
+ A number of spatial methods are available for the classes in =sp=:
 
-#  -  =coordinates(object) <- value= sets spatial coordinates to create spatial data. It promotes a =data.frame= into a =SpatialPointsDataFrame=. /value/ may be specified by a formula, a character vector, or a numeric matrix or =data.frame= with the actual coordinates.
+ -  =coordinates(object) <- value= sets spatial coordinates to create spatial data. It promotes a =data.frame= into a =SpatialPointsDataFrame=. /value/ may be specified by a formula, a character vector, or a numeric matrix or =data.frame= with the actual coordinates.
 
-#  -  =coordinates(object, ...)= returns a matrix with the spatial coordinates. If used with =SpatialPolygons= it returns a matrix with the centroids of the polygons.
+ -  =coordinates(object, ...)= returns a matrix with the spatial coordinates. If used with =SpatialPolygons= it returns a matrix with the centroids of the polygons.
 
-#  -  =bbox= returns a matrix with the coordinates bounding box.
+ -  =bbox= returns a matrix with the coordinates bounding box.
 
-#  -  =proj4string(object)= and =proj4string(object) <- value= retrieve or set projection attributes on spatial classes.
+ -  =proj4string(object)= and =proj4string(object) <- value= retrieve or set projection attributes on spatial classes.
 
-#  -  =spTransform= transforms from one coordinate reference system (geographic projection) to another (requires package =rgdal=).
+ -  =spTransform= transforms from one coordinate reference system (geographic projection) to another (requires package =rgdal=).
 
-#  -  =spplot= plots attributes combined with spatial data: Points, lines, grids, polygons.
+ -  =spplot= plots attributes combined with spatial data: Points, lines, grids, polygons.
 
-# **** raster
-#  label:sec:raster
+**** raster
+ label:sec:raster
 
-# #+INDEX: Packages!raster@\texttt{raster}
+#+INDEX: Packages!raster@\texttt{raster}
 
-#  The =raster= package cite:Hijmans2013 has functions for creating, reading, manipulating, and writing raster data. The package provides general raster data manipulation functions. The package also implements raster algebra and most functions for raster data manipulation that are common in Geographic Information Systems (GIS).
+ The =raster= package cite:Hijmans2013 has functions for creating, reading, manipulating, and writing raster data. The package provides general raster data manipulation functions. The package also implements raster algebra and most functions for raster data manipulation that are common in Geographic Information Systems (GIS).
 
-#  The raster package can work with raster datasets stored on disk if they are too large to be loaded into memory. The package can work with large files because the objects it creates from these files only contain information about the structure of the data, such as the number of rows and columns, the spatial extent, and the filename, but it does not attempt to read all the cell values in memory. In computations with these objects, the data are processed in chunks.
+ The raster package can work with raster datasets stored on disk if they are too large to be loaded into memory. The package can work with large files because the objects it creates from these files only contain information about the structure of the data, such as the number of rows and columns, the spatial extent, and the filename, but it does not attempt to read all the cell values in memory. In computations with these objects, the data are processed in chunks.
 
-#  The package defines a number of =S4= classes. =RasterLayer=, =RasterBrick=, and =RasterStack= are the most important:
+ The package defines a number of =S4= classes. =RasterLayer=, =RasterBrick=, and =RasterStack= are the most important:
 
-#  -  A =RasterLayer= object represents single-layer (variable) raster
-#     data. It can be created with the function =raster=. This function is able to create a =RasterLayer= from another object, including another =Raster*= object, or from a =SpatialPixels*= and =SpatialGrid*= object, or even a matrix. In addition, it can create a =RasterLayer= reading data from a file. The =raster= package can use raster files in several formats, some of them via the =rgdal= package. Supported formats for reading include GeoTIFF, ESRI, ENVI, and ERDAS.
+ -  A =RasterLayer= object represents single-layer (variable) raster
+    data. It can be created with the function =raster=. This function is able to create a =RasterLayer= from another object, including another =Raster*= object, or from a =SpatialPixels*= and =SpatialGrid*= object, or even a matrix. In addition, it can create a =RasterLayer= reading data from a file. The =raster= package can use raster files in several formats, some of them via the =rgdal= package. Supported formats for reading include GeoTIFF, ESRI, ENVI, and ERDAS.
 
-#  -  =RasterBrick= and =RasterStack= are classes for multilayer data. A
-#     =RasterStack= is a list of =RasterLayer= objects with the same spatial extent and resolution. It can be formed with a collection of files in different locations or even mixed with =RasterLayer= objects that only exist in memory. A =RasterBrick= is truly a multilayered object, and processing it can be more efficient than processing a =RasterStack= representing the same data.
+ -  =RasterBrick= and =RasterStack= are classes for multilayer data. A
+    =RasterStack= is a list of =RasterLayer= objects with the same spatial extent and resolution. It can be formed with a collection of files in different locations or even mixed with =RasterLayer= objects that only exist in memory. A =RasterBrick= is truly a multilayered object, and processing it can be more efficient than processing a =RasterStack= representing the same data.
 
-#  The =raster= package defines a number of methods for raster algebra with =Raster*= objects: arithmetic operators, logical operators, and functions such as =abs=, =round=, =ceiling=, =floor=, =trunc=, =sqrt=, =log=, =log10=, =exp=, =cos=, =sin=, =max=, =min=, =range=, =prod=, =sum=, =any=, and =all=. In these functions, =Raster*= objects can be mixed with numbers.
+ The =raster= package defines a number of methods for raster algebra with =Raster*= objects: arithmetic operators, logical operators, and functions such as =abs=, =round=, =ceiling=, =floor=, =trunc=, =sqrt=, =log=, =log10=, =exp=, =cos=, =sin=, =max=, =min=, =range=, =prod=, =sum=, =any=, and =all=. In these functions, =Raster*= objects can be mixed with numbers.
 
-#  There are several functions to modify the content or the spatial extent of =Raster*= objects, or to combine =Raster*= objects:
+ There are several functions to modify the content or the spatial extent of =Raster*= objects, or to combine =Raster*= objects:
 
-#  -  The =crop= function takes a geographic subset of a larger =Raster*= object. =trim= crops a =RasterLayer= by removing the outer rows and columns that only contain =NA= values. =extend= adds new rows and/or columns with =NA= values.
+ -  The =crop= function takes a geographic subset of a larger =Raster*= object. =trim= crops a =RasterLayer= by removing the outer rows and columns that only contain =NA= values. =extend= adds new rows and/or columns with =NA= values.
 
-#  -  The =merge= function merges two or more =Raster*= objects into a single new object.
+ -  The =merge= function merges two or more =Raster*= objects into a single new object.
 
-#  -  =projectRaster= transforms values of a =Raster*= object to a new object with a different coordinate reference system.
+ -  =projectRaster= transforms values of a =Raster*= object to a new object with a different coordinate reference system.
 
-#  -  With =overlay=, multiple =Raster*= objects can be combined (for example, multiply them).
+ -  With =overlay=, multiple =Raster*= objects can be combined (for example, multiply them).
 
-#  -  =mask= removes all values from one layer that are =NA= in another layer, and =cover= combines two layers by taking the values of the first layer except where these are =NA=.
+ -  =mask= removes all values from one layer that are =NA= in another layer, and =cover= combines two layers by taking the values of the first layer except where these are =NA=.
 
-#  -  =calc= computes a function for a =Raster*= object. With =RasterLayer= objects, another =RasterLayer= is returned. With multilayer objects the result depends on the function: With a summary function (=sum=, =max=, etc.), =calc= returns a =RasterLayer= object, and a =RasterBrick= object otherwise.
+ -  =calc= computes a function for a =Raster*= object. With =RasterLayer= objects, another =RasterLayer= is returned. With multilayer objects the result depends on the function: With a summary function (=sum=, =max=, etc.), =calc= returns a =RasterLayer= object, and a =RasterBrick= object otherwise.
 
-#  -  =stackApply= computes summary layers for subsets of a =RasterStack= or =RasterBrick=.
+ -  =stackApply= computes summary layers for subsets of a =RasterStack= or =RasterBrick=.
 
-#  -  =cut= and =reclassify= replace ranges of values with single values.
+ -  =cut= and =reclassify= replace ranges of values with single values.
 
-#  -  =zonal= computes zonal statistics, that is, summarizes a =Raster*= object using zones (areas with the same integer number) defined by another =RasterLayer=.
+ -  =zonal= computes zonal statistics, that is, summarizes a =Raster*= object using zones (areas with the same integer number) defined by another =RasterLayer=.
 
-# **** rasterVis
-#  label:sec:rasterVis
-# #+INDEX: Packages!rasterVis@\texttt{rasterVis}
+**** rasterVis
+ label:sec:rasterVis
+#+INDEX: Packages!rasterVis@\texttt{rasterVis}
 
-#  The =rasterVis= package cite:Perpinan.Hijmans2013 complements the =raster= package, providing a set of methods for enhanced visualization and interaction. This package defines visualization methods (=levelplot=) for quantitative data and categorical data, both for univariate and multivariate rasters.
+ The =rasterVis= package cite:Perpinan.Hijmans2013 complements the =raster= package, providing a set of methods for enhanced visualization and interaction. This package defines visualization methods (=levelplot=) for quantitative data and categorical data, both for univariate and multivariate rasters.
 
-#  It also includes several methods in the frame of the Exploratory Data Analysis approach: scatterplots with =xyplot=, histograms and density plots with =histogram= and =densityplot=, violin and boxplots with =bwplot=, and a matrix of scatterplots with =splom=.
+ It also includes several methods in the frame of the Exploratory Data Analysis approach: scatterplots with =xyplot=, histograms and density plots with =histogram= and =densityplot=, violin and boxplots with =bwplot=, and a matrix of scatterplots with =splom=.
 
-#  On the other hand, this package is able to display vector fields using arrows, =vectorplot=, or with streamlines cite:Wegenkittl.Groeller1997, =streamplot=. In this last method, for each point, /droplet/, of a jittered regular grid, a short streamline portion, /streamlet/, is calculated by integrating the underlying vector field at that point. The main color of each streamlet indicates local vector magnitude (slope). Streamlets are composed of points whose sizes, positions, and color degradation encode the local vector direction (aspect).
+ On the other hand, this package is able to display vector fields using arrows, =vectorplot=, or with streamlines cite:Wegenkittl.Groeller1997, =streamplot=. In this last method, for each point, /droplet/, of a jittered regular grid, a short streamline portion, /streamlet/, is calculated by integrating the underlying vector field at that point. The main color of each streamlet indicates local vector magnitude (slope). Streamlets are composed of points whose sizes, positions, and color degradation encode the local vector direction (aspect).
 
-# **** maptools
-#  label:sec:maptools
-# #+INDEX: Packages!maptools@\texttt{maptools}
+**** maptools
+ label:sec:maptools
+#+INDEX: Packages!maptools@\texttt{maptools}
 
-#  The =maptools= package cite:Bivand.Lewin-Koh2013 provides a set of tools for manipulating and reading geographic data, in particular ESRI (Environmental Systems Research Institute) shapefiles. The package also provides interface wrappers for exchanging spatial objects with packages such as PBSmapping, spatstat, maps, RArcInfo, Stata tmap, WinBUGS, Mondrian, and others. The main functions in the context of this book are
+ The =maptools= package cite:Bivand.Lewin-Koh2013 provides a set of tools for manipulating and reading geographic data, in particular ESRI (Environmental Systems Research Institute) shapefiles. The package also provides interface wrappers for exchanging spatial objects with packages such as PBSmapping, spatstat, maps, RArcInfo, Stata tmap, WinBUGS, Mondrian, and others. The main functions in the context of this book are
 
-#  -  =readShapePoints= reads data from a points shapefile into a =SpatialPointsDataFrame= object.
+ -  =readShapePoints= reads data from a points shapefile into a =SpatialPointsDataFrame= object.
 
-#  -  =writePointsShape= writes data from a =SpatialPointsDataFrame= object to a shapefile.
+ -  =writePointsShape= writes data from a =SpatialPointsDataFrame= object to a shapefile.
 
-#  -  =readShapeLines= reads data from a line shapefile into a =SpatialLinesDataFrame= object.
+ -  =readShapeLines= reads data from a line shapefile into a =SpatialLinesDataFrame= object.
 
-#  -  =writeLinesShape= writes data from a =SpatialLinesDataFrame= object to a shapefile.
+ -  =writeLinesShape= writes data from a =SpatialLinesDataFrame= object to a shapefile.
 
-#  -  =readShapePoly= reads data from a polygon shapefile into a =SpatialPolygonsDataFrame= object.
+ -  =readShapePoly= reads data from a polygon shapefile into a =SpatialPolygonsDataFrame= object.
 
-#  -  =writePolyShape= writes data from a =SpatialPolygonsDataFrame= object to a shapefile.
+ -  =writePolyShape= writes data from a =SpatialPolygonsDataFrame= object to a shapefile.
 
-#  -  =map2SpatialPolygons= and =map2SpatialLines= may be used to convert map objects returned by the =map= function in the =maps= package to the classes defined in the =sp= package.
+ -  =map2SpatialPolygons= and =map2SpatialLines= may be used to convert map objects returned by the =map= function in the =maps= package to the classes defined in the =sp= package.
 
-#  -  =spCbind= provides cbind-like methods for =Spatial*DataFrame= and =data.frame= objects.
+ -  =spCbind= provides cbind-like methods for =Spatial*DataFrame= and =data.frame= objects.
 
-#  The topology operations on geometries performed by this package (for example, =unionSpatialPolygons= ) use the package =rgeos=, an interface to the Geometry Engine Open Source (GEOS) [fn:20].
+ The topology operations on geometries performed by this package (for example, =unionSpatialPolygons= ) use the package =rgeos=, an interface to the Geometry Engine Open Source (GEOS) [fn:20].
 
-# **** rgdal
-#  label:sec:rgdal
-# #+INDEX: Packages!rgdal@\texttt{rgdal}
+**** rgdal
+ label:sec:rgdal
+#+INDEX: Packages!rgdal@\texttt{rgdal}
 
-#  The =rgdal= package cite:Bivand.Keitt.ea2013 provides bindings to the Geospatial Data Abstraction Library (GDAL) [fn:21]. With =readOGR= and =readGDAL=, both GDAL raster and OGR vector map data can be imported into =R=, and GDAL raster data and OGR vector data can be exported with =writeGDAL= and =writeOGR=.
+ The =rgdal= package cite:Bivand.Keitt.ea2013 provides bindings to the Geospatial Data Abstraction Library (GDAL) [fn:21]. With =readOGR= and =readGDAL=, both GDAL raster and OGR vector map data can be imported into =R=, and GDAL raster data and OGR vector data can be exported with =writeGDAL= and =writeOGR=.
 
-#  In addition, this package provides access to projection and transformation operations from the PROJ.4 library [fn:22]. This package implements several =spTransform= methods providing transformation between datums and conversion between projections using PROJ.4 projection arguments.
+ In addition, this package provides access to projection and transformation operations from the PROJ.4 library [fn:22]. This package implements several =spTransform= methods providing transformation between datums and conversion between projections using PROJ.4 projection arguments.
 
-# **** gstat
-#  label:sec:gstat
-# #+INDEX: Packages!gstat@\texttt{gstat}
+**** gstat
+ label:sec:gstat
+#+INDEX: Packages!gstat@\texttt{gstat}
 
-#  The =gstat= package cite:Pebesma2004 provides functions for geostatistical modeling, prediction, and simulation, including variogram modeling and simple, ordinary, universal, and external drift kriging.
+ The =gstat= package cite:Pebesma2004 provides functions for geostatistical modeling, prediction, and simulation, including variogram modeling and simple, ordinary, universal, and external drift kriging.
 
-#  Most of the functionality of this package is beyond the scope of this book. However, some functions must be mentioned:
+ Most of the functionality of this package is beyond the scope of this book. However, some functions must be mentioned:
 
-#  -  =variogram= calculates the sample variogram from data, or for the residuals if a linear model is given. =vgm= generates a variogram and =fit.variogram= fit ranges and/or sills from a variogram model to a sample variogram.
+ -  =variogram= calculates the sample variogram from data, or for the residuals if a linear model is given. =vgm= generates a variogram and =fit.variogram= fit ranges and/or sills from a variogram model to a sample variogram.
 
-#  -  =krige= is the function for simple, ordinary or universal kriging.  =gstat= is the function for univariate or multivariate geostatistical prediction.
+ -  =krige= is the function for simple, ordinary or universal kriging.  =gstat= is the function for univariate or multivariate geostatistical prediction.
 
-# **** maps
-#  label:sec:maps
-# #+INDEX: Packages!maps@\texttt{maps}
-# #+INDEX: Packages!mapproj@\texttt{mapproj}
-# #+INDEX: Packages!mapdata@\texttt{mapdata}
+**** maps
+ label:sec:maps
+#+INDEX: Packages!maps@\texttt{maps}
+#+INDEX: Packages!mapproj@\texttt{mapproj}
+#+INDEX: Packages!mapdata@\texttt{mapdata}
 
-#  The =maps= cite:Becker.Wilks.ea2013, =mapdata= cite:Becker.Wilks.ea2013b, and =mapproj= cite:McIlroy.Brownrigg.ea2013 packages are useful to draw or create geographical maps. =mapdata= contains higher resolution databases, and =mapproj= converts latitude/longitude coordinates into projected coordinates.
+ The =maps= cite:Becker.Wilks.ea2013, =mapdata= cite:Becker.Wilks.ea2013b, and =mapproj= cite:McIlroy.Brownrigg.ea2013 packages are useful to draw or create geographical maps. =mapdata= contains higher resolution databases, and =mapproj= converts latitude/longitude coordinates into projected coordinates.
 
-*** Further Reading
+*** COMMENT Further Reading
  label:cha:further-reading-spatial
 
- # -  cite:Slocum.McMaster.ea2005 and cite:Dent.Torguson.ea2008 are comprehensive books on thematic cartography and geovisualization.  They include chapters devoted to data classification, scales, map projections, color theory, typography, and proportional symbol, choropleth, dasymetric, isarithmic, and multivariate mapping. Several resources are available at their accompanying websites [fn:23].
+ -  cite:Slocum.McMaster.ea2005 and cite:Dent.Torguson.ea2008 are comprehensive books on thematic cartography and geovisualization.  They include chapters devoted to data classification, scales, map projections, color theory, typography, and proportional symbol, choropleth, dasymetric, isarithmic, and multivariate mapping. Several resources are available at their accompanying websites [fn:23].
 
- # -  cite:Bivand.Pebesma.ea2008 is the essential reference to work with spatial data in =R=. R. Bivand and E. Pebesma are the authors of the fundamental =sp= package, and they are the authors or maintainers of several important packages such as =gstat=, for geostatistical modeling, prediction, and simulation, =rgdal=, =rgeos= and =maptools=. Chapter 3 is devoted to the visualization of spatial data. Code, figures, and data of the book are available at the accompanying website [fn:24].
+ -  cite:Bivand.Pebesma.ea2008 is the essential reference to work with spatial data in =R=. R. Bivand and E. Pebesma are the authors of the fundamental =sp= package, and they are the authors or maintainers of several important packages such as =gstat=, for geostatistical modeling, prediction, and simulation, =rgdal=, =rgeos= and =maptools=. Chapter 3 is devoted to the visualization of spatial data. Code, figures, and data of the book are available at the accompanying website [fn:24].
 
- # -  cite:Hengl2009 is an open-access book with seven spatial data analysis exercises. The author is the creator and maintainer of the Spatial-Analyst webpage [fn:25].
+ -  cite:Hengl2009 is an open-access book with seven spatial data analysis exercises. The author is the creator and maintainer of the Spatial-Analyst webpage [fn:25].
 
- # -  The CRAN Tasks View "Analysis of Spatial Data" [fn:26] summarizes the packages for reading, vizualizing, and analyzing spatial data. The packages in development published at R-Forge are listed in the "Spatial Data & Statistics" topic view [fn:27]. The R-SIG-Geo mailing list [fn:28] is a powerful resource for obtaining help.
+ -  The CRAN Tasks View "Analysis of Spatial Data" [fn:26] summarizes the packages for reading, vizualizing, and analyzing spatial data. The packages in development published at R-Forge are listed in the "Spatial Data & Statistics" topic view [fn:27]. The R-SIG-Geo mailing list [fn:28] is a powerful resource for obtaining help.
 
- # -  The "Spatial Analysis" [fn:29] and "Kartograph" [fn:30] webpages publish a variety of beautiful visualization examples.
+ -  The "Spatial Analysis" [fn:29] and "Kartograph" [fn:30] webpages publish a variety of beautiful visualization examples.
 
-** Thematic Maps
+** COMMENT Thematic Maps
  label:cha:thematicMaps
 
-#  A thematic map focuses on a specific theme or variable, commonly using geographic data such as coastlines, boundaries, and places as points of reference for the variable being mapped. These maps provide specific information about particular locations or areas (proportional symbol mapping and choropleth maps) and information about spatial patterns (isarithmic and raster maps). The following sections illustrate the code you need to produce these maps, with a final section devoted to the visualization of vector fields.
-# #+INCLUDE: "Spatial/bubble.tex" src latex
-# #+INCLUDE: "Spatial/choropleth.tex" src latex
-# #+INCLUDE: "Spatial/raster.tex" src latex
-# #+INCLUDE: "Spatial/vector.tex" src latex
+ A thematic map focuses on a specific theme or variable, commonly using geographic data such as coastlines, boundaries, and places as points of reference for the variable being mapped. These maps provide specific information about particular locations or areas (proportional symbol mapping and choropleth maps) and information about spatial patterns (isarithmic and raster maps). The following sections illustrate the code you need to produce these maps, with a final section devoted to the visualization of vector fields.
+#+INCLUDE: "Spatial/bubble.tex" src latex
+#+INCLUDE: "Spatial/choropleth.tex" src latex
+#+INCLUDE: "Spatial/raster.tex" src latex
+#+INCLUDE: "Spatial/vector.tex" src latex
 
-** Reference and Physical Maps
+** COMMENT Reference and Physical Maps
  label:cha:refer-phys-maps
 
-#  A reference map focuses on the geographic location of features. In these maps, cities are named and major transport routes are identified. In addition, natural features such as rivers and mountains are named, and elevation is shown using a simple color shading.
-#  A physical map shows the physical landscape features of a place.  Mountains and elevation changes are usually shown with different colors and shades to show relief, using green to show lower elevations and browns for high elevations.
+ A reference map focuses on the geographic location of features. In these maps, cities are named and major transport routes are identified. In addition, natural features such as rivers and mountains are named, and elevation is shown using a simple color shading.
+ A physical map shows the physical landscape features of a place.  Mountains and elevation changes are usually shown with different colors and shades to show relief, using green to show lower elevations and browns for high elevations.
 
-#  This chapter details how to create a reference map of a northern region of Spain using data from OpenStreetMap and a physical map of Brazil with data from different sources.
-# #+INCLUDE: "Spatial/physical.tex" src latex
-# #+INCLUDE: "Spatial/osmar.tex" src latex
+ This chapter details how to create a reference map of a northern region of Spain using data from OpenStreetMap and a physical map of Brazil with data from different sources.
+#+INCLUDE: "Spatial/physical.tex" src latex
+#+INCLUDE: "Spatial/osmar.tex" src latex
 
-** About the Data
+** COMMENT About the Data
  label:cha:dataSpatial
 
-# #+INCLUDE: "Spatial/dataSpatial.tex" src latex
+#+INCLUDE: "Spatial/dataSpatial.tex" src latex
 
 * Space-Time Data
 
-** Displaying Spatiotemporal Data: Introduction
+** COMMENT Displaying Spatiotemporal Data: Introduction
  label:cha:introductionST
 
- # Space-time datasets are indexed both in space and in time. The data may consist of a spatial vector object (for example, points or polygons) or raster data at different times. The first case is representative of data from fixed sensors providing measurements abundant in time but sparse in space. The second case is the typical format of satellite imagery, which produces high spatial resolution data sparse in time cite:Pebesma2012.
+ Space-time datasets are indexed both in space and in time. The data may consist of a spatial vector object (for example, points or polygons) or raster data at different times. The first case is representative of data from fixed sensors providing measurements abundant in time but sparse in space. The second case is the typical format of satellite imagery, which produces high spatial resolution data sparse in time cite:Pebesma2012.
 
- # There are several visualization approaches of space-time data trying to cope with the four dimensions of the data cite:Cressie.Wikle2011.
+ There are several visualization approaches of space-time data trying to cope with the four dimensions of the data cite:Cressie.Wikle2011.
 
- # On the one hand, the data can be conceived as a collection of snapshots at different times. These snapshots can be displayed as a sequence of frames to produce an animation, or can be printed on one page with different panels for each snapshot using the small-multiple technique described repeatedly in previous chapters.
+ On the one hand, the data can be conceived as a collection of snapshots at different times. These snapshots can be displayed as a sequence of frames to produce an animation, or can be printed on one page with different panels for each snapshot using the small-multiple technique described repeatedly in previous chapters.
 
- # On the other hand, one of the two spatial dimensions can be collapsed through an appropriate statistic (for example, mean or standard deviation) to produce a space-time plot (also known as a Hovmöller diagram). The axes of this graphic are typically longitude or latitude as the x-axis, and time as the y-axis, with the value of the spatial-averaged value of the raster data represented with color.
+ On the other hand, one of the two spatial dimensions can be collapsed through an appropriate statistic (for example, mean or standard deviation) to produce a space-time plot (also known as a Hovmöller diagram). The axes of this graphic are typically longitude or latitude as the x-axis, and time as the y-axis, with the value of the spatial-averaged value of the raster data represented with color.
 
- # Finally, the space-time object can be reduced to a multivariate time series (where each location is a variable or column of the time series) and displayed with the time series visualization techniques described in the Part ref:part:Time. This approach is directly applicable to space-time data sparse in space (for example, point measurements at different times). However, it is mandatory to use aggregation in the case of raster data. In this case, the multivariate time series is composed of the evolution of the raster data averaged along a certain direction.
+ Finally, the space-time object can be reduced to a multivariate time series (where each location is a variable or column of the time series) and displayed with the time series visualization techniques described in the Part ref:part:Time. This approach is directly applicable to space-time data sparse in space (for example, point measurements at different times). However, it is mandatory to use aggregation in the case of raster data. In this case, the multivariate time series is composed of the evolution of the raster data averaged along a certain direction.
 
- # The next chapters, focused on raster space-time data (Chapter ref:cha:rasterST) and point space-time data (Chapter ref:cha:pointsST), illustrate with examples how to produce animations, multipanel graphics, hovmöller diagrams, and time-series with =R=.
+ The next chapters, focused on raster space-time data (Chapter ref:cha:rasterST) and point space-time data (Chapter ref:cha:pointsST), illustrate with examples how to produce animations, multipanel graphics, hovmöller diagrams, and time-series with =R=.
 
 *** Packages
  label:sec:spacetime-packages
 
-#  The CRAN Tasks View "Handling and Analyzing Spatiotemporal Data" [fn:31] summarizes the packages for reading, vizualizing, and analyzing space-time data. This section provides a brief introduction to the =spacetime=, =raster=, and =rasterVis= packages. Most of the information has been extracted from their vignettes, webpages, and help pages. You should read them for detailed information.
+ The CRAN Tasks View "Handling and Analyzing Spatiotemporal Data" [fn:31] summarizes the packages for reading, vizualizing, and analyzing space-time data. This section provides a brief introduction to the =spacetime=, =raster=, and =rasterVis= packages. Most of the information has been extracted from their vignettes, webpages, and help pages. You should read them for detailed information.
 
-# **** spacetime
-#  label:sec:spacetime
-# #+INDEX: Packages!spacetime@\texttt{spacetime}
+**** spacetime
+ label:sec:spacetime
+#+INDEX: Packages!spacetime@\texttt{spacetime}
 
-#  The =spacetime= package cite:Pebesma2012 is built upon the classes and methods for spatial data from the =sp= package , and for time series data from the =xts= package. It defines classes to represent four space-time layouts:
+ The =spacetime= package cite:Pebesma2012 is built upon the classes and methods for spatial data from the =sp= package , and for time series data from the =xts= package. It defines classes to represent four space-time layouts:
 
-#  1. =STF=, =STFDF=: full space-time grid of observations for spatial features and observation time, with all space-time combinations.
+ 1. =STF=, =STFDF=: full space-time grid of observations for spatial features and observation time, with all space-time combinations.
 
-#  2. =STS=, =STSDF=: sparse grid layout, stores only the non-missing space-time combinations on a lattice
+ 2. =STS=, =STSDF=: sparse grid layout, stores only the non-missing space-time combinations on a lattice
 
-#  3. =STI=, =STIDF=: irregular layout, time and space points of measured values have no apparent organisation.
+ 3. =STI=, =STIDF=: irregular layout, time and space points of measured values have no apparent organisation.
 
-#  4. =STT=, =STTDF=: simple trajectories.
+ 4. =STT=, =STTDF=: simple trajectories.
 
-#  Moreover, =spacetime= provides several methods for the following classes:
+ Moreover, =spacetime= provides several methods for the following classes:
 
-#  -  =stConstruct=, =STFDF=, and =STIDF= create objects from single or multiple tables.
+ -  =stConstruct=, =STFDF=, and =STIDF= create objects from single or multiple tables.
 
-#  -  =as= coerces to other spatiotemporal objects, xts, Spatial, matrix, or data.frame.
+ -  =as= coerces to other spatiotemporal objects, xts, Spatial, matrix, or data.frame.
 
-#  -  =[[= selects or replaces data values.
+ -  =[[= selects or replaces data values.
 
-#  -  =[= selects spatial or temporal subsets, and data variables.
+ -  =[= selects spatial or temporal subsets, and data variables.
 
-#  -  =over= retrieves index or data values of one object at the locations and times of another.
+ -  =over= retrieves index or data values of one object at the locations and times of another.
 
-#  -  =aggregate= aggregates data values over particular spatial, temporal, or spatiotemporal domains.
+ -  =aggregate= aggregates data values over particular spatial, temporal, or spatiotemporal domains.
 
-#  -  =stplot= creates spatiotemporal plots. It is able to produce multi-panel plots, space-time plots, animations, and time series plots.
+ -  =stplot= creates spatiotemporal plots. It is able to produce multi-panel plots, space-time plots, animations, and time series plots.
 
-# **** raster
-#  label:sec:rasterST
-# #+INDEX: Packages!raster@\texttt{raster}
+**** raster
+ label:sec:rasterST
+#+INDEX: Packages!raster@\texttt{raster}
 
-#  The =raster= package cite:Hijmans2013 is able to add time information associated with layers of a =RasterStack= or =RasterBrick= object with the =setZ= function. This information can be extracted with =getZ=.
+ The =raster= package cite:Hijmans2013 is able to add time information associated with layers of a =RasterStack= or =RasterBrick= object with the =setZ= function. This information can be extracted with =getZ=.
 
-#  If a =Raster*= object includes this information, the =zApply= function can be used to apply a function over a time series of layers of the object.
+ If a =Raster*= object includes this information, the =zApply= function can be used to apply a function over a time series of layers of the object.
 
-# **** rasterVis
-#  label:sec:rastervisST
-# #+INDEX: Packages!rasterVis@\texttt{rasterVis}
+**** rasterVis
+ label:sec:rastervisST
+#+INDEX: Packages!rasterVis@\texttt{rasterVis}
 
-#  =rasterVis= cite:Perpinan.Hijmans2013 provides three methods to display spatiotemporal rasters:
+ =rasterVis= cite:Perpinan.Hijmans2013 provides three methods to display spatiotemporal rasters:
 
-#  1. =hovmoller= produces Hovmöller diagrams cite:Hovmoeller1949a. The axes of this kind of diagram are typically longitude or latitude (x-axis) and time (ordinate or y-axis) with the value of some aggregated field represented through color. However, the user can define the direction with =dirXY= and the summary function with =FUN=.
+ 1. =hovmoller= produces Hovmöller diagrams cite:Hovmoeller1949a. The axes of this kind of diagram are typically longitude or latitude (x-axis) and time (ordinate or y-axis) with the value of some aggregated field represented through color. However, the user can define the direction with =dirXY= and the summary function with =FUN=.
 
-#  2. =horizonplot= creates horizon graphs cite:Few2008, with many time series displayed in parallel by cutting the vertical range into segments and overplotting them with color representing the magnitude and direction of deviation. Each time series corresponds to a geographical zone defined with =dirXY= and averaged with =zonal=.
+ 2. =horizonplot= creates horizon graphs cite:Few2008, with many time series displayed in parallel by cutting the vertical range into segments and overplotting them with color representing the magnitude and direction of deviation. Each time series corresponds to a geographical zone defined with =dirXY= and averaged with =zonal=.
 
-#  3. =xyplot= displays conventional time series plots. Each time series corresponds to a geographical zone defined with =dirXY= and aggregated with =zonal=.
+ 3. =xyplot= displays conventional time series plots. Each time series corresponds to a geographical zone defined with =dirXY= and aggregated with =zonal=.
 
-#  On the other hand, the =histogram=, =densityplot=, and =bwplot= methods accept a =FUN= argument to be applied to the =z= slot of =Raster*= object (defined by =setZ=). The result of this function is used as the grouping variable of the plot to create different panels.
+ On the other hand, the =histogram=, =densityplot=, and =bwplot= methods accept a =FUN= argument to be applied to the =z= slot of =Raster*= object (defined by =setZ=). The result of this function is used as the grouping variable of the plot to create different panels.
 
 *** Further Reading
  label:cha:further-reading-spatiotime
 
- # -  cite:Cressie.Wikle2011 is a systematic approach to key quantitative techniques on statistics for spatiotemporal data. The book begins with separate treatments of temporal data and spatial data, and later combines these concepts to discuss spatiotemporal statistical methods. There is a chapter devoted to exploratory methods, including visualization techniques.
+ -  cite:Cressie.Wikle2011 is a systematic approach to key quantitative techniques on statistics for spatiotemporal data. The book begins with separate treatments of temporal data and spatial data, and later combines these concepts to discuss spatiotemporal statistical methods. There is a chapter devoted to exploratory methods, including visualization techniques.
 
- # -  cite:Pebesma2012 presents the =spacetime= package, which implements a set of classes for spatiotemporal data. This paper includes examples that illustrate how to import, subset, coerce, and export spatiotemporal data, proposes several visualization methods, and discusses spatiotemporal geostatistical interpolation.
+ -  cite:Pebesma2012 presents the =spacetime= package, which implements a set of classes for spatiotemporal data. This paper includes examples that illustrate how to import, subset, coerce, and export spatiotemporal data, proposes several visualization methods, and discusses spatiotemporal geostatistical interpolation.
 
- # -  cite:Slocum.McMaster.ea2005 (previously cited in Chapter ref:cha:further-reading-spatial) includes a chapter about map animation, discussing several approaches for displaying spatiotemporal data.
+ -  cite:Slocum.McMaster.ea2005 (previously cited in Chapter ref:cha:further-reading-spatial) includes a chapter about map animation, discussing several approaches for displaying spatiotemporal data.
 
- # -  cite:Hengl2009 (previously cited in Chapter ref:cha:further-reading-spatial) includes a working example with spatiotemporal data to illustrate space-time variograms and interpolation.
+ -  cite:Hengl2009 (previously cited in Chapter ref:cha:further-reading-spatial) includes a working example with spatiotemporal data to illustrate space-time variograms and interpolation.
 
- # -  cite:Harrower.Fabrikant2008 explore the role of animation in geographic visualization and outline the challenges, both conceptual and technical, involved in the creation and use of animated maps.
+ -  cite:Harrower.Fabrikant2008 explore the role of animation in geographic visualization and outline the challenges, both conceptual and technical, involved in the creation and use of animated maps.
 
- # -  The CRAN Tasks View "Handling and Analyzing Spatiotemporal Data" [fn:32] summarizes the packages for reading, vizualizing, and analyzing space-time data. The R-SIG-Geo mailing list [fn:33] is a powerful resource for obtaining help.
+ -  The CRAN Tasks View "Handling and Analyzing Spatiotemporal Data" [fn:32] summarizes the packages for reading, vizualizing, and analyzing space-time data. The R-SIG-Geo mailing list [fn:33] is a powerful resource for obtaining help.
 
-** Spatiotemporal Raster Data
+** COMMENT Spatiotemporal Raster Data
  label:cha:rasterST
 
-# #+INCLUDE: "SpatioTime/rasterST.tex" src latex
+#+INCLUDE: "SpatioTime/rasterST.tex" src latex
 
-** Spatiotemporal Point Observations
+** COMMENT Spatiotemporal Point Observations
  label:cha:pointsST
 
-# #+INCLUDE: "SpatioTime/pointsST.tex" src latex
+#+INCLUDE: "SpatioTime/pointsST.tex" src latex
+
+* Bibliography and Index 
 
 \backmatter
 
