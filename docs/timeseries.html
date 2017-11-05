@@ -1,0 +1,1565 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2017-11-05 dom 16:21 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Time Series - Displaying time series, spatial and space-time data with R</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Oscar Perpiñán Lamigueiro" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="stylesheets/styles.css" />
+<link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/readtheorg/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/readtheorg/css/readtheorg.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://www.pirilampo.org/styles/readtheorg/js/readtheorg.js"></script>
+<link rel="stylesheet" type="text/css" href="stylesheets/colorbox.css" />
+<script src="js/jquery.colorbox.js"></script>
+<script src="js/colorbox.js"></script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2017 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Time Series - Displaying time series, spatial and space-time data with R</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#horizontal">Time on the horizontal axis</a>
+<ul>
+<li><a href="#org99a2f31">Time Graph of Different Meteorological Variables</a></li>
+<li><a href="#orga0081af">The Horizon Graph</a></li>
+<li><a href="#orgf67dd6f">Time Series of Variables with the Same Scale</a></li>
+<li><a href="#org87f20ed">Stacked Graphs</a></li>
+</ul>
+</li>
+<li><a href="#group">Time as a conditioning or grouping variable</a>
+<ul>
+<li><a href="#org6723ce1">Scatterplot Matrix: Time as a Grouping Variable</a></li>
+<li><a href="#org8ca8944">Scatterplot with Time as a Conditioning Variable</a></li>
+</ul>
+</li>
+<li><a href="#complementary">Time as a complementary variable</a>
+<ul>
+<li><a href="#orga170df2">Polylines</a></li>
+<li><a href="#org0ae7dc9">Labels to Show Time Information</a></li>
+<li><a href="#orgff12a04">Using Variable Size to Encode an Additional Variable</a></li>
+<li><a href="#orgbf4f17b">Traveling Bubbles</a></li>
+</ul>
+</li>
+<li><a href="#code">Code</a>
+<ul>
+<li><a href="#code_horizontal">Time on the horizontal axis</a></li>
+<li><a href="#code_group">Time as a conditioning or grouping variable</a></li>
+<li><a href="#code_complementary">Time as a complementary variable</a></li>
+<li><a href="#code_data">Data</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org95e222a" class="outline-2">
+<h2 id="horizontal"><a id="org95e222a"></a>Time on the horizontal axis</h2>
+<div class="outline-text-2" id="text-horizontal">
+</div>
+
+<div id="outline-container-org99a2f31" class="outline-3">
+<h3 id="org99a2f31">Time Graph of Different Meteorological Variables</h3>
+<div class="outline-text-3" id="text-org99a2f31">
+
+<div class="figure">
+<p><a href="images/aranjuezXblocks.png"><img src="images/thumbs/aranjuezXblocks.png" alt="aranjuezXblocks.png" /></a> 
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga0081af" class="outline-3">
+<h3 id="orga0081af">The Horizon Graph</h3>
+<div class="outline-text-3" id="text-orga0081af">
+
+<div class="figure">
+<p><a href="images/navarraHorizonplot.png"><img src="images/thumbs/navarraHorizonplot.png" alt="navarraHorizonplot.png" /></a> 
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf67dd6f" class="outline-3">
+<h3 id="orgf67dd6f">Time Series of Variables with the Same Scale</h3>
+<div class="outline-text-3" id="text-orgf67dd6f">
+
+<div class="figure">
+<p><a href="images/navarraRadiation.svg.html" class="svg"><img src="images/thumbs/navarraSVG.png" alt="navarraSVG.png" class="svg" /></a> 
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org87f20ed" class="outline-3">
+<h3 id="org87f20ed">Stacked Graphs</h3>
+<div class="outline-text-3" id="text-org87f20ed">
+
+<div class="figure">
+<p><a href="images/unemployUSAThemeRiver.png"><img src="images/thumbs/unemployUSAThemeRiver.png" alt="unemployUSAThemeRiver.png" /></a> 
+</p>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org5018d76" class="outline-2">
+<h2 id="group"><a id="org5018d76"></a>Time as a conditioning or grouping variable</h2>
+<div class="outline-text-2" id="text-group">
+</div>
+
+<div id="outline-container-org6723ce1" class="outline-3">
+<h3 id="org6723ce1">Scatterplot Matrix: Time as a Grouping Variable</h3>
+<div class="outline-text-3" id="text-org6723ce1">
+
+<div class="figure">
+<p><a href="images/aranjuezSplom.png"><img src="images/thumbs/aranjuezSplom.png" alt="aranjuezSplom.png" /></a> 
+</p>
+</div>
+
+
+<div class="figure">
+<p><a href="images/aranjuezSplomHexbin.png"><img src="images/thumbs/aranjuezSplomHexbin.png" alt="aranjuezSplomHexbin.png" /></a> 
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><a href="images/aranjuezHexbinplot.png"><img src="images/thumbs/aranjuezHexbinplot.png" alt="aranjuezHexbinplot.png" /></a> 
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8ca8944" class="outline-3">
+<h3 id="org8ca8944">Scatterplot with Time as a Conditioning Variable</h3>
+<div class="outline-text-3" id="text-org8ca8944">
+
+<div class="figure">
+<p><a href="images/aranjuezOuterStrips.png"><img src="images/thumbs/aranjuezOuterStrips.png" alt="aranjuezOuterStrips.png" /></a>
+</p>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org16a876c" class="outline-2">
+<h2 id="complementary"><a id="org16a876c"></a>Time as a complementary variable</h2>
+<div class="outline-text-2" id="text-complementary">
+</div>
+
+<div id="outline-container-orga170df2" class="outline-3">
+<h3 id="orga170df2">Polylines</h3>
+<div class="outline-text-3" id="text-orga170df2">
+
+<div class="figure">
+<p><a href="images/googleVis.html" class="svg"><img src="images/thumbs/googleVis.png" alt="googleVis.png" class="svg" /></a>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0ae7dc9" class="outline-3">
+<h3 id="org0ae7dc9">Labels to Show Time Information</h3>
+<div class="outline-text-3" id="text-org0ae7dc9">
+
+<div class="figure">
+<p><a href="images/CO2_capitaDL.png"><img src="images/thumbs/CO2_capitaDL.png" alt="CO2_capitaDL.png" /></a> 
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgff12a04" class="outline-3">
+<h3 id="orgff12a04">Using Variable Size to Encode an Additional Variable</h3>
+<div class="outline-text-3" id="text-orgff12a04">
+
+<div class="figure">
+<p><a href="images/CO2points.png"><img src="images/thumbs/CO2points.png" alt="CO2points.png" /></a> 
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbf4f17b" class="outline-3">
+<h3 id="orgbf4f17b">Traveling Bubbles</h3>
+<div class="outline-text-3" id="text-orgbf4f17b">
+
+<div class="figure">
+<p><a href="images/bubbles.svg" class="svg"><img src="images/thumbs/bubbles.png" alt="bubbles.png" class="svg" /></a> 
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org34e9b18" class="outline-2">
+<h2 id="code"><a id="org34e9b18"></a>Code</h2>
+<div class="outline-text-2" id="text-code">
+</div>
+<div id="outline-container-org7900937" class="outline-3">
+<h3 id="code_horizontal"><a id="org7900937"></a>Time on the horizontal axis</h3>
+<div class="outline-text-3" id="text-code_horizontal">
+<p>
+<a href="R/timeHorizontalAxis.R">Download</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-R"><span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Initial configuration</span>
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Clone or download the repository and set the working directory</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">with setwd to the folder where the repository is located.</span>
+
+ 
+<span class="org-constant">library</span>(lattice)
+<span class="org-constant">library</span>(ggplot2)
+<span class="org-constant">library</span>(latticeExtra)
+<span class="org-constant">library</span>(zoo)
+
+myTheme <span class="org-constant">&lt;-</span> custom.theme.2(pch = 19, cex = 0.7,
+                          region = rev(brewer.pal(9, <span class="org-string">'YlOrRd'</span>)),
+                          symbol = brewer.pal(n = 8, name = <span class="org-string">"Dark2"</span>))
+myTheme$strip.background$col = <span class="org-string">'transparent'</span>
+myTheme$strip.shingle$col = <span class="org-string">'transparent'</span>
+myTheme$strip.border$col = <span class="org-string">'transparent'</span>
+
+<span class="org-function-name">xscale.components.custom</span> <span class="org-constant">&lt;-</span> <span class="org-keyword">function</span>(...){
+    ans <span class="org-constant">&lt;-</span> xscale.components.default(...)
+    ans$top = <span class="org-type">FALSE</span>
+    ans
+}
+
+<span class="org-function-name">yscale.components.custom</span> <span class="org-constant">&lt;-</span> <span class="org-keyword">function</span>(...){
+      ans <span class="org-constant">&lt;-</span> yscale.components.default(...)
+      ans$right = <span class="org-type">FALSE</span>
+      ans
+}
+
+myArgs <span class="org-constant">&lt;-</span> list(as.table = <span class="org-type">TRUE</span>,
+               between = list(x = 0.5, y = 0.2),
+               xscale.components = xscale.components.custom,
+               yscale.components = yscale.components.custom)
+defaultArgs <span class="org-constant">&lt;-</span> lattice.options()$default.args
+
+lattice.options(default.theme = myTheme,
+                default.args = modifyList(defaultArgs, myArgs))
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Time graph of variables with different scales</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(zoo)
+load(<span class="org-string">'data/aranjuez.RData'</span>)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">The layout argument arranges panels in rows</span>
+xyplot(aranjuez, layout = c(1, ncol(aranjuez)))
+
+autoplot(aranjuez) + facet_free()
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Annotations to enhance the time graph</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">lattice version</span>
+
+<span class="org-constant">library</span>(grid)
+<span class="org-constant">library</span>(latticeExtra)
+  
+<span class="org-comment-delimiter">## </span><span class="org-comment">Auxiliary function to extract the year value of a POSIXct time</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">index</span>
+<span class="org-function-name">Year</span> <span class="org-constant">&lt;-</span> <span class="org-keyword">function</span>(x)format(x, <span class="org-string">"%Y"</span>)
+  
+xyplot(aranjuez, layout = c(1, ncol(aranjuez)), strip = <span class="org-type">FALSE</span>,
+       scales = list(y = list(cex = 0.6, rot = 0)),
+       panel = <span class="org-keyword">function</span>(x, y, ...){
+           <span class="org-comment-delimiter">## </span><span class="org-comment">Alternation of years</span>
+           panel.xblocks(x, Year,
+                         col = c(<span class="org-string">"lightgray"</span>, <span class="org-string">"white"</span>),
+                         border = <span class="org-string">"darkgray"</span>)
+           <span class="org-comment-delimiter">## </span><span class="org-comment">Values under the average highlighted with red regions</span>
+           panel.xblocks(x, y&lt;mean(y, na.rm = <span class="org-type">TRUE</span>),
+                         col = <span class="org-string">"indianred1"</span>,
+                         height = unit(0.1, <span class="org-string">'npc'</span>))
+           <span class="org-comment-delimiter">## </span><span class="org-comment">Time series</span>
+           panel.lines(x, y, col = <span class="org-string">'royalblue4'</span>, lwd = 0.5, ...)
+           <span class="org-comment-delimiter">## </span><span class="org-comment">Label of each time series</span>
+           panel.text(x[1], min(y, na.rm = <span class="org-type">TRUE</span>),
+                      names(aranjuez)[panel.number()],
+                      cex = 0.6, adj = c(0, 0), srt = 90, ...)
+           <span class="org-comment-delimiter">## </span><span class="org-comment">Triangles to point the maxima and minima </span>
+           idxMax <span class="org-constant">&lt;-</span> which.max(y)
+           panel.points(x[idxMax], y[idxMax],
+                        col = <span class="org-string">'black'</span>, fill = <span class="org-string">'lightblue'</span>, pch = 24)
+           idxMin <span class="org-constant">&lt;-</span> which.min(y)
+           panel.points(x[idxMin], y[idxMin],
+                        col = <span class="org-string">'black'</span>, fill = <span class="org-string">'lightblue'</span>, pch = 25)
+       })
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">ggplot2 version</span>
+
+timeIdx <span class="org-constant">&lt;-</span> index(aranjuez)
+  
+aranjuezLong <span class="org-constant">&lt;-</span> fortify(aranjuez, melt = <span class="org-type">TRUE</span>)
+
+summary(aranjuezLong)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Values below mean are negative after being centered</span>
+scaled <span class="org-constant">&lt;-</span> fortify(scale(aranjuez, scale = <span class="org-type">FALSE</span>), melt = <span class="org-type">TRUE</span>)
+<span class="org-comment-delimiter">## </span><span class="org-comment">The 'scaled' column is the result of the centering.</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">The new 'Value' column store the original values.</span>
+scaled <span class="org-constant">&lt;-</span> transform(scaled, scaled = Value, Value = long$Value)
+underIdx <span class="org-constant">&lt;-</span> which(scaled$scaled &lt;= 0)
+<span class="org-comment-delimiter">## </span><span class="org-comment">'under' is the subset of values below the average</span>
+under <span class="org-constant">&lt;-</span> scaled[underIdx,]
+
+<span class="org-constant">library</span>(xts)
+ep <span class="org-constant">&lt;-</span> endpoints(timeIdx, on = <span class="org-string">'years'</span>)
+N <span class="org-constant">&lt;-</span> length(ep[-1])
+<span class="org-comment-delimiter">## </span><span class="org-comment">'tsp' is start and 'tep' is the end of each band</span>
+tep <span class="org-constant">&lt;-</span> timeIdx[ep]
+tsp <span class="org-constant">&lt;-</span> timeIdx[ep[-(N+1)]+1]
+<span class="org-comment-delimiter">## </span><span class="org-comment">'cols' is a vector with the color of each band</span>
+cols <span class="org-constant">&lt;-</span> rep_len(c(<span class="org-string">'gray'</span>, <span class="org-string">'white'</span>), N)
+
+minIdx <span class="org-constant">&lt;-</span> timeIdx[apply(aranjuez, 2, which.min)]
+minVals <span class="org-constant">&lt;-</span> apply(aranjuez, 2, min, na.rm = <span class="org-type">TRUE</span>)
+mins <span class="org-constant">&lt;-</span> data.frame(Index = minIdx,
+                   Value = minVals,
+                   Series = names(aranjuez))
+
+maxIdx <span class="org-constant">&lt;-</span> timeIdx[apply(aranjuez, 2, which.max)]
+maxVals <span class="org-constant">&lt;-</span> apply(aranjuez, 2, max, na.rm = <span class="org-type">TRUE</span>)
+maxs <span class="org-constant">&lt;-</span> data.frame(Index = maxIdx,
+                   Value = maxVals,
+                   Series = names(aranjuez))
+
+ggplot(data = long, aes(Index, Value)) +
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Time series of each variable</span>
+    geom_line(colour = <span class="org-string">"royalblue4"</span>, lwd = 0.5) +
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Year bands</span>
+    annotate(geom=<span class="org-string">'rect'</span>, ymin = -<span class="org-type">Inf</span>, ymax = <span class="org-type">Inf</span>,
+             xmin = tsp, xmax = tep,
+             fill = cols, alpha = 0.4) +
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Values below average</span>
+    geom_rug(data = under,
+             sides = <span class="org-string">'b'</span>, col = <span class="org-string">'indianred1'</span>) +
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Minima</span>
+    geom_point(data = mins, pch = 25) +
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Maxima</span>
+    geom_point(data = maxs, pch = 24) +
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Axis labels and theme definition</span>
+    labs(x = <span class="org-string">'Time'</span>, y = <span class="org-type">NULL</span>) +
+    theme_bw() +
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Each series is displayed in a different panel with an</span>
+    <span class="org-comment-delimiter">## </span><span class="org-comment">independent y scale</span>
+    facet_free()
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Time series of variables with the same scale</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+load(<span class="org-string">'data/navarra.RData'</span>)
+
+avRad <span class="org-constant">&lt;-</span> zoo(rowMeans(navarra, na.rm = 1), index(navarra))
+pNavarra <span class="org-constant">&lt;-</span> xyplot(navarra - avRad,
+                   superpose = <span class="org-type">TRUE</span>, auto.key = <span class="org-type">FALSE</span>,
+                   lwd = 0.5, alpha = 0.3, col = <span class="org-string">'midnightblue'</span>) 
+pNavarra
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Aspect ratio and rate of change</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+xyplot(navarra - avRad,
+       aspect = <span class="org-string">'xy'</span>, cut = list(n = 3, overlap = 0.1),
+       strip = <span class="org-type">FALSE</span>,
+       superpose = <span class="org-type">TRUE</span>, auto.key = <span class="org-type">FALSE</span>,
+       lwd = 0.5, alpha = 0.3, col = <span class="org-string">'midnightblue'</span>)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">The horizon graph</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(latticeExtra)
+  
+horizonplot(navarra-avRad,
+            layout = c(1, ncol(navarra)),
+            origin = 0, colorkey = <span class="org-type">TRUE</span>)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Time graph of the differences between a time series and a reference</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+Ta <span class="org-constant">&lt;-</span> aranjuez$TempAvg
+timeIndex <span class="org-constant">&lt;-</span> index(aranjuez)
+longTa <span class="org-constant">&lt;-</span> ave(Ta, format(timeIndex, <span class="org-string">'%j'</span>))
+diffTa <span class="org-constant">&lt;-</span> (Ta - longTa)
+
+xyplot(cbind(Ta, longTa, diffTa),
+       col = c(<span class="org-string">'darkgray'</span>, <span class="org-string">'red'</span>, <span class="org-string">'midnightblue'</span>),
+       superpose = <span class="org-type">TRUE</span>, auto.key = list(space = <span class="org-string">'right'</span>),
+       screens = c(rep(<span class="org-string">'Average Temperature'</span>, 2), <span class="org-string">'Differences'</span>))
+
+years <span class="org-constant">&lt;-</span> unique(format(timeIndex, <span class="org-string">'%Y'</span>))
+  
+horizonplot(diffTa, cut = list(n = 8, overlap = 0),
+            colorkey = <span class="org-type">TRUE</span>, layout = c(1, 8),
+            scales = list(draw = <span class="org-type">FALSE</span>, y = list(relation = <span class="org-string">'same'</span>)),
+            origin = 0, strip.left = <span class="org-type">FALSE</span>) +
+    layer(grid.text(years[panel.number()], x  =  0, y  =  0.1, 
+                    gp = gpar(cex = 0.8),
+                    just = <span class="org-string">"left"</span>))
+
+<span class="org-function-name">year</span> <span class="org-constant">&lt;-</span> <span class="org-keyword">function</span>(x)as.numeric(format(x, <span class="org-string">'%Y'</span>))
+<span class="org-function-name">day</span> <span class="org-constant">&lt;-</span> <span class="org-keyword">function</span>(x)as.numeric(format(x, <span class="org-string">'%d'</span>))
+<span class="org-function-name">month</span> <span class="org-constant">&lt;-</span> <span class="org-keyword">function</span>(x)as.numeric(format(x, <span class="org-string">'%m'</span>))
+
+myTheme <span class="org-constant">&lt;-</span> modifyList(custom.theme(region = brewer.pal(9, <span class="org-string">'RdBu'</span>)),
+                      list(
+                          strip.background = list(col = <span class="org-string">'gray'</span>),
+                          panel.background = list(col = <span class="org-string">'gray'</span>)))
+
+maxZ <span class="org-constant">&lt;-</span> max(abs(diffTa))
+
+levelplot(diffTa ~ day(timeIndex) * year(timeIndex) | factor(month(timeIndex)),
+          at = pretty(c(-maxZ, maxZ), n = 8),
+          colorkey = list(height = 0.3),
+          layout = c(1, 12), strip = <span class="org-type">FALSE</span>, strip.left = <span class="org-type">TRUE</span>,
+          xlab = <span class="org-string">'Day'</span>, ylab = <span class="org-string">'Month'</span>, 
+          par.settings = myTheme)
+
+df <span class="org-constant">&lt;-</span> data.frame(Vals = diffTa,
+                 Day = day(timeIndex),
+                 Year = year(timeIndex),
+                 Month = month(timeIndex))
+
+<span class="org-constant">library</span>(scales) 
+<span class="org-comment-delimiter">## </span><span class="org-comment">The packages scales is needed for the pretty_breaks function.</span>
+
+ggplot(data = df,
+       aes(fill = Vals,
+           x = Day,
+           y = Year)) +
+    facet_wrap(~ Month, ncol = 1, strip.position = <span class="org-string">'left'</span>) +
+    scale_y_continuous(breaks = pretty_breaks()) + 
+    scale_fill_distiller(palette = <span class="org-string">'RdBu'</span>, direction = 1) + 
+    geom_raster() +
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank())
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Stacked graphs</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+load(<span class="org-string">'data/unemployUSA.RData'</span>)
+
+xyplot(unemployUSA,
+       superpose = <span class="org-type">TRUE</span>,
+       par.settings = custom.theme,
+       auto.key = list(space = <span class="org-string">'right'</span>))
+
+<span class="org-constant">library</span>(scales) <span class="org-comment-delimiter">## </span><span class="org-comment">scale_x_yearmon needs scales::pretty_breaks</span>
+autoplot(unemployUSA, facets = <span class="org-type">NULL</span>, geom = <span class="org-string">'area'</span>) +
+    geom_area(aes(fill = Series)) +
+    scale_x_yearmon()
+
+<span class="org-function-name">panel.flow</span> <span class="org-constant">&lt;-</span> <span class="org-keyword">function</span>(x, y, groups, origin, ...)
+{
+    dat <span class="org-constant">&lt;-</span> data.frame(x = x, y = y, groups = groups)
+    nVars <span class="org-constant">&lt;-</span> nlevels(groups)
+    groupLevels <span class="org-constant">&lt;-</span> levels(groups)
+    
+    <span class="org-comment-delimiter">## </span><span class="org-comment">From long to wide</span>
+    yWide <span class="org-constant">&lt;-</span> unstack(dat, y~groups)
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Where are the maxima of each variable located? We will use</span>
+    <span class="org-comment-delimiter">## </span><span class="org-comment">them to position labels.</span>
+    idxMaxes <span class="org-constant">&lt;-</span> apply(yWide, 2, which.max)
+    
+    <span class="org-comment-delimiter">##</span><span class="org-comment">Origin calculated following Havr.eHetzler.ea2002</span>
+    <span class="org-keyword">if</span> (origin==<span class="org-string">'themeRiver'</span>) origin =  -1/2*rowSums(yWide)
+    <span class="org-keyword">else</span> origin = 0 
+    yWide <span class="org-constant">&lt;-</span> cbind(origin = origin, yWide)
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Cumulative sums to define the polygon</span>
+    yCumSum <span class="org-constant">&lt;-</span> t(apply(yWide, 1, cumsum))
+    Y <span class="org-constant">&lt;-</span> as.data.frame(sapply(seq_len(nVars),
+                              <span class="org-keyword">function</span>(iCol)c(yCumSum[,iCol+1],
+                                              rev(yCumSum[,iCol]))))
+    names(Y) <span class="org-constant">&lt;-</span> levels(groups)
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Back to long format, since xyplot works that way</span>
+    y <span class="org-constant">&lt;-</span> stack(Y)$values
+    
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Similar but easier for x</span>
+    xWide <span class="org-constant">&lt;-</span> unstack(dat, x~groups)
+    x <span class="org-constant">&lt;-</span> rep(c(xWide[,1], rev(xWide[,1])), nVars)
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Groups repeated twice (upper and lower limits of the polygon)</span>
+    groups <span class="org-constant">&lt;-</span> rep(groups, each = 2)
+    
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Graphical parameters</span>
+    superpose.polygon <span class="org-constant">&lt;-</span> trellis.par.get(<span class="org-string">"superpose.polygon"</span>)
+    col = superpose.polygon$col
+    border = superpose.polygon$border 
+    lwd = superpose.polygon$lwd 
+    
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Draw polygons</span>
+    <span class="org-keyword">for</span> (i <span class="org-keyword">in</span> seq_len(nVars)){
+        xi <span class="org-constant">&lt;-</span> x[groups==groupLevels[i]]
+        yi <span class="org-constant">&lt;-</span> y[groups==groupLevels[i]]
+        panel.polygon(xi, yi, border = border,
+                      lwd = lwd, col = col[i])
+    }
+    
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Print labels</span>
+    <span class="org-keyword">for</span> (i <span class="org-keyword">in</span> seq_len(nVars)){
+        xi <span class="org-constant">&lt;-</span> x[groups==groupLevels[i]]
+        yi <span class="org-constant">&lt;-</span> y[groups==groupLevels[i]]
+        N <span class="org-constant">&lt;-</span> length(xi)/2
+        <span class="org-comment-delimiter">## </span><span class="org-comment">Height available for the label</span>
+        h <span class="org-constant">&lt;-</span> unit(yi[idxMaxes[i]], <span class="org-string">'native'</span>) -
+            unit(yi[idxMaxes[i] + 2*(N-idxMaxes[i]) +1], <span class="org-string">'native'</span>)
+        <span class="org-comment-delimiter">##</span><span class="org-comment">...converted to "char" units</span>
+        hChar <span class="org-constant">&lt;-</span> convertHeight(h, <span class="org-string">'char'</span>, <span class="org-type">TRUE</span>)
+        <span class="org-comment-delimiter">## </span><span class="org-comment">If there is enough space and we are not at the first or</span>
+        <span class="org-comment-delimiter">## </span><span class="org-comment">last variable, then the label is printed inside the polygon.</span>
+        <span class="org-keyword">if</span>((hChar &gt;= 1) &amp;&amp; !(i <span class="org-ess-XopX">%in%</span> c(1, nVars))){
+            grid.text(groupLevels[i],
+                      xi[idxMaxes[i]],
+                      (yi[idxMaxes[i]] +
+                       yi[idxMaxes[i] + 2*(N-idxMaxes[i]) +1])/2,
+                      gp = gpar(col = <span class="org-string">'white'</span>, alpha = 0.7, cex = 0.7),
+                      default.units = <span class="org-string">'native'</span>)
+        } <span class="org-keyword">else</span> {
+            <span class="org-comment-delimiter">## </span><span class="org-comment">Elsewhere, the label is printed outside</span>
+            
+            grid.text(groupLevels[i],
+                      xi[N],
+                      (yi[N] + yi[N+1])/2,
+                      gp = gpar(col = col[i], cex = 0.7),
+                      just = <span class="org-string">'left'</span>, default.units = <span class="org-string">'native'</span>)
+        }          
+    }
+}
+
+<span class="org-function-name">prepanel.flow</span> <span class="org-constant">&lt;-</span> <span class="org-keyword">function</span>(x, y, groups, origin,...)
+{
+    dat <span class="org-constant">&lt;-</span> data.frame(x = x, y = y, groups = groups)
+    nVars <span class="org-constant">&lt;-</span> nlevels(groups)
+    groupLevels <span class="org-constant">&lt;-</span> levels(groups)
+    yWide <span class="org-constant">&lt;-</span> unstack(dat, y~groups)
+    <span class="org-keyword">if</span> (origin==<span class="org-string">'themeRiver'</span>) origin =  -1/2*rowSums(yWide)
+    <span class="org-keyword">else</span> origin = 0
+    yWide <span class="org-constant">&lt;-</span> cbind(origin = origin, yWide)
+    yCumSum <span class="org-constant">&lt;-</span> t(apply(yWide, 1, cumsum))
+    
+    list(xlim = range(x),
+         ylim = c(min(yCumSum[,1]), max(yCumSum[,nVars+1])),
+         dx = diff(x),
+         dy = diff(c(yCumSum[,-1])))
+}
+
+<span class="org-constant">library</span>(colorspace)
+<span class="org-comment-delimiter">## </span><span class="org-comment">We will use a qualitative palette from colorspace</span>
+nCols <span class="org-constant">&lt;-</span> ncol(unemployUSA)
+pal <span class="org-constant">&lt;-</span> rainbow_hcl(nCols, c = 70, l = 75, start = 30, end = 300)
+myTheme <span class="org-constant">&lt;-</span> custom.theme(fill = pal, lwd = 0.2)
+
+sep2008 <span class="org-constant">&lt;-</span> as.numeric(as.yearmon(<span class="org-string">'2008-09'</span>))
+
+xyplot(unemployUSA, superpose = <span class="org-type">TRUE</span>, auto.key = <span class="org-type">FALSE</span>,
+       panel = panel.flow, prepanel = prepanel.flow,
+       origin = <span class="org-string">'themeRiver'</span>, scales = list(y = list(draw = <span class="org-type">FALSE</span>)),
+       par.settings = myTheme) +
+    layer(panel.abline(v = sep2008, col = <span class="org-string">'gray'</span>, lwd = 0.7))
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Panel and prepanel functions to implement the ThemeRiver with =xyplot=</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(dygraphs)
+
+dyTemp <span class="org-constant">&lt;-</span> dygraph(aranjuez[, c(<span class="org-string">"TempMin"</span>, <span class="org-string">"TempAvg"</span>, <span class="org-string">"TempMax"</span>)],
+                  main = <span class="org-string">"Temperature in Aranjuez"</span>,
+                  ylab = <span class="org-string">"&#186;C"</span>)
+
+dyTemp
+
+dyTemp <span class="org-ess-XopX">%&gt;%</span>
+    dyHighlight(highlightSeriesBackgroundAlpha = 0.2,
+                highlightSeriesOpts = list(strokeWidth = 2))
+
+dygraph(aranjuez[, c(<span class="org-string">"TempMin"</span>, <span class="org-string">"TempAvg"</span>, <span class="org-string">"TempMax"</span>)],
+        main = <span class="org-string">"Temperature in Aranjuez"</span>,
+        ylab = <span class="org-string">"&#186;C"</span>) <span class="org-ess-XopX">%&gt;%</span>
+    dySeries(c(<span class="org-string">"TempMin"</span>, <span class="org-string">"TempAvg"</span>, <span class="org-string">"TempMax"</span>),
+             label = <span class="org-string">"Temperature"</span>)
+
+<span class="org-constant">library</span>(highcharter)
+<span class="org-constant">library</span>(xts)
+
+aranjuezXTS <span class="org-constant">&lt;-</span> as.xts(aranjuez)
+
+highchart() <span class="org-ess-XopX">%&gt;%</span>
+    hc_add_series_xts(name = <span class="org-string">'TempMax'</span>,
+                      aranjuezXTS[, <span class="org-string">"TempMax"</span>]) <span class="org-ess-XopX">%&gt;%</span>
+    hc_add_series_xts(name = <span class="org-string">'TempMin'</span>,
+                      aranjuezXTS[, <span class="org-string">"TempMin"</span>]) <span class="org-ess-XopX">%&gt;%</span>
+    hc_add_series_xts(name = <span class="org-string">'TempAvg'</span>,
+                      aranjuezXTS[, <span class="org-string">"TempAvg"</span>])
+
+aranjuezDF <span class="org-constant">&lt;-</span> fortify(aranjuez[,
+                               c(<span class="org-string">"TempMax"</span>,
+                                 <span class="org-string">"TempAvg"</span>,
+                                 <span class="org-string">"TempMin"</span>)],
+                      melt = <span class="org-type">TRUE</span>)
+
+summary(aranjuezDF)
+
+<span class="org-constant">library</span>(plotly)
+
+plot_ly(aranjuezDF) <span class="org-ess-XopX">%&gt;%</span>
+    add_lines(x = ~ Index,
+              y = ~ Value,
+              color = ~ Series)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Interaction with gridSVG</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(gridSVG)
+<span class="org-comment-delimiter">## </span><span class="org-comment">grobs in the graphical output</span>
+pNavarra
+grobs <span class="org-constant">&lt;-</span> grid.ls(print = <span class="org-type">FALSE</span>)
+<span class="org-comment-delimiter">## </span><span class="org-comment">only interested in some of them</span>
+nms <span class="org-constant">&lt;-</span> grobs$name[grobs$type == <span class="org-string">"grobListing"</span>]
+idxNames <span class="org-constant">&lt;-</span> grep(<span class="org-string">'lines'</span>, nms)
+IDs <span class="org-constant">&lt;-</span> nms[idxNames]
+
+<span class="org-keyword">for</span> (id <span class="org-keyword">in</span> unique(IDs))
+{
+    <span class="org-comment-delimiter">## </span><span class="org-comment">extract information from the data</span>
+    <span class="org-comment-delimiter">## </span><span class="org-comment">according to the ID value</span>
+    i <span class="org-constant">&lt;-</span> strsplit(id, <span class="org-string">'\\.'</span>)
+    i <span class="org-constant">&lt;-</span> sapply(i, <span class="org-keyword">function</span>(x)as.numeric(x[5]))
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Information to be attached to each line: annual mean of daily</span>
+    <span class="org-comment-delimiter">## </span><span class="org-comment">radiation and abbreviated name of the station</span>
+    dat <span class="org-constant">&lt;-</span> round(mean(navarra[,i], na.rm = <span class="org-type">TRUE</span>), 2)
+    info <span class="org-constant">&lt;-</span> paste(names(navarra)[i], paste(dat, collapse = <span class="org-string">','</span>),
+                  sep = <span class="org-string">': '</span>)
+    <span class="org-comment-delimiter">## </span><span class="org-comment">attach SVG attributes</span>
+    grid.garnish(id,
+                 onmouseover = <span class="org-string">"highlight(evt)"</span>,
+                 onmouseout = <span class="org-string">"hide(evt)"</span>,
+                 title = info)
+}
+
+grid.script(filename=<span class="org-string">"highlight.js"</span>)
+
+grid.export(<span class="org-string">'figs/navarraRadiation.svg'</span>)
+
+unemployDF <span class="org-constant">&lt;-</span> fortify(unemployUSA, melt = <span class="org-type">TRUE</span>)
+
+head(unemployDF)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">remotes::install_github("hrbrmstr/streamgraph")</span>
+<span class="org-constant">library</span>(streamgraph)
+
+streamgraph(unemployDF,
+            key = <span class="org-string">"Series"</span>,
+            value = <span class="org-string">"Value"</span>,
+            date = <span class="org-string">"Index"</span>) <span class="org-ess-XopX">%&gt;%</span>
+    sg_axis_x(1, <span class="org-string">"year"</span>, <span class="org-string">"%Y"</span>) <span class="org-ess-XopX">%&gt;%</span>
+    sg_fill_brewer(<span class="org-string">"Set1"</span>)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5b0a876" class="outline-3">
+<h3 id="code_group"><a id="org5b0a876"></a>Time as a conditioning or grouping variable</h3>
+<div class="outline-text-3" id="text-code_group">
+<p>
+<a href="R/timeGroupFactor.R">Download</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-R"><span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Initial configuration</span>
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Clone or download the repository and set the working directory</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">with setwd to the folder where the repository is located.</span>
+
+
+<span class="org-constant">library</span>(lattice)
+<span class="org-constant">library</span>(ggplot2)
+<span class="org-constant">library</span>(latticeExtra)
+
+myTheme <span class="org-constant">&lt;-</span> custom.theme.2(pch = 19, cex = 0.7,
+                          region = rev(brewer.pal(9, <span class="org-string">'YlOrRd'</span>)),
+                          symbol = brewer.pal(n = 8, name = <span class="org-string">"Dark2"</span>))
+myTheme$strip.background$col = <span class="org-string">'transparent'</span>
+myTheme$strip.shingle$col = <span class="org-string">'transparent'</span>
+myTheme$strip.border$col = <span class="org-string">'transparent'</span>
+
+<span class="org-function-name">xscale.components.custom</span> <span class="org-constant">&lt;-</span> <span class="org-keyword">function</span>(...){
+    ans <span class="org-constant">&lt;-</span> xscale.components.default(...)
+    ans$top=<span class="org-type">FALSE</span>
+    ans}
+<span class="org-function-name">yscale.components.custom</span> <span class="org-constant">&lt;-</span> <span class="org-keyword">function</span>(...){
+    ans <span class="org-constant">&lt;-</span> yscale.components.default(...)
+    ans$right = <span class="org-type">FALSE</span>
+    ans}
+myArgs <span class="org-constant">&lt;-</span> list(as.table = <span class="org-type">TRUE</span>,
+               between = list(x = 0.5, y = 0.2),
+               xscale.components = xscale.components.custom,
+               yscale.components = yscale.components.custom)
+defaultArgs <span class="org-constant">&lt;-</span> lattice.options()$default.args
+
+lattice.options(default.theme = myTheme,
+                default.args = modifyList(defaultArgs, myArgs))
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Scatterplot matrix: time as a grouping variable </span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(zoo)
+
+load(<span class="org-string">'data/aranjuez.RData'</span>)
+aranjuezDF <span class="org-constant">&lt;-</span> as.data.frame(aranjuez)
+aranjuezDF$Month <span class="org-constant">&lt;-</span> format(index(aranjuez), <span class="org-string">'%m'</span>)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Red-Blue palette with black added (12 colors)</span>
+colors <span class="org-constant">&lt;-</span> c(brewer.pal(n=11, <span class="org-string">'RdBu'</span>), <span class="org-string">'#000000'</span>)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Rearrange according to months (darkest for summer)</span>
+colors <span class="org-constant">&lt;-</span> colors[c(6:1, 12:7)]
+
+splom(~ aranjuezDF, 
+      groups = aranjuezDF$Month,
+      auto.key = list(space = <span class="org-string">'right'</span>, 
+                    title = <span class="org-string">'Month'</span>, cex.title = 1),
+      pscale = 0, varname.cex = 0.7, xlab = <span class="org-string">''</span>,
+      par.settings = custom.theme(symbol = colors,
+                                pch = 19),
+      cex = 0.3, alpha = 0.1)
+
+trellis.focus(<span class="org-string">'panel'</span>, 1, 1)
+idx <span class="org-constant">&lt;-</span> panel.link.splom(pch=13, cex=0.6, col=<span class="org-string">'green'</span>)
+aranjuez[idx,]
+
+<span class="org-constant">library</span>(GGally)
+
+ggpairs(aranjuezDF,
+        columns = 1:10, <span class="org-comment-delimiter">## </span><span class="org-comment">Do not include "Month"</span>
+        upper = list(continuous = <span class="org-string">"points"</span>),
+        mapping = aes(colour = Month, alpha = 0.1))
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Hexagonal binning</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(hexbin)
+  
+splom(~as.data.frame(aranjuez),
+      panel = panel.hexbinplot,
+      colramp = BTC,
+      diag.panel = <span class="org-keyword">function</span>(x, ...){
+          yrng <span class="org-constant">&lt;-</span> current.panel.limits()$ylim
+          d <span class="org-constant">&lt;-</span> density(x, na.rm = <span class="org-type">TRUE</span>)
+          d$y <span class="org-constant">&lt;-</span> with(d, yrng[1] + 0.95 * diff(yrng) * y / max(y))
+          panel.lines(d)
+          diag.panel.splom(x, ...)
+      },
+      lower.panel = <span class="org-keyword">function</span>(x, y, ...){
+          panel.hexbinplot(x, y, ...)
+          panel.loess(x, y, ..., col = <span class="org-string">'red'</span>)
+      },
+      xlab = <span class="org-string">''</span>,
+      pscale = 0, varname.cex = 0.7)
+
+<span class="org-constant">library</span>(reshape2)
+
+aranjuezRshp <span class="org-constant">&lt;-</span> melt(aranjuezDF,
+                     measure.vars = c(<span class="org-string">'TempMax'</span>,
+                                      <span class="org-string">'TempAvg'</span>,
+                                      <span class="org-string">'TempMin'</span>),
+                     variable.name = <span class="org-string">'Statistic'</span>,
+                     value.name = <span class="org-string">'Temperature'</span>)
+
+summary(aranjuezRshp)
+
+hexbinplot(Radiation ~ Temperature | Statistic,
+           data = aranjuezRshp,
+           layout = c(1, 3),
+           colramp = BTC) +
+    layer(panel.loess(..., col = <span class="org-string">'red'</span>))
+
+ggplot(data = aranjuezRshp,
+       aes(Temperature, Radiation)) +
+    stat_binhex(ncol = 1) + 
+    stat_smooth(se = <span class="org-type">FALSE</span>, method = <span class="org-string">'loess'</span>, col = <span class="org-string">'red'</span>) +
+    facet_wrap(~ Statistic, ncol = 1) +
+    theme_bw()
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Scatterplot with time as a conditioning variable</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+ggplot(data = aranjuezRshp, aes(Radiation, Temperature)) +
+    facet_grid(Statistic ~ month) +
+    geom_point(col = <span class="org-string">'skyblue4'</span>, pch = 19, cex = 0.5, alpha = 0.3) +
+    geom_rug() +
+    stat_smooth(se = <span class="org-type">FALSE</span>, method = <span class="org-string">'loess'</span>, col = <span class="org-string">'indianred1'</span>, lwd = 1.2) +
+    theme_bw()
+
+useOuterStrips(xyplot(Temperature ~ Radiation | month * Statistic,
+                      data = aranjuezRshp,
+                      between = list(x = 0),
+                      col = <span class="org-string">'skyblue4'</span>, pch = 19,
+                      cex = 0.5, alpha = 0.3)) +
+    layer({
+        panel.rug(..., col.line = <span class="org-string">'indianred1'</span>, end = 0.05, alpha = 0.6)
+        panel.loess(..., col = <span class="org-string">'indianred1'</span>, lwd = 1.5, alpha = 1)
+    })
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc581ff1" class="outline-3">
+<h3 id="code_complementary"><a id="orgc581ff1"></a>Time as a complementary variable</h3>
+<div class="outline-text-3" id="text-code_complementary">
+<p>
+<a href="R/timeComplementary.R">Download</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-R"><span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Initial configuration</span>
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Clone or download the repository and set the working directory</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">with setwd to the folder where the repository is located.</span>
+  
+<span class="org-constant">library</span>(lattice)
+<span class="org-constant">library</span>(ggplot2)
+<span class="org-constant">library</span>(latticeExtra)
+
+myTheme <span class="org-constant">&lt;-</span> custom.theme.2(pch = 19, cex = 0.7,
+                          region = rev(brewer.pal(9, <span class="org-string">'YlOrRd'</span>)),
+                          symbol = brewer.pal(n = 8, name = <span class="org-string">"Dark2"</span>))
+myTheme$strip.background$col = <span class="org-string">'transparent'</span>
+myTheme$strip.shingle$col = <span class="org-string">'transparent'</span>
+myTheme$strip.border$col = <span class="org-string">'transparent'</span>
+    
+<span class="org-function-name">xscale.components.custom</span> <span class="org-constant">&lt;-</span> <span class="org-keyword">function</span>(...){
+    ans <span class="org-constant">&lt;-</span> xscale.components.default(...)
+    ans$top = <span class="org-type">FALSE</span>
+    ans}
+<span class="org-function-name">yscale.components.custom</span> <span class="org-constant">&lt;-</span> <span class="org-keyword">function</span>(...){
+    ans <span class="org-constant">&lt;-</span> yscale.components.default(...)
+    ans$right = <span class="org-type">FALSE</span>
+    ans}
+
+myArgs <span class="org-constant">&lt;-</span> list(as.table = <span class="org-type">TRUE</span>,
+               between = list(x = 0.5, y = 0.2),
+               xscale.components = xscale.components.custom,
+               yscale.components = yscale.components.custom)
+defaultArgs <span class="org-constant">&lt;-</span> lattice.options()$default.args
+
+lattice.options(default.theme = myTheme,
+                default.args = modifyList(defaultArgs, myArgs))
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Polylines</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(zoo)
+
+load(<span class="org-string">'data/CO2.RData'</span>)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">lattice version</span>
+xyplot(GNI.capita  ~ CO2.capita, data = CO2data,
+       xlab = <span class="org-string">"Carbon dioxide emissions (metric tons per capita)"</span>,
+       ylab = <span class="org-string">"GNI per capita, PPP (current international $)"</span>,
+       groups = Country.Name, type = <span class="org-string">'b'</span>)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">ggplot2 version</span>
+ggplot(data = CO2data, aes(x = CO2.capita, y = GNI.capita,
+                         color = Country.Name)) +
+    xlab(<span class="org-string">"Carbon dioxide emissions (metric tons per capita)"</span>) +
+    ylab(<span class="org-string">"GNI per capita, PPP (current international $)"</span>) +
+    geom_point() + geom_path() + theme_bw()
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Choosing colors</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(RColorBrewer)
+
+nCountries <span class="org-constant">&lt;-</span> nlevels(CO2data$Country.Name)
+pal <span class="org-constant">&lt;-</span> brewer.pal(n=5, <span class="org-string">'Set1'</span>)
+pal <span class="org-constant">&lt;-</span> rep(pal, length = nCountries)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Rank of average values of CO2 per capita</span>
+CO2mean <span class="org-constant">&lt;-</span> aggregate(CO2.capita ~ Country.Name,
+                     data = CO2data, FUN = mean)
+palOrdered <span class="org-constant">&lt;-</span> pal[rank(CO2mean$CO2.capita)]
+
+<span class="org-constant">library</span>(reshape2)
+
+CO2capita <span class="org-constant">&lt;-</span> CO2data[, c(<span class="org-string">'Country.Name'</span>,
+                         <span class="org-string">'Year'</span>,
+                         <span class="org-string">'CO2.capita'</span>)]
+CO2capita <span class="org-constant">&lt;-</span> dcast(CO2capita, Country.Name ~ Year)
+
+summary(CO2capita)
+
+hCO2 <span class="org-constant">&lt;-</span> hclust(dist(CO2capita[, -1]))
+
+oldpar <span class="org-constant">&lt;-</span> par(mar=c(0, 2, 0, 0) + .1)
+plot(hCO2, labels=CO2capita$Country.Name,
+     xlab=<span class="org-string">''</span>, ylab=<span class="org-string">''</span>, sub=<span class="org-string">''</span>, main=<span class="org-string">''</span>)
+par(oldpar)
+
+idx <span class="org-constant">&lt;-</span> match(levels(CO2data$Country.Name), 
+             CO2capita$Country.Name[hCO2$order])
+palOrdered <span class="org-constant">&lt;-</span> pal[idx]
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">lattice version</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">simpleTheme encapsulates the palette in a new theme for xyplot</span>
+myTheme <span class="org-constant">&lt;-</span> simpleTheme(pch=19, cex=0.6, col=palOrdered)
+
+pCO2.capita <span class="org-constant">&lt;-</span> xyplot(GNI.capita  ~ CO2.capita,
+                      data = CO2data,
+                      xlab = <span class="org-string">"Carbon dioxide emissions (metric tons per capita)"</span>,
+                      ylab = <span class="org-string">"GNI per capita, PPP (current international $)"</span>,
+                      groups = Country.Name,
+                      par.settings = myTheme,
+                      type=<span class="org-string">'b'</span>)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">ggplot2 version</span>
+gCO2.capita <span class="org-constant">&lt;-</span> ggplot(data = CO2data,
+                      aes(x = CO2.capita,
+                          y = GNI.capita,
+                          color = Country.Name)) +
+    geom_point() + geom_path() +
+    scale_color_manual(values=palOrdered, guide=<span class="org-type">FALSE</span>) +
+    xlab(<span class="org-string">'CO2 emissions (metric tons per capita)'</span>) +
+    ylab(<span class="org-string">'GNI per capita, PPP (current international $)'</span>) +
+    theme_bw()
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Labels to show time information</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+xyplot(GNI.capita  ~ CO2.capita,
+       data = CO2data
+       xlab = <span class="org-string">"Carbon dioxide emissions (metric tons per capita)"</span>,
+       ylab = <span class="org-string">"GNI per capita, PPP (current international $)"</span>,
+       groups = Country.Name,
+       par.settings = myTheme,
+       type=<span class="org-string">'b'</span>,
+       panel = <span class="org-keyword">function</span>(x, y, ..., subscripts, groups){
+           panel.text(x, y, ...,
+                      labels = CO2data$Year[subscripts],
+                      pos = 2, cex = 0.5, col = <span class="org-string">'gray'</span>)
+           panel.superpose(x, y, subscripts, groups,...)
+       })
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">lattice version</span>
+pCO2.capita <span class="org-constant">&lt;-</span> pCO2.capita +
+    glayer_(panel.text(...,
+                       labels = CO2data$Year[subscripts],
+                         pos = 2, cex = 0.5, col = <span class="org-string">'gray'</span>))
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">ggplot2 version</span>
+gCO2.capita <span class="org-constant">&lt;-</span> gCO2.capita + geom_text(aes(label = Year),
+                                       colour = <span class="org-string">'gray'</span>,
+                                       size = 2.5,
+                                       hjust = 0, vjust = 0)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Country names: positioning labels</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(maptools)  
+<span class="org-comment-delimiter">## </span><span class="org-comment">group.value provides the country name; group.number is the index</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">of each country to choose the color from the palette.</span>
+pCO2.capita +
+    glayer(panel.pointLabel(mean(x), mean(y),
+                            labels = group.value,
+                            col = palOrdered[group.number],
+                            cex = .8,
+                            fontface = 2,
+                            fontfamily = <span class="org-string">'Palatino'</span>))
+
+<span class="org-constant">library</span>(directlabels)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">lattice version</span>
+direct.label(pCO2.capita,
+             method = <span class="org-string">'extreme.grid'</span>)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">ggplot2 version</span>
+direct.label(gCO2.capita, method=<span class="org-string">'extreme.grid'</span>)
+
+  <span class="org-comment-delimiter">##################################################################</span>
+  <span class="org-comment-delimiter">## </span><span class="org-comment">A panel for each year</span>
+  <span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">lattice version</span>
+xyplot(GNI.capita  ~ CO2.capita | factor(Year),
+       data = CO2data,
+       xlab = <span class="org-string">"Carbon dioxide emissions (metric tons per capita)"</span>,
+       ylab = <span class="org-string">"GNI per capita, PPP (current international $)"</span>,
+       groups = Country.Name, type = <span class="org-string">'b'</span>,
+       auto.key = list(space = <span class="org-string">'right'</span>))
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">ggplot2 version</span>
+ggplot(data = CO2data,
+       aes(x = CO2.capita,
+           y = GNI.capita,
+           colour = Country.Name)) +
+    facet_wrap(~ Year) + geom_point(pch = 19) + 
+    xlab(<span class="org-string">'CO2 emissions (metric tons per capita)'</span>) +
+    ylab(<span class="org-string">'GNI per capita, PPP (current international $)'</span>) +
+    theme_bw()
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">lattice version</span>
+xyplot(GNI.capita  ~ CO2.capita | factor(Year),
+       data = CO2data,
+       xlab = <span class="org-string">"Carbon dioxide emissions (metric tons per capita)"</span>,
+       ylab = <span class="org-string">"GNI per capita, PPP (current international $)"</span>,
+       groups = Country.Name, type = <span class="org-string">'b'</span>,
+       par.settings = myTheme) + 
+    glayer(panel.pointLabel(x, y,
+                            labels = group.value,
+                            col = palOrdered[group.number],
+                            cex = 0.7))
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Using variable size to encode an additional variable</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(classInt)
+z <span class="org-constant">&lt;-</span> CO2data$CO2.PPP
+intervals <span class="org-constant">&lt;-</span> classIntervals(z, n = 4, style = <span class="org-string">'fisher'</span>)
+
+nInt <span class="org-constant">&lt;-</span> length(intervals$brks) - 1
+cex.key <span class="org-constant">&lt;-</span> seq(0.5, 1.8, length = nInt)
+
+idx <span class="org-constant">&lt;-</span> findCols(intervals)
+CO2data$cexPoints <span class="org-constant">&lt;-</span> cex.key[idx]
+
+ggplot(data = CO2data,
+       aes(x = CO2.capita,
+           y = GNI.capita,
+           colour = Country.Name)) +
+    facet_wrap(~ Year) +
+    geom_point(aes(size = cexPoints), pch = 19) +
+    xlab(<span class="org-string">'Carbon dioxide emissions (metric tons per capita)'</span>) +
+    ylab(<span class="org-string">'GNI per capita, PPP (current international $)'</span>) +
+    theme_bw()
+
+op <span class="org-constant">&lt;-</span> options(digits = 2)
+tab <span class="org-constant">&lt;-</span> print(intervals)
+options(op)
+  
+key <span class="org-constant">&lt;-</span> list(space = <span class="org-string">'right'</span>,
+            title = expression(CO[2]/GNI.PPP),
+            cex.title = 1,
+            <span class="org-comment-delimiter">## </span><span class="org-comment">Labels of the key are the intervals strings</span>
+            text = list(labels = names(tab), cex = 0.85),
+            <span class="org-comment-delimiter">## </span><span class="org-comment">Points sizes are defined with cex.key</span>
+            points = list(col = <span class="org-string">'black'</span>, pch = 19,
+                cex = cex.key, alpha = 0.7))
+
+  
+xyplot(GNI.capita ~ CO2.capita|factor(Year), data = CO2data,
+       xlab = <span class="org-string">"Carbon dioxide emissions (metric tons per capita)"</span>,
+       ylab = <span class="org-string">"GNI per capita, PPP (current international $)"</span>,
+       groups = Country.Name, key = key, alpha = 0.7,
+       panel  =  panel.superpose,
+       panel.groups  =  <span class="org-keyword">function</span>(x, y,
+           subscripts, group.number, group.value, ...){
+           panel.xyplot(x, y,
+                        col  =  palOrdered[group.number],
+                        cex  =  CO2data$cexPoints[subscripts])
+           panel.pointLabel(x, y, labels = group.value,
+                            col = palOrdered[group.number],
+                            cex = 0.7)
+       }
+       )
+
+<span class="org-constant">library</span>(plotly)
+p <span class="org-constant">&lt;-</span> plot_ly(CO2data,
+             x = ~CO2.capita,
+             y = ~GNI.capita)
+
+p <span class="org-constant">&lt;-</span> add_markers(p,
+                 size = ~CO2.PPP,
+                 color = ~Country.Name,
+                 text = ~Country.Name, hoverinfo = <span class="org-string">"text"</span>,
+                 ids = ~Country.Name,
+                 frame = ~Year,
+                 showlegend = <span class="org-type">FALSE</span>)
+
+p <span class="org-constant">&lt;-</span> animation_opts(p,
+                    frame = 1000,
+                    transition = 800,
+                    redraw = <span class="org-type">FALSE</span>)
+
+p <span class="org-constant">&lt;-</span> animation_slider(p,
+                      currentvalue = list(prefix = <span class="org-string">"Year "</span>))
+
+p
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">googleVis</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(googleVis)
+
+pgvis <span class="org-constant">&lt;-</span> gvisMotionChart(CO2data,
+                         xvar = <span class="org-string">'CO2.capita'</span>,
+                         yvar = <span class="org-string">'GNI.capita'</span>,
+                         sizevar = <span class="org-string">'CO2.PPP'</span>,
+                         idvar = <span class="org-string">'Country.Name'</span>,
+                         timevar = <span class="org-string">'Year'</span>)
+
+print(pgvis, <span class="org-string">'html'</span>, file=<span class="org-string">'figs/googleVis.html'</span>)
+
+<span class="org-constant">library</span>(gridSVG)
+
+xyplot(GNI.capita ~ CO2.capita,
+       data = CO2data,
+       xlab = <span class="org-string">"Carbon dioxide emissions (metric tons per capita)"</span>,
+       ylab = <span class="org-string">"GNI per capita, PPP (current international $)"</span>,
+       subset = Year==2000, groups = Country.Name,
+       <span class="org-comment-delimiter">## </span><span class="org-comment">The limits of the graphic are defined</span>
+       <span class="org-comment-delimiter">## </span><span class="org-comment">with the entire dataset</span>
+       xlim = extendrange(CO2data$CO2.capita),
+       ylim = extendrange(CO2data$GNI.capita),
+       panel = <span class="org-keyword">function</span>(x, y, ..., subscripts, groups) {
+           color <span class="org-constant">&lt;-</span> palOrdered[groups[subscripts]]
+           radius <span class="org-constant">&lt;-</span> CO2data$CO2.PPP[subscripts]
+           <span class="org-comment-delimiter">## </span><span class="org-comment">Size of labels</span>
+           cex <span class="org-constant">&lt;-</span> 1.1*sqrt(radius)
+           <span class="org-comment-delimiter">## </span><span class="org-comment">Bubbles</span>
+           grid.circle(x, y, default.units = <span class="org-string">"native"</span>,
+                       r = radius*unit(.25, <span class="org-string">"inch"</span>),
+                       name = trellis.grobname(<span class="org-string">"points"</span>, type = <span class="org-string">"panel"</span>),
+                       gp = gpar(col = color,
+                               <span class="org-comment-delimiter">## </span><span class="org-comment">Fill color ligther than border</span>
+                               fill = adjustcolor(color, alpha = .5),
+                               lwd = 2))
+           <span class="org-comment-delimiter">## </span><span class="org-comment">Country labels</span>
+           grid.text(label = groups[subscripts],
+                     x = unit(x, <span class="org-string">'native'</span>),
+                     <span class="org-comment-delimiter">## </span><span class="org-comment">Labels above each bubble</span>
+                     y = unit(y, <span class="org-string">'native'</span>) + 1.5 * radius *unit(.25, <span class="org-string">'inch'</span>),
+                     name = trellis.grobname(<span class="org-string">'labels'</span>, type = <span class="org-string">'panel'</span>),
+                     gp = gpar(col = color, cex = cex))
+       })
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Duration in seconds of the animation</span>
+duration <span class="org-constant">&lt;-</span> 20
+  
+nCountries <span class="org-constant">&lt;-</span> nlevels(CO2data$Country.Name)
+years <span class="org-constant">&lt;-</span> unique(CO2data$Year)
+nYears <span class="org-constant">&lt;-</span> length(years)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Intermediate positions of the bubbles</span>
+x_points <span class="org-constant">&lt;-</span> animUnit(unit(CO2data$CO2.capita, <span class="org-string">'native'</span>),
+                     id = rep(seq_len(nCountries), each = nYears))
+y_points <span class="org-constant">&lt;-</span> animUnit(unit(CO2data$GNI.capita, <span class="org-string">'native'</span>),
+                     id = rep(seq_len(nCountries), each = nYears))
+<span class="org-comment-delimiter">## </span><span class="org-comment">Intermediate positions of the labels</span>
+y_labels <span class="org-constant">&lt;-</span> animUnit(unit(CO2data$GNI.capita, <span class="org-string">'native'</span>) +
+                     1.5 * CO2data$CO2.PPP * unit(.25, <span class="org-string">'inch'</span>),
+                     id = rep(seq_len(nCountries), each = nYears))
+<span class="org-comment-delimiter">## </span><span class="org-comment">Intermediate sizes of the bubbles</span>
+size <span class="org-constant">&lt;-</span> animUnit(CO2data$CO2.PPP * unit(.25, <span class="org-string">'inch'</span>),
+                 id = rep(seq_len(nCountries), each = nYears))
+
+grid.animate(trellis.grobname(<span class="org-string">"points"</span>, type = <span class="org-string">"panel"</span>, row = 1, col = 1),
+             duration = duration,
+             x = x_points,
+             y = y_points,
+             r = size,
+             rep = <span class="org-type">TRUE</span>)
+
+grid.animate(trellis.grobname(<span class="org-string">"labels"</span>, type = <span class="org-string">"panel"</span>, row = 1, col = 1),
+             duration = duration,
+             x = x_points,
+             y = y_labels,
+             rep = <span class="org-type">TRUE</span>)
+
+countries <span class="org-constant">&lt;-</span> unique(CO2data$Country.Name)
+URL <span class="org-constant">&lt;-</span> paste(<span class="org-string">'http://en.wikipedia.org/wiki/'</span>, countries, sep = <span class="org-string">''</span>)
+grid.hyperlink(trellis.grobname(<span class="org-string">'points'</span>, type = <span class="org-string">'panel'</span>, row = 1, col = 1),
+               URL, group = <span class="org-type">FALSE</span>)
+
+visibility <span class="org-constant">&lt;-</span> matrix(<span class="org-string">"hidden"</span>, nrow = nYears, ncol = nYears)
+diag(visibility) <span class="org-constant">&lt;-</span> <span class="org-string">"visible"</span>
+yearText <span class="org-constant">&lt;-</span> animateGrob(garnishGrob(textGrob(years, .9, .15,
+                                             name = <span class="org-string">"year"</span>,
+                                             gp = gpar(cex = 2, col = <span class="org-string">"grey"</span>)),
+                                    visibility = <span class="org-string">"hidden"</span>),
+                        duration = 20,
+                        visibility = visibility,
+                        rep = <span class="org-type">TRUE</span>)
+grid.draw(yearText)
+
+grid.export(<span class="org-string">"figs/bubbles.svg"</span>)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgac99df5" class="outline-3">
+<h3 id="code_data"><a id="orgac99df5"></a>Data</h3>
+<div class="outline-text-3" id="text-code_data">
+<p>
+<a href="R/dataTime.R">Download</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-R"><span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">SIAR</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Daily data of different meteorological variables </span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(zoo)
+  
+aranjuez <span class="org-constant">&lt;-</span> read.zoo(<span class="org-string">"data/aranjuez.gz"</span>,
+                     index.column = 3, format = <span class="org-string">"%d/%m/%Y"</span>,
+                     fileEncoding = <span class="org-string">'UTF-16LE'</span>,
+                     header = <span class="org-type">TRUE</span>, fill = <span class="org-type">TRUE</span>,
+                     sep = <span class="org-string">';'</span>, dec = <span class="org-string">","</span>, as.is = <span class="org-type">TRUE</span>)
+aranjuez <span class="org-constant">&lt;-</span> aranjuez[, -c(1:4)]
+  
+names(aranjuez) <span class="org-constant">&lt;-</span> c(<span class="org-string">'TempAvg'</span>, <span class="org-string">'TempMax'</span>, <span class="org-string">'TempMin'</span>,
+                     <span class="org-string">'HumidAvg'</span>, <span class="org-string">'HumidMax'</span>,
+                     <span class="org-string">'WindAvg'</span>, <span class="org-string">'WindMax'</span>,
+                     <span class="org-string">'Radiation'</span>, <span class="org-string">'Rain'</span>, <span class="org-string">'ET'</span>)
+  
+  
+summary(aranjuez)
+
+aranjuezClean <span class="org-constant">&lt;-</span> within(as.data.frame(aranjuez),{
+    TempMin[TempMin&gt;40] <span class="org-constant">&lt;-</span> <span class="org-type">NA</span>
+    HumidMax[HumidMax&gt;100] <span class="org-constant">&lt;-</span> <span class="org-type">NA</span>
+    WindAvg[WindAvg&gt;10] <span class="org-constant">&lt;-</span> <span class="org-type">NA</span>
+    WindMax[WindMax&gt;10] <span class="org-constant">&lt;-</span> <span class="org-type">NA</span>
+})
+
+aranjuez <span class="org-constant">&lt;-</span> zoo(aranjuezClean, index(aranjuez))
+
+summary(aranjuez)
+
+save(aranjuez, file=<span class="org-string">'data/aranjuez.RData'</span>)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Solar radiation measurements from different locations</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(zoo)
+
+load(<span class="org-string">'data/navarra.RData'</span>)
+
+summary(navarra)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Unemployment in the United States</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+unemployUSA <span class="org-constant">&lt;-</span> read.csv(<span class="org-string">'data/unemployUSA.csv'</span>)
+nms <span class="org-constant">&lt;-</span> unemployUSA$Series.ID
+<span class="org-comment-delimiter">##</span><span class="org-comment">columns of annual summaries</span>
+annualCols <span class="org-constant">&lt;-</span> 14 + 13*(0:12)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Transpose. Remove annual summaries</span>
+unemployUSA <span class="org-constant">&lt;-</span> as.data.frame(t(unemployUSA[,-c(1, annualCols)]))
+<span class="org-comment-delimiter">## </span><span class="org-comment">First 7 characters can be suppressed</span>
+names(unemployUSA) <span class="org-constant">&lt;-</span> substring(nms, 7)
+
+summary(unemployUSA)
+
+<span class="org-constant">library</span>(zoo)
+  
+Sys.setlocale(<span class="org-string">"LC_TIME"</span>, <span class="org-string">'C'</span>)
+idx <span class="org-constant">&lt;-</span> as.yearmon(row.names(unemployUSA), format=<span class="org-string">'%b.%Y'</span>)
+unemployUSA <span class="org-constant">&lt;-</span> zoo(unemployUSA, idx)
+
+isNA <span class="org-constant">&lt;-</span> apply(is.na(unemployUSA), 1, any)
+unemployUSA <span class="org-constant">&lt;-</span> unemployUSA[!isNA,]
+
+summary(unemployUSA)
+
+save(unemployUSA, file=<span class="org-string">'data/unemployUSA.RData'</span>)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Gross National Income and $CO_2$ emissions</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(WDI)
+    
+CO2data <span class="org-constant">&lt;-</span> WDI(indicator=c(<span class="org-string">'EN.ATM.CO2E.PC'</span>, <span class="org-string">'EN.ATM.CO2E.PP.GD'</span>,
+                           <span class="org-string">'NY.GNP.MKTP.PP.CD'</span>, <span class="org-string">'NY.GNP.PCAP.PP.CD'</span>),
+               start=2000, end=2011,
+               country=c(<span class="org-string">'BR'</span>, <span class="org-string">'CN'</span>, <span class="org-string">'DE'</span>, <span class="org-string">'ES'</span>,
+                         <span class="org-string">'FI'</span>, <span class="org-string">'FR'</span>, <span class="org-string">'GR'</span>, <span class="org-string">'IN'</span>, <span class="org-string">'NO'</span>, <span class="org-string">'US'</span>))
+
+names(CO2data) <span class="org-constant">&lt;-</span> c(<span class="org-string">'iso2c'</span>, <span class="org-string">'Country.Name'</span>, <span class="org-string">'Year'</span>,
+                    <span class="org-string">'CO2.capita'</span>, <span class="org-string">'CO2.PPP'</span>,
+                    <span class="org-string">'GNI.PPP'</span>, <span class="org-string">'GNI.capita'</span>)
+
+summary(CO2data)
+
+isNA <span class="org-constant">&lt;-</span> apply(is.na(CO2data), 1, any)
+CO2data <span class="org-constant">&lt;-</span> CO2data[!isNA, ]
+
+CO2data$Country.Name <span class="org-constant">&lt;-</span> factor(CO2data$Country.Name)
+
+summary(CO2data)
+
+save(CO2data, file=<span class="org-string">'data/CO2.RData'</span>)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p><a href="http://oscarperpinan.github.io/spacetime-vis">HOME</a> <p>Maintained by <a href="http://oscarperpinan.github.io/">Oscar Perpiñán</a>.</p>
+</div>
+</body>
+</html>

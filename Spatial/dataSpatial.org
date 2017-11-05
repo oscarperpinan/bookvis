@@ -1,4 +1,4 @@
-#+PROPERTY:  header-args :session *R* :tangle /home/oscar/R/spacetimeVis/dataSpatial.R :eval no-export
+#+PROPERTY:  header-args :session *R* :tangle ../docs/R/dataSpatial.R :eval no-export
 #+OPTIONS: ^:nil
 
 #+begin_src R :exports none :tangle no

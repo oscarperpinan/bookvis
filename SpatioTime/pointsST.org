@@ -1,4 +1,4 @@
-#+PROPERTY: header-args :tangle /home/oscar/github/spacetime-vis/pointsST.R :session *R* :eval no-export
+#+PROPERTY: header-args :tangle ../docs/R/pointsST.R :session *R* :eval no-export
 #+OPTIONS: ^:nil
 #+BIND: org-latex-image-default-height "0.45\\textheight"
 

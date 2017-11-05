@@ -1,4 +1,4 @@
-#+PROPERTY: header-args :session *R* :tangle /home/oscar/github/spacetime-vis/dataTime.R :eval no-export
+#+PROPERTY: header-args :session *R* :tangle ../docs/R/dataTime.R :eval no-export
 
 #+begin_src R :exports none :tangle no
 setwd('~/github/bookvis/')

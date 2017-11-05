@@ -1,11 +1,78 @@
-#+TITLE: Hello World!
-#+AUTHOR: Oscar Perpiñán Lamigueiro
+#+AUTHOR:    Oscar Perpiñán Lamigueiro
+#+EMAIL:     oscar.perpinan@gmail.com
+#+TITLE:     Displaying time series, spatial and space-time data with R
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t TeX:t LaTeX:nil skip:nil d:t tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_UP:
+#+LINK_HOME:
 
-Hello World!
+#+OPTIONS: html-style:nil
 
 
-[[file:../figs/plotly_aranjuez.png]]
+#+HTML_HEAD:    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+#+HTML_HEAD:    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/readable/bootstrap.min.css">
+#+HTML_HEAD:    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+#+HTML_HEAD: <link rel="icon" type="image/ico" href="favicon.ico">
+#+BIND: org-html-postamble nil
 
-[[file:figs/plotly.png]]
+* 
+  :PROPERTIES:
+  :HTML_CONTAINER_CLASS: container jumbotron
+  :END:
 
-#+INCLUDE: "R/dataTime.R" src R
+This is the accompanying website of the book published with
+[[https://www.crcpress.com/Displaying-Time-Series-Spatial-and-Space-Time-Data-with-R/Lamigueiro/9781466565203][Chapman&Hall/CRC]], a project created and maintained by [[http://oscarperpinan.github.io/][Oscar Perpiñán
+Lamigueiro]]. 
+
+
+*** 
+    :PROPERTIES:
+    :HTML_CONTAINER_CLASS: col-md-3
+    :END:
+
+[[http://goo.gl/6iN5KR][http://images.tandf.co.uk/common/jackets/weblarge/978146656/9781466565203.jpg]]
+
+*** 
+    :PROPERTIES:
+    :HTML_CONTAINER_CLASS: col-md-9
+    :END:
+Focusing on the exploration of data with visual methods, *Displaying
+Time Series, Spatial, and Space-Time Data with R* presents methods and
+R code for producing high-quality graphics of time series, spatial,
+and space-time data. Practical examples using real-world datasets help
+you understand how to apply the methods and code.  The book
+illustrates how to display a dataset starting with an easy and direct
+approach and progressively adding improvements that involve more
+complexity. Each of the book’s three parts is devoted to different
+types of data. In each part, the chapters are grouped according to the
+various visualization methods or data characteristics.
+  
+Along with the main graphics from the text, this website offers access
+to the datasets used in the examples as well as the full R code. This
+combination of freely available code and data enables you to practice
+with the methods and modify the code to suit your own needs.
+
+* Time Series
+    :PROPERTIES:
+    :HTML_CONTAINER_CLASS: col-md-4
+    :END:
+
+[[file:timeseries.org][file:images/aranjuezXblocks_small.png]] 
+
+* Spatial Data 
+    :PROPERTIES:
+    :HTML_CONTAINER_CLASS: col-md-4
+    :END:
+
+[[file:spatial.org][file:images/popLandClass_small.png]]
+
+* Space-time Data
+    :PROPERTIES:
+    :HTML_CONTAINER_CLASS: col-md-4
+    :END:
+
+[[file:spacetime.org][file:images/cft_small.png]]
+
+
+

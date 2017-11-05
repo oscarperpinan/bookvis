@@ -1,0 +1,33 @@
+.figure a{
+    border: 2px solid #D0D0D0;/* #08298A; */
+    border-radius:5%;
+    /* position: absolute; */
+    width: 400px;
+    display: table-cell;
+    margin:auto;
+    overflow: hidden;
+    vertical-align: middle;
+    /* Mouse out*/
+    /* transform:scale(1); */
+    /* -webkit-transform:scale(1); */
+    /* -moz-transform:scale(1); */
+    /* transition: transform 0.8s; */
+    /* -webkit-transition: -webkit-transform 0.8s; */
+    /* -moz-transition: -moz-transform 0.8s; */
+}
+
+.figure a:hover {
+    border:3px solid #000019;
+    /* transform:scale(1.05); */
+    /* -webkit-transform:scale(1.05); */
+    /* -moz-transform:scale(1.05); */
+    /* z-index:1; */
+    /* transition: transform 0.8s; */
+    /* -webkit-transition: -webkit-transform 0.8s; */
+    /* -moz-transition: -moz-transform 0.8s; */
+}
+
+iframe {
+    display:block;
+    margin:auto;
+}
