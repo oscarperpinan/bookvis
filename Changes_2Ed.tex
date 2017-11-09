@@ -1,0 +1,95 @@
+% Created 2017-11-09 jue 07:22
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{mathpazo}
+\usepackage[usenames,svgnames,dvipsnames]{xcolor}
+\hypersetup{colorlinks=true, linkcolor=Blue, urlcolor=Blue}
+\author{Oscar Perpiñán Lamigueiro}
+\date{November 2017}
+\title{Outline of Changes\\\medskip
+\large Second Edition of ``Displaying Time Series, Spatial, and Space-Time Data with R''}
+\hypersetup{
+ pdfauthor={Oscar Perpiñán Lamigueiro},
+ pdftitle={Outline of Changes},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 25.2.2 (Org mode 9.1.2)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+
+
+\section*{Time Series}
+\label{sec:orgbb04cc8}
+
+\begin{itemize}
+\item Code have been revised, cleaned and improved. Bugs have been fixed.
+
+\item After data creation or transformation, a text frame with the output of \texttt{summary()} has been included.
+
+\item Code using \texttt{base::reshape} has been replaced by \texttt{reshape2::melt} and \texttt{reshape2::dcast}.
+\end{itemize}
+
+\subsection*{Time on the Horizontal Axis}
+\label{sec:orgc386f10}
+
+\begin{itemize}
+\item Alternative code based on \texttt{ggplot2} for the Figure 3.9 (\emph{Level plot of differences between a daily temperature time \ldots{}}).
+
+\item New ``Interactive Graphics'' section (Section 3.4):
+\begin{itemize}
+\item Some figures have an interactive alternative with code based on the packages \texttt{dygraphs}, \texttt{highcharter}, \texttt{plotly}, and \texttt{streamgraph}.
+\item The \texttt{gridSVG} section has been revised and moved here (Section 3.4.4).
+\item This section includes snapshots of the interactive graphics that will be available in the updated webpage.
+\end{itemize}
+\end{itemize}
+
+\subsection*{Time as a Conditioning or Grouping Variable}
+\label{sec:orgf3b4bac}
+
+\begin{itemize}
+\item Alternative code based on \texttt{ggplot2} (using package \texttt{GGally}) for the Figure 4.1 (\emph{Scatter plot matrix of the collection\ldots{}}).
+\end{itemize}
+
+\subsection*{Time as a Complementary Variable}
+\label{sec:org4420047}
+
+\begin{itemize}
+\item New ``Interactive Graphics: animation'' section (Section 5.6):
+\begin{itemize}
+\item A new section based on the package \texttt{plotly} has been created (section 5.6.1).
+\item Original sections using \texttt{googleVis} and \texttt{gridSVG} have been revised and moved here.
+\item This section includes snapshots of the interactive graphics that will be available in the updated webpage.
+\end{itemize}
+\end{itemize}
+
+\subsection*{About the Data}
+\label{sec:orgf0f01e5}
+\begin{itemize}
+\item Data URLs have been checked and updated where needed.
+\end{itemize}
+
+\section*{Spatial Data}
+\label{sec:org9a5e11b}
+
+To Do.
+\section*{Space-Time Data}
+\label{sec:org8905af4}
+To Do.
+\end{document}
