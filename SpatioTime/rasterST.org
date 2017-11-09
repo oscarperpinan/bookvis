@@ -4,18 +4,17 @@
 
 
 #+begin_src R :exports none :tangle no
-  setwd('~/Dropbox/chapman/book/')
-
+setwd('~/github/bookvis')
 #+end_src
 
 #+begin_src R :exports none  
-  ##################################################################
-  ## Initial configuration
-  ##################################################################
-  ## Clone or download the repository and set the working directory
-  ## with setwd to the folder where the repository is located.
+##################################################################
+## Initial configuration
+##################################################################
+## Clone or download the repository and set the working directory
+## with setwd to the folder where the repository is located.
 
-  Sys.setlocale("LC_TIME", 'C')
+Sys.setlocale("LC_TIME", 'C')
 #+end_src
 
 * Introduction
@@ -41,23 +40,21 @@ the region of Galicia (north of Spain) during 2011. These data are
 arranged in a =RasterBrick= with 365 layers using =brick= and time
 indexed with =setZ=.
 
-#+BEGIN_LaTeX
-\index{Packages!raster@\texttt{raster}}
-\index{Packages!zoo@\texttt{zoo}}
-\index{Packages!rasterVis@\texttt{rasterVis}}
-\index{setZ@\texttt{setZ}}
-#+END_LaTeX
+#+INDEX: Packages!raster@\texttt{raster}
+#+INDEX: Packages!zoo@\texttt{zoo}
+#+INDEX: Packages!rasterVis@\texttt{rasterVis}
+#+INDEX: setZ@\texttt{setZ}
 
 #+begin_src R 
-  library(raster)
-  library(zoo)
-  library(rasterVis)
-  
-  SISdm <- brick('data/SISgal')
-  
-  timeIndex <- seq(as.Date('2011-01-01'), by='day', length=365)
-  SISdm <- setZ(SISdm, timeIndex)
-  names(SISdm) <- format(timeIndex, '%a_%Y%m%d')
+library(raster)
+library(zoo)
+library(rasterVis)
+
+SISdm <- brick('data/SISgal')
+
+timeIndex <- seq(as.Date('2011-01-01'), by = 'day', length = 365)
+SISdm <- setZ(SISdm, timeIndex)
+names(SISdm) <- format(timeIndex, '%a_%Y%m%d')
 #+end_src
 
 * Level Plots
@@ -73,12 +70,10 @@ approach is that only a limited number of panels can be correctly
 displayed on one page. In this example, we print the first 12
 days of the sequence (Figure [[fig:SISdm]]).
 
-#+BEGIN_LaTeX
-\index{levelplot@\texttt{levelplot}}
-#+END_LaTeX
+#+INDEX: levelplot@\texttt{levelplot}
 
 #+begin_src R :results output graphics :exports both :file figs/SISdm.pdf
-  levelplot(SISdm, layers=1:12, panel=panel.levelplot.raster)
+levelplot(SISdm, layers=1:12, panel=panel.levelplot.raster)
 #+end_src
 
 #+CAPTION: Level plot of daily averages of solar radiation.
@@ -94,16 +89,14 @@ can be completely displayed on one page (Figure [[fig:SISmm]]),
 although part of the information of the original data is lost in
 the aggregation procedure.
 
-#+BEGIN_LaTeX
-\index{zApply@\texttt{zApply}}
-#+END_LaTeX
+#+INDEX: zApply@\texttt{zApply}
 
 #+begin_src R 
-  SISmm <- zApply(SISdm, by=as.yearmon, fun='mean')
+SISmm <- zApply(SISdm, by=as.yearmon, fun='mean')
 #+end_src
 
 #+begin_src R :results output graphics :exports both :file figs/SISmm.pdf
-  levelplot(SISmm, panel=panel.levelplot.raster)
+levelplot(SISmm, panel=panel.levelplot.raster)
 #+end_src
 
 #+CAPTION: Level plot of monthly averages of solar radiation.
@@ -114,9 +107,9 @@ the aggregation procedure.
 * Graphical Exploratory Data Analysis
 
 #+begin_src R :exports none
-  ##################################################################
-  ## Exploratory graphics
-  ##################################################################
+##################################################################
+## Exploratory graphics
+##################################################################
 #+end_src
 There are other graphical tools that complement the previous maps. The
 scatterplot and the matrix of scatterplots, the histogram and kernel
@@ -128,12 +121,10 @@ the violin plot (a combination of a boxplot and a kernel density plot)
 (Figure [[fig:SISdm_boxplot]]), and the matrix of scatterplots
 (section \ref{SEC:groupVariable}, Figure [[fig:SISmm_splom]]).
 
-#+BEGIN_LaTeX
-\index{histogram@\texttt{histogram}}
-#+END_LaTeX
+#+INDEX: histogram@\texttt{histogram}
 
 #+begin_src R :results output graphics :exports both :file figs/SISdm_histogram.pdf
-  histogram(SISdm, FUN=as.yearmon)
+histogram(SISdm, FUN=as.yearmon)
 #+end_src
 
 #+CAPTION: Histogram of monthly distribution of solar radiation.
@@ -142,11 +133,10 @@ the violin plot (a combination of a boxplot and a kernel density plot)
 [[file:figs/SISdm_histogram.pdf]]
 
 
-#+BEGIN_LaTeX
-\index{bwplot@\texttt{bwplot}}
-#+END_LaTeX
+#+INDEX: bwplot@\texttt{bwplot}
+
 #+begin_src R :results output graphics :exports both :file figs/SISdm_boxplot.pdf
-  bwplot(SISdm, FUN=as.yearmon)
+bwplot(SISdm, FUN=as.yearmon)
 #+end_src
 
 #+CAPTION: Violin plot of monthly distribution of solar radiation.
@@ -154,12 +144,10 @@ the violin plot (a combination of a boxplot and a kernel density plot)
 #+RESULTS:
 [[file:figs/SISdm_boxplot.pdf]]
 
-#+BEGIN_LaTeX
-\index{splom@\texttt{splom}}
-#+END_LaTeX
+#+INDEX: splom@\texttt{splom}
 
 #+begin_src R :results output graphics :exports both :file figs/SISmm_splom.png :width 4000 :height 4000 :res 600
-  splom(SISmm, xlab='', plot.loess=TRUE)
+splom(SISmm, xlab='', plot.loess=TRUE)
 #+end_src
 
 #+CAPTION: Scatterplot matrix of monthly averages together with their kernel density estimations in the diagonal frames.
@@ -200,12 +188,10 @@ displays with colors the averaged value of the raster for each
 latitude zone (using the default value of the argument =dirXY=) with
 time on the vertical axis.
 
-#+BEGIN_LaTeX
-\index{hovmoller@\texttt{hovmoller}}
-#+END_LaTeX
+#+INDEX: hovmoller@\texttt{hovmoller}
 
 #+begin_src R :results output graphics :exports both :file figs/SISdm_hovmoller_lat.pdf
-  hovmoller(SISdm, par.settings=BTCTheme())
+hovmoller(SISdm, par.settings=BTCTheme())
 #+end_src
 
 #+CAPTION: Hovmöller graphic displaying the time evolution of the average solar radiation for each latitude zone.
@@ -220,12 +206,10 @@ the time series. This approach is followed by the =xyplot= (Figure
 methods, which reproduce the procedures described in Chapter
 \ref{cha:timeHorizontalAxis} to display multivariate time series.
 
-#+BEGIN_LaTeX
-\index{xyplot@\texttt{xyplot}}
-#+END_LaTeX
+#+INDEX: xyplot@\texttt{xyplot}
 
 #+begin_src R :results output graphics :exports both :file figs/SISmm_xyplot.png :width 2000 :height 2000 :res 300
-  xyplot(SISdm, digits=1, col='black', lwd=0.2, alpha=0.6)
+xyplot(SISdm, digits=1, col='black', lwd=0.2, alpha=0.6)
 #+end_src
 
 #+CAPTION: Time graph of the average solar radiation for each latitude zone. Each line represents a latitude band.
@@ -233,14 +217,12 @@ methods, which reproduce the procedures described in Chapter
 #+RESULTS:
 [[file:figs/SISmm_xyplot.png]]
 
-#+BEGIN_LaTeX
-\index{horizonplot@\texttt{horizonplot}}
-#+END_LaTeX
+#+INDEX: horizonplot@\texttt{horizonplot}
 
 #+begin_src R :results output graphics :exports both :file figs/SISdm_horizonplot.pdf
-  horizonplot(SISdm, digits=1,
-              col.regions=rev(brewer.pal(n=6, 'PuOr')),
-              xlab='', ylab='Latitude')
+horizonplot(SISdm, digits = 1,
+            col.regions = rev(brewer.pal(n = 6, 'PuOr')),
+            xlab = '', ylab = 'Latitude')
 #+end_src
 
 #+CAPTION: Horizon graph of the average solar radiation for each latitude zone.
@@ -302,16 +284,16 @@ space-time raster has a time horizon of 96 hours and a spatial
 resolution of 12 kilometers.
 
 #+begin_src R
-  cft <- brick('data/cft_20130417_0000.nc')
-  ## use memory instead of file
-  cft[] <- getValues(cft)
-  ## set projection
-  projLCC2d <- "+proj=lcc +lon_0=-14.1 +lat_0=34.823 +lat_1=43 +lat_2=43 +x_0=536402.3 +y_0=-18558.61 +units=km +ellps=WGS84"
-  projection(cft) <- projLCC2d
-  #set time index
-  timeIndex <- seq(as.POSIXct('2013-04-17 01:00:00', tz='UTC'), length=96, by='hour')
-  cft <- setZ(cft, timeIndex)
-  names(cft) <- format(timeIndex, 'D%d_H%H')
+cft <- brick('data/cft_20130417_0000.nc')
+## use memory instead of file
+cft[] <- getValues(cft)
+## set projection
+projLCC2d <- "+proj=lcc +lon_0=-14.1 +lat_0=34.823 +lat_1=43 +lat_2=43 +x_0=536402.3 +y_0=-18558.61 +units=km +ellps=WGS84"
+projection(cft) <- projLCC2d
+##set time index
+timeIndex <- seq(as.POSIXct('2013-04-17 01:00:00', tz = 'UTC'), length = 96, by = 'hour')
+cft <- setZ(cft, timeIndex)
+names(cft) <- format(timeIndex, 'D%d_H%H')
 #+end_src
 
 
@@ -325,30 +307,28 @@ Let's provide the spatial context with the countries
 boundaries, extracted from the =worldHires= database of the =maps=
 and =mapdata= packages.
 
-#+BEGIN_LaTeX
-\index{Packages!maptools@\texttt{maptools}}
-\index{Packages!mapdata@\texttt{mapdata}}
-\index{Packages!maps@\texttt{maps}}
-\index{Packages!rgdal@\texttt{rgdal}}
-\index{map2SpatialLines@\texttt{map2SpatialLines}}
-\index{spTransform@\texttt{spTransform}}
-#+END_LaTeX
+#+INDEX: Packages!maptools@\texttt{maptools}
+#+INDEX: Packages!mapdata@\texttt{mapdata}
+#+INDEX: Packages!maps@\texttt{maps}
+#+INDEX: Packages!rgdal@\texttt{rgdal}
+#+INDEX: map2SpatialLines@\texttt{map2SpatialLines}
+#+INDEX: spTransform@\texttt{spTransform}
 
 #+begin_src R 
-  library(maptools)
-  library(rgdal)
-  library(maps)
-  library(mapdata)
-  
-  
-  projLL <- CRS('+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0')
-  cftLL <- projectExtent(cft, projLL)
-  cftExt <- as.vector(bbox(cftLL))
-  boundaries <- map('worldHires',
-                    xlim=cftExt[c(1,3)], ylim=cftExt[c(2,4)],
-                    plot=FALSE)
-  boundaries <- map2SpatialLines(boundaries, proj4string=projLL)
-  boundaries <- spTransform(boundaries, CRS(projLCC2d))
+library(maptools)
+library(rgdal)
+library(maps)
+library(mapdata)
+
+
+projLL <- CRS('+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0')
+cftLL <- projectExtent(cft, projLL)
+cftExt <- as.vector(bbox(cftLL))
+boundaries <- map('worldHires',
+                  xlim = cftExt[c(1,3)], ylim = cftExt[c(2,4)],
+                  plot = FALSE)
+boundaries <- map2SpatialLines(boundaries, proj4string = projLL)
+boundaries <- spTransform(boundaries, CRS(projLCC2d))
 #+end_src
 
 #+RESULTS:
@@ -365,24 +345,21 @@ function. This function provides the argument =layout= to control the
 arrangement of a multipanel display. If it is set to =c(1,1)=, a
 different page is created for each layer.
 
-#+BEGIN_LaTeX
-\index{brewer.pal@\texttt{brewer.pal}}
-#+END_LaTeX
+#+INDEX: brewer.pal@\texttt{brewer.pal}
+
 #+begin_src R 
-  cloudTheme <- rasterTheme(region=brewer.pal(n=9, 'Blues'))
+cloudTheme <- rasterTheme(region = brewer.pal(n = 9, 'Blues'))
 #+end_src
 
-#+BEGIN_LaTeX
-\index{levelplot@\texttt{levelplot}}
-#+END_LaTeX
+#+INDEX: levelplot@\texttt{levelplot}
 
 #+begin_src R :eval no-export
-  tmp <- tempdir()
-  trellis.device(png, file=paste0(tmp, '/Rplot%02d.png'),
-                        res=300, width=1500, height=1500)
-  levelplot(cft, layout=c(1, 1), par.settings=cloudTheme) +
-      layer(sp.lines(boundaries, lwd=0.6))
-  dev.off()
+tmp <- tempdir()
+trellis.device(png, file = paste0(tmp, '/Rplot%02d.png'),
+               res = 300, width = 1500, height = 1500)
+levelplot(cft, layout = c(1, 1), par.settings = cloudTheme) +
+    layer(sp.lines(boundaries, lwd = 0.6))
+dev.off()
 #+end_src
 
 A suitable tool to concatenate these frames and create the movie is
@@ -390,18 +367,16 @@ A suitable tool to concatenate these frames and create the movie is
 audio and video[fn:5]. The resulting movie is available from the book
 website.
 
-#+BEGIN_LaTeX
-\index{ffmpeg@\texttt{ffmpeg}}
-#+END_LaTeX
+#+INDEX: ffmpeg@\texttt{ffmpeg}
 
 #+begin_src R :eval no-export
-  old <- setwd(tmp)
-  ## Create a movie with ffmpeg using 6 frames per second a bitrate of 300kbs
-  movieCMD <- 'ffmpeg -r 6 -b 300k -i Rplot%02d.png output.mp4'
-  system(movieCMD)
-  file.remove(dir(pattern='Rplot'))
-  file.copy('output.mp4', paste0(old, '/figs/cft.mp4'), overwrite=TRUE)
-  setwd(old)
+old <- setwd(tmp)
+## Create a movie with ffmpeg using 6 frames per second a bitrate of 300kbs
+movieCMD <- 'ffmpeg -r 6 -b 300k -i Rplot%02d.png output.mp4'
+system(movieCMD)
+file.remove(dir(pattern = 'Rplot'))
+file.copy('output.mp4', paste0(old, '/figs/cft.mp4'), overwrite = TRUE)
+setwd(old)
 #+end_src
 
 ** Static Image
@@ -416,11 +391,11 @@ with =levelplot= but now using the argument =layers= to choose a
 subset of the layers, and with a different value for =layout= to
 display a matrix of twenty-four panels.
 #+begin_src R :results output graphics :exports both :file figs/cft.pdf
-  levelplot(cft, layers=25:48, layout=c(6, 4),
-            par.settings=cloudTheme,
-            names.attr=paste0(sprintf('%02d', 1:24), 'h'),
-            panel=panel.levelplot.raster) +
-      layer(sp.lines(boundaries, lwd=0.6))
+levelplot(cft, layers = 25:48, layout = c(6, 4),
+          par.settings = cloudTheme,
+          names.attr = paste0(sprintf('%02d', 1:24), 'h'),
+          panel = panel.levelplot.raster) +
+    layer(sp.lines(boundaries, lwd = 0.6))
 #+end_src
 
 #+CAPTION: Forecast of hourly cloud cover at low and mid levels.
