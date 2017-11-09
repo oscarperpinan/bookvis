@@ -104,9 +104,13 @@ levelplot(cft, layout = c(1, 1), par.settings = cloudTheme) +
 dev.off()
 
 old <- setwd(tmp)
-## Create a movie with ffmpeg using 6 frames per second a bitrate of 300kbs
-movieCMD <- 'ffmpeg -r 6 -b 300k -i Rplot%02d.png output.mp4'
-system(movieCMD)
+## Create a movie with ffmpeg ...  
+system2('ffmpeg',
+        c('-r 6', ## with 6 frames per second
+          '-i Rplot%02d.png', ## using the previous files
+          '-b:v 300k', ## with a bitrate of 300kbs
+          'output.mp4')
+        )
 file.remove(dir(pattern = 'Rplot'))
 file.copy('output.mp4', paste0(old, '/figs/cft.mp4'), overwrite = TRUE)
 setwd(old)
