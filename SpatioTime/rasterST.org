@@ -422,7 +422,91 @@ the entire 3D dataset.
 #   mogrify -density 200 -format png figs/*.pdf 
 # #+end_src
 
+* rgl
 
+#+begin_src R
+library(rgl)
+library(magick)
+
+lat <- seq(-90,90, len=100)*pi/180
+long <- seq(-180, 180, len=100)*pi/180
+
+r <- 6378.1 # radius of Earth in km
+x <- outer(long, lat, FUN=function(x, y) r*cos(y)*cos(x))
+y <- outer(long, lat, FUN=function(x, y) r*cos(y)*sin(x))
+z <- outer(long, lat, FUN=function(x, y) r*sin(y))
+
+open3d()
+bg3d('black')
+#+end_src
+
+#+begin_src R
+## 'http://eoimages.gsfc.nasa.gov/images/imagerecords/79000/79765/dnb_land_ocean_ice.2012.3600x1800_geo.tif'
+earth <- surface3d(-x, -z, y,
+                   texture="nightLightsHR.png", ## max 8192x8192; sólo PNG!
+                   specular="black", col='white')
+                 ## normal_x=-x, normal_y=-z, normal_z=y)
+#+end_src
+
+#+begin_src R
+writeWebGL('nightLights', width=1000)
+#+end_src
+
+#+begin_src R
+library(XML)
+
+geocode <- function(city){
+  urlOSM <- paste('http://nominatim.openstreetmap.org/search?city=',
+                  city, '&format=xml', sep='')
+  xmlOSM <- xmlParse(urlOSM)
+  cityOSM <- getNodeSet(xmlOSM, '//place')[[1]] ##sólo cojo el primer resultado
+  lon <- xmlGetAttr(cityOSM, 'lon')
+  lat <- xmlGetAttr(cityOSM, 'lat')
+  as.numeric(c(lon, lat))
+  }
+
+cities <- c('Madrid', 'Tokyo', 'Sidney', 'Sao Paulo', 'New York')
+points <- t(sapply(cities, geocode))
+row.names(points) <- NULL
+#+end_src
+
+#+begin_src R
+library(geosphere)
+
+zoomIn <- seq(.3, .1, length=100)
+zoomOut <- seq(.1, .3, length=100)
+
+route <- data.frame(lon=points[1,1], lat=points[1,2], zoom=zoomIn, name=cities[1], action='arrive')
+
+for (i in 1:(nrow(points)-1)){
+  p1 <- points[i,]
+  p2 <- points[i+1,]
+
+  routePart <- gcIntermediate(p1, p2, n=100)
+  routePart <- data.frame(routePart)
+  routePart$zoom <- .3
+  routePart$name <- ''
+  routePart$action <- 'travel'
+
+  departure <- data.frame(lon=p1[1], lat=p1[2],  zoom=zoomOut, name=cities[i], action='depart')
+  arrival <- data.frame(lon=p2[1], lat=p2[2], zoom=zoomIn, name=cities[i+1], action='arrive')
+  routePart <- rbind(departure, routePart, arrival)
+  route <- rbind(route, routePart)
+  }
+route <- rbind(route, data.frame(lon=points[i+1,1], lat=points[i+1,2],
+                                 zoom=zoomOut, name=cities[i+1], action='depart'))
+#+end_src
+
+#+begin_src R
+travel <- function(tt){
+  point <- route[tt,]
+  rgl.viewpoint(theta=-90+point$lon, phi=point$lat, zoom=point$zoom)
+}
+#+end_src
+
+#+begin_src R
+movie3d(travel, duration=nrow(route), startTime=1, fps=1, type='mp4', clean=FALSE)
+#+end_src
 * Footnotes
 
 [fn:1] http://mandeo.meteogalicia.es/thredds/catalogos/WRF_2D/catalog.html
