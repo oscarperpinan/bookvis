@@ -103,12 +103,12 @@ seconds.
   write.csv2(airStations, file='data/airStations.csv')
 #+end_src
 
-The 2011 air pollution data are available upon request from the Madrid
-City Council webpage[fn:2] and at the =data= folder of the book
-repository. The structure of the file is documented in the
-INTPHORA-DIA document[fn:3]. The =readLines= function reads the file
-and a =lapply= loop processes each line. The result is stored in the
-file =airQuality.csv=
+The 2011 air pollution data are available from the Madrid City Council
+webpage[fn:2] and at the =data= folder of the book repository. The
+structure of the file is documented in the INTPHORA-DIA
+document[fn:3]. The =readLines= function reads the file and a =lapply=
+loop processes each line. The result is stored in the file
+=airQuality.csv=
 
 #+BEGIN_LaTeX
 \index{String manipulation}
@@ -122,15 +122,11 @@ file =airQuality.csv=
 #+END_LaTeX
 
 #+begin_src R 
-  ## Fill in the form at
-  ## http://www.mambiente.munimadrid.es/opencms/opencms/calaire/consulta/descarga.html
-  ## to receive the Diarios11.zip file.
-  unzip('data/Diarios11.zip')
-  rawData <- readLines('data/Datos11.txt')
-  ## This loop reads each line and extracts fields as defined by the
-  ## INTPHORA file:
-  ## http://www.mambiente.munimadrid.es/opencms/export/sites/default/calaire/Anexos/INTPHORA-DIA.pdf
-  datos11 <- lapply(rawData, function(x){
+rawData <- readLines('data/Datos11.txt')
+## This loop reads each line and extracts fields as defined by the
+## INTPHORA file:
+## http://www.mambiente.munimadrid.es/opencms/export/sites/default/calaire/Anexos/INTPHORA-DIA.pdf
+datos11 <- lapply(rawData, function(x){
     codEst <- substr(x, 1, 8)
     codParam <- substr(x, 9, 10)
     codTec <- substr(x, 11, 12)
@@ -148,12 +144,14 @@ file =airQuality.csv=
     ## Only data from valid days
     dat <- dat[day]
     res <- data.frame(codEst, codParam, ##codTec, codPeriod,
-                      month, day, year=2011,
+                      month, day, year = 2016,
                       dat)
-    })
-  datos11 <- do.call(rbind, datos11)
-  write.csv2(datos11, 'data/airQuality.csv')
+})
+datos11 <- do.call(rbind, datos11)
+
+write.csv2(datos11, 'data/airQuality.csv')
 #+end_src
+
 
 ** Combine Data and Spatial Locations
 #+begin_src R :exports none
@@ -182,6 +180,8 @@ method.
   proj4string(airStations) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
 #+end_src
 
+#+RESULTS:
+
 On the other hand, the =airQuality= =data.frame= comprises the air
 quality daily measurements. We will retain only the $NO_2$ time
 series.
@@ -191,6 +191,8 @@ series.
   ## Only interested in NO2 
   NO2 <- airQuality[airQuality$codParam==8, ]
 #+end_src
+
+#+RESULTS:
 
 We will represent each station using aggregated values (mean, median,
 and standard deviation) computed with =aggregate=:
@@ -209,6 +211,7 @@ and standard deviation) computed with =aggregate=:
   NO2agg <- do.call(cbind, NO2agg)
   NO2agg <- as.data.frame(NO2agg)
 #+end_src
+
 
 The aggregated values (a =data.frame=) and the spatial information (a
 =SpatialPointsDataFrame=) are combined with the =spCbind= method from
@@ -231,6 +234,7 @@ matching against the shared key column (=airStations$Codigo= and
   NO2sp <- spCbind(airStations[, c('Nombre', 'alt')], NO2agg[idxNO2, ])
   save(NO2sp, file='data/NO2sp.RData')
 #+end_src
+
 
 
 * Spanish General Elections
@@ -380,7 +384,7 @@ package.
 
 [fn:1] [[http://www.eea.europa.eu/soer/countries/es/]]
 
-[fn:2] [[http://www.mambiente.munimadrid.es/opencms/opencms/calaire/consulta/descarga.html]]
+[fn:2] http://www.mambiente.munimadrid.es/opencms/opencms/calaire/consulta/descarga_opendata.html
 
 [fn:3] [[http://www.mambiente.munimadrid.es/opencms/export/sites/default/calaire/Anexos/INTPHORA-DIA.pdf]]
 
