@@ -253,7 +253,7 @@ N <- length(ep)
 tep <- timeIdx[ep[seq(1, N, 2)] + 1]
 tsp <- timeIdx[ep[seq(2, N, 2)]]
 #+end_src
-- The minima and maximla points of each variable are extracted with
+- The minima and maxima points of each variable are extracted with
   =apply=:
 #+begin_src R
 minIdx <- timeIdx[apply(aranjuez, 2, which.min)]

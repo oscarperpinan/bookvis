@@ -118,7 +118,7 @@ gCO2.capita <- ggplot(data = CO2data,
 ##################################################################
 
 xyplot(GNI.capita  ~ CO2.capita,
-       data = CO2data
+       data = CO2data,
        xlab = "Carbon dioxide emissions (metric tons per capita)",
        ylab = "GNI per capita, PPP (current international $)",
        groups = Country.Name,

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-11-05 dom 16:21 -->
+<!-- 2017-11-26 dom 17:35 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Time Series - Displaying time series, spatial and space-time data with R</title>
@@ -245,24 +245,25 @@ for the JavaScript code in this tag.
 <ul>
 <li><a href="#horizontal">Time on the horizontal axis</a>
 <ul>
-<li><a href="#org99a2f31">Time Graph of Different Meteorological Variables</a></li>
-<li><a href="#orga0081af">The Horizon Graph</a></li>
-<li><a href="#orgf67dd6f">Time Series of Variables with the Same Scale</a></li>
-<li><a href="#org87f20ed">Stacked Graphs</a></li>
+<li><a href="#org03acf04">Time Graph of Different Meteorological Variables</a></li>
+<li><a href="#org0761296">The Horizon Graph</a></li>
+<li><a href="#org7da4cb6">Time Series of Variables with the Same Scale</a></li>
+<li><a href="#orgeb959eb">Stacked Graphs</a></li>
+<li><a href="#interactive_timehorizontal">Interactive</a></li>
 </ul>
 </li>
 <li><a href="#group">Time as a conditioning or grouping variable</a>
 <ul>
-<li><a href="#org6723ce1">Scatterplot Matrix: Time as a Grouping Variable</a></li>
-<li><a href="#org8ca8944">Scatterplot with Time as a Conditioning Variable</a></li>
+<li><a href="#org31cc1bf">Scatterplot Matrix: Time as a Grouping Variable</a></li>
+<li><a href="#orgf4f2069">Scatterplot with Time as a Conditioning Variable</a></li>
 </ul>
 </li>
 <li><a href="#complementary">Time as a complementary variable</a>
 <ul>
-<li><a href="#orga170df2">Polylines</a></li>
-<li><a href="#org0ae7dc9">Labels to Show Time Information</a></li>
-<li><a href="#orgff12a04">Using Variable Size to Encode an Additional Variable</a></li>
-<li><a href="#orgbf4f17b">Traveling Bubbles</a></li>
+<li><a href="#org832ed18">Polylines</a></li>
+<li><a href="#orgd9c7714">Labels to Show Time Information</a></li>
+<li><a href="#org5732f3a">Using Variable Size to Encode an Additional Variable</a></li>
+<li><a href="#org2bdd7b6">Interactive graphics: animation</a></li>
 </ul>
 </li>
 <li><a href="#code">Code</a>
@@ -277,14 +278,14 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org95e222a" class="outline-2">
-<h2 id="horizontal"><a id="org95e222a"></a>Time on the horizontal axis</h2>
+<div id="outline-container-org35e7302" class="outline-2">
+<h2 id="horizontal"><a id="org35e7302"></a>Time on the horizontal axis</h2>
 <div class="outline-text-2" id="text-horizontal">
 </div>
 
-<div id="outline-container-org99a2f31" class="outline-3">
-<h3 id="org99a2f31">Time Graph of Different Meteorological Variables</h3>
-<div class="outline-text-3" id="text-org99a2f31">
+<div id="outline-container-org03acf04" class="outline-3">
+<h3 id="org03acf04">Time Graph of Different Meteorological Variables</h3>
+<div class="outline-text-3" id="text-org03acf04">
 
 <div class="figure">
 <p><a href="images/aranjuezXblocks.png"><img src="images/thumbs/aranjuezXblocks.png" alt="aranjuezXblocks.png" /></a> 
@@ -293,9 +294,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orga0081af" class="outline-3">
-<h3 id="orga0081af">The Horizon Graph</h3>
-<div class="outline-text-3" id="text-orga0081af">
+<div id="outline-container-org0761296" class="outline-3">
+<h3 id="org0761296">The Horizon Graph</h3>
+<div class="outline-text-3" id="text-org0761296">
 
 <div class="figure">
 <p><a href="images/navarraHorizonplot.png"><img src="images/thumbs/navarraHorizonplot.png" alt="navarraHorizonplot.png" /></a> 
@@ -304,9 +305,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgf67dd6f" class="outline-3">
-<h3 id="orgf67dd6f">Time Series of Variables with the Same Scale</h3>
-<div class="outline-text-3" id="text-orgf67dd6f">
+<div id="outline-container-org7da4cb6" class="outline-3">
+<h3 id="org7da4cb6">Time Series of Variables with the Same Scale</h3>
+<div class="outline-text-3" id="text-org7da4cb6">
 
 <div class="figure">
 <p><a href="images/navarraRadiation.svg.html" class="svg"><img src="images/thumbs/navarraSVG.png" alt="navarraSVG.png" class="svg" /></a> 
@@ -314,9 +315,10 @@ for the JavaScript code in this tag.
 </div>
 </div>
 </div>
-<div id="outline-container-org87f20ed" class="outline-3">
-<h3 id="org87f20ed">Stacked Graphs</h3>
-<div class="outline-text-3" id="text-org87f20ed">
+
+<div id="outline-container-orgeb959eb" class="outline-3">
+<h3 id="orgeb959eb">Stacked Graphs</h3>
+<div class="outline-text-3" id="text-orgeb959eb">
 
 <div class="figure">
 <p><a href="images/unemployUSAThemeRiver.png"><img src="images/thumbs/unemployUSAThemeRiver.png" alt="unemployUSAThemeRiver.png" /></a> 
@@ -324,17 +326,75 @@ for the JavaScript code in this tag.
 </div>
 </div>
 </div>
+
+<div id="outline-container-org4f50043" class="outline-3">
+<h3 id="interactive_timehorizontal"><a id="org4f50043"></a>Interactive</h3>
+<div class="outline-text-3" id="text-interactive_timehorizontal">
+</div>
+
+<div id="outline-container-org631b563" class="outline-4">
+<h4 id="org631b563">dygraphs</h4>
+<div class="outline-text-4" id="text-org631b563">
+<iframe src="images/dygraphs/TimeHorizontalAxis1.html" width="100%" height="600px" style = "border:none;"></iframe>
+
+<p>
+<a href="images/dygraphs/TimeHorizontalAxis1.html">Open in a blank page</a>.
+</p>
+
+<iframe src="images/dygraphs/TimeHorizontalAxis2.html" width="100%" height="600px" style = "border:none;"></iframe>
+
+<p>
+<a href="images/dygraphs/TimeHorizontalAxis2.html">Open in a blank page</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6d8977a" class="outline-4">
+<h4 id="org6d8977a">highcharter</h4>
+<div class="outline-text-4" id="text-org6d8977a">
+<iframe src="images/highcharter/TimeHorizontalAxis.html" width="100%" height="600px" style = "border:none;"></iframe>
+
+<p>
+<a href="images/highcharter/TimeHorizontalAxis.html">Open in a blank page</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb4d88b2" class="outline-4">
+<h4 id="orgb4d88b2">plotly</h4>
+<div class="outline-text-4" id="text-orgb4d88b2">
+<iframe src="images/plotly/TimeHorizontalAxis.html" width="100%" height="600px" style = "border:none;"></iframe>
+
+<p>
+<a href="images/plotly/TimeHorizontalAxis.html">Open in a blank page</a>.
+</p>
+</div>
 </div>
 
 
-<div id="outline-container-org5018d76" class="outline-2">
-<h2 id="group"><a id="org5018d76"></a>Time as a conditioning or grouping variable</h2>
+
+<div id="outline-container-org93a74e7" class="outline-4">
+<h4 id="org93a74e7">streamgraph</h4>
+<div class="outline-text-4" id="text-org93a74e7">
+<iframe src="images/streamgraph/index.html" width="100%" height="600px" style = "border:none;"></iframe>
+
+<p>
+<a href="images/streamgraph/index.html">Open in a blank page</a>.
+</p>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org2ef8647" class="outline-2">
+<h2 id="group"><a id="org2ef8647"></a>Time as a conditioning or grouping variable</h2>
 <div class="outline-text-2" id="text-group">
 </div>
 
-<div id="outline-container-org6723ce1" class="outline-3">
-<h3 id="org6723ce1">Scatterplot Matrix: Time as a Grouping Variable</h3>
-<div class="outline-text-3" id="text-org6723ce1">
+<div id="outline-container-org31cc1bf" class="outline-3">
+<h3 id="org31cc1bf">Scatterplot Matrix: Time as a Grouping Variable</h3>
+<div class="outline-text-3" id="text-org31cc1bf">
 
 <div class="figure">
 <p><a href="images/aranjuezSplom.png"><img src="images/thumbs/aranjuezSplom.png" alt="aranjuezSplom.png" /></a> 
@@ -356,9 +416,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org8ca8944" class="outline-3">
-<h3 id="org8ca8944">Scatterplot with Time as a Conditioning Variable</h3>
-<div class="outline-text-3" id="text-org8ca8944">
+<div id="outline-container-orgf4f2069" class="outline-3">
+<h3 id="orgf4f2069">Scatterplot with Time as a Conditioning Variable</h3>
+<div class="outline-text-3" id="text-orgf4f2069">
 
 <div class="figure">
 <p><a href="images/aranjuezOuterStrips.png"><img src="images/thumbs/aranjuezOuterStrips.png" alt="aranjuezOuterStrips.png" /></a>
@@ -369,25 +429,25 @@ for the JavaScript code in this tag.
 </div>
 
 
-<div id="outline-container-org16a876c" class="outline-2">
-<h2 id="complementary"><a id="org16a876c"></a>Time as a complementary variable</h2>
+<div id="outline-container-org215a99d" class="outline-2">
+<h2 id="complementary"><a id="org215a99d"></a>Time as a complementary variable</h2>
 <div class="outline-text-2" id="text-complementary">
 </div>
 
-<div id="outline-container-orga170df2" class="outline-3">
-<h3 id="orga170df2">Polylines</h3>
-<div class="outline-text-3" id="text-orga170df2">
+<div id="outline-container-org832ed18" class="outline-3">
+<h3 id="org832ed18">Polylines</h3>
+<div class="outline-text-3" id="text-org832ed18">
 
 <div class="figure">
-<p><a href="images/googleVis.html" class="svg"><img src="images/thumbs/googleVis.png" alt="googleVis.png" class="svg" /></a>
+<p><a href="images/CO2_GNI.png"><img src="images/thumbs/CO2_GNI.png" alt="CO2_GNI.png" /></a>
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org0ae7dc9" class="outline-3">
-<h3 id="org0ae7dc9">Labels to Show Time Information</h3>
-<div class="outline-text-3" id="text-org0ae7dc9">
+<div id="outline-container-orgd9c7714" class="outline-3">
+<h3 id="orgd9c7714">Labels to Show Time Information</h3>
+<div class="outline-text-3" id="text-orgd9c7714">
 
 <div class="figure">
 <p><a href="images/CO2_capitaDL.png"><img src="images/thumbs/CO2_capitaDL.png" alt="CO2_capitaDL.png" /></a> 
@@ -396,9 +456,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgff12a04" class="outline-3">
-<h3 id="orgff12a04">Using Variable Size to Encode an Additional Variable</h3>
-<div class="outline-text-3" id="text-orgff12a04">
+<div id="outline-container-org5732f3a" class="outline-3">
+<h3 id="org5732f3a">Using Variable Size to Encode an Additional Variable</h3>
+<div class="outline-text-3" id="text-org5732f3a">
 
 <div class="figure">
 <p><a href="images/CO2points.png"><img src="images/thumbs/CO2points.png" alt="CO2points.png" /></a> 
@@ -407,9 +467,35 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgbf4f17b" class="outline-3">
-<h3 id="orgbf4f17b">Traveling Bubbles</h3>
-<div class="outline-text-3" id="text-orgbf4f17b">
+<div id="outline-container-org2bdd7b6" class="outline-3">
+<h3 id="org2bdd7b6">Interactive graphics: animation</h3>
+<div class="outline-text-3" id="text-org2bdd7b6">
+</div>
+<div id="outline-container-org28b7723" class="outline-4">
+<h4 id="org28b7723">plotly</h4>
+<div class="outline-text-4" id="text-org28b7723">
+<iframe src="images/plotly/TimeComplementary.html" width="100%" height="600px" style = "border:none;"></iframe>
+
+<p>
+<a href="images/plotly/TimeComplementary.html">Open in a blank page</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc664ada" class="outline-4">
+<h4 id="orgc664ada">googleVis</h4>
+<div class="outline-text-4" id="text-orgc664ada">
+
+<div class="figure">
+<p><a href="images/googleVis.html" class="svg"><img src="images/thumbs/googleVis.png" alt="googleVis.png" class="svg" /></a>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org341b2e9" class="outline-4">
+<h4 id="org341b2e9">gridSVG</h4>
+<div class="outline-text-4" id="text-org341b2e9">
 
 <div class="figure">
 <p><a href="images/bubbles.svg" class="svg"><img src="images/thumbs/bubbles.png" alt="bubbles.png" class="svg" /></a> 
@@ -418,13 +504,14 @@ for the JavaScript code in this tag.
 </div>
 </div>
 </div>
+</div>
 
-<div id="outline-container-org34e9b18" class="outline-2">
-<h2 id="code"><a id="org34e9b18"></a>Code</h2>
+<div id="outline-container-org8b294bb" class="outline-2">
+<h2 id="code"><a id="org8b294bb"></a>Code</h2>
 <div class="outline-text-2" id="text-code">
 </div>
-<div id="outline-container-org7900937" class="outline-3">
-<h3 id="code_horizontal"><a id="org7900937"></a>Time on the horizontal axis</h3>
+<div id="outline-container-org7be900a" class="outline-3">
+<h3 id="code_horizontal"><a id="org7be900a"></a>Time on the horizontal axis</h3>
 <div class="outline-text-3" id="text-code_horizontal">
 <p>
 <a href="R/timeHorizontalAxis.R">Download</a>
@@ -542,12 +629,12 @@ under <span class="org-constant">&lt;-</span> scaled[underIdx,]
 
 <span class="org-constant">library</span>(xts)
 ep <span class="org-constant">&lt;-</span> endpoints(timeIdx, on = <span class="org-string">'years'</span>)
-N <span class="org-constant">&lt;-</span> length(ep[-1])
-<span class="org-comment-delimiter">## </span><span class="org-comment">'tsp' is start and 'tep' is the end of each band</span>
-tep <span class="org-constant">&lt;-</span> timeIdx[ep]
-tsp <span class="org-constant">&lt;-</span> timeIdx[ep[-(N+1)]+1]
-<span class="org-comment-delimiter">## </span><span class="org-comment">'cols' is a vector with the color of each band</span>
-cols <span class="org-constant">&lt;-</span> rep_len(c(<span class="org-string">'gray'</span>, <span class="org-string">'white'</span>), N)
+ep <span class="org-constant">&lt;-</span> ep[-1]
+N <span class="org-constant">&lt;-</span> length(ep)
+<span class="org-comment-delimiter">## </span><span class="org-comment">'tsp' is start and 'tep' is the end of each band. One of each two</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">years are selected.</span>
+tep <span class="org-constant">&lt;-</span> timeIdx[ep[seq(1, N, 2)] + 1]
+tsp <span class="org-constant">&lt;-</span> timeIdx[ep[seq(2, N, 2)]]
 
 minIdx <span class="org-constant">&lt;-</span> timeIdx[apply(aranjuez, 2, which.min)]
 minVals <span class="org-constant">&lt;-</span> apply(aranjuez, 2, min, na.rm = <span class="org-type">TRUE</span>)
@@ -561,13 +648,14 @@ maxs <span class="org-constant">&lt;-</span> data.frame(Index = maxIdx,
                    Value = maxVals,
                    Series = names(aranjuez))
 
-ggplot(data = long, aes(Index, Value)) +
+ggplot(data = aranjuezLong, aes(Index, Value)) +
     <span class="org-comment-delimiter">## </span><span class="org-comment">Time series of each variable</span>
     geom_line(colour = <span class="org-string">"royalblue4"</span>, lwd = 0.5) +
     <span class="org-comment-delimiter">## </span><span class="org-comment">Year bands</span>
-    annotate(geom=<span class="org-string">'rect'</span>, ymin = -<span class="org-type">Inf</span>, ymax = <span class="org-type">Inf</span>,
+    annotate(<span class="org-string">'rect'</span>,
              xmin = tsp, xmax = tep,
-             fill = cols, alpha = 0.4) +
+             ymin = -<span class="org-type">Inf</span>, ymax = <span class="org-type">Inf</span>,
+              alpha = 0.4) + 
     <span class="org-comment-delimiter">## </span><span class="org-comment">Values below average</span>
     geom_rug(data = under,
              sides = <span class="org-string">'b'</span>, col = <span class="org-string">'indianred1'</span>) +
@@ -901,8 +989,8 @@ streamgraph(unemployDF,
 </div>
 </div>
 
-<div id="outline-container-org5b0a876" class="outline-3">
-<h3 id="code_group"><a id="org5b0a876"></a>Time as a conditioning or grouping variable</h3>
+<div id="outline-container-org46f1706" class="outline-3">
+<h3 id="code_group"><a id="org46f1706"></a>Time as a conditioning or grouping variable</h3>
 <div class="outline-text-3" id="text-code_group">
 <p>
 <a href="R/timeGroupFactor.R">Download</a>
@@ -1051,8 +1139,8 @@ useOuterStrips(xyplot(Temperature ~ Radiation | month * Statistic,
 </div>
 </div>
 
-<div id="outline-container-orgc581ff1" class="outline-3">
-<h3 id="code_complementary"><a id="orgc581ff1"></a>Time as a complementary variable</h3>
+<div id="outline-container-org1114f54" class="outline-3">
+<h3 id="code_complementary"><a id="org1114f54"></a>Time as a complementary variable</h3>
 <div class="outline-text-3" id="text-code_complementary">
 <p>
 <a href="R/timeComplementary.R">Download</a>
@@ -1179,7 +1267,7 @@ gCO2.capita <span class="org-constant">&lt;-</span> ggplot(data = CO2data,
 <span class="org-comment-delimiter">##################################################################</span>
 
 xyplot(GNI.capita  ~ CO2.capita,
-       data = CO2data
+       data = CO2data,
        xlab = <span class="org-string">"Carbon dioxide emissions (metric tons per capita)"</span>,
        ylab = <span class="org-string">"GNI per capita, PPP (current international $)"</span>,
        groups = Country.Name,
@@ -1442,8 +1530,8 @@ grid.export(<span class="org-string">"figs/bubbles.svg"</span>)
 </div>
 </div>
 
-<div id="outline-container-orgac99df5" class="outline-3">
-<h3 id="code_data"><a id="orgac99df5"></a>Data</h3>
+<div id="outline-container-orgc0698c0" class="outline-3">
+<h3 id="code_data"><a id="orgc0698c0"></a>Data</h3>
 <div class="outline-text-3" id="text-code_data">
 <p>
 <a href="R/dataTime.R">Download</a>

@@ -34,8 +34,54 @@
 ** Time Series of Variables with the Same Scale
 #+ATTR_HTML: :class svg
 [[file:images/navarraRadiation.svg.html][file:images/thumbs/navarraSVG.png]] 
+
 ** Stacked Graphs
 [[file:images/unemployUSAThemeRiver.png][file:images/thumbs/unemployUSAThemeRiver.png]] 
+
+** Interactive
+   :PROPERTIES:
+   :CUSTOM_ID: interactive_timehorizontal
+   :END:
+
+*** dygraphs
+
+ #+BEGIN_EXPORT html
+ <iframe src="images/dygraphs/TimeHorizontalAxis1.html" width="100%" height="600px" style = "border:none;"></iframe>
+ #+END_EXPORT
+
+[[file:images/dygraphs/TimeHorizontalAxis1.html][Open in a blank page]].
+
+ #+BEGIN_EXPORT html
+ <iframe src="images/dygraphs/TimeHorizontalAxis2.html" width="100%" height="600px" style = "border:none;"></iframe>
+ #+END_EXPORT
+
+[[file:images/dygraphs/TimeHorizontalAxis2.html][Open in a blank page]].
+
+*** highcharter
+
+#+BEGIN_EXPORT html
+<iframe src="images/highcharter/TimeHorizontalAxis.html" width="100%" height="600px" style = "border:none;"></iframe>
+#+END_EXPORT
+
+[[file:images/highcharter/TimeHorizontalAxis.html][Open in a blank page]].
+
+*** plotly
+
+#+BEGIN_EXPORT html
+<iframe src="images/plotly/TimeHorizontalAxis.html" width="100%" height="600px" style = "border:none;"></iframe>
+#+END_EXPORT
+
+[[file:images/plotly/TimeHorizontalAxis.html][Open in a blank page]].
+
+
+
+*** streamgraph
+
+#+BEGIN_EXPORT html
+<iframe src="images/streamgraph/index.html" width="100%" height="600px" style = "border:none;"></iframe>
+#+END_EXPORT
+
+[[file:images/streamgraph/index.html][Open in a blank page]].
 
 
 * Time as a conditioning or grouping variable
@@ -62,8 +108,8 @@
   :END:
 
 ** Polylines
-#+ATTR_HTML: :class svg
-[[file:images/googleVis.html][file:images/thumbs/googleVis.png]]
+
+[[file:images/CO2_GNI.png][file:images/thumbs/CO2_GNI.png]]
 
 ** Labels to Show Time Information
 [[file:images/CO2_capitaDL.png][file:images/thumbs/CO2_capitaDL.png]] 
@@ -71,7 +117,22 @@
 ** Using Variable Size to Encode an Additional Variable
 [[file:images/CO2points.png][file:images/thumbs/CO2points.png]] 
 
-** Traveling Bubbles
+** Interactive graphics: animation
+
+*** plotly
+
+#+BEGIN_EXPORT html
+<iframe src="images/plotly/TimeComplementary.html" width="100%" height="600px" style = "border:none;"></iframe>
+#+END_EXPORT
+
+[[file:images/plotly/TimeComplementary.html][Open in a blank page]].
+
+*** googleVis
+#+ATTR_HTML: :class svg
+[[file:images/googleVis.html][file:images/thumbs/googleVis.png]]
+
+*** gridSVG
+
 #+ATTR_HTML: :class svg
 [[file:images/bubbles.svg][file:images/thumbs/bubbles.png]] 
 
