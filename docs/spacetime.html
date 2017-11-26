@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-11-05 dom 15:49 -->
+<!-- 2017-11-26 dom 22:14 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Spatio-temporal data - Displaying time series, spatial and space-time data with R</title>
@@ -180,11 +180,11 @@
   .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
-<link rel="stylesheet" type="text/css" href="stylesheets/colorbox.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/styles.css" />
 <link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/readtheorg/css/htmlize.css"/>
 <link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/readtheorg/css/readtheorg.css"/>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="http://www.pirilampo.org/styles/readtheorg/js/readtheorg.js"></script>
 <link rel="stylesheet" type="text/css" href="stylesheets/colorbox.css" />
 <script src="js/jquery.colorbox.js"></script>
@@ -243,35 +243,34 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org155123f">Raster data</a>
+<li><a href="#org272c7e3">Raster data</a>
 <ul>
-<li><a href="#orgbe24e5a">Level plots</a></li>
-<li><a href="#orge2d95a6">Graphical Exploratory Data Analysis</a></li>
-<li><a href="#org8237a74">Space-Time and Time Series Plots</a></li>
-<li><a href="#org205dacb">Animation</a></li>
+<li><a href="#org121324d">Level plots</a></li>
+<li><a href="#org8668d7e">Graphical Exploratory Data Analysis</a></li>
+<li><a href="#orgdd272ba">Space-Time and Time Series Plots</a></li>
+<li><a href="#orge3f745f">Animation</a></li>
 </ul>
 </li>
-<li><a href="#orgaffa025">Spatial point data</a>
+<li><a href="#orgb286620">Spatial point data</a>
 <ul>
-<li><a href="#org356528f">Graphics with <code>spacetime</code></a></li>
-<li><a href="#org6362bd6">Animation</a></li>
+<li><a href="#org8c0cd40">Graphics with <code>spacetime</code></a></li>
+<li><a href="#orgd62b173">Animation</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-
-<div id="outline-container-org155123f" class="outline-2">
-<h2 id="org155123f">Raster data</h2>
-<div class="outline-text-2" id="text-org155123f">
+<div id="outline-container-org272c7e3" class="outline-2">
+<h2 id="org272c7e3">Raster data</h2>
+<div class="outline-text-2" id="text-org272c7e3">
 <p>
 The code of this section is available <a href="R/rasterST.R">here</a>.
 </p>
 </div>
-<div id="outline-container-orgbe24e5a" class="outline-3">
-<h3 id="orgbe24e5a">Level plots</h3>
-<div class="outline-text-3" id="text-orgbe24e5a">
+<div id="outline-container-org121324d" class="outline-3">
+<h3 id="org121324d">Level plots</h3>
+<div class="outline-text-3" id="text-org121324d">
 
 <div class="figure">
 <p><a href="images/SISdm.png"><img src="images/thumbs/SISdm.png" alt="SISdm.png" /></a> 
@@ -280,9 +279,9 @@ The code of this section is available <a href="R/rasterST.R">here</a>.
 </div>
 </div>
 
-<div id="outline-container-orge2d95a6" class="outline-3">
-<h3 id="orge2d95a6">Graphical Exploratory Data Analysis</h3>
-<div class="outline-text-3" id="text-orge2d95a6">
+<div id="outline-container-org8668d7e" class="outline-3">
+<h3 id="org8668d7e">Graphical Exploratory Data Analysis</h3>
+<div class="outline-text-3" id="text-org8668d7e">
 
 <div class="figure">
 <p><a href="images/SISdm_splom.png"><img src="images/thumbs/SISdm_splom.png" alt="SISdm_splom.png" /></a>     
@@ -304,9 +303,9 @@ The code of this section is available <a href="R/rasterST.R">here</a>.
 </div>
 </div>
 
-<div id="outline-container-org8237a74" class="outline-3">
-<h3 id="org8237a74">Space-Time and Time Series Plots</h3>
-<div class="outline-text-3" id="text-org8237a74">
+<div id="outline-container-orgdd272ba" class="outline-3">
+<h3 id="orgdd272ba">Space-Time and Time Series Plots</h3>
+<div class="outline-text-3" id="text-orgdd272ba">
 
 <div class="figure">
 <p><a href="images/SISdm_hovmoller_lat.png"><img src="images/thumbs/SISdm_hovmoller_lat.png" alt="SISdm_hovmoller_lat.png" /></a> 
@@ -333,9 +332,9 @@ The code of this section is available <a href="R/rasterST.R">here</a>.
 </div>
 </div>
 
-<div id="outline-container-org205dacb" class="outline-3">
-<h3 id="org205dacb">Animation</h3>
-<div class="outline-text-3" id="text-org205dacb">
+<div id="outline-container-orge3f745f" class="outline-3">
+<h3 id="orge3f745f">Animation</h3>
+<div class="outline-text-3" id="text-orge3f745f">
 
 <div class="figure">
 <p><a href="http://player.vimeo.com/video/65227780" class="vimeo"><img src="images/thumbs/cftVideo.png" alt="cftVideo.png" class="vimeo" /></a>                
@@ -352,17 +351,17 @@ The code of this section is available <a href="R/rasterST.R">here</a>.
 </div>
 
 
-<div id="outline-container-orgaffa025" class="outline-2">
-<h2 id="orgaffa025">Spatial point data</h2>
-<div class="outline-text-2" id="text-orgaffa025">
+<div id="outline-container-orgb286620" class="outline-2">
+<h2 id="orgb286620">Spatial point data</h2>
+<div class="outline-text-2" id="text-orgb286620">
 <p>
 The code of this section is available <a href="R/pointsST.R">here</a>.
 </p>
 </div>
 
-<div id="outline-container-org356528f" class="outline-3">
-<h3 id="org356528f">Graphics with <code>spacetime</code></h3>
-<div class="outline-text-3" id="text-org356528f">
+<div id="outline-container-org8c0cd40" class="outline-3">
+<h3 id="org8c0cd40">Graphics with <code>spacetime</code></h3>
+<div class="outline-text-3" id="text-org8c0cd40">
 
 <div class="figure">
 <p><a href="images/NO2STxy.png"><img src="images/thumbs/NO2STxy.png" alt="NO2STxy.png" /></a> 
@@ -377,9 +376,9 @@ The code of this section is available <a href="R/pointsST.R">here</a>.
 </div>
 </div>
 
-<div id="outline-container-org6362bd6" class="outline-3">
-<h3 id="org6362bd6">Animation</h3>
-<div class="outline-text-3" id="text-org6362bd6">
+<div id="outline-container-orgd62b173" class="outline-3">
+<h3 id="orgd62b173">Animation</h3>
+<div class="outline-text-3" id="text-orgd62b173">
 
 <div class="figure">
 <p><a href="images/vLine.svg" class="svg"><img src="images/thumbs/vLine.png" alt="vLine.png" class="svg" /></a> 
@@ -394,6 +393,9 @@ The code of this section is available <a href="R/pointsST.R">here</a>.
 </div>
 </div>
 </div>
+</div>
+<div id="postamble" class="status">
+<p><a href="http://oscarperpinan.github.io/spacetime-vis">HOME</a> <p>Maintained by <a href="http://oscarperpinan.github.io/">Oscar Perpiñán</a>.</p>
 </div>
 </body>
 </html>
