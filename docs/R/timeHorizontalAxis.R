@@ -109,12 +109,12 @@ under <- scaled[underIdx,]
 
 library(xts)
 ep <- endpoints(timeIdx, on = 'years')
-N <- length(ep[-1])
-## 'tsp' is start and 'tep' is the end of each band
-tep <- timeIdx[ep]
-tsp <- timeIdx[ep[-(N+1)]+1]
-## 'cols' is a vector with the color of each band
-cols <- rep_len(c('gray', 'white'), N)
+ep <- ep[-1]
+N <- length(ep)
+## 'tsp' is start and 'tep' is the end of each band. One of each two
+## years are selected.
+tep <- timeIdx[ep[seq(1, N, 2)] + 1]
+tsp <- timeIdx[ep[seq(2, N, 2)]]
 
 minIdx <- timeIdx[apply(aranjuez, 2, which.min)]
 minVals <- apply(aranjuez, 2, min, na.rm = TRUE)
@@ -128,13 +128,14 @@ maxs <- data.frame(Index = maxIdx,
                    Value = maxVals,
                    Series = names(aranjuez))
 
-ggplot(data = long, aes(Index, Value)) +
+ggplot(data = aranjuezLong, aes(Index, Value)) +
     ## Time series of each variable
     geom_line(colour = "royalblue4", lwd = 0.5) +
     ## Year bands
-    annotate(geom='rect', ymin = -Inf, ymax = Inf,
+    annotate('rect',
              xmin = tsp, xmax = tep,
-             fill = cols, alpha = 0.4) +
+             ymin = -Inf, ymax = Inf,
+              alpha = 0.4) + 
     ## Values below average
     geom_rug(data = under,
              sides = 'b', col = 'indianred1') +
