@@ -629,10 +629,23 @@ includes a wide set of options:
 Both functions produce a file that can be directly opened with Google
 Earth or Marble.
 
-** \floweroneleft Additional Information with Tooltips and Hyperlinks
+** Interactive
+Additional Information with Tooltips and Hyperlinks
+*** mapview
 #+begin_src R :exports none
 ##################################################################
-## Additional information with tooltips and hyperlinks
+## mapView
+##################################################################
+#+end_src
+
+#+begin_src R
+mapview(NO2sp, zcol = "mean", cex = "mean")
+#+end_src
+
+** \floweroneleft gridSVG
+#+begin_src R :exports none
+##################################################################
+## gridSVG
 ##################################################################
 #+end_src
 Now, let's suppose you need to know the median and standard deviation
