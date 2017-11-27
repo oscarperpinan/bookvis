@@ -226,7 +226,7 @@ label:sec:introduction
 
 
 
-* Time Series
+* COMMENT Time Series
 
 ** Displaying Time Series: Introduction
  label:cha:timeIntro
@@ -526,7 +526,7 @@ In this chapter, time will be used as a complementary variable which adds inform
 
 * Space-Time Data
 
-** COMMENT Displaying Spatiotemporal Data: Introduction
+** Displaying Spatiotemporal Data: Introduction
  label:cha:introductionST
 
  Space-time datasets are indexed both in space and in time. The data may consist of a spatial vector object (for example, points or polygons) or raster data at different times. The first case is representative of data from fixed sensors providing measurements abundant in time but sparse in space. The second case is the typical format of satellite imagery, which produces high spatial resolution data sparse in time cite:Pebesma2012.
@@ -598,6 +598,9 @@ In this chapter, time will be used as a complementary variable which adds inform
 
  On the other hand, the =histogram=, =densityplot=, and =bwplot= methods accept a =FUN= argument to be applied to the =z= slot of =Raster*= object (defined by =setZ=). The result of this function is used as the grouping variable of the plot to create different panels.
 
+**** rgl
+TODO
+
 *** Further Reading
  label:cha:further-reading-spatiotime
 
@@ -613,15 +616,20 @@ In this chapter, time will be used as a complementary variable which adds inform
 
  -  The CRAN Tasks View "Handling and Analyzing Spatiotemporal Data" [fn:32] summarizes the packages for reading, vizualizing, and analyzing space-time data. The R-SIG-Geo mailing list [fn:33] is a powerful resource for obtaining help.
 
-** COMMENT Spatiotemporal Raster Data
+** Spatiotemporal Raster Data
  label:cha:rasterST
 
 #+INCLUDE: "SpatioTime/rasterST.org"
 
-** COMMENT Spatiotemporal Point Observations
+** Spatiotemporal Point Observations
  label:cha:pointsST
 
 #+INCLUDE: "SpatioTime/pointsST.org"
+
+** 3D animation
+ label:cha:rasterST
+
+#+INCLUDE: "SpatioTime/rgl.org"
 
 * Bibliography and Index 
 

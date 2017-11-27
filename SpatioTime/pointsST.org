@@ -42,6 +42,8 @@ lattice.options(default.theme = myTheme,
 #+end_src
 
 * Introduction
+label:sec:intro_st
+
 Throughout this chapter we will revisit the data from the Integrated
 Air Quality system of the Madrid City Council (section
 ref:sec:airQualityData) to illustrate visualization methods
@@ -55,7 +57,7 @@ using the tools provided by the =spacetime= package
 cite:Pebesma2012.
 
 * Data and Spatial Information
-
+label:sec:data_st
 #+begin_src R :exports none
 ##################################################################
 ## Data and spatial information
@@ -116,19 +118,25 @@ the schema of cite:Pebesma2012). The procedure is
 
 #+begin_src R 
 library(zoo)
+library(reshape2)
 library(spacetime)
   
-NO2$time <- with(NO2, ISOdate(year, month, day))
-NO2wide <- reshape(NO2[,c('codEst', 'dat', 'time')],
-                   idvar='time', timevar='codEst',
-                   direction='wide')
+NO2$time <- as.Date(with(NO2,
+                         ISOdate(year, month, day)))
+NO2wide <- dcast(NO2[, c('codEst', 'dat', 'time')],
+                 time ~ codEst,
+                 value.var = "dat")
 NO2zoo <- zoo(NO2wide[,-1], NO2wide$time)
 
-dats <- data.frame(vals=as.vector(t(NO2zoo)))
-NO2st <- STFDF(airStations, index(NO2zoo), dats)
+dats <- data.frame(vals = as.vector(t(NO2zoo)))
+NO2st <- STFDF(sp = airStations,
+               time = index(NO2zoo),
+               data = dats)
 #+end_src
 
 * Graphics with =spacetime=
+label:sec:graphs_with_spacetime
+
 #+begin_src R :exports none
 ##################################################################
 ## Graphics with spacetime
@@ -152,6 +160,7 @@ airPal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(5)
 stplot(NO2st[, 1:12],
        cuts = 5,
        col.regions = airPal,
+       main = '',
        edge.col = 'black')
 #+end_src
 
@@ -167,7 +176,7 @@ time on the y-axis is plotted (Figure [[fig:NO2hovmoller]]).
 stplot(NO2st, mode='xt',
        col.regions = colorRampPalette(airPal)(15),
        scales = list(x = list(rot = 45)),
-       ylab='', xlab='')
+       ylab='', xlab='', main = '')
 #+end_src
 
 #+CAPTION: Space-time graphic of the NO_2 time series. Each column represents a different station (denoted with the last two digits of the code).
@@ -208,6 +217,7 @@ winter. These maxima are clearly displayed in Figure [[fig:NO2zoo]].
 
 
 * \floweroneleft Animation
+label:sec:animation_st
 #+begin_src R :exports none
 ##################################################################
 ## Animation
@@ -376,14 +386,9 @@ The SVG file is finally produced with =gridToSVG= (Figure ref:fig:NO2pb)
 grid.export('figs/NO2pb.svg')
 #+end_src
 
-#+BEGIN_LaTeX
-  \begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{figs/NO2pb.png}
-    \caption{Animated circles of the $NO_2$ space-time data with a progress bar.}
-    \label{fig:NO2pb}
-  \end{figure}
-#+END_LaTeX
+#+CAPTION: Animated circles of the $NO_2$ space-time data with a progress bar. label:fig:NO2pb
+file:figs/NO2pb.png
+
 
 ** Time Reference: A Time Series Plot
 #+begin_src R :exports none
@@ -447,15 +452,8 @@ grid.garnish('timePlot', grep = TRUE,
 grid.export('figs/vLine.svg')
 #+end_src
 
-
-#+BEGIN_LaTeX
-  \begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{figs/vLine.png}
-    \caption{Animated circles of the $NO_2$ space-time data with a a time series as reference.}
-    \label{fig:vLine}
-  \end{figure}
-#+END_LaTeX
+#+CAPTION: Animated circles of the $NO_2$ space-time data with a a time series as reference. label:fig:vLine
+[[file:figs/vLine.png]]
 
 * Footnotes
 

@@ -1,0 +1,197 @@
+#+PROPERTY:  header-args :session *R* :tangle ../docs/R/rgl.R :eval no-export
+#+OPTIONS: ^:nil
+
+* Introduction label:sec:intro_rgl
+
+The rgl package is a visualization device system for R, using OpenGL as the rendering backend
+
+The rgl package is used to produce interactive 3-D plots. It contains high-level graphics commands modelled loosely after classic R graphics, but working in three dimensions. It also contains low level structure inspired by (but incompatible with) the grid package.
+
+It produces WebGL graphics. WebGL a cross-platform, royalty-free API used to create 3D graphics in a Web browser. Based on OpenGL
+
+* rgl label:sec:rgl
+
+** Basic 3D earth
+#+begin_src R
+library(rgl)
+library(magick) ## needed to import the texture
+
+lat <- seq(-90, 90, len = 100) * pi/180
+long <- seq(-180, 180, len = 100) * pi/180
+
+r <- 6378.1 # radius of Earth in km
+x <- outer(long, lat, FUN=function(x, y) r*cos(y)*cos(x))
+y <- outer(long, lat, FUN=function(x, y) r*cos(y)*sin(x))
+z <- outer(long, lat, FUN=function(x, y) r*sin(y))
+
+open3d()
+bg3d('black')
+#+end_src
+
+#+begin_src R
+## 'http://eoimages.gsfc.nasa.gov/images/imagerecords/79000/79765/dnb_land_ocean_ice.2012.3600x1800_geo.tif'
+earth <- surface3d(-x, -z, y,
+                   texture = "nightLightsHR.png", ## max 8192x8192; sólo PNG!
+                   specular = "black", col = 'white')
+#+end_src
+
+#+begin_src R
+writeWebGL('nightLights', width=1000)
+#+end_src
+
+** Define the locations
+#+begin_src R
+library(XML)
+
+geocode <- function(x){
+    city <- x[1]
+    country <- x[2]
+    urlOSM <- paste0('http://nominatim.openstreetmap.org/search?',
+                     'city=', city,
+                     '&country=', country,
+                     '&format=xml')
+  xmlOSM <- xmlParse(urlOSM)
+  cityOSM <- getNodeSet(xmlOSM, '//place')[[1]] ## use only the first result
+  lon <- xmlGetAttr(cityOSM, 'lon')
+  lat <- xmlGetAttr(cityOSM, 'lat')
+  as.numeric(c(lon, lat))
+  }
+
+cities <- rbind(c('Madrid', 'Spain'),
+                c('Tokyo', 'Japan'),
+                c('Sidney', 'Australia'),
+                c('Sao Paulo', 'Brazil'),
+                c('New York', 'USA'))
+cities <- as.data.frame(cities)
+names(cities) <- c("city", "country")
+
+points <- apply(cities, 1, geocode)
+points <- t(points)
+colnames(points) <- c("lon", "lat")
+
+cities <- cbind(cities, points)
+#+end_src
+
+#+RESULTS:
+| Madrid    | Spain     |  -3.7035825 |  40.4167047 |
+| Tokyo     | Japan     | 139.7589667 |  35.6828378 |
+| Sidney    | Australia | 151.2164539 | -33.8548157 |
+| Sao Paulo | Brazil    | -46.6333824 | -23.5506507 |
+| New York  | USA       | -87.2008048 |  30.8385202 |
+
+** Generate the route 
+#+begin_src R
+library(geosphere)
+
+## When arriving or departing include a progressive zoom with 100
+## frames
+zoomIn <- seq(.3, .1, length = 100)
+zoomOut <- seq(.1, .3, length = 100)
+
+## First point of the route
+route <- data.frame(lon = cities[1, "lon"],
+                    lat = points[1, "lat"],
+                    zoom = zoomIn,
+                    name = cities[1, "city"],
+                    action = 'arrive')
+#+end_src
+
+
+#+begin_src R
+## This loop visits each location included in the 'points' set
+## generating the route.
+for (i in 1:(nrow(cities) - 1)) {
+
+    p1 <- cities[i,]
+    p2 <- cities[i + 1,] 
+    ## Initial location
+    departure <- data.frame(lon = p1$lon,
+                            lat = p1$lat,
+                            zoom = zoomOut,
+                            name = p1$city,
+                            action = 'depart')
+
+    ## Travel between two points: Compute 100 points between the
+    ## initial and the final locations.
+    routePart <- gcIntermediate(p1[, c("lon", "lat")],
+                                p2[, c("lon", "lat")],
+                                n = 100)
+    routePart <- data.frame(routePart)
+    routePart$zoom <- 0.3
+    routePart$name <- ''
+    routePart$action <- 'travel'
+
+    ## Final location
+    arrival <- data.frame(lon = p2$lon,
+                          lat = p2$lat,
+                          zoom = zoomIn,
+                          name = p2$city,
+                          action = 'arrive')
+    ## Complete route: initial, intermediate, and final locations.
+    routePart <- rbind(departure, routePart, arrival)
+    route <- rbind(route, routePart)
+}
+#+end_src
+
+#+RESULTS:
+
+#+begin_src R :results output :exports both
+## Close the travel
+route <- rbind(route,
+               data.frame(lon = cities[i + 1, "lon"],
+                          lat = cities[i + 1, "lat"],
+                          zoom = zoomOut,
+                          name = cities[i+1, "city"],
+                          action = 'depart'))
+
+summary(route)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+      lon                lat               zoom               name    
+ Min.   :-179.538   Min.   :-74.346   Min.   :0.1000   Madrid   :300  
+ 1st Qu.: -54.003   1st Qu.:-23.551   1st Qu.:0.1707   New York :400  
+ Median :  -3.704   Median : 25.285   Median :0.2434   Sao Paulo:400  
+ Mean   :  32.888   Mean   :  6.293   Mean   :0.2296   Sidney   :400  
+ 3rd Qu.: 139.759   3rd Qu.: 35.683   3rd Qu.:0.3000   Tokyo    :400  
+ Max.   : 178.515   Max.   : 68.234   Max.   :0.3000            :800  
+    action    
+ arrive: 900  
+ depart:1000  
+ travel: 800
+#+end_example
+
+** Produce the frames
+#+begin_src R
+## Function to move the viewpoint in the RGL scene according to the
+## information included in the route (position and zoom).
+travel <- function(tt){
+  point <- route[tt,]
+  rgl.viewpoint(theta = -90 + point$lon,
+                phi = point$lat,
+                zoom = point$zoom)
+}
+#+end_src
+
+#+RESULTS:
+
+Example of =travel=
+#+begin_src R
+travel(1)
+rgl.snapshot('images/travel1.png')
+
+travel(1200)
+rgl.snapshot('images/travel2.png')
+#+end_src
+
+[[file:images/travel1.png]]
+
+[[file:images/travel2.png]]
+
+#+begin_src R
+movie3d(travel,
+        duration = nrow(route),
+        startTime = 1, fps = 1,
+        type = 'mp4', clean = FALSE)
+#+end_src
