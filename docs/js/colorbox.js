@@ -1,5 +1,11 @@
 $(document).ready(function(){
     $(".figure a").colorbox({height:"100%"});
+    $(".iframe").colorbox({
+	iframe:true,
+	width:"100%",
+	height:"100%",
+	scrolling:false
+    });
     $(".svg").colorbox({
 	iframe:true, 
 	height:"125%", 

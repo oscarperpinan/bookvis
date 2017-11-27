@@ -30,45 +30,23 @@
    :END:
 
 *** dygraphs
-
- #+BEGIN_EXPORT html
- <iframe src="images/dygraphs/TimeHorizontalAxis1.html" width="100%" height="600px" style = "border:none;"></iframe>
- #+END_EXPORT
-
-[[file:images/dygraphs/TimeHorizontalAxis1.html][Open in a blank page]].
-
- #+BEGIN_EXPORT html
- <iframe src="images/dygraphs/TimeHorizontalAxis2.html" width="100%" height="600px" style = "border:none;"></iframe>
- #+END_EXPORT
-
-[[file:images/dygraphs/TimeHorizontalAxis2.html][Open in a blank page]].
+#+ATTR_HTML: :class iframe
+[[file:images/dygraphs/TimeHorizontalAxis1.html][file:images/dygraphs_aranjuez.png]]
+#+ATTR_HTML: :class iframe
+[[file:images/dygraphs/TimeHorizontalAxis2.html][file:images/dygraphs_aranjuez_maxmin.png]]
 
 *** highcharter
-
-#+BEGIN_EXPORT html
-<iframe src="images/highcharter/TimeHorizontalAxis.html" width="100%" height="600px" style = "border:none;"></iframe>
-#+END_EXPORT
-
-[[file:images/highcharter/TimeHorizontalAxis.html][Open in a blank page]].
+#+ATTR_HTML: :class iframe
+[[file:images/highcharter/TimeHorizontalAxis.html][file:images/highcharter_aranjuez.png]]
 
 *** plotly
-
-#+BEGIN_EXPORT html
-<iframe src="images/plotly/TimeHorizontalAxis.html" width="100%" height="600px" style = "border:none;"></iframe>
-#+END_EXPORT
-
-[[file:images/plotly/TimeHorizontalAxis.html][Open in a blank page]].
-
-
+#+ATTR_HTML: :class iframe
+[[file:images/plotly/TimeHorizontalAxis.html][file:images/plotly_aranjuez.png]]
 
 *** streamgraph
 
-#+BEGIN_EXPORT html
-<iframe src="images/streamgraph/index.html" width="100%" height="600px" style = "border:none;"></iframe>
-#+END_EXPORT
-
-[[file:images/streamgraph/index.html][Open in a blank page]].
-
+#+ATTR_HTML: :class iframe
+[[file:images/streamgraph/index.html][file:images/streamgraph_interactive.png]]
 
 * Time as a conditioning or grouping variable
   :PROPERTIES:
@@ -106,12 +84,8 @@
 ** Interactive graphics: animation
 
 *** plotly
-
-#+BEGIN_EXPORT html
-<iframe src="images/plotly/TimeComplementary.html" width="100%" height="600px" style = "border:none;"></iframe>
-#+END_EXPORT
-
-[[file:images/plotly/TimeComplementary.html][Open in a blank page]].
+#+ATTR_HTML: :class iframe
+[[file:images/plotly/TimeComplementary.html][file:images/plotly_animation.png]]
 
 *** googleVis
 #+ATTR_HTML: :class svg
