@@ -1,5 +1,4 @@
 ## Core latex/pdflatex auxiliary files:
-*.tex
 *.aux
 *.lof
 *.log
@@ -129,5 +128,7 @@ sympy-plots-for-*.tex/
 # Emacs
 *~
 .Rhistory
+*.tex
+!preamble.tex
 SpaceTimeVis.pdf
 

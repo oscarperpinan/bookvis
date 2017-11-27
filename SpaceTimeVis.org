@@ -504,10 +504,10 @@ In this chapter, time will be used as a complementary variable which adds inform
  label:cha:thematicMaps
 
  A thematic map focuses on a specific theme or variable, commonly using geographic data such as coastlines, boundaries, and places as points of reference for the variable being mapped. These maps provide specific information about particular locations or areas (proportional symbol mapping and choropleth maps) and information about spatial patterns (isarithmic and raster maps). The following sections illustrate the code you need to produce these maps, with a final section devoted to the visualization of vector fields.
-#+INCLUDE: "Spatial/bubble.tex" src latex
-#+INCLUDE: "Spatial/choropleth.tex" src latex
-#+INCLUDE: "Spatial/raster.tex" src latex
-#+INCLUDE: "Spatial/vector.tex" src latex
+#+INCLUDE: "Spatial/bubble.org"
+#+INCLUDE: "Spatial/choropleth.org"
+#+INCLUDE: "Spatial/raster.org"
+#+INCLUDE: "Spatial/vector.org"
 
 ** COMMENT Reference and Physical Maps
  label:cha:refer-phys-maps
@@ -516,13 +516,13 @@ In this chapter, time will be used as a complementary variable which adds inform
  A physical map shows the physical landscape features of a place.  Mountains and elevation changes are usually shown with different colors and shades to show relief, using green to show lower elevations and browns for high elevations.
 
  This chapter details how to create a reference map of a northern region of Spain using data from OpenStreetMap and a physical map of Brazil with data from different sources.
-#+INCLUDE: "Spatial/physical.tex" src latex
-#+INCLUDE: "Spatial/osmar.tex" src latex
+#+INCLUDE: "Spatial/physical.org"
+#+INCLUDE: "Spatial/osmar.org"
 
 ** COMMENT About the Data
  label:cha:dataSpatial
 
-#+INCLUDE: "Spatial/dataSpatial.tex" src latex
+#+INCLUDE: "Spatial/dataSpatial.org"
 
 * Space-Time Data
 
@@ -616,12 +616,12 @@ In this chapter, time will be used as a complementary variable which adds inform
 ** COMMENT Spatiotemporal Raster Data
  label:cha:rasterST
 
-#+INCLUDE: "SpatioTime/rasterST.tex" src latex
+#+INCLUDE: "SpatioTime/rasterST.org"
 
 ** COMMENT Spatiotemporal Point Observations
  label:cha:pointsST
 
-#+INCLUDE: "SpatioTime/pointsST.tex" src latex
+#+INCLUDE: "SpatioTime/pointsST.org"
 
 * Bibliography and Index 
 

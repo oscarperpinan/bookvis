@@ -17,7 +17,7 @@ setwd('~/github/bookvis')
 Sys.setlocale("LC_TIME", 'C')
 #+end_src
 
-* Introduction
+* Introduction label:sec:intro_st
 
 A space-time raster dataset is a collection of raster layers indexed
 by time, or in other words, a time series of raster maps. The =raster=
@@ -57,7 +57,25 @@ SISdm <- setZ(SISdm, timeIndex)
 names(SISdm) <- format(timeIndex, '%a_%Y%m%d')
 #+end_src
 
-* Level Plots
+#+begin_src R :results output :exports results :tangle no
+SISdm
+#+end_src
+
+#+RESULTS:
+#+begin_example
+class       : RasterBrick 
+dimensions  : 70, 95, 6650, 365  (nrow, ncol, ncell, nlayers)
+resolution  : 0.03, 0.03  (x, y)
+extent      : -9.385, -6.535, 41.735, 43.835  (xmin, xmax, ymin, ymax)
+coord. ref. : +proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0 
+data source : data/SISgal.grd 
+names       : sáb_20110101, dom_20110102, lun_20110103, mar_20110104, mié_20110105, jue_20110106, vie_20110107, sáb_20110108, dom_20110109, lun_20110110, mar_20110111, mié_20110112, jue_20110113, vie_20110114, sáb_20110115, ... 
+min values  :    22.368380,    17.167900,    14.132746,     6.816897,    11.616024,     4.851091,     7.251504,     7.717323,    32.492584,    16.786699,    20.433887,    25.984509,    24.190809,    25.485737,    31.256468, ... 
+max values  :     88.84628,     93.43065,     84.44052,     81.79698,     47.08540,     49.01350,     80.98129,     74.12977,    102.71733,     48.54120,     75.46757,     98.09704,    104.65322,    104.29843,    107.23942, ... 
+time        : 2011-01-01, 2011-12-31 (min, max)
+#+end_example
+
+* Level Plots label:sec:levelplot_st
 
 #+begin_src R :exports none
 ##################################################################
@@ -95,6 +113,26 @@ the aggregation procedure.
 SISmm <- zApply(SISdm, by=as.yearmon, fun='mean')
 #+end_src
 
+#+RESULTS:
+
+#+begin_src R :results output :exports results :tangle no
+SISmm
+#+end_src
+
+#+RESULTS:
+#+begin_example
+class       : RasterBrick 
+dimensions  : 70, 95, 6650, 12  (nrow, ncol, ncell, nlayers)
+resolution  : 0.03, 0.03  (x, y)
+extent      : -9.385, -6.535, 41.735, 43.835  (xmin, xmax, ymin, ymax)
+coord. ref. : +proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0 
+data source : in memory
+names       :  ene.2011,  feb.2011,  mar.2011,  abr.2011,  may.2011,  jun.2011,  jul.2011,  ago.2011,  sep.2011,  oct.2011,  nov.2011,  dic.2011 
+min values  :  45.79540,  90.73799, 127.99301, 206.37934, 171.51269, 233.96372, 196.51799, 188.50950, 161.11302, 126.57236,  64.57646,  49.24799 
+max values  :  74.62326, 123.82005, 167.88226, 249.85596, 313.51773, 340.51255, 334.61417, 273.41496, 225.10363, 164.54701,  82.47245,  79.40128 
+            : ene 2011, feb 2011, mar 2011, abr 2011, may 2011, jun 2011, jul 2011, ago 2011, sep 2011, oct 2011, nov 2011, dic 2011
+#+end_example
+
 #+begin_src R :results output graphics :exports both :file figs/SISmm.pdf
 levelplot(SISmm, panel=panel.levelplot.raster)
 #+end_src
@@ -104,7 +142,7 @@ levelplot(SISmm, panel=panel.levelplot.raster)
 #+RESULTS:
 [[file:figs/SISmm.pdf]]
 
-* Graphical Exploratory Data Analysis
+* Graphical Exploratory Data Analysis label:sec:exploratory_st
 
 #+begin_src R :exports none
 ##################################################################
@@ -169,7 +207,7 @@ between the central months due to the predominance of clear sky
 conditions. However, the relationships involving winter months become
 strongly nonlinear due to the presence of clouds.
 
-* Space-Time and Time Series Plots
+* Space-Time and Time Series Plots label:sec:spacetime_plot
 #+begin_src R :exports none
 ##################################################################
 ## Space-time and time series plots
@@ -236,8 +274,7 @@ interesting to note that (Figure [[fig:SISdm_horizonplot]]) the
 radiation values around the equinoxes fluctuate near the yearly
 average value of each latitude region.
 
-* Animation
-\label{sec:animationST}
+* Animation label:sec:animationST
 
 #+begin_src R :exports none
 ##################################################################
@@ -285,8 +322,6 @@ resolution of 12 kilometers.
 
 #+begin_src R
 cft <- brick('data/cft_20130417_0000.nc')
-## use memory instead of file
-cft[] <- getValues(cft)
 ## set projection
 projLCC2d <- "+proj=lcc +lon_0=-14.1 +lat_0=34.823 +lat_1=43 +lat_2=43 +x_0=536402.3 +y_0=-18558.61 +units=km +ellps=WGS84"
 projection(cft) <- projLCC2d
@@ -295,6 +330,21 @@ timeIndex <- seq(as.POSIXct('2013-04-17 01:00:00', tz = 'UTC'), length = 96, by 
 cft <- setZ(cft, timeIndex)
 names(cft) <- format(timeIndex, 'D%d_H%H')
 #+end_src
+
+#+begin_src R :results output :exports results :tangle no
+cft
+#+end_src
+
+#+RESULTS:
+: class       : RasterBrick 
+: dimensions  : 99, 99, 9801, 96  (nrow, ncol, ncell, nlayers)
+: resolution  : 12, 12  (x, y)
+: extent      : 858, 2046, -6, 1182  (xmin, xmax, ymin, ymax)
+: coord. ref. : +proj=lcc +lon_0=-14.1 +lat_0=34.823 +lat_1=43 +lat_2=43 +x_0=536402.3 +y_0=-18558.61 +units=km +ellps=WGS84 
+: data source : /home/oscar/github/bookvis/data/cft_20130417_0000.nc 
+: names       : D17_H01, D17_H02, D17_H03, D17_H04, D17_H05, D17_H06, D17_H07, D17_H08, D17_H09, D17_H10, D17_H11, D17_H12, D17_H13, D17_H14, D17_H15, ... 
+: time        : 2013-04-17 01:00:00, 2013-04-21 00:00:00 (min, max)
+: varname     : cft
 
 
 ** Spatial Context: Administrative Boundaries
@@ -422,7 +472,7 @@ the entire 3D dataset.
 #   mogrify -density 200 -format png figs/*.pdf 
 # #+end_src
 
-* rgl
+* rgl label:sec:rgl
 
 #+begin_src R
 library(rgl)
