@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-11-27 lun 23:05 -->
+<!-- 2017-12-01 vie 19:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Time Series - Displaying time series, spatial and space-time data with R</title>
@@ -245,25 +245,25 @@ for the JavaScript code in this tag.
 <ul>
 <li><a href="#horizontal">Time on the horizontal axis</a>
 <ul>
-<li><a href="#org877c5e8">Time Graph of Different Meteorological Variables</a></li>
-<li><a href="#org80493f5">The Horizon Graph</a></li>
-<li><a href="#org7a6e1d3">Time Series of Variables with the Same Scale</a></li>
-<li><a href="#org7ad807f">Stacked Graphs</a></li>
+<li><a href="#horizontal_different_scales">Time Graph of Variables with Different Scales</a></li>
+<li><a href="#horizontal_same_scale">Time Series of Variables with the Same Scale</a></li>
+<li><a href="#horizonplot">The Horizon Graph</a></li>
+<li><a href="#stacked">Stacked Graphs</a></li>
 <li><a href="#interactive_timehorizontal">Interactive</a></li>
 </ul>
 </li>
 <li><a href="#group">Time as a conditioning or grouping variable</a>
 <ul>
-<li><a href="#org1303c76">Scatterplot Matrix: Time as a Grouping Variable</a></li>
-<li><a href="#org822df23">Scatterplot with Time as a Conditioning Variable</a></li>
+<li><a href="#scatterplot_group">Scatterplot Matrix: Time as a Grouping Variable</a></li>
+<li><a href="#scatterplot_condition">Scatterplot with Time as a Conditioning Variable</a></li>
 </ul>
 </li>
 <li><a href="#complementary">Time as a complementary variable</a>
 <ul>
-<li><a href="#orgeb92720">Polylines</a></li>
-<li><a href="#org8b95955">Labels to Show Time Information</a></li>
-<li><a href="#orgbb4c168">Using Variable Size to Encode an Additional Variable</a></li>
-<li><a href="#orgefe13db">Interactive graphics: animation</a></li>
+<li><a href="#complementary_polylines">Polylines</a></li>
+<li><a href="#complementary_labels">Labels to Show Time Information</a></li>
+<li><a href="#complementary_size">Using Variable Size to Encode an Additional Variable</a></li>
+<li><a href="#complementary_animation">Interactive graphics: animation</a></li>
 </ul>
 </li>
 <li><a href="#code">Code</a>
@@ -278,14 +278,14 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org1084913" class="outline-2">
-<h2 id="horizontal"><a id="org1084913"></a>Time on the horizontal axis</h2>
+<div id="outline-container-org2eadd40" class="outline-2">
+<h2 id="horizontal"><a id="org2eadd40"></a>Time on the horizontal axis</h2>
 <div class="outline-text-2" id="text-horizontal">
 </div>
 
-<div id="outline-container-org877c5e8" class="outline-3">
-<h3 id="org877c5e8">Time Graph of Different Meteorological Variables</h3>
-<div class="outline-text-3" id="text-org877c5e8">
+<div id="outline-container-org97b87d7" class="outline-3">
+<h3 id="horizontal_different_scales"><a id="org97b87d7"></a>Time Graph of Variables with Different Scales</h3>
+<div class="outline-text-3" id="text-horizontal_different_scales">
 
 <div class="figure">
 <p><a href="images/aranjuezXblocks.png"><img src="images/thumbs/aranjuezXblocks.png" alt="aranjuezXblocks.png" /></a> 
@@ -294,20 +294,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org80493f5" class="outline-3">
-<h3 id="org80493f5">The Horizon Graph</h3>
-<div class="outline-text-3" id="text-org80493f5">
-
-<div class="figure">
-<p><a href="images/navarraHorizonplot.png"><img src="images/thumbs/navarraHorizonplot.png" alt="navarraHorizonplot.png" /></a> 
-</p>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org7a6e1d3" class="outline-3">
-<h3 id="org7a6e1d3">Time Series of Variables with the Same Scale</h3>
-<div class="outline-text-3" id="text-org7a6e1d3">
+<div id="outline-container-org832c2a0" class="outline-3">
+<h3 id="horizontal_same_scale"><a id="org832c2a0"></a>Time Series of Variables with the Same Scale</h3>
+<div class="outline-text-3" id="text-horizontal_same_scale">
 
 <div class="figure">
 <p><a href="images/navarraRadiation.svg.html" class="svg"><img src="images/thumbs/navarraSVG.png" alt="navarraSVG.png" class="svg" /></a> 
@@ -316,9 +305,20 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org7ad807f" class="outline-3">
-<h3 id="org7ad807f">Stacked Graphs</h3>
-<div class="outline-text-3" id="text-org7ad807f">
+<div id="outline-container-orga04fed9" class="outline-3">
+<h3 id="horizonplot"><a id="orga04fed9"></a>The Horizon Graph</h3>
+<div class="outline-text-3" id="text-horizonplot">
+
+<div class="figure">
+<p><a href="images/navarraHorizonplot.png"><img src="images/thumbs/navarraHorizonplot.png" alt="navarraHorizonplot.png" /></a> 
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfc4060c" class="outline-3">
+<h3 id="stacked"><a id="orgfc4060c"></a>Stacked Graphs</h3>
+<div class="outline-text-3" id="text-stacked">
 
 <div class="figure">
 <p><a href="images/unemployUSAThemeRiver.png"><img src="images/thumbs/unemployUSAThemeRiver.png" alt="unemployUSAThemeRiver.png" /></a> 
@@ -327,14 +327,14 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org1d9a97b" class="outline-3">
-<h3 id="interactive_timehorizontal"><a id="org1d9a97b"></a>Interactive</h3>
+<div id="outline-container-orgbd837e0" class="outline-3">
+<h3 id="interactive_timehorizontal"><a id="orgbd837e0"></a>Interactive</h3>
 <div class="outline-text-3" id="text-interactive_timehorizontal">
 </div>
 
-<div id="outline-container-org578a4d8" class="outline-4">
-<h4 id="org578a4d8">dygraphs</h4>
-<div class="outline-text-4" id="text-org578a4d8">
+<div id="outline-container-orgb8ed3f7" class="outline-4">
+<h4 id="orgb8ed3f7">dygraphs</h4>
+<div class="outline-text-4" id="text-orgb8ed3f7">
 
 <div class="figure">
 <p><a href="images/dygraphs/TimeHorizontalAxis1.html" class="iframe"><img src="images/dygraphs_aranjuez.png" alt="dygraphs_aranjuez.png" class="iframe" /></a>
@@ -348,9 +348,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org6e791d4" class="outline-4">
-<h4 id="org6e791d4">highcharter</h4>
-<div class="outline-text-4" id="text-org6e791d4">
+<div id="outline-container-org468cd26" class="outline-4">
+<h4 id="org468cd26">highcharter</h4>
+<div class="outline-text-4" id="text-org468cd26">
 
 <div class="figure">
 <p><a href="images/highcharter/TimeHorizontalAxis.html" class="iframe"><img src="images/highcharter_aranjuez.png" alt="highcharter_aranjuez.png" class="iframe" /></a>
@@ -359,9 +359,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgab2439f" class="outline-4">
-<h4 id="orgab2439f">plotly</h4>
-<div class="outline-text-4" id="text-orgab2439f">
+<div id="outline-container-orgc6a98cb" class="outline-4">
+<h4 id="orgc6a98cb">plotly</h4>
+<div class="outline-text-4" id="text-orgc6a98cb">
 
 <div class="figure">
 <p><a href="images/plotly/TimeHorizontalAxis.html" class="iframe"><img src="images/plotly_aranjuez.png" alt="plotly_aranjuez.png" class="iframe" /></a>
@@ -370,9 +370,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org238699d" class="outline-4">
-<h4 id="org238699d">streamgraph</h4>
-<div class="outline-text-4" id="text-org238699d">
+<div id="outline-container-orgf38200e" class="outline-4">
+<h4 id="orgf38200e">streamgraph</h4>
+<div class="outline-text-4" id="text-orgf38200e">
 
 <div class="figure">
 <p><a href="images/streamgraph/index.html" class="iframe"><img src="images/streamgraph_interactive.png" alt="streamgraph_interactive.png" class="iframe" /></a>
@@ -383,14 +383,14 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orge84f347" class="outline-2">
-<h2 id="group"><a id="orge84f347"></a>Time as a conditioning or grouping variable</h2>
+<div id="outline-container-orgf3232e1" class="outline-2">
+<h2 id="group"><a id="orgf3232e1"></a>Time as a conditioning or grouping variable</h2>
 <div class="outline-text-2" id="text-group">
 </div>
 
-<div id="outline-container-org1303c76" class="outline-3">
-<h3 id="org1303c76">Scatterplot Matrix: Time as a Grouping Variable</h3>
-<div class="outline-text-3" id="text-org1303c76">
+<div id="outline-container-org2adaeeb" class="outline-3">
+<h3 id="scatterplot_group"><a id="org2adaeeb"></a>Scatterplot Matrix: Time as a Grouping Variable</h3>
+<div class="outline-text-3" id="text-scatterplot_group">
 
 <div class="figure">
 <p><a href="images/aranjuezSplom.png"><img src="images/thumbs/aranjuezSplom.png" alt="aranjuezSplom.png" /></a> 
@@ -412,9 +412,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org822df23" class="outline-3">
-<h3 id="org822df23">Scatterplot with Time as a Conditioning Variable</h3>
-<div class="outline-text-3" id="text-org822df23">
+<div id="outline-container-org69f5aa4" class="outline-3">
+<h3 id="scatterplot_condition"><a id="org69f5aa4"></a>Scatterplot with Time as a Conditioning Variable</h3>
+<div class="outline-text-3" id="text-scatterplot_condition">
 
 <div class="figure">
 <p><a href="images/aranjuezOuterStrips.png"><img src="images/thumbs/aranjuezOuterStrips.png" alt="aranjuezOuterStrips.png" /></a>
@@ -425,14 +425,14 @@ for the JavaScript code in this tag.
 </div>
 
 
-<div id="outline-container-orgd6f8870" class="outline-2">
-<h2 id="complementary"><a id="orgd6f8870"></a>Time as a complementary variable</h2>
+<div id="outline-container-org2d1c958" class="outline-2">
+<h2 id="complementary"><a id="org2d1c958"></a>Time as a complementary variable</h2>
 <div class="outline-text-2" id="text-complementary">
 </div>
 
-<div id="outline-container-orgeb92720" class="outline-3">
-<h3 id="orgeb92720">Polylines</h3>
-<div class="outline-text-3" id="text-orgeb92720">
+<div id="outline-container-org87acfed" class="outline-3">
+<h3 id="complementary_polylines"><a id="org87acfed"></a>Polylines</h3>
+<div class="outline-text-3" id="text-complementary_polylines">
 
 <div class="figure">
 <p><a href="images/CO2_GNI.png"><img src="images/thumbs/CO2_GNI.png" alt="CO2_GNI.png" /></a>
@@ -441,9 +441,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org8b95955" class="outline-3">
-<h3 id="org8b95955">Labels to Show Time Information</h3>
-<div class="outline-text-3" id="text-org8b95955">
+<div id="outline-container-org952b07b" class="outline-3">
+<h3 id="complementary_labels"><a id="org952b07b"></a>Labels to Show Time Information</h3>
+<div class="outline-text-3" id="text-complementary_labels">
 
 <div class="figure">
 <p><a href="images/CO2_capitaDL.png"><img src="images/thumbs/CO2_capitaDL.png" alt="CO2_capitaDL.png" /></a> 
@@ -452,9 +452,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgbb4c168" class="outline-3">
-<h3 id="orgbb4c168">Using Variable Size to Encode an Additional Variable</h3>
-<div class="outline-text-3" id="text-orgbb4c168">
+<div id="outline-container-org4bce2fe" class="outline-3">
+<h3 id="complementary_size"><a id="org4bce2fe"></a>Using Variable Size to Encode an Additional Variable</h3>
+<div class="outline-text-3" id="text-complementary_size">
 
 <div class="figure">
 <p><a href="images/CO2points.png"><img src="images/thumbs/CO2points.png" alt="CO2points.png" /></a> 
@@ -463,13 +463,14 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgefe13db" class="outline-3">
-<h3 id="orgefe13db">Interactive graphics: animation</h3>
-<div class="outline-text-3" id="text-orgefe13db">
+<div id="outline-container-orgbf9ee5f" class="outline-3">
+<h3 id="complementary_animation"><a id="orgbf9ee5f"></a>Interactive graphics: animation</h3>
+<div class="outline-text-3" id="text-complementary_animation">
 </div>
-<div id="outline-container-orge8fa554" class="outline-4">
-<h4 id="orge8fa554">plotly</h4>
-<div class="outline-text-4" id="text-orge8fa554">
+
+<div id="outline-container-org8cceec3" class="outline-4">
+<h4 id="org8cceec3">plotly</h4>
+<div class="outline-text-4" id="text-org8cceec3">
 
 <div class="figure">
 <p><a href="images/plotly/TimeComplementary.html" class="iframe"><img src="images/plotly_animation.png" alt="plotly_animation.png" class="iframe" /></a>
@@ -478,9 +479,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgdeb04f3" class="outline-4">
-<h4 id="orgdeb04f3">googleVis</h4>
-<div class="outline-text-4" id="text-orgdeb04f3">
+<div id="outline-container-org59fa910" class="outline-4">
+<h4 id="org59fa910">googleVis</h4>
+<div class="outline-text-4" id="text-org59fa910">
 
 <div class="figure">
 <p><a href="images/googleVis.html" class="svg"><img src="images/thumbs/googleVis.png" alt="googleVis.png" class="svg" /></a>
@@ -489,9 +490,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org06a0ddd" class="outline-4">
-<h4 id="org06a0ddd">gridSVG</h4>
-<div class="outline-text-4" id="text-org06a0ddd">
+<div id="outline-container-orga9521b4" class="outline-4">
+<h4 id="orga9521b4">gridSVG</h4>
+<div class="outline-text-4" id="text-orga9521b4">
 
 <div class="figure">
 <p><a href="images/bubbles.svg" class="svg"><img src="images/thumbs/bubbles.png" alt="bubbles.png" class="svg" /></a> 
@@ -502,12 +503,12 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org6934f4b" class="outline-2">
-<h2 id="code"><a id="org6934f4b"></a>Code</h2>
+<div id="outline-container-orgb851310" class="outline-2">
+<h2 id="code"><a id="orgb851310"></a>Code</h2>
 <div class="outline-text-2" id="text-code">
 </div>
-<div id="outline-container-orgde35306" class="outline-3">
-<h3 id="code_horizontal"><a id="orgde35306"></a>Time on the horizontal axis</h3>
+<div id="outline-container-org9390e2a" class="outline-3">
+<h3 id="code_horizontal"><a id="org9390e2a"></a>Time on the horizontal axis</h3>
 <div class="outline-text-3" id="text-code_horizontal">
 <p>
 <a href="R/timeHorizontalAxis.R">Download</a>
@@ -985,8 +986,8 @@ streamgraph(unemployDF,
 </div>
 </div>
 
-<div id="outline-container-org88e1482" class="outline-3">
-<h3 id="code_group"><a id="org88e1482"></a>Time as a conditioning or grouping variable</h3>
+<div id="outline-container-org6e069f7" class="outline-3">
+<h3 id="code_group"><a id="org6e069f7"></a>Time as a conditioning or grouping variable</h3>
 <div class="outline-text-3" id="text-code_group">
 <p>
 <a href="R/timeGroupFactor.R">Download</a>
@@ -1135,8 +1136,8 @@ useOuterStrips(xyplot(Temperature ~ Radiation | month * Statistic,
 </div>
 </div>
 
-<div id="outline-container-orgb707a10" class="outline-3">
-<h3 id="code_complementary"><a id="orgb707a10"></a>Time as a complementary variable</h3>
+<div id="outline-container-org9f23924" class="outline-3">
+<h3 id="code_complementary"><a id="org9f23924"></a>Time as a complementary variable</h3>
 <div class="outline-text-3" id="text-code_complementary">
 <p>
 <a href="R/timeComplementary.R">Download</a>
@@ -1526,8 +1527,8 @@ grid.export(<span class="org-string">"figs/bubbles.svg"</span>)
 </div>
 </div>
 
-<div id="outline-container-orgcc790a7" class="outline-3">
-<h3 id="code_data"><a id="orgcc790a7"></a>Data</h3>
+<div id="outline-container-org8b41d3f" class="outline-3">
+<h3 id="code_data"><a id="org8b41d3f"></a>Data</h3>
 <div class="outline-text-3" id="text-code_data">
 <p>
 <a href="R/dataTime.R">Download</a>

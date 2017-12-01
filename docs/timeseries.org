@@ -11,17 +11,29 @@
   :CUSTOM_ID: horizontal
   :END:
 
-** Time Graph of Different Meteorological Variables
+** Time Graph of Variables with Different Scales
+   :PROPERTIES:
+   :CUSTOM_ID: horizontal_different_scales
+   :END:
 [[file:images/aranjuezXblocks.png][file:images/thumbs/aranjuezXblocks.png]] 
 
-** The Horizon Graph
-[[file:images/navarraHorizonplot.png][file:images/thumbs/navarraHorizonplot.png]] 
-
 ** Time Series of Variables with the Same Scale
+   :PROPERTIES:
+   :CUSTOM_ID: horizontal_same_scale
+   :END:
 #+ATTR_HTML: :class svg
 [[file:images/navarraRadiation.svg.html][file:images/thumbs/navarraSVG.png]] 
 
+** The Horizon Graph
+   :PROPERTIES:
+   :CUSTOM_ID: horizonplot
+   :END:
+[[file:images/navarraHorizonplot.png][file:images/thumbs/navarraHorizonplot.png]] 
+
 ** Stacked Graphs
+   :PROPERTIES:
+   :CUSTOM_ID: stacked
+   :END:
 [[file:images/unemployUSAThemeRiver.png][file:images/thumbs/unemployUSAThemeRiver.png]] 
 
 ** Interactive
@@ -54,6 +66,9 @@
   :END:
 
 ** Scatterplot Matrix: Time as a Grouping Variable
+   :PROPERTIES:
+   :CUSTOM_ID: scatterplot_group
+   :END:
 
 [[file:images/aranjuezSplom.png][file:images/thumbs/aranjuezSplom.png]] 
 
@@ -63,6 +78,10 @@
 [[file:images/aranjuezHexbinplot.png][file:images/thumbs/aranjuezHexbinplot.png]] 
 
 ** Scatterplot with Time as a Conditioning Variable
+   :PROPERTIES:
+   :conditioning:
+   :CUSTOM_ID: scatterplot_condition
+   :END:
 [[file:images/aranjuezOuterStrips.png][file:images/thumbs/aranjuezOuterStrips.png]]
 
 
@@ -72,16 +91,28 @@
   :END:
 
 ** Polylines
+   :PROPERTIES:
+   :CUSTOM_ID: complementary_polylines
+   :END:
 
 [[file:images/CO2_GNI.png][file:images/thumbs/CO2_GNI.png]]
 
 ** Labels to Show Time Information
+   :PROPERTIES:
+   :CUSTOM_ID: complementary_labels
+   :END:
 [[file:images/CO2_capitaDL.png][file:images/thumbs/CO2_capitaDL.png]] 
 
 ** Using Variable Size to Encode an Additional Variable
+   :PROPERTIES:
+   :CUSTOM_ID: complementary_size
+   :END:
 [[file:images/CO2points.png][file:images/thumbs/CO2points.png]] 
 
 ** Interactive graphics: animation
+   :PROPERTIES:
+   :CUSTOM_ID: complementary_animation
+   :END:
 
 *** plotly
 #+ATTR_HTML: :class iframe
