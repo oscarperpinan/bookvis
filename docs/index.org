@@ -64,14 +64,21 @@ with the methods and modify the code to suit your own needs.
     :HTML_CONTAINER_CLASS: col-md-4
     :END:
 
-[[file:spatial.org][file:images/popLandClass_small.png]]
+[[file:images/popLandClass_small.png]]
+
+
+# [[file:spatial.org][file:images/popLandClass_small.png]]
+
 
 * Space-time Data
     :PROPERTIES:
     :HTML_CONTAINER_CLASS: col-md-4
     :END:
 
-[[file:spacetime.org][file:images/cft_small.png]]
+[[file:images/cft_small.png]]
+
+
+# [[file:spacetime.org][file:images/cft_small.png]]
 
 
 
