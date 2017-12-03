@@ -472,6 +472,32 @@ the entire 3D dataset.
 #   mogrify -density 200 -format png figs/*.pdf 
 # #+end_src
 
+** 3D animation
+
+#+begin_src R
+clear3d()
+
+pal <- colorRampPalette(brewer.pal(n = 9, 'Blues'))
+
+N <- nlayers(cft)
+
+ids <- lapply(seq_len(N),
+              FUN = function(i)
+                  plot3D(cft[[i]],
+                         maxpixels = 1e3, col = pal,
+                         adjust = FALSE, zfac = 200))
+
+#+end_src
+
+#+begin_src R
+rglwidget() %>%
+    playwidget(start = 0, stop = N, 
+               subsetControl(1, subsets = ids))
+#+end_src
+
+#+CAPTION: 3D animation of the forecast of hourly cloud cover at low and mid levels. label:fig:cftRGL
+[[file:figs/cftRGL.png]]
+
 * Footnotes
 
 [fn:1] http://mandeo.meteogalicia.es/thredds/catalogos/WRF_2D/catalog.html

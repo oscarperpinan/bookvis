@@ -1,17 +1,12 @@
 #+PROPERTY:  header-args :session *R* :tangle ../docs/R/rgl.R :eval no-export
 #+OPTIONS: ^:nil
 
+
 * Introduction label:sec:intro_rgl
 
-The rgl package is a visualization device system for R, using OpenGL as the rendering backend
+In section ref:sec:3dvisualiation an interactive 3D plot of a Digital Elevation Model was produced with the =rgl= package, a visualization device system for R using OpenGL as the rendering backend. In this section this package is used to generate movie of a flying travel across the earth, as an example of a 3D space-time graphic.
 
-The rgl package is used to produce interactive 3-D plots. It contains high-level graphics commands modelled loosely after classic R graphics, but working in three dimensions. It also contains low level structure inspired by (but incompatible with) the grid package.
-
-It produces WebGL graphics. WebGL a cross-platform, royalty-free API used to create 3D graphics in a Web browser. Based on OpenGL
-
-* rgl label:sec:rgl
-
-** Basic 3D earth
+* Basic 3D earth
 #+begin_src R
 library(rgl)
 library(magick) ## needed to import the texture
@@ -39,7 +34,7 @@ earth <- surface3d(-x, -z, y,
 writeWebGL('nightLights', width=1000)
 #+end_src
 
-** Define the locations
+* Define the locations
 #+begin_src R
 library(XML)
 
@@ -79,7 +74,7 @@ cities <- cbind(cities, points)
 | Sao Paulo | Brazil    | -46.6333824 | -23.5506507 |
 | New York  | USA       | -87.2008048 |  30.8385202 |
 
-** Generate the route 
+* Generate the route 
 #+begin_src R
 library(geosphere)
 
@@ -162,7 +157,7 @@ summary(route)
  travel: 800
 #+end_example
 
-** Produce the frames
+* Produce the frames
 #+begin_src R
 ## Function to move the viewpoint in the RGL scene according to the
 ## information included in the route (position and zoom).

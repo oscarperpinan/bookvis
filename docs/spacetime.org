@@ -35,11 +35,6 @@ The code of this section is available [[file:R/rasterST.R][here]].
 
 [[file:images/cft.png][file:images/thumbs/cft.png]]                
 
-# #+BEGIN_HTML
-#   <iframe src="http://player.vimeo.com/video/65227780" width="400" height="400" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe><a href="http://vimeo.com/65227780"></a>
-# #+END_HTML
-
-
 * Spatial point data
 
 The code of this section is available [[file:R/pointsST.R][here]].
@@ -61,4 +56,9 @@ The code of this section is available [[file:R/pointsST.R][here]].
 * 3D animation
 
 #+ATTR_HTML: :target _blank
-[[file:images/nightLights/index.html][RGL]]
+[[file:images/rgl/cft.html][Forecast of cloud cover]]
+[[file:images/cftRGL.png]]
+
+#+ATTR_HTML: :target _blank
+[[file:images/rgl/nightLights.html][Earth at night]]
+[[file:images/nightLights.png]]

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-11-27 lun 22:49 -->
+<!-- 2017-12-03 dom 16:58 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Spatio-temporal data - Displaying time series, spatial and space-time data with R</title>
@@ -243,35 +243,35 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org87d732c">Raster data</a>
+<li><a href="#orgbeed239">Raster data</a>
 <ul>
-<li><a href="#org70493d2">Level plots</a></li>
-<li><a href="#org5bc831c">Graphical Exploratory Data Analysis</a></li>
-<li><a href="#orgf5cbdc4">Space-Time and Time Series Plots</a></li>
-<li><a href="#org0a368f1">Animation</a></li>
+<li><a href="#org82a0b3e">Level plots</a></li>
+<li><a href="#orgece4b27">Graphical Exploratory Data Analysis</a></li>
+<li><a href="#org2c58a5d">Space-Time and Time Series Plots</a></li>
+<li><a href="#orgcbf529d">Animation</a></li>
 </ul>
 </li>
-<li><a href="#orgad9d2b2">Spatial point data</a>
+<li><a href="#org1bd5906">Spatial point data</a>
 <ul>
-<li><a href="#org9c62767">Graphics with <code>spacetime</code></a></li>
-<li><a href="#org3d9c21b">Animation</a></li>
+<li><a href="#org04028b8">Graphics with <code>spacetime</code></a></li>
+<li><a href="#org2b45ec2">Animation</a></li>
 </ul>
 </li>
-<li><a href="#orgefeaac6">3D animation</a></li>
+<li><a href="#orgd2d8143">3D animation</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org87d732c" class="outline-2">
-<h2 id="org87d732c">Raster data</h2>
-<div class="outline-text-2" id="text-org87d732c">
+<div id="outline-container-orgbeed239" class="outline-2">
+<h2 id="orgbeed239">Raster data</h2>
+<div class="outline-text-2" id="text-orgbeed239">
 <p>
 The code of this section is available <a href="R/rasterST.R">here</a>.
 </p>
 </div>
-<div id="outline-container-org70493d2" class="outline-3">
-<h3 id="org70493d2">Level plots</h3>
-<div class="outline-text-3" id="text-org70493d2">
+<div id="outline-container-org82a0b3e" class="outline-3">
+<h3 id="org82a0b3e">Level plots</h3>
+<div class="outline-text-3" id="text-org82a0b3e">
 
 <div class="figure">
 <p><a href="images/SISdm.png"><img src="images/thumbs/SISdm.png" alt="SISdm.png" /></a> 
@@ -280,9 +280,9 @@ The code of this section is available <a href="R/rasterST.R">here</a>.
 </div>
 </div>
 
-<div id="outline-container-org5bc831c" class="outline-3">
-<h3 id="org5bc831c">Graphical Exploratory Data Analysis</h3>
-<div class="outline-text-3" id="text-org5bc831c">
+<div id="outline-container-orgece4b27" class="outline-3">
+<h3 id="orgece4b27">Graphical Exploratory Data Analysis</h3>
+<div class="outline-text-3" id="text-orgece4b27">
 
 <div class="figure">
 <p><a href="images/SISdm_splom.png"><img src="images/thumbs/SISdm_splom.png" alt="SISdm_splom.png" /></a>     
@@ -304,9 +304,9 @@ The code of this section is available <a href="R/rasterST.R">here</a>.
 </div>
 </div>
 
-<div id="outline-container-orgf5cbdc4" class="outline-3">
-<h3 id="orgf5cbdc4">Space-Time and Time Series Plots</h3>
-<div class="outline-text-3" id="text-orgf5cbdc4">
+<div id="outline-container-org2c58a5d" class="outline-3">
+<h3 id="org2c58a5d">Space-Time and Time Series Plots</h3>
+<div class="outline-text-3" id="text-org2c58a5d">
 
 <div class="figure">
 <p><a href="images/SISdm_hovmoller_lat.png"><img src="images/thumbs/SISdm_hovmoller_lat.png" alt="SISdm_hovmoller_lat.png" /></a> 
@@ -333,9 +333,9 @@ The code of this section is available <a href="R/rasterST.R">here</a>.
 </div>
 </div>
 
-<div id="outline-container-org0a368f1" class="outline-3">
-<h3 id="org0a368f1">Animation</h3>
-<div class="outline-text-3" id="text-org0a368f1">
+<div id="outline-container-orgcbf529d" class="outline-3">
+<h3 id="orgcbf529d">Animation</h3>
+<div class="outline-text-3" id="text-orgcbf529d">
 
 <div class="figure">
 <p><a href="http://player.vimeo.com/video/65227780" class="vimeo"><img src="images/thumbs/cftVideo.png" alt="cftVideo.png" class="vimeo" /></a>                
@@ -351,18 +351,17 @@ The code of this section is available <a href="R/rasterST.R">here</a>.
 </div>
 </div>
 
-
-<div id="outline-container-orgad9d2b2" class="outline-2">
-<h2 id="orgad9d2b2">Spatial point data</h2>
-<div class="outline-text-2" id="text-orgad9d2b2">
+<div id="outline-container-org1bd5906" class="outline-2">
+<h2 id="org1bd5906">Spatial point data</h2>
+<div class="outline-text-2" id="text-org1bd5906">
 <p>
 The code of this section is available <a href="R/pointsST.R">here</a>.
 </p>
 </div>
 
-<div id="outline-container-org9c62767" class="outline-3">
-<h3 id="org9c62767">Graphics with <code>spacetime</code></h3>
-<div class="outline-text-3" id="text-org9c62767">
+<div id="outline-container-org04028b8" class="outline-3">
+<h3 id="org04028b8">Graphics with <code>spacetime</code></h3>
+<div class="outline-text-3" id="text-org04028b8">
 
 <div class="figure">
 <p><a href="images/NO2STxy.png"><img src="images/thumbs/NO2STxy.png" alt="NO2STxy.png" /></a> 
@@ -377,9 +376,9 @@ The code of this section is available <a href="R/pointsST.R">here</a>.
 </div>
 </div>
 
-<div id="outline-container-org3d9c21b" class="outline-3">
-<h3 id="org3d9c21b">Animation</h3>
-<div class="outline-text-3" id="text-org3d9c21b">
+<div id="outline-container-org2b45ec2" class="outline-3">
+<h3 id="org2b45ec2">Animation</h3>
+<div class="outline-text-3" id="text-org2b45ec2">
 
 <div class="figure">
 <p><a href="images/vLine.svg" class="svg"><img src="images/thumbs/vLine.png" alt="vLine.png" class="svg" /></a> 
@@ -396,11 +395,17 @@ The code of this section is available <a href="R/pointsST.R">here</a>.
 </div>
 
 
-<div id="outline-container-orgefeaac6" class="outline-2">
-<h2 id="orgefeaac6">3D animation</h2>
-<div class="outline-text-2" id="text-orgefeaac6">
+<div id="outline-container-orgd2d8143" class="outline-2">
+<h2 id="orgd2d8143">3D animation</h2>
+<div class="outline-text-2" id="text-orgd2d8143">
 <p target="_blank">
-<a href="images/nightLights/index.html" target="_blank">RGL</a>
+<a href="images/rgl/cft.html" target="_blank">Forecast of Cloud Cover</a>
+<img src="images/cftRGL.png" alt="cftRGL.png" />
+</p>
+
+<p target="_blank">
+<a href="images/rgl/nightLights.html" target="_blank">Earth at night</a>
+<img src="images/nightLights.png" alt="nightLights.png" />
 </p>
 </div>
 </div>

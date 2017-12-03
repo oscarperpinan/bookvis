@@ -201,7 +201,7 @@ The procedure is as follows:
 #+RESULTS:
 [[file:figs/hillShading.png]]
 
-*** Excursus: 3D Visualization
+*** Excursus: 3D Visualization label:sec:3dvisualization
 #+begin_src R :exports none
 ##################################################################
 ## Excursus: 3D visualization
@@ -236,7 +236,7 @@ writeWebGL(filename = 'docs/images/rgl/DEM.html',
 #+end_src
 
 #+CAPTION: 3D visualization of a Digital Elevation Model using the WebGL format. label:fig:DEM_Web
-[[file:~/github/bookvis/figs/DEM_WebGL.png]]
+[[file:figs/DEM_WebGL.png]]
 
 *** Diverging Palettes
 #+begin_src R :exports none
