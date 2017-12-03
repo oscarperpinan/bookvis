@@ -25,8 +25,8 @@ The code of this section is available [[file:R/raster.R][here]].
 
 [[file:images/populationNASA.png][file:images/thumbs/populationNASA.png]]    
 
-#+ATTR_HTML: :class vimeo
-[[file:images/stl.html][file:images/thumbs/DEM_STL_GitHub.png]]
+#+ATTR_HTML: :class iframe
+[[file:images/rgl/DEM.html][file:images/DEM_WebGL.png]]
 
 [[file:images/popLandClass.png][file:images/thumbs/popLandClass.png]] 
 

@@ -161,7 +161,7 @@ The procedure is as follows:
 #+end_src
 
 #+begin_src R :exports none :tangle no
-  DEM <- raster('~/Datos/ESP_msk_alt/ESP_msk_alt')
+  DEM <- raster('/home/datos/ESP_msk_alt/ESP_msk_alt')
 #+end_src
 
 - Compute the hill shade raster with =terrain= and =hillShade= from =raster=.
@@ -221,26 +221,22 @@ wrapper to this package for =RasterLayer= objects.
 #+END_LaTeX
 
 #+begin_src R
-  plot3D(DEM, maxpixels=5e4)
+plot3D(DEM, maxpixels = 5e4)
 #+end_src
 
-The output scene can be exported to several formats such as WebGL with
-=writeWebGL= to be rendered in a browser, or =STL= with =writeSTL=, a
-format commonly used in 3D printing. Files using this format are
-viewed easily on GitHub (Figure \ref{fig:DEM_STL})
+The output scene can be exported to several formats such as =STL= with
+=writeSTL=, a format commonly used in 3D printing, or WebGL with
+=writeWebGL= to be rendered in a browser (Figure \ref{fig:DEM_web}).
 
 #+begin_src R :eval no-export
-writeSTL('figs/DEM.stl')
+par3d(viewport = c(0, 30, 250, 250))
+
+writeWebGL(filename = 'docs/images/rgl/DEM.html',
+           width = 800)
 #+end_src
 
-#+BEGIN_LaTeX
-  \begin{figure}
-  \includegraphics[height=0.3\textheight]{figs/DEM_STL_GitHub.png}
-  \caption{\label{fig:DEM_STL}3D visualization of a Digital Elevation
-    Model using the STL format in a GitHub repository.}
-  \end{figure}
-#+END_LaTeX
-
+#+CAPTION: 3D visualization of a Digital Elevation Model using the WebGL format. label:fig:DEM_Web
+[[file:~/github/bookvis/figs/DEM_WebGL.png]]
 
 *** Diverging Palettes
 #+begin_src R :exports none
