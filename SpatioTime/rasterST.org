@@ -35,7 +35,7 @@ rasters.
 #+end_src
 
 Throughout this chapter we will work with a multilayer raster of daily
-solar radiation estimates from CM SAF (section \ref{sec:CMSAF}) falling in
+solar radiation estimates from CM SAF (ref:sec:CMSAF) falling in
 the region of Galicia (north of Spain) during 2011. These data are
 arranged in a =RasterBrick= with 365 layers using =brick= and time
 indexed with =setZ=.
@@ -153,11 +153,11 @@ There are other graphical tools that complement the previous maps. The
 scatterplot and the matrix of scatterplots, the histogram and kernel
 density plot, and the boxplot are among the most important tools in
 the frame of the Exploratory Data Analysis approach. Some of them were
-previously used with a spatial raster (Chapter \ref{cha:raster}). In
+previously used with a spatial raster (ref:cha:raster). In
 this section we will use the histogram (Figure [[fig:SISdm_hist]]),
 the violin plot (a combination of a boxplot and a kernel density plot)
 (Figure [[fig:SISdm_boxplot]]), and the matrix of scatterplots
-(section \ref{SEC:groupVariable}, Figure [[fig:SISmm_splom]]).
+(section ref:SEC:groupVariable, Figure [[fig:SISmm_splom]]).
 
 #+INDEX: histogram@\texttt{histogram}
 
@@ -217,7 +217,7 @@ strongly nonlinear due to the presence of clouds.
 The level plots of Figures [[fig:SISdm]] and [[fig:SISmm]]
 display the full 3D space-time with a grid of panels where each layer
 is printed. In other words, the raster is sliced, and the collection of
-pieces is shown in a table. In the section \ref{sec:animationST}, this
+pieces is shown in a table. In the section ref:sec:animationST, this
 collection of layers will be displayed sequentially like frames of a
 movie to build an animation. In this section, the 3D raster is reduced
 to a 2D matrix with spatial aggregation following a certain
@@ -242,7 +242,7 @@ time series with each aggregated zone conforming to a different variable of
 the time series. This approach is followed by the =xyplot= (Figure
 [[fig:SISmm_xyplot]]) and =horizonplot= (Figure [[fig:SISdm_horizonplot]])
 methods, which reproduce the procedures described in Chapter
-\ref{cha:timeHorizontalAxis} to display multivariate time series.
+ref:cha:timeHorizontalAxis to display multivariate time series.
 
 #+INDEX: xyplot@\texttt{xyplot}
 
@@ -273,243 +273,3 @@ radiation, with higher values during the central months. It is
 interesting to note that (Figure [[fig:SISdm_horizonplot]]) the
 radiation values around the equinoxes fluctuate near the yearly
 average value of each latitude region.
-
-* Animation label:sec:animationST
-
-#+begin_src R :exports none
-##################################################################
-## Animation
-##################################################################
-#+end_src
-
-
-A different approach is to plot the individual layers of the
-space-time raster sequentially as movie frames to produce an
-animation. The procedure is quite simple:
-- Plot each layer of the raster to produce a collection of graphic
-  files.
-- Join these files as a sequence of frames with a suitable tool (for
-  example, =ffmpeg=) to create a movie file[fn:3][fn:4].
-
-
-The effectiveness of this visualization procedure is partly related to
-the similitude between consecutive frames. If the frames of the
-sequence diverge excessively from one to another, the user will
-experience difficulties to perceive any relationship between them. On
-the other hand, if the transitions between layers are smooth enough,
-the frames will be perceived as conforming to a whole story; and,
-moreover, the user will be able to spot both the stable patterns and
-the important variations.
-
-** Data
-#+begin_src R :exports none
-##################################################################
-## Data
-##################################################################
-#+end_src
-The daily solar radiation CM-SAF data do not meet the condition of
-a smooth transition between layers. The changes between the consecutive
-snapshots of daily radiation are too abrupt to be glued one after
-another. We will work with a different dataset in this section.
-
-The THREDSS server[fn:1] of Meteogalicia[fn:2] provides access
-through different protocols to the output of a Weather Research
-and Forecasting (WRF) model, a mesoscale numerical weather
-prediction system. Among the set of available variables we will
-use the forecast of hourly cloud cover at low and mid levels. This
-space-time raster has a time horizon of 96 hours and a spatial
-resolution of 12 kilometers.
-
-#+begin_src R
-cft <- brick('data/cft_20130417_0000.nc')
-## set projection
-projLCC2d <- "+proj=lcc +lon_0=-14.1 +lat_0=34.823 +lat_1=43 +lat_2=43 +x_0=536402.3 +y_0=-18558.61 +units=km +ellps=WGS84"
-projection(cft) <- projLCC2d
-##set time index
-timeIndex <- seq(as.POSIXct('2013-04-17 01:00:00', tz = 'UTC'), length = 96, by = 'hour')
-cft <- setZ(cft, timeIndex)
-names(cft) <- format(timeIndex, 'D%d_H%H')
-#+end_src
-
-#+begin_src R :results output :exports results :tangle no
-cft
-#+end_src
-
-#+RESULTS:
-: class       : RasterBrick 
-: dimensions  : 99, 99, 9801, 96  (nrow, ncol, ncell, nlayers)
-: resolution  : 12, 12  (x, y)
-: extent      : 858, 2046, -6, 1182  (xmin, xmax, ymin, ymax)
-: coord. ref. : +proj=lcc +lon_0=-14.1 +lat_0=34.823 +lat_1=43 +lat_2=43 +x_0=536402.3 +y_0=-18558.61 +units=km +ellps=WGS84 
-: data source : /home/oscar/github/bookvis/data/cft_20130417_0000.nc 
-: names       : D17_H01, D17_H02, D17_H03, D17_H04, D17_H05, D17_H06, D17_H07, D17_H08, D17_H09, D17_H10, D17_H11, D17_H12, D17_H13, D17_H14, D17_H15, ... 
-: time        : 2013-04-17 01:00:00, 2013-04-21 00:00:00 (min, max)
-: varname     : cft
-
-
-** Spatial Context: Administrative Boundaries
-#+begin_src R :exports none
-##################################################################
-## Spatial context: administrative boundaries
-##################################################################
-#+end_src
-Let's provide the spatial context with the countries
-boundaries, extracted from the =worldHires= database of the =maps=
-and =mapdata= packages.
-
-#+INDEX: Packages!maptools@\texttt{maptools}
-#+INDEX: Packages!mapdata@\texttt{mapdata}
-#+INDEX: Packages!maps@\texttt{maps}
-#+INDEX: Packages!rgdal@\texttt{rgdal}
-#+INDEX: map2SpatialLines@\texttt{map2SpatialLines}
-#+INDEX: spTransform@\texttt{spTransform}
-
-#+begin_src R 
-library(maptools)
-library(rgdal)
-library(maps)
-library(mapdata)
-
-
-projLL <- CRS('+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0')
-cftLL <- projectExtent(cft, projLL)
-cftExt <- as.vector(bbox(cftLL))
-boundaries <- map('worldHires',
-                  xlim = cftExt[c(1,3)], ylim = cftExt[c(2,4)],
-                  plot = FALSE)
-boundaries <- map2SpatialLines(boundaries, proj4string = projLL)
-boundaries <- spTransform(boundaries, CRS(projLCC2d))
-#+end_src
-
-#+RESULTS:
-
-** Producing the Frames and the Movie
-#+begin_src R :exports none
-##################################################################
-## Producing frames and movie
-##################################################################
-#+end_src
-The next step is to produce the collection of frames. We will create a
-file with each layer of the =RasterBrick= using the =levelplot=
-function. This function provides the argument =layout= to control the
-arrangement of a multipanel display. If it is set to =c(1,1)=, a
-different page is created for each layer.
-
-#+INDEX: brewer.pal@\texttt{brewer.pal}
-
-#+begin_src R 
-cloudTheme <- rasterTheme(region = brewer.pal(n = 9, 'Blues'))
-#+end_src
-
-#+INDEX: levelplot@\texttt{levelplot}
-
-#+begin_src R :eval no-export
-tmp <- tempdir()
-trellis.device(png, file = paste0(tmp, '/Rplot%02d.png'),
-               res = 300, width = 1500, height = 1500)
-levelplot(cft, layout = c(1, 1), par.settings = cloudTheme) +
-    layer(sp.lines(boundaries, lwd = 0.6))
-dev.off()
-#+end_src
-
-A suitable tool to concatenate these frames and create the movie is
-=ffmpeg=, a free cross-platform software to record, convert, and stream
-audio and video[fn:5]. The resulting movie is available from the book
-website.
-
-#+INDEX: ffmpeg@\texttt{ffmpeg}
-
-#+begin_src R :eval no-export
-old <- setwd(tmp)
-## Create a movie with ffmpeg ...  
-system2('ffmpeg',
-        c('-r 6', ## with 6 frames per second
-          '-i Rplot%02d.png', ## using the previous files
-          '-b:v 300k', ## with a bitrate of 300kbs
-          'output.mp4')
-        )
-file.remove(dir(pattern = 'Rplot'))
-file.copy('output.mp4', paste0(old, '/figs/cft.mp4'), overwrite = TRUE)
-setwd(old)
-#+end_src
-
-** Static Image
-#+begin_src R :exports none
-##################################################################
-## Static image
-##################################################################
-#+end_src
-Figure [[fig:cft]] shows a sequence of twenty-four snapshots (second day
-of the forecast series) of the movie. This graphic is also created
-with =levelplot= but now using the argument =layers= to choose a
-subset of the layers, and with a different value for =layout= to
-display a matrix of twenty-four panels.
-#+begin_src R :results output graphics :exports both :file figs/cft.pdf
-levelplot(cft, layers = 25:48, layout = c(6, 4),
-          par.settings = cloudTheme,
-          names.attr = paste0(sprintf('%02d', 1:24), 'h'),
-          panel = panel.levelplot.raster) +
-    layer(sp.lines(boundaries, lwd = 0.6))
-#+end_src
-
-#+CAPTION: Forecast of hourly cloud cover at low and mid levels.
-#+LABEL: fig:cft
-#+RESULTS:
-[[file:figs/cft.pdf]]
-
-The movie and the static image are complementary tools and should be
-used together. Watching the movie you will perceive the cloud transit
-from Galicia to the Pyrenees gradually dissolving over the Cantabrian
-region. On the other hand, with Figure [[fig:cft]] you can locate the
-position of a group of clouds in a certain hour and simultaneously
-observe the relationship of that position with the evolution during
-that period. With the movie you will concentrate your attention on the
-movement. With small multiple pictures, your focus will be on
-positions and relations. You should use both graphical tools to grasp
-the entire 3D dataset.
-
-# #+begin_src sh :results silent :exports none
-#   mogrify -density 200 -format png figs/*.pdf 
-# #+end_src
-
-** 3D animation
-
-#+begin_src R
-clear3d()
-
-pal <- colorRampPalette(brewer.pal(n = 9, 'Blues'))
-
-N <- nlayers(cft)
-
-ids <- lapply(seq_len(N),
-              FUN = function(i)
-                  plot3D(cft[[i]],
-                         maxpixels = 1e3, col = pal,
-                         adjust = FALSE, zfac = 200))
-
-#+end_src
-
-#+begin_src R
-rglwidget() %>%
-    playwidget(start = 0, stop = N, 
-               subsetControl(1, subsets = ids))
-#+end_src
-
-#+CAPTION: 3D animation of the forecast of hourly cloud cover at low and mid levels. label:fig:cftRGL
-[[file:figs/cftRGL.png]]
-
-* Footnotes
-
-[fn:1] http://mandeo.meteogalicia.es/thredds/catalogos/WRF_2D/catalog.html
-
-[fn:2] http://www.meteogalicia.es
-
-[fn:3] The =animation= package \cite{Xie2013} defines several functions to wrap =ffmpeg= and =convert= from ImageMagick.
-
-[fn:4] An alternative method is the LaTeX animate package, which
-    provides an interface to create portable JavaScript-driven PDF
-    animations from rasterized image files.
-
-[fn:5] http://www.ffmpeg.org/
-
-

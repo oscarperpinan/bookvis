@@ -539,7 +539,7 @@ In this chapter, time will be used as a complementary variable which adds inform
 
  Finally, the space-time object can be reduced to a multivariate time series (where each location is a variable or column of the time series) and displayed with the time series visualization techniques described in the Part ref:part:Time. This approach is directly applicable to space-time data sparse in space (for example, point measurements at different times). However, it is mandatory to use aggregation in the case of raster data. In this case, the multivariate time series is composed of the evolution of the raster data averaged along a certain direction.
 
- The next chapters, focused on raster space-time data (Chapter ref:cha:rasterST) and point space-time data (Chapter ref:cha:pointsST), illustrate with examples how to produce animations, multipanel graphics, hovmöller diagrams, and time-series with =R=.
+ The next chapters, focused on raster space-time data (Chapters ref:cha:rasterST and ref:cha:animationST) and point space-time data (Chapter ref:cha:pointsST), illustrate with examples how to produce animations, multipanel graphics, hovmöller diagrams, and time-series with =R=.
 
 *** Packages
  label:sec:spacetime-packages
@@ -599,7 +599,7 @@ In this chapter, time will be used as a complementary variable which adds inform
  On the other hand, the =histogram=, =densityplot=, and =bwplot= methods accept a =FUN= argument to be applied to the =z= slot of =Raster*= object (defined by =setZ=). The result of this function is used as the grouping variable of the plot to create different panels.
 
 **** rgl
-TODO
+     The =rgl= package produces interactive 3D plots. It contains high-level graphics commands modelled loosely after classic R graphics, but working in three dimensions. It also contains low level structure inspired by (but incompatible with) the grid package.
 
 *** Further Reading
  label:cha:further-reading-spatiotime
@@ -626,10 +626,10 @@ TODO
 
 #+INCLUDE: "SpatioTime/pointsST.org"
 
-** 3D animation
- label:cha:rasterST
+** Animation
+ label:cha:animationST
 
-#+INCLUDE: "SpatioTime/rgl.org"
+#+INCLUDE: "SpatioTime/animation.org"
 
 * Bibliography and Index 
 
