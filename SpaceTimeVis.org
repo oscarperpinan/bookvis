@@ -2,7 +2,7 @@
 
 #+AUTHOR: Oscar Perpiñán Lamigueiro
 
-#+DATE: November 2017
+#+DATE: December 2017
 
 #+SETUPFILE: config.org
 
@@ -226,9 +226,10 @@ label:sec:introduction
 
 
 
-* COMMENT Time Series
+* Time Series
+label:part:Time
 
-** Displaying Time Series: Introduction
+** COMMENT Displaying Time Series: Introduction
  label:cha:timeIntro
 
  A time series is a sequence of observations registered at consecutive time instants. When these time instants are evenly spaced, the distance between them is called the sampling interval. The visualization of time series is intended to reveal changes of one or more quantitative variables through time, and to display the relationships between the variables and their evolution through time.
@@ -309,21 +310,21 @@ label:sec:introduction
 
  -  The =D3= gallery [fn:16] shows several great examples of time-series visualizations using the JavaScript library =D3.js=.
 
-** Time on the Horizontal Axis
+** COMMENT Time on the Horizontal Axis
  label:cha:timeHorizontalAxis
 
  The most frequent visualization method of a time series uses the horizontal axis to depict the time index. This chapter illustrates several variants to display multivariate time series: multiple time series with different scales, variables with the same scale, and stacked graphs.
 
 #+INCLUDE: "TimeSeries/timeHorizontalAxis.org" 
 
-** Time as a Conditioning or Grouping Variable
+** COMMENT Time as a Conditioning or Grouping Variable
 label:cha:timeGroupFactor
 
 In Section ref:sec:differentVariables we learned to display the time evolution of multiple time series with different scales. But, what if instead of displaying the time evolution we want to confront the variables between them? Section ref:SEC:groupVariable proposes the scatterplot matrix solution with time as a grouping variable. Section ref:SEC:conditionVariable uses an enhanced scatterplot with time as a conditioning variable. Section ref:SEC:hexbin includes a digression about the hexagonal binning for large datasets.
 
 #+INCLUDE: "TimeSeries/timeGroupFactor.org"
 
-** Time as a Complementary Variable
+** COMMENT Time as a Complementary Variable
  label:cha:timeComplementary
 
 Gapminder [fn:17] is an independent foundation based in Stockholm, Sweden.  Its mission is "to debunk devastating myths about the world by offering free access to a fact-based world view." They provide free online tools, data, and videos "to better understand the changing world." The initial development of Gapminder was the Trendalyzer software, used by Hans Rosling in several sequences of his documentary "The Joy of Stats."
@@ -336,13 +337,13 @@ In this chapter, time will be used as a complementary variable which adds inform
 
 #+INCLUDE: "TimeSeries/timeComplementary.org"
 
-** About the Data
+** COMMENT About the Data
  label:cha:dataTime
 
 #+INCLUDE: "TimeSeries/dataTime.org"
 
 * Spatial Data
-
+label:part:Spatial
 ** COMMENT Displaying Spatial Data: Introduction
   label:cha:spatialIntro
 
@@ -487,7 +488,7 @@ In this chapter, time will be used as a complementary variable which adds inform
 
  The =maps= cite:Becker.Wilks.ea2013, =mapdata= cite:Becker.Wilks.ea2013b, and =mapproj= cite:McIlroy.Brownrigg.ea2013 packages are useful to draw or create geographical maps. =mapdata= contains higher resolution databases, and =mapproj= converts latitude/longitude coordinates into projected coordinates.
 
-*** COMMENT Further Reading
+*** Further Reading
  label:cha:further-reading-spatial
 
  -  cite:Slocum.McMaster.ea2005 and cite:Dent.Torguson.ea2008 are comprehensive books on thematic cartography and geovisualization.  They include chapters devoted to data classification, scales, map projections, color theory, typography, and proportional symbol, choropleth, dasymetric, isarithmic, and multivariate mapping. Several resources are available at their accompanying websites [fn:23].
@@ -525,7 +526,7 @@ In this chapter, time will be used as a complementary variable which adds inform
 #+INCLUDE: "Spatial/dataSpatial.org"
 
 * Space-Time Data
-
+label:part:SpaceTime
 ** Displaying Spatiotemporal Data: Introduction
  label:cha:introductionST
 
@@ -599,7 +600,13 @@ In this chapter, time will be used as a complementary variable which adds inform
  On the other hand, the =histogram=, =densityplot=, and =bwplot= methods accept a =FUN= argument to be applied to the =z= slot of =Raster*= object (defined by =setZ=). The result of this function is used as the grouping variable of the plot to create different panels.
 
 **** rgl
-     The =rgl= package produces interactive 3D plots. It contains high-level graphics commands modelled loosely after classic R graphics, but working in three dimensions. It also contains low level structure inspired by (but incompatible with) the grid package.
+=rgl= is a package that produces real-time interactive 3D plots. It
+allows to interactively rotate, zoom the graphics and select
+regions. This package uses the OpenGL[fn:34] library as the rendering
+backend providing an interface to graphics hardware. It contains
+high-level graphics functions similar to base R graphics, but working
+in three dimensions. Moreover, it provides low level functions
+inspired by the =grid= package.
 
 *** Further Reading
  label:cha:further-reading-spatiotime
@@ -642,6 +649,8 @@ In this chapter, time will be used as a complementary variable which adds inform
 \printindex
 
 * Footnotes
+
+[fn:34] https://www.opengl.org/
 
 [fn:31] [[http://cran.r-project.org/web/views/SpatioTemporal.html]]
 

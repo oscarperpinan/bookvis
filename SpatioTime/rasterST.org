@@ -35,7 +35,7 @@ rasters.
 #+end_src
 
 Throughout this chapter we will work with a multilayer raster of daily
-solar radiation estimates from CM SAF (ref:sec:CMSAF) falling in
+solar radiation estimates from CM SAF (section ref:sec:CMSAF) falling in
 the region of Galicia (north of Spain) during 2011. These data are
 arranged in a =RasterBrick= with 365 layers using =brick= and time
 indexed with =setZ=.
@@ -153,7 +153,7 @@ There are other graphical tools that complement the previous maps. The
 scatterplot and the matrix of scatterplots, the histogram and kernel
 density plot, and the boxplot are among the most important tools in
 the frame of the Exploratory Data Analysis approach. Some of them were
-previously used with a spatial raster (ref:cha:raster). In
+previously used with a spatial raster (chapter ref:cha:raster). In
 this section we will use the histogram (Figure [[fig:SISdm_hist]]),
 the violin plot (a combination of a boxplot and a kernel density plot)
 (Figure [[fig:SISdm_boxplot]]), and the matrix of scatterplots

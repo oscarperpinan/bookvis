@@ -27,20 +27,21 @@ Sys.setlocale("LC_TIME", 'C')
 
 In the chapter ref:cha:rasterST a multilayer raster is displayed as a
 3D object with a matrix of levelplots using the small-multiple
-technique (section ref:sec:levelplot) or as a 2D object after
+technique (section ref:sec:levelplot) and as a 2D object after
 aggregation following a certain direction (section
 ref:sec:spacetime_plot).
 
-This chapter displays the multilayer raster with a different approach,
+This chapter displays a multilayer raster with a different approach,
 plotting the individual layers of the space-time raster sequentially
 as movie frames to produce an animation (section
 ref:sec:animationST_var).
 
-Moreover, the animation technique is not restricted to displaying the
-evolution of a variable over time. Animations can also be constructed
-from a sequence of changes in an attribute of the variable: for
-example, the user's view of an static variable can be gradually moved
-to create a fly-by animation.
+Notwithstanding, the animation technique is not restricted to
+displaying the evolution of a variable over time. Animations can also
+be constructed from a sequence of changes in an attribute of the
+variable: for example, the user's view of an static variable can be
+gradually moved to create a fly-by animation (section
+ref:sec:animationST_3d).
 
 * Depicting variable changes over time label:sec:animationST_var
 
@@ -287,8 +288,8 @@ In this section the =rgl= package is used to generate a fly-by animation over th
 Firstly, a basic 3D Earth at night is created with the =surface3d= function, using the night lights images published by the NASA[fn:3].
 
 #+INDEX: surface3d@\texttt{surface3d}
-#+INDEX: Packages!rgl\texttt{rgl}
-#+INDEX: Packages!magick\texttt{magick}
+#+INDEX: Packages!rgl@\texttt{rgl}
+#+INDEX: Packages!magick@\texttt{magick}
 
 #+begin_src R
 library(rgl)
@@ -330,7 +331,10 @@ writeWebGL('nightLights', width = 1000)
 [[file:figs/nightLights.png]]
 
 *** Define the locations
-Once the Earth is represented with the sphere and the superimposed image, the fly-by animation is defined with a set of locations to be visited:
+
+Once the Earth is represented with the sphere and the superimposed
+image, the fly-by animation is defined with a set of locations to be
+visited:
 
 #+begin_src R
 cities <- rbind(c('Madrid', 'Spain'),
@@ -342,9 +346,11 @@ cities <- as.data.frame(cities)
 names(cities) <- c("city", "country")
 #+end_src
 
-The latitude and longitude coordinates of these cities can be obtained through the Nominatim service of OpenStreetMap. An auxiliary function, =geocode=, obtains this information using the =XML= package.
+The latitude and longitude coordinates of these cities can be obtained
+through the Nominatim service of OpenStreetMap. An auxiliary function,
+=geocode=, obtains this information using the =XML= package.
 
-#+INDEX: Packages!XML\texttt{XML}
+#+INDEX: Packages!XML@\texttt{XML}
 
 #+begin_src R
 library(XML)
@@ -379,9 +385,11 @@ cities <- cbind(cities, points)
 
 *** Generate the route 
 
-The next step computes the intermediate points between each pair of locations. The =geosphere= package provides the =gcIntermediate= function for this task:
+The next step computes the intermediate points between each pair of
+locations. The =geosphere= package provides the =gcIntermediate=
+function for this task:
 
-#+INDEX: Packages!geosphere\texttt{geosphere}
+#+INDEX: Packages!geosphere@\texttt{geosphere}
 #+INDEX: gcIntermediate@\texttt{gcIntermediate}
 
 #+begin_src R
@@ -464,7 +472,12 @@ summary(route)
 #+end_example
 
 *** Produce the frames
-Finally, this matrix of points is used to change the viewpoint of the OpenGL scene with the =rgl.viewpoint= function. The =travel= function wraps this function to automate the process with the =movie3d= function. Figure ref:fig:travel_example shows examples of frames produced with this function. 
+
+Finally, this matrix of points is used to change the viewpoint of the
+OpenGL scene with the =rgl.viewpoint= function. The =travel= function
+wraps this function to automate the process with the =movie3d=
+function. Figure ref:fig:travel_example shows examples of frames
+produced with this function.
 
 #+INDEX: rgl.viewpoint@\texttt{rgl.viewpoint}
 
@@ -493,10 +506,11 @@ rgl.snapshot('images/travel2.png')
 
 #+CAPTION: Examples of usage of the =travel= function (frames no.1 and no.1200). label:fig:travel_example
 [[file:images/travel1.png]]
-
 [[file:images/travel2.png]]
 
-The =movie3d= accepts a function, =travel= in our code, to modify the RGL scene, create an snapshot at each step, and paste the snapshots as frames of a movie.
+The =movie3d= accepts a function, =travel= in our code, to modify the
+RGL scene. It creates an snapshot at each step, and paste these
+snapshots as frames of a movie.
 
 #+INDEX: movie3d@\texttt{movie3d}
 
