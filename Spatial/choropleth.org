@@ -88,24 +88,24 @@ the INE (Instituto Nacional de Estadística) webpage[fn:7]. Both the
 municipalities, =espMap=, and province boundaries, =provinces=, are
 read as =SpatialPolygonsDataFrame= with =readShapePoly=.
 
-#+BEGIN_LaTeX
-\index{Packages!maps@\texttt{maps}}
-\index{Packages!maptools@\texttt{maptools}}
-\index{Packages!rgeos@\texttt{rgeos}}
-\index{Packages!sp@\texttt{sp}}
-\index{Packages!latticeExtra@\texttt{latticeExtra}}
-#+END_LaTeX
+
+#+INDEX: Packages!maps@\texttt{maps}
+#+INDEX: Packages!maptools@\texttt{maptools}
+#+INDEX: Packages!rgeos@\texttt{rgeos}
+#+INDEX: Packages!sp@\texttt{sp}
+#+INDEX: Packages!latticeExtra@\texttt{latticeExtra}
+
 
 #+begin_src R
   library(sp)
   library(maptools)
 #+end_src
 
-#+BEGIN_LaTeX
-\index{INE}
-\index{readShapePoly@\texttt{readShapePoly}}
-\index{Encoding@\texttt{Encoding}}
-#+END_LaTeX
+
+#+INDEX: INE
+#+INDEX: readShapePoly@\texttt{readShapePoly}
+#+INDEX: Encoding@\texttt{Encoding}
+
 
 #+begin_src R :eval no-export
   old <- setwd(tempdir())
@@ -127,9 +127,9 @@ read as =SpatialPolygonsDataFrame= with =readShapePoly=.
 
 Some of the polygons are repeated and can be dissolved with
 =unionSpatialPolygons= (the =rgeos= package must be installed).
-#+BEGIN_LaTeX
-\index{unionSpatialPolygons@\texttt{unionSpatialPolygons}}
-#+END_LaTeX
+
+#+INDEX: unionSpatialPolygons@\texttt{unionSpatialPolygons}
+
 #+begin_src R 
   ## dissolve repeated polygons
   espPols <- unionSpatialPolygons(espMap, espMap$PROVMUN) 
@@ -202,10 +202,10 @@ luminance for each class using the package =colorspace=
 discrimination, hues are equally spaced along the HCL (Hue, Chroma,
 Luminance) based color wheel.
 
-#+BEGIN_LaTeX
-\index{Packages!colorspace@\texttt{colorspace}}
-\index{rainbow_hcl@\texttt{rainbow\_hcl}}
-#+END_LaTeX
+
+#+INDEX: Packages!colorspace@\texttt{colorspace}
+#+INDEX: rainbow_hcl@\texttt{rainbow\_hcl}
+
 #+begin_src R 
   library(colorspace)  
   
@@ -219,9 +219,9 @@ For the definition of a combined palette in the next section, it is
 interesting to note that the colors provided by =rainbow_hcl= can be
 obtained with the following code where the distances between hues and
 their values are computed explicitly.
-#+BEGIN_LaTeX
-\index{hcl@\texttt{hcl}}
-#+END_LaTeX
+
+#+INDEX: hcl@\texttt{hcl}
+
 #+begin_src R 
   ## distance between hues
   step <- 360/nClasses 
@@ -267,9 +267,9 @@ luminance will vary according to the percentage of votes
 [[fig:whichMax]], while the corresponding values of chroma and
 luminance are calculated with the =sequential_hcl= function.
 
-#+BEGIN_LaTeX
-\index{sequential_hcl@\texttt{sequential\_hcl}}
-#+END_LaTeX
+
+#+INDEX: sequential_hcl@\texttt{sequential\_hcl}
+
 #+begin_src R
   classes <- levels(factor(espMapVotes$whichMax))
   nClasses <- length(classes)
@@ -290,9 +290,10 @@ It is important to note that, to ensure the legend's homogeneity, the
 breakpoints defined by the =at= argument are the same for all the
 individual maps.
 
-#+BEGIN_LaTeX
-\index{Reduce@\texttt{Reduce}} \index{spplot@\texttt{spplot}}
-#+END_LaTeX
+
+#+INDEX: Reduce@\texttt{Reduce} 
+#+INDEX: spplot@\texttt{spplot}
+
 #+begin_src R 
   pList <- lapply(1:nClasses, function(i){
       ## Only those polygons corresponding to a level are selected
@@ -321,11 +322,11 @@ method will process this function when displaying the =trellis=
 object. The =frameGrob= and =packGrob= of the =grid= package will do
 the main work inside this function.
 
-#+BEGIN_LaTeX
-\index{textGrob@\texttt{textGrob}}
-\index{packGrob@\texttt{packGrob}}
-\index{Packages!grid@\texttt{grid}}
-#+END_LaTeX
+
+#+INDEX: textGrob@\texttt{textGrob}
+#+INDEX: packGrob@\texttt{packGrob}
+#+INDEX: Packages!grid@\texttt{grid}
+
 #+begin_src R
   ## Function to add a title to a legend
   addTitle <- function(legend, title){

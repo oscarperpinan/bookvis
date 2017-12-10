@@ -27,14 +27,14 @@ natural environments, and extensive natural resources in a variety of
 protected habitats. Throughout this section we will create a physical
 map of this exceptional country using data from several data services.
 
-#+BEGIN_LaTeX
-\index{Packages!raster@\texttt{raster}}  
-\index{Packages!rasterVis@\texttt{rasterVis}}  
-\index{Packages!sp@\texttt{sp}}  
-\index{Packages!maptools@\texttt{maptools}}  
-\index{Packages!rgeos@\texttt{rgeos}}  
-\index{Packages!colorspace@\texttt{colorspace}}  
-\index{CRS@\texttt{CRS}}
+
+#+INDEX: Packages!raster@\texttt{raster}  
+#+INDEX: Packages!rasterVis@\texttt{rasterVis}  
+#+INDEX: Packages!sp@\texttt{sp}  
+#+INDEX: Packages!maptools@\texttt{maptools}  
+#+INDEX: Packages!rgeos@\texttt{rgeos}  
+#+INDEX: Packages!colorspace@\texttt{colorspace}  
+#+INDEX: CRS@\texttt{CRS}
 #+END_LaTeX
 
 #+begin_src R 
@@ -58,15 +58,15 @@ map of this exceptional country using data from several data services.
 Four types of information are needed: administrative boundaries,
 terrain elevation, rivers and lakes, and sea depth.
 
-#+BEGIN_LaTeX
-\index{download.file@\texttt{download.file}}
-\index{readShapePoly@\texttt{readShapePoly}}
-\index{readShapeLines@\texttt{readShapeLines}}
-\index{Encoding@\texttt{Encoding}}
-\index{raster@\texttt{raster}}
-\index{Data!GADM}
-\index{Data!DIVA-GIS}
-\index{Data!Natural Earth Data}
+
+#+INDEX: download.file@\texttt{download.file}
+#+INDEX: readShapePoly@\texttt{readShapePoly}
+#+INDEX: readShapeLines@\texttt{readShapeLines}
+#+INDEX: Encoding@\texttt{Encoding}
+#+INDEX: raster@\texttt{raster}
+#+INDEX: Data!GADM
+#+INDEX: Data!DIVA-GIS
+#+INDEX: Data!Natural Earth Data
 #+END_LaTeX
 
   1. The administrative boundaries are available from GADM[fn:4]. The
@@ -129,9 +129,9 @@ classes of the =sp= package, the extent of =brazilDEM= must be first
 converted to =SpatialPolygons=. The intersection is a new
 =SpatialLines= object, =brazilRiv=.
 
-#+BEGIN_LaTeX
-\index{gIntersection@\texttt{gIntersection}}
-\index{extent@\texttt{extent}}
+
+#+INDEX: gIntersection@\texttt{gIntersection}
+#+INDEX: extent@\texttt{extent}
 #+END_LaTeX
 
 #+begin_src R :eval no-export
@@ -184,9 +184,9 @@ centroid of each polygon, easily computed with the =coordinates=
 method. In addition, a larger label with the name of the country will be
 placed in the average centroid.
 
-#+BEGIN_LaTeX
-\index{coordinates@\texttt{coordinates}}
-\index{apply@\texttt{apply}}
+
+#+INDEX: coordinates@\texttt{coordinates}
+#+INDEX: apply@\texttt{apply}
 #+END_LaTeX
 
 #+begin_src R
@@ -200,9 +200,9 @@ Some region names are too long to be displayed in one line. Thus, a
 previous step is to split the string if it comprises more than two
 words.
 
-#+BEGIN_LaTeX
-\index{sapply@\texttt{sapply}}
-\index{strsplit@\texttt{strsplit}}
+
+#+INDEX: sapply@\texttt{sapply}
+#+INDEX: strsplit@\texttt{strsplit}
 #+END_LaTeX
 
 #+begin_src R 
@@ -235,10 +235,10 @@ of four layers:
                            margin=FALSE, colorkey=FALSE)
    #+end_src
 
-   #+BEGIN_LaTeX
-   \index{rasterTheme@\texttt{rasterTheme}}
-   \index{brewer.pal@\texttt{brewer.pal}}
-   #+END_LaTeX
+   
+#+INDEX: rasterTheme@\texttt{rasterTheme}
+#+INDEX: brewer.pal@\texttt{brewer.pal}
+ 
 
 2. The altitude raster layer uses a terrain colors palette, as the one
   produced by the =terrain_hcl= function from the =colorspace= package
@@ -251,10 +251,10 @@ of four layers:
                            margin=FALSE, colorkey=FALSE)
   #+end_src
 
-  #+BEGIN_LaTeX
-  \index{rasterTheme@\texttt{rasterTheme}}
-  \index{terrain_hcl@\texttt{terrain\_hcl}}
-  #+END_LaTeX
+  
+#+INDEX: rasterTheme@\texttt{rasterTheme}
+#+INDEX: terrain_hcl@\texttt{terrain\_hcl}
+
   
 3. The rivers represented by the =SpatialLinesDataFrame= object. The
    Amazonas River is labeled with =sp.lineLabel= and printed with a
@@ -272,15 +272,15 @@ of four layers:
    the =panel.pointLabel= function. This function uses optimization
    routines to find good locations for point labels without overlaps.
 
-  #+BEGIN_LaTeX
-  \index{levelplot@\texttt{levelplot}}
-  \index{sp.lines@\texttt{sp.lines}}
-  \index{sp.lineLabel@\texttt{sp.lineLabel}}
-  \index{sp.polygons@\texttt{sp.polygons}}
-  \index{panel.text@\texttt{panel.text}}
-  \index{layer@\texttt{layer}}
-  \index{brewer.pal@\texttt{brewer.pal}}
-  #+END_LaTeX
+  
+#+INDEX: levelplot@\texttt{levelplot}
+#+INDEX: sp.lines@\texttt{sp.lines}
+#+INDEX: sp.lineLabel@\texttt{sp.lineLabel}
+#+INDEX: sp.polygons@\texttt{sp.polygons}
+#+INDEX: panel.text@\texttt{panel.text}
+#+INDEX: layer@\texttt{layer}
+#+INDEX: brewer.pal@\texttt{brewer.pal}
+
 
   #+begin_src R :results output graphics :exports both :file figs/brazil.png :width 2000 :height 2000 :res 300
        seaPlot + altPlot + layer({

@@ -236,7 +236,7 @@ the temperature values with one row for each observation). This task
 is easily accomplished with the =melt= function included in the
 =reshape2= package.
 
-#+INDEX: melt\texttt{melt}
+#+INDEX: melt@\texttt{melt}
 #+INDEX: Packages!reshape2@\texttt{reshape2}
 
 #+begin_src R :results output :exports both

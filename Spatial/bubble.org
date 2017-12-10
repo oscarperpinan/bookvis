@@ -141,12 +141,10 @@ Two main improvements can be added to Figure
   implements the Fisher-Jenks optimal classification
   algorithm. 
 
-#+BEGIN_LaTeX
-\index{Packages!classInt@\texttt{classInt}}
-\index{classIntervals@\texttt{classIntervals}}
-\index{findCols@\texttt{findCols}}
-\index{findColours@\texttt{findColours}}
-#+END_LaTeX
+#+INDEX: Packages!classInt@\texttt{classInt}
+#+INDEX: classIntervals@\texttt{classIntervals}
+#+INDEX: findCols@\texttt{findCols}
+#+INDEX: findColours@\texttt{findColours}
 
 #+begin_src R 
   library(classInt)
@@ -272,10 +270,10 @@ Commons licence CC BY-3.0 (Attribution). They produce these maps with
 data by OpenStreetMap also published under a Creative Commons licence
 BY-SA (Attribution - ShareAlike).
 
-#+BEGIN_LaTeX
-  \index{Packages!ggmap@\texttt{ggmap}}
-  \index{Packages!OpenStreetMap@\texttt{OpenStreetMap}}
-#+END_LaTeX
+
+#+INDEX: Packages!ggmap@\texttt{ggmap}
+#+INDEX: Packages!OpenStreetMap@\texttt{OpenStreetMap}
+
 
 #+begin_src R 
   madridBox <- bbox(NO2sp)
@@ -380,18 +378,18 @@ and =sp.lines= functions provided by the =sp= package.
 For our example, the Madrid district and streets are available as
 shapefiles from the nomecalles web service[fn:1].
 
-#+BEGIN_LaTeX
-\index{Data!nomecalles}
-\index{spTransform@\texttt{spTransform}}
-\index{Packages!rgdal@\texttt{rgdal}}
-\index{Packages!sp@\texttt{sp}}
-\index{readShapeLines@\texttt{readShapeLines}}
-\index{layer@\texttt{layer}}
-\index{+.trellis@\texttt{+.trellis}}
-\index{sp.polygons@\texttt{sp.polygons}}
-\index{sp.pointLabel@\texttt{sp.pointLabel}}
-\index{sp.lines@\texttt{sp.lines}}
-#+END_LaTeX
+
+#+INDEX: Data!nomecalles
+#+INDEX: spTransform@\texttt{spTransform}
+#+INDEX: Packages!rgdal@\texttt{rgdal}
+#+INDEX: Packages!sp@\texttt{sp}
+#+INDEX: readShapeLines@\texttt{readShapeLines}
+#+INDEX: layer@\texttt{layer}
+#+INDEX: +.trellis@\texttt{+.trellis}
+#+INDEX: sp.polygons@\texttt{sp.polygons}
+#+INDEX: sp.pointLabel@\texttt{sp.pointLabel}
+#+INDEX: sp.lines@\texttt{sp.lines}
+
 
 #+begin_src R :eval no-export
   library(maptools)
@@ -439,10 +437,10 @@ placed with this same procedure using the =sp.pointLabel= function
 from the =maptools= package. Figure \ref{fig:airMadrid} displays the
 final result.
 
-#+BEGIN_LaTeX
-\index{Packages!maptools@\texttt{maptools}}
-\index{sp.pointLabel@\texttt{sp.pointLabel}}
-#+END_LaTeX
+
+#+INDEX: Packages!maptools@\texttt{maptools}
+#+INDEX: sp.pointLabel@\texttt{sp.pointLabel}
+
 
 #+begin_src R :eval no-export
   spDistricts <- list('sp.polygons', distritosMadrid, fill='gray97', lwd=0.3)
@@ -509,10 +507,10 @@ easy solution using inverse distance weighted (IDW) interpolation with
 the =gstat= package \cite{Pebesma2004} /only/ for illustration
 purposes.
  
-#+BEGIN_LaTeX
-\index{Packages!gstat@\texttt{gstat}}
-\index{Packages!krige@\texttt{krige}}
-#+END_LaTeX
+
+#+INDEX: Packages!gstat@\texttt{gstat}
+#+INDEX: Packages!krige@\texttt{krige}
+
 
 #+begin_src R
   library(gstat)
@@ -526,13 +524,13 @@ The result is a =SpatialPixelsDataFrame= that can be displayed with
 =spplot= and combined with the previous layers and the measurement
 station points (Figure \ref{fig:airMadrid_krige}).
 
-#+BEGIN_LaTeX
-\index{spplot@\texttt{spplot}}
-\index{layer@\texttt{layer}}
-\index{sp.polygons@\texttt{sp.polygons}}
-\index{sp.lines@\texttt{sp.lines}}
-\index{sp.points@\texttt{sp.points}}
-#+END_LaTeX
+
+#+INDEX: spplot@\texttt{spplot}
+#+INDEX: layer@\texttt{layer}
+#+INDEX: sp.polygons@\texttt{sp.polygons}
+#+INDEX: sp.lines@\texttt{sp.lines}
+#+INDEX: sp.points@\texttt{sp.points}
+
 
 #+begin_src R :results output graphics :exports both :file figs/airMadrid_krige.png :width 4000 :height 4000 :res 600
 spplot(airKrige["var1.pred"],
@@ -572,11 +570,11 @@ underlying map data.
 Our =SpatialPointsDataFrame= can be converted to a GeoJSON file with
 =writeOGR= from the =rgdal= package. 
 
-#+BEGIN_LaTeX
-\index{Packages!rgdal@\texttt{rgdal}}
-\index{writeOGR@\texttt{writeOGR}}
-\index{GeoJSON}
-#+END_LaTeX
+
+#+INDEX: Packages!rgdal@\texttt{rgdal}
+#+INDEX: writeOGR@\texttt{writeOGR}
+#+INDEX: GeoJSON
+
 
 #+begin_src R :eval no-export
 library(rgdal)
@@ -587,12 +585,13 @@ Figure \ref{fig:geojson} shows a snapshot of the rendering of this
 GeoJSON file, available from the GitHub repository. There you can zoom
 on the map and click on the stations to display the data.
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \begin{figure}
 \includegraphics[width=0.9\textwidth]{figs/geojson.png}
 \caption{\label{fig:geojson}$NO_2$ data in a GeoJSON file rendered within the GitHub repository.}
 \end{figure}
-#+END_LaTeX
+#+END_EXPORT
+
 
 *** Keyhole Markup Language
 
@@ -605,11 +604,11 @@ in 2008. Google Earth was the first program able to view and
 graphically edit KML files, although Marble, an open-source project,
 also offers KML support.
 
-#+BEGIN_LaTeX
-\index{Packages!rgdal@\texttt{rgdal}}
-\index{Packages!plotKML@\texttt{plotKML}}
-\index{KML}
-#+END_LaTeX
+
+#+INDEX: Packages!rgdal@\texttt{rgdal}
+#+INDEX: Packages!plotKML@\texttt{plotKML}
+#+INDEX: KML
+
 
 There are several packages able to generate KML files. For example,
 the =writeOGR= function from the =rgdal= package can also write KML
@@ -668,11 +667,11 @@ from the Munimadrid webpage. The =htmlParse= function from the =XML=
 package parses each station page, and the station photograph is
 extracted with =getNodeSet= and =xmlAttrs=.
 
-#+BEGIN_LaTeX
-\index{Packages!XML@\texttt{XML}}
-\index{htmlParse@\texttt{htmlParse}}
-\index{getNodeSet@\texttt{getNodeSet}}
-#+END_LaTeX
+
+#+INDEX: Packages!XML@\texttt{XML}
+#+INDEX: htmlParse@\texttt{htmlParse}
+#+INDEX: getNodeSet@\texttt{getNodeSet}
+
 
 #+begin_src R :eval no-export
   library(XML)
@@ -701,13 +700,13 @@ Next, we attach the hyperlink and the SVG information to each
 circle.
  
 
-#+BEGIN_LaTeX
-\index{Packages!gridSVG@\texttt{gridSVG}}
-\index{JavaScript}
-\index{grid.garnish@\texttt{grid.garnish}}
-\index{grid.hyperlink@\texttt{grid.hyperlink}}
-\index{grid.export@\texttt{grid.export}}
-#+END_LaTeX
+
+#+INDEX: Packages!gridSVG@\texttt{gridSVG}
+#+INDEX: JavaScript
+#+INDEX: grid.garnish@\texttt{grid.garnish}
+#+INDEX: grid.hyperlink@\texttt{grid.hyperlink}
+#+INDEX: grid.export@\texttt{grid.export}
+
 
 #+begin_src R 
   print(pNO2 + layer_(sp.polygons(distritosMadrid, fill='gray97', lwd=0.3)))
@@ -764,10 +763,10 @@ hovers over each station. The =grid.script= function creates objects
 containing links to these plug-ins. And =grid.export= uses these
 objects to produce an SVG document with script elements.
 
-#+BEGIN_LaTeX
-\index{jQuery} 
-\index{jQuery UI}
-#+END_LaTeX
+
+#+INDEX: jQuery
+#+INDEX: jQuery UI
+
 
 #+begin_src R
   ## Add jQuery and jQuery UI scripts
@@ -805,12 +804,13 @@ These plug-ins will work only after the file =airMadrid.svg= created by
 #+RESULTS[86f1c1ed2c5b2b4e4e11e843c412fc1fac30518f]:
 
 
-#+BEGIN_LaTeX
+#+BEGIN_EXPORT latex
 \begin{figure}
 \includegraphics[width=0.9\textwidth]{figs/airMadridTooltip.png}
 \caption{\label{fig:airMadridTooltip}Tooltips generated with \texttt{gridSVG} using jQuery and jQuery UI.}
 \end{figure}
-#+END_LaTeX
+#+END_EXPORT
+
 
 * Footnotes
 

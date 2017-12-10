@@ -43,12 +43,12 @@ use of the raw data with classes from the packages =sp= and =igraph=.
 The =get_osm= function retrieves a region defined by =corner_bbox=
 using the OSM API.
 
-#+BEGIN_LaTeX
-\index{Data!OpenStreetMap}
-\index{Packages!osmar@\texttt{osmar}}
-\index{osmsource_api@\texttt{osmsource\_api}}
-\index{get_osm@\texttt{get\_osm}}
-#+END_LaTeX
+
+#+INDEX: Data!OpenStreetMap
+#+INDEX: Packages!osmar@\texttt{osmar}
+#+INDEX: osmsource_api@\texttt{osmsource\_api}
+#+INDEX: get_osm@\texttt{get\_osm}
+
 
 #+begin_src R
   library('osmar')
@@ -72,11 +72,11 @@ appropiate tag.
   summary(cedeira$nodes)
 #+end_src  
 
-#+BEGIN_LaTeX
-\index{find@\texttt{find}}
-\index{subset@\texttt{subset}}
-\index{way@\texttt{way}}
-#+END_LaTeX
+
+#+INDEX: find@\texttt{find}
+#+INDEX: subset@\texttt{subset}
+#+INDEX: way@\texttt{way}
+
 
 #+begin_src R 
   idxHighways <- find(cedeira, way(tags(k=='highway')))
@@ -97,10 +97,10 @@ converted to a class defined by the =sp= package with =as_sp=. The
 following =spFromOSM= function encodes the procedure, and extracts the
 =SpatialLines= object that represent each type of road.
 
-#+BEGIN_LaTeX
-\index{as_sp@\texttt{as\_sp}}
-\index{find_down@\texttt{find\_down}}
-#+END_LaTeX
+
+#+INDEX: as_sp@\texttt{as\_sp}
+#+INDEX: find_down@\texttt{find\_down}
+
 
 #+begin_src R 
   spFromOSM <- function(source, index, type='lines'){
@@ -119,9 +119,9 @@ following =spFromOSM= function encodes the procedure, and extracts the
 A similar procedure can be applied to construct a =SpatialPoints=
 object with the collection of places with name:
 
-#+BEGIN_LaTeX
-\index{match@\texttt{match}}
-#+END_LaTeX
+
+#+INDEX: match@\texttt{match}
+
 
 #+begin_src R 
   idxPlaces <- find(cedeira, node(tags(k=='name')))
@@ -144,9 +144,9 @@ object with the collection of places with name:
 ## Hill Shading
 ##################################################################
 #+end_src
-#+BEGIN_LaTeX
-\index{Hill shading}
-#+END_LaTeX
+
+#+INDEX: Hill shading
+
 
 The second step is to produce layers to display the topography. A
 suitable method is shaded relief or hill shading. This technique
@@ -158,11 +158,11 @@ semitransparency.
 
 The DEM of Galicia is available at the Geonetwork service of the Xunta de Galicia[fn:1]. I have extracted the data corresponding to the region of interest using =crop=, and the corresponding files are available at the =data= folder of the book repository.
 
-#+BEGIN_LaTeX
-\index{Packages!raster@\texttt{raster}}
-\index{Packages!rasterVis@\texttt{rasterVis}}
-\index{Data!Geonetwork}
-#+END_LaTeX
+
+#+INDEX: Packages!raster@\texttt{raster}
+#+INDEX: Packages!rasterVis@\texttt{rasterVis}
+#+INDEX: Data!Geonetwork
+
 
 #+begin_src R
   library(raster)
@@ -179,11 +179,11 @@ The =slope= and =aspect= layers are computed with the =terrain=
 function, and the hill shade layer is derived with these layers for a
 fixed sun position. 
 
-#+BEGIN_LaTeX
-\index{terrain@\texttt{terrain}}
-\index{hillShade@\texttt{hillShade}}
-\index{Hill shading}
-#+END_LaTeX
+
+#+INDEX: terrain@\texttt{terrain}
+#+INDEX: hillShade@\texttt{hillShade}
+#+INDEX: Hill shading
+
 
 #+begin_src R 
   slope <- terrain(demCedeira, 'slope')
@@ -217,15 +217,15 @@ information in correct order (Figure [[fig:cedeiraOsmar]]):
   package. These functions use optimization routines to find good
   locations for point labels without overlaps. 
 
-#+BEGIN_LaTeX
-\index{Packages!maptools@\texttt{maptools}}  
-\index{Packages!sp@\texttt{sp}}  
-\index{Packages!latticeExtra@\texttt{latticeExtra}}  
-\index{Packages!colorspace@\texttt{colorspace}}  
-\index{sp.lines@\texttt{sp.lines}}
-\index{sp.lines@\texttt{sp.points}}
-\index{sp.lines@\texttt{sp.pointLabel}}
-#+END_LaTeX
+
+#+INDEX: Packages!maptools@\texttt{maptools}  
+#+INDEX: Packages!sp@\texttt{sp}  
+#+INDEX: Packages!latticeExtra@\texttt{latticeExtra}  
+#+INDEX: Packages!colorspace@\texttt{colorspace}  
+#+INDEX: sp.lines@\texttt{sp.lines}
+#+INDEX: sp.lines@\texttt{sp.points}
+#+INDEX: sp.lines@\texttt{sp.pointLabel}
+
 
 #+begin_src R :results output graphics :exports both :file figs/cedeiraOsmar.pdf
   library(maptools)

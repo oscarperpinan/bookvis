@@ -62,14 +62,14 @@ cleans this table and converts the strings to the =DMS= class defined
 by the =sp= package to represent degrees, minutes, and decimal
 seconds.
 
-#+BEGIN_LaTeX
-\index{Web scraping}
-\index{Packages!XML@\texttt{XML}}
-\index{Packages!sp@\texttt{sp}}
-\index{readHTMLTable@\texttt{readHTMLTable}}
-\index{lapply@\texttt{lapply}}
-\index{char2dms@\texttt{char2dms}}
-#+END_LaTeX
+
+#+INDEX: Web scraping
+#+INDEX: Packages!XML@\texttt{XML}
+#+INDEX: Packages!sp@\texttt{sp}
+#+INDEX: readHTMLTable@\texttt{readHTMLTable}
+#+INDEX: lapply@\texttt{lapply}
+#+INDEX: char2dms@\texttt{char2dms}
+
 
 #+begin_src R
   library(XML)
@@ -110,16 +110,16 @@ document[fn:3]. The =readLines= function reads the file and a =lapply=
 loop processes each line. The result is stored in the file
 =airQuality.csv=
 
-#+BEGIN_LaTeX
-\index{String manipulation}
-\index{readLines@\texttt{readLines}}
-\index{lapply@\texttt{lapply}}
-\index{do.call@\texttt{do.call}}
-\index{substr@\texttt{substr}}
-\index{gregexpr@\texttt{gregexpr}}
-\index{strsplit@\texttt{strsplit}}
-\index{gsub@\texttt{gsub}}
-#+END_LaTeX
+
+#+INDEX: String manipulation
+#+INDEX: readLines@\texttt{readLines}
+#+INDEX: lapply@\texttt{lapply}
+#+INDEX: do.call@\texttt{do.call}
+#+INDEX: substr@\texttt{substr}
+#+INDEX: gregexpr@\texttt{gregexpr}
+#+INDEX: strsplit@\texttt{strsplit}
+#+INDEX: gsub@\texttt{gsub}
+
 
 #+begin_src R 
 rawData <- readLines('data/Datos11.txt')
@@ -164,11 +164,11 @@ locations are contained in =airStations=, a =data.frame= that is
 converted to an =SpatialPointsDataFrame= object with the =coordinates=
 method.
 
-#+BEGIN_LaTeX
-\index{Data!Air quality in Madrid}
-\index{Packages!sp@\texttt{sp}}
-\index{read.csv2@\texttt{read.csv2}}
-#+END_LaTeX
+
+#+INDEX: Data!Air quality in Madrid
+#+INDEX: Packages!sp@\texttt{sp}
+#+INDEX: read.csv2@\texttt{read.csv2}
+
 
 #+begin_src R 
   library(sp)
@@ -197,9 +197,9 @@ series.
 We will represent each station using aggregated values (mean, median,
 and standard deviation) computed with =aggregate=:
 
-#+BEGIN_LaTeX
-\index{aggregate@\texttt{aggregate}}
-#+END_LaTeX
+
+#+INDEX: aggregate@\texttt{aggregate}
+
 
 #+begin_src R 
   NO2agg <- aggregate(dat ~ codEst, data=NO2,
@@ -220,11 +220,12 @@ the =maptools= package to create a new
 matching against the shared key column (=airStations$Codigo= and
 =NO2agg$codEst=):
 
-#+BEGIN_LaTeX
-\index{Packages!maptools@\texttt{maptools}}
-\index{aggregate@\texttt{aggregate}} \index{match@\texttt{match}}
-\index{spCbind@\texttt{spCbind}}
-#+END_LaTeX
+
+#+INDEX: Packages!maptools@\texttt{maptools}
+#+INDEX: aggregate@\texttt{aggregate} 
+#+INDEX: match@\texttt{match}
+#+INDEX: spCbind@\texttt{spCbind}
+
 
 #+begin_src R
   library(maptools)
@@ -253,10 +254,10 @@ groups are considered: the two main parties (=PP= and =PSOE=), the
 abstention results (=ABS=), and the remaining parties (=OTH=). Each
 region will be identified by the =PROVMUN= code.
 
-#+BEGIN_LaTeX
-\index{apply@\texttt{apply}}
-\index{sprintf@\texttt{sprintf}}
-#+END_LaTeX
+
+#+INDEX: apply@\texttt{apply}
+#+INDEX: sprintf@\texttt{sprintf}
+
 
 #+begin_src R 
   dat2011 <- read.csv('data/GeneralSpanishElections2011.gz')
@@ -330,10 +331,10 @@ and create a =RasterStack= object, where each layer stores the content
 of a file. Therefore, the twelve raster files of monthly averages
 produce a =RasterStack= with twelve layers.
 
-#+BEGIN_LaTeX
-\index{Packages!raster@\texttt{raster}}
-\index{stack@\texttt{stack}}
-#+END_LaTeX
+
+#+INDEX: Packages!raster@\texttt{raster}
+#+INDEX: stack@\texttt{stack}
+
 
 #+begin_src R
   library(raster)

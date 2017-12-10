@@ -200,7 +200,7 @@ the corresponding bands (years and regions below the average values):
   indicating the =Series=, and the corresponding =Value=.
 
 #+INDEX: fortify@\texttt{fortify}
-#+INDEX: melt\texttt{melt}
+#+INDEX: melt@\texttt{melt}
 
 #+begin_src R :results output :exports both
 timeIdx <- index(aranjuez)
@@ -225,7 +225,7 @@ summary(aranjuezLong)
   centered.
 
 #+INDEX: fortify@\texttt{fortify}
-#+INDEX: melt\texttt{melt}
+#+INDEX: melt@\texttt{melt}
 
 #+begin_src R
 ## Values below mean are negative after being centered
@@ -423,7 +423,8 @@ to free vertical space:
 Because the panels share the same design structure, once this
 technique is understood, it is easy to establish comparisons or spot
 extraordinary events.  This method is what Tufte described as small
-multiples#+INDEX: Small multiples} cite:Tufte1990.
+multiples cite:Tufte1990.
+#+INDEX: Small multiples
 
 Figure ref:fig:navarraHorizonplot displays the variations of
 solar radiation around the time average with an horizon graph
@@ -1025,7 +1026,7 @@ combination of =fortify=, to convert the =zoo= object into a
 =data.frame=, and =melt=, to transform from wide to long format.
 
 #+INDEX: fortify@\texttt{fortify}
-#+INDEX: melt\texttt{melt}
+#+INDEX: melt@\texttt{melt}
 
 #+begin_src R :results output :exports both
 aranjuezDF <- fortify(aranjuez[,
@@ -1196,7 +1197,7 @@ argument. Besides, its three next arguments, =key=, =value=, and
 =fortify= and =melt=.
 
 #+INDEX: fortify@\texttt{fortify}
-#+INDEX: melt\texttt{melt}
+#+INDEX: melt@\texttt{melt}
 
 #+begin_src R :results output :exports both
 unemployDF <- fortify(unemployUSA, melt = TRUE)
@@ -1219,7 +1220,7 @@ interactive graphic created with the functions =streamgraph=,
 =sg_axis=, and =sg_fill_brewer=, connected through the pipe operator,
 =%>%=.
 
-#+INDEX: Packages!streamgraph\texttt{streamgraph}
+#+INDEX: Packages!streamgraph@\texttt{streamgraph}
 
 #+begin_src R
 ## remotes::install_github("hrbrmstr/streamgraph")

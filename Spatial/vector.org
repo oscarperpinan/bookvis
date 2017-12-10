@@ -2,30 +2,6 @@
 #+OPTIONS: ^:nil
 #+BIND: org-latex-image-default-height "0.45\\textheight"
 
-#+begin_src R :exports none
-  ##################################################################
-  ## Source code for the book: "Displaying time series, spatial and
-  ## space-time data with R"
-  
-  ## Copyright (C) 2013-2012 Oscar Perpiñán Lamigueiro
-  
-  ## This program is free software you can redistribute it and/or modify
-  ## it under the terms of the GNU General Public License as published
-  ## by the Free Software Foundation; either version 2 of the License,
-  ## or (at your option) any later version.
-   
-  ## This program is distributed in the hope that it will be useful, but
-  ## WITHOUT ANY WARRANTY; without even the implied warranty of
-  ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  ## General Public License for more details.
-   
-  ## You should have received a copy of the GNU General Public License
-  ## along with this program; if not, write to the Free Software
-  ## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
-  ## 02111-1307, USA.
-  ####################################################################
-#+end_src
-
 #+begin_src R :exports none :tangle no
   setwd('~/Dropbox/chapman/book/')
 #+end_src
@@ -60,11 +36,11 @@ stream lines, with the help of the wind direction and speed forecast
 published by MeteoGalicia (see Section \ref{sec:animationST} for
 details).
 
-#+BEGIN_LaTeX
-  \index{Packages!rasterVis@\texttt{rasterVis}}
-  \index{Packages!raster@\texttt{raster}}
-  \index{Data!Wind Speed}
-#+END_LaTeX
+
+#+INDEX: Packages!rasterVis@\texttt{rasterVis}
+#+INDEX: Packages!raster@\texttt{raster}
+#+INDEX: Data!Wind Speed
+
 
 #+begin_src R 
   library(raster)
@@ -89,9 +65,9 @@ small datasets. If the grid of discrete points gets too dense or
 if the variations in magnitude are too big, the images tend to be
 visually confusing.
 
-#+BEGIN_LaTeX
-  \index{vectorplot@\texttt{vectorplot}}
-#+END_LaTeX
+
+#+INDEX: vectorplot@\texttt{vectorplot}
+
 #+begin_src R :results output graphics :exports both :file figs/vectorplot.pdf
   vectorplot(windField, isField=TRUE, par.settings=BTCTheme(),
              colorkey=FALSE, scales=list(draw=FALSE))
@@ -121,10 +97,10 @@ local vector magnitude. Streamlets are composed of points whose sizes,
 positions, and color degradation encode the local vector direction
 (Figure [[fig:streamplot]]).
 
-#+BEGIN_LaTeX
-  \index{streamplot@\texttt{streamplot}}
-  \index{brewer.pal@\texttt{brewer.pal}}
-#+END_LaTeX
+
+#+INDEX: streamplot@\texttt{streamplot}
+#+INDEX: brewer.pal@\texttt{brewer.pal}
+
 #+begin_src R :results output graphics :exports both :file figs/streamplot.pdf
   myTheme <- streamTheme(region=rev(brewer.pal(n=4, name='Greys')),
                                       symbol=BTC(n=9, beg=20))

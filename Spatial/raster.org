@@ -53,12 +53,12 @@ summaries of the =RasterLayer= object. The summary is computed with
 the function defined by =FUN.margin= (which uses =mean= as the default
 value).
 
-#+BEGIN_LaTeX
-\index{Packages!raster@\texttt{raster}}
-\index{Packages!rasterVis@\texttt{rasterVis}}
-\index{levelplot@\texttt{levelplot}}
-\index{rasterTheme@\texttt{rasterTheme}}
-#+END_LaTeX
+
+#+INDEX: Packages!raster@\texttt{raster}
+#+INDEX: Packages!rasterVis@\texttt{rasterVis}
+#+INDEX: levelplot@\texttt{levelplot}
+#+INDEX: rasterTheme@\texttt{rasterTheme}
+
 
 #+begin_src R :results output graphics :exports both :file figs/leveplotSISavOrig.pdf
   library(raster)
@@ -77,12 +77,12 @@ structure of the region, it is recommended to add the geographic
 context with a layer of administrative boundaries (Figure
 \ref{fig:levelplotCMSAF_boundaries}).
 
-#+BEGIN_LaTeX
-\index{Packages!maps@\texttt{maps}}
-\index{Packages!mapdata@\texttt{mapdata}}
-\index{Packages!maptools@\texttt{maptools}}
-\index{map2SpatialLines@\texttt{map2SpatialLines}}
-#+END_LaTeX
+
+#+INDEX: Packages!maps@\texttt{maps}
+#+INDEX: Packages!mapdata@\texttt{mapdata}
+#+INDEX: Packages!maptools@\texttt{maptools}
+#+INDEX: map2SpatialLines@\texttt{map2SpatialLines}
+
 
 #+begin_src R 
   library(maps)
@@ -97,11 +97,11 @@ context with a layer of administrative boundaries (Figure
                                  proj4string=CRS(projection(SISav)))
 #+end_src
 
-#+BEGIN_LaTeX
-\index{Packages!sp@\texttt{sp}}
-\index{Packages!latticeExtra@\texttt{latticeExtra}}
-\index{sp.lines@\texttt{sp.lines}}
-#+END_LaTeX
+
+#+INDEX: Packages!sp@\texttt{sp}
+#+INDEX: Packages!latticeExtra@\texttt{latticeExtra}
+#+INDEX: sp.lines@\texttt{sp.lines}
+
 
 #+begin_src R :results output graphics :exports both :file figs/leveplotSISavBoundaries.pdf
   levelplot(SISav) + layer(sp.lines(boundaries, lwd=0.5))
@@ -148,9 +148,9 @@ ground if light comes from a certain sun position (Figure
 The procedure is as follows:
 
 - Download a Digital Elevation Model (DEM) from the DIVA-GIS service.
-#+BEGIN_LaTeX
-\index{Data!DIVA-GIS}
-#+END_LaTeX
+
+#+INDEX: Data!DIVA-GIS
+
 
 #+begin_src R :eval no-export
   old <- setwd(tempdir())
@@ -165,10 +165,10 @@ The procedure is as follows:
 #+end_src
 
 - Compute the hill shade raster with =terrain= and =hillShade= from =raster=.
-#+BEGIN_LaTeX
-\index{terrain@\texttt{terrain}}
-\index{hillShade@\texttt{hillShade}}
-#+END_LaTeX
+
+#+INDEX: terrain@\texttt{terrain}
+#+INDEX: hillShade@\texttt{hillShade}
+
 
 #+begin_src R
   slope <- terrain(DEM, 'slope')
@@ -181,10 +181,10 @@ The procedure is as follows:
 #+end_src
 
 - Combine the result with the previous map using semitransparency.
-#+BEGIN_LaTeX
-\index{+.trellis@\texttt{+.trellis}}
-\index{layer@\texttt{layer}}
-#+END_LaTeX
+
+#+INDEX: +.trellis@\texttt{+.trellis}
+#+INDEX: layer@\texttt{layer}
+
 
 #+begin_src R :results output graphics :exports both :width 2000 :height 2000 :res 300 :file figs/hillShading.png
   ## hillShade theme: gray colors and semitransparency
@@ -213,12 +213,12 @@ rotate or zoom the figure. This solution is available thanks to the
 graphics. The =plot3D= function in the =rasterVis= package is a
 wrapper to this package for =RasterLayer= objects.
 
-#+BEGIN_LaTeX
-  \index{Packages!rgl@\texttt{rgl}}
-  \index{3D visualization}
-  \index{WebGL}
-  \index{STL}
-#+END_LaTeX
+
+#+INDEX: Packages!rgl@\texttt{rgl}
+#+INDEX: 3D visualization
+#+INDEX: WebGL
+#+INDEX: STL
+
 
 #+begin_src R
 plot3D(DEM, maxpixels = 5e4)
@@ -255,21 +255,21 @@ longitude (=cut(x, 5)=). It is evident that larger irradiation values
 are associated with lower latitudes. However, there is no such clear
 relation between irradiation and longitude.
 
-#+BEGIN_LaTeX
-\index{cellStats@\texttt{cellStats}}
-#+END_LaTeX
+
+#+INDEX: cellStats@\texttt{cellStats}
+
 
 #+begin_src R
 meanRad <- cellStats(SISav, 'mean')
 SISav <- SISav - meanRad
 #+end_src
 
-#+BEGIN_LaTeX
-\index{xyplot@\texttt{xyplot}}
-\index{rasterTheme@\texttt{rasterTheme}}
-\index{Packages!hexbin@\texttt{hexbin}}
-\index{plinrain@\texttt{plinrain}}
-#+END_LaTeX
+
+#+INDEX: xyplot@\texttt{xyplot}
+#+INDEX: rasterTheme@\texttt{rasterTheme}
+#+INDEX: Packages!hexbin@\texttt{hexbin}
+#+INDEX: plinrain@\texttt{plinrain}
+
 
 #+begin_src R :results output graphics :exports both :width 2000 :height 2000 :res 300 :file figs/xyplotSISav.png 
   xyplot(layer ~ y, data = SISav,
@@ -300,10 +300,10 @@ extreme positive and negative values can be easily discriminated,
 the zero value is not associated with white because the data range
 is not symmetrical around zero.
 
-#+BEGIN_LaTeX
-\index{Package!RColorBrewer@\texttt{RColorBrewer}}
-\index{brewer.pal@\texttt{brewer.pal}}
-#+END_LaTeX
+
+#+INDEX: Package!RColorBrewer@\texttt{RColorBrewer}
+#+INDEX: brewer.pal@\texttt{brewer.pal}
+
 
 #+begin_src R :results output graphics :exports both :file figs/showDivPal.pdf
   divPal <- brewer.pal(n=9, 'PuOr')
@@ -359,10 +359,10 @@ intervals.
 The next step is to compute the midpoints of each interval. These
 points represent the data belonging to each interval, and their value
 will be connected with a color of the palette.
-#+BEGIN_LaTeX
-\index{findInterval@\texttt{findInterval}}
-\index{tapply@\texttt{tapply}}
-#+END_LaTeX
+
+#+INDEX: findInterval@\texttt{findInterval}
+#+INDEX: tapply@\texttt{tapply}
+
 
 #+begin_src R 
   ## Midpoints computed with the median of each interval
@@ -388,10 +388,10 @@ palette is displayed in Figure \ref{fig:showBreak2Pal}.
 The raster map produced with this new palette is displayed in Figure
 \ref{fig:divPalSISav}. Now zero is clearly associated with the white
 color.
-#+BEGIN_LaTeX
-\index{colorRamp@\texttt{colorRamp}}
-\index{rgb@\texttt{rgb}}
-#+END_LaTeX
+
+#+INDEX: colorRamp@\texttt{colorRamp}
+#+INDEX: rgb@\texttt{rgb}
+
 #+begin_src R :results output graphics :exports both :file figs/showBreak2Pal.pdf
   break2pal <- function(x, mx, pal){
     ## x = mx gives y = 1
@@ -463,10 +463,10 @@ above, replacing the =breaks= vector with the result of the
 =classIntervals= function. Figure \ref{fig:divPalSISav_classInt}
 displays the result.
 
-#+BEGIN_LaTeX
-\index{Packages!classInt@\texttt{classInt}}
-\index{classIntervals@\texttt{classIntervals}}
-#+END_LaTeX
+
+#+INDEX: Packages!classInt@\texttt{classInt}
+#+INDEX: classIntervals@\texttt{classIntervals}
+
 
 #+begin_src R 
   library(classInt)
@@ -518,11 +518,11 @@ package. Both files are read, their geographical extent reduced to the
 area of India and China, and cleaned (=99999= cells are replaced with
 =NA=).
 
-#+BEGIN_LaTeX
-\index{Packages!raster@\texttt{raster}}
-\index{extent@\texttt{extent}}
-\index{crop@\texttt{crop}}
-#+END_LaTeX
+
+#+INDEX: Packages!raster@\texttt{raster}
+#+INDEX: extent@\texttt{extent}
+#+INDEX: crop@\texttt{crop}
+
 
 #+begin_src R :eval no-export
   library(raster)
@@ -559,17 +559,17 @@ package includes the =ratify= method to define a layer as categorical
 data, filling it with integer values associated to a Raster Attribute
 Table (RAT).
 
-# #+BEGIN_LaTeX
+# 
 # \begin{figure}
 # \includegraphics[width=0.3\textwidth]{figs/lcc_key.jpg}
 # \caption{\label{fig:lccKey}Codes of land cover classification}
 # \end{figure}
-# #+END_LaTeX
+# 
 
-#+BEGIN_LaTeX
-\index{ratify@\texttt{ratify}}
-\index{cut@\texttt{cut}}
-#+END_LaTeX
+
+#+INDEX: ratify@\texttt{ratify}
+#+INDEX: cut@\texttt{cut}
+
 
 #+begin_src R
   landClass[landClass %in% c(0, 254)] <- NA
@@ -596,12 +596,12 @@ background color set to =lightskyblue1= to display the sea areas
 (filled with =NA= values), and the region palette is defined with
 adequate colors (Figure \ref{fig:landClass}).
 
-#+BEGIN_LaTeX
-\index{Packages!rasterVis@\texttt{rasterVis}}
-\index{levelplot@\texttt{levelplot}}
-\index{modifyList@\texttt{modifyList}}
-\index{rasterTheme@\texttt{rasterTheme}}
-#+END_LaTeX
+
+#+INDEX: Packages!rasterVis@\texttt{rasterVis}
+#+INDEX: levelplot@\texttt{levelplot}
+#+INDEX: modifyList@\texttt{modifyList}
+#+INDEX: rasterTheme@\texttt{rasterTheme}
+
 
 #+begin_src R :results output graphics :exports both :file figs/landClass.pdf
   library(rasterVis)
@@ -644,10 +644,10 @@ create a new =RasterStack= object. Figure
 \ref{fig:histogramLandClass} displays the distribution of the
 logarithm of the population density associated to each land class.
 
-#+BEGIN_LaTeX
-\index{stack@\texttt{stack}}
-\index{histogram@\texttt{histogram}}
-#+END_LaTeX
+
+#+INDEX: stack@\texttt{stack}
+#+INDEX: histogram@\texttt{histogram}
+
 
 #+begin_src R :results output graphics :exports both :file figs/histogramLandClass.pdf
   s <- stack(pop, landClass)

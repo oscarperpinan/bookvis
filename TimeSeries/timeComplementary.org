@@ -146,8 +146,8 @@ A more sophisticated solution is to use the ordered results of a
 hierarchical clustering of the time evolution of the $\mathrm{CO_2}$ per capita
 values (Figure ref:fig:hclustCO2). The data is extracted from the
 original $\mathrm{CO_2}$ =data.frame=.  
-#+INDEX: Packages!reshape2\texttt{reshape2}
-#+INDEX: dcast\texttt{dcast}
+#+INDEX: Packages!reshape2@\texttt{reshape2}
+#+INDEX: dcast@\texttt{dcast}
 
 #+begin_src R :results output :exports both
 library(reshape2)
