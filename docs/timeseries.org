@@ -129,7 +129,7 @@
 
 * Code
   :PROPERTIES:
-  :CUSTOM_ID: code
+  :CUSTOM_ID: code_time
   :END:
 ** Time on the horizontal axis 
   :PROPERTIES:

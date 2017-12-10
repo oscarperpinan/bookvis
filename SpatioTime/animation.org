@@ -1,4 +1,4 @@
-#+PROPERTY:  header-args :session *R* :tangle ../docs/R/rasterST.R :eval no-export
+#+PROPERTY:  header-args :session *R* :tangle ../docs/R/animation.R :eval no-export
 #+OPTIONS: ^:nil
 #+BIND: org-export-latex-image-default-option "height=0.4\\textheight"
 

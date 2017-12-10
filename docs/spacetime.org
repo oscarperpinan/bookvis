@@ -7,7 +7,6 @@
 
 * Raster data
 
-The code of this section is available [[file:R/rasterST.R][here]].
 ** Level plots
 
 [[file:images/SISdm.png][file:images/thumbs/SISdm.png]] 
@@ -29,15 +28,25 @@ The code of this section is available [[file:R/rasterST.R][here]].
 
 [[file:images/diffTa_xyplot.png][file:images/thumbs/diffTa_xyplot.png]]   
 
-** Animation
-#+ATTR_HTML: :class vimeo
-[[http://player.vimeo.com/video/65227780][file:images/thumbs/cftVideo.png]]                
 
-[[file:images/cft.png][file:images/thumbs/cft.png]]                
+** Animation
+
+*** WebGL
+ #+ATTR_HTML: :target _blank
+ [[file:images/rgl/cft.html][- Forecast of cloud cover]]
+
+ #+ATTR_HTML: :target _blank
+ [[file:images/rgl/nightLights.html][- Earth at night]]
+
+*** Videos
+ #+ATTR_HTML: :class vimeo
+ [[http://player.vimeo.com/video/65227780][file:images/thumbs/cftVideo.png]]                
+
+ #+ATTR_HTML: :class vimeo
+ [[https://player.vimeo.com/video/246688233][file:images/nightLights.png]]
+
 
 * Spatial point data
-
-The code of this section is available [[file:R/pointsST.R][here]].
 
 ** Graphics with =spacetime=
 
@@ -53,12 +62,34 @@ The code of this section is available [[file:R/pointsST.R][here]].
 [[file:images/NO2pb.svg][file:images/thumbs/NO2pb.png]]   
 
 
-* 3D animation
 
-#+ATTR_HTML: :target _blank
-[[file:images/rgl/cft.html][Forecast of cloud cover]]
-[[file:images/cftRGL.png]]
 
-#+ATTR_HTML: :target _blank
-[[file:images/rgl/nightLights.html][Earth at night]]
-[[file:images/nightLights.png]]
+* Code
+  :PROPERTIES:
+  :CUSTOM_ID: time_st
+  :END:
+
+** Raster data
+   :PROPERTIES:
+   :CUSTOM_ID: code_rasterst
+   :END:
+
+[[file:R/rasterST.R][Download]]
+#+INCLUDE: "R/rasterST.R" src R
+
+** Spatial point data
+   :PROPERTIES:
+   :CUSTOM_ID: code_pointsst
+   :END:
+
+[[file:R/pointsST.R][Download]]
+#+INCLUDE: "R/pointsST.R" src R
+
+** Animation
+   :PROPERTIES:
+   :CUSTOM_ID: code_animationst
+   :END:
+
+[[file:R/animation.R][Download]]
+#+INCLUDE: "R/animation.R" src R
+

@@ -49,16 +49,20 @@ airQuality <- read.csv2('data/airQuality.csv')
 NO2 <- airQuality[airQuality$codParam == 8, ]
 
 library(zoo)
+library(reshape2)
 library(spacetime)
   
-NO2$time <- with(NO2, ISOdate(year, month, day))
-NO2wide <- reshape(NO2[,c('codEst', 'dat', 'time')],
-                   idvar='time', timevar='codEst',
-                   direction='wide')
+NO2$time <- as.Date(with(NO2,
+                         ISOdate(year, month, day)))
+NO2wide <- dcast(NO2[, c('codEst', 'dat', 'time')],
+                 time ~ codEst,
+                 value.var = "dat")
 NO2zoo <- zoo(NO2wide[,-1], NO2wide$time)
 
-dats <- data.frame(vals=as.vector(t(NO2zoo)))
-NO2st <- STFDF(airStations, index(NO2zoo), dats)
+dats <- data.frame(vals = as.vector(t(NO2zoo)))
+NO2st <- STFDF(sp = airStations,
+               time = index(NO2zoo),
+               data = dats)
 
 ##################################################################
 ## Graphics with spacetime
@@ -69,12 +73,13 @@ airPal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(5)
 stplot(NO2st[, 1:12],
        cuts = 5,
        col.regions = airPal,
+       main = '',
        edge.col = 'black')
 
 stplot(NO2st, mode='xt',
        col.regions = colorRampPalette(airPal)(15),
        scales = list(x = list(rot = 45)),
-       ylab='', xlab='')
+       ylab='', xlab='', main = '')
 
 stplot(NO2st, mode = 'ts', xlab = '',
        lwd = 0.1, col = 'black', alpha = 0.6,

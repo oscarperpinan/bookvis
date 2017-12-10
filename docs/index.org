@@ -75,10 +75,7 @@ with the methods and modify the code to suit your own needs.
     :HTML_CONTAINER_CLASS: col-md-4
     :END:
 
-[[file:images/cft_small.png]]
-
-
-# [[file:spacetime.org][file:images/cft_small.png]]
+[[file:spacetime.org][file:images/cft_small.png]]
 
 
 
