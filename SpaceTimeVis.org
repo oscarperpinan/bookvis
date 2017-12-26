@@ -518,7 +518,7 @@ label:part:Spatial
 
  This chapter details how to create a reference map of a northern region of Spain using data from OpenStreetMap and a physical map of Brazil with data from different sources.
 #+INCLUDE: "Spatial/physical.org"
-#+INCLUDE: "Spatial/osmar.org"
+#+INCLUDE: "Spatial/osm.org"
 
 ** COMMENT About the Data
  label:cha:dataSpatial
