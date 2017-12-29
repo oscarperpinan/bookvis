@@ -239,6 +239,7 @@ matching against the shared key column (=airStations$Codigo= and
 
 
 * Spanish General Elections
+label:sec:dataChoropleth
 #+begin_src R :exports none
   ##################################################################
   ## Spanish General Elections
@@ -284,6 +285,116 @@ region will be identified by the =PROVMUN= code.
   
   votes2011 <- data.frame(PROVMUN, whichMax, Max, pcMax)
   write.csv(votes2011, 'data/votes2011.csv', row.names=FALSE)
+#+end_src
+
+** Administrative Boundaries
+
+#+begin_src R :exports none
+##################################################################
+## Administrative boundaries
+##################################################################
+#+end_src
+
+The Spanish administrative boundaries are available as shapefiles at
+the INE (Instituto Nacional de Estadística) webpage[fn:7]. Both the
+municipalities, =espMap=, and province boundaries, =provinces=, are
+read as =SpatialPolygonsDataFrame= with =readShapePoly=.
+
+
+#+INDEX: Packages!maptools@\texttt{maptools}
+#+INDEX: Packages!sp@\texttt{sp}
+
+#+begin_src R
+library(sp)
+library(maptools)
+#+end_src
+
+
+#+INDEX: INE
+#+INDEX: readShapePoly@\texttt{readShapePoly}
+#+INDEX: Encoding@\texttt{Encoding}
+
+
+#+begin_src R :eval no-export
+old <- setwd(tempdir())
+
+download.file('ftp://www.ine.es/pcaxis/mapas_completo_municipal.rar',
+              'mapas_completo_municipal.rar')
+system2('unrar', c('e', 'mapas_completo_municipal.rar'))
+
+espMap <- readShapePoly(fn="esp_muni_0109",
+                        proj4string = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs")
+Encoding(levels(espMap$NOMBRE)) <- "latin1"
+
+setwd(old)
+#+end_src
+
+#+begin_src R :exports none :tangle no
+espMap <- readShapePoly(fn="/home/datos/mapas_completo_municipal/esp_muni_0109",
+                        proj4string = CRS("+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"))
+Encoding(levels(espMap$NOMBRE)) <- "latin1"
+#+end_src  
+
+Some of the polygons are repeated and can be dissolved with
+=unionSpatialPolygons= (the =rgeos= package must be installed).
+
+#+INDEX: unionSpatialPolygons@\texttt{unionSpatialPolygons}
+
+#+begin_src R 
+## dissolve repeated polygons
+espPols <- unionSpatialPolygons(espMap, espMap$PROVMUN) 
+#+end_src
+
+Spanish maps are commonly displayed with the Canarian islands next
+to the peninsula. First we have to extract the polygons of the
+islands and the polygons of the peninsula, and then shift the
+coordinates of the islands with =elide=. Finally, a new
+=SpatialPolygons= object binds the shifted islands with the
+peninsula.
+
+#+begin_src R
+## Extract Canarias islands from the SpatialPolygons object
+canarias <-  sapply(espPols@polygons, function(x)substr(x@ID, 1, 2) %in% c("35",  "38"))
+peninsulaPols <- espPols[!canarias]
+islandPols <- espPols[canarias]
+
+## Shift the island extent box to position them at the bottom right corner
+dy <- bbox(peninsulaPols)[2,1] - bbox(islandPols)[2,1]
+dx <- bbox(peninsulaPols)[1,2] - bbox(islandPols)[1,2]
+islandPols2 <- elide(islandPols, shift=c(dx, dy))
+bbIslands <- bbox(islandPols2)
+proj4string(islandPols2) <- proj4string(peninsulaPols)
+
+## Bind Peninsula (without islands) with shifted islands
+espPols <- rbind(peninsulaPols, islandPols2)
+#+end_src
+
+The final step is to link the data with the polygons. The =ID= slot of
+each polygon is the key to find the correspondent registry in the
+=votes2011= dataset.
+#+begin_src R
+votes2011 <- read.csv('data/votes2011.csv',
+                        colClasses=c('factor', 'factor', 'numeric', 'numeric'))
+
+## Match polygons and data using ID slot and PROVMUN column
+IDs <- sapply(espPols@polygons, function(x)x@ID)
+idx <- match(IDs, votes2011$PROVMUN)
+  
+##Places without information
+idxNA <- which(is.na(idx))
+
+##Information to be added to the SpatialPolygons object
+dat2add <- votes2011[idx, ]
+
+## SpatialPolygonsDataFrame uses row names to match polygons with data
+row.names(dat2add) <- IDs
+espMapVotes <- SpatialPolygonsDataFrame(espPols, dat2add)
+
+## Drop those places without information
+espMapVotes <- espMapVotes[-idxNA, ]
+
+## Save the result
+writeSpatialShape(espMapVotes, fn = "data/espMapVotes")
 #+end_src
 
 

@@ -52,15 +52,11 @@
   
   write.csv2(airStations, file='data/airStations.csv')
 
-  ## Fill in the form at
-  ## http://www.mambiente.munimadrid.es/opencms/opencms/calaire/consulta/descarga.html
-  ## to receive the Diarios11.zip file.
-  unzip('data/Diarios11.zip')
-  rawData <- readLines('data/Datos11.txt')
-  ## This loop reads each line and extracts fields as defined by the
-  ## INTPHORA file:
-  ## http://www.mambiente.munimadrid.es/opencms/export/sites/default/calaire/Anexos/INTPHORA-DIA.pdf
-  datos11 <- lapply(rawData, function(x){
+rawData <- readLines('data/Datos11.txt')
+## This loop reads each line and extracts fields as defined by the
+## INTPHORA file:
+## http://www.mambiente.munimadrid.es/opencms/export/sites/default/calaire/Anexos/INTPHORA-DIA.pdf
+datos11 <- lapply(rawData, function(x){
     codEst <- substr(x, 1, 8)
     codParam <- substr(x, 9, 10)
     codTec <- substr(x, 11, 12)
@@ -78,11 +74,12 @@
     ## Only data from valid days
     dat <- dat[day]
     res <- data.frame(codEst, codParam, ##codTec, codPeriod,
-                      month, day, year=2011,
+                      month, day, year = 2016,
                       dat)
-    })
-  datos11 <- do.call(rbind, datos11)
-  write.csv2(datos11, 'data/airQuality.csv')
+})
+datos11 <- do.call(rbind, datos11)
+
+write.csv2(datos11, 'data/airQuality.csv')
 
 ##################################################################
 ## Combine data and spatial locations
@@ -145,6 +142,66 @@
   
   votes2011 <- data.frame(PROVMUN, whichMax, Max, pcMax)
   write.csv(votes2011, 'data/votes2011.csv', row.names=FALSE)
+
+##################################################################
+## Administrative boundaries
+##################################################################
+
+library(sp)
+library(maptools)
+
+old <- setwd(tempdir())
+
+download.file('ftp://www.ine.es/pcaxis/mapas_completo_municipal.rar',
+              'mapas_completo_municipal.rar')
+system2('unrar', c('e', 'mapas_completo_municipal.rar'))
+
+espMap <- readShapePoly(fn="esp_muni_0109",
+                        proj4string = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs")
+Encoding(levels(espMap$NOMBRE)) <- "latin1"
+
+setwd(old)
+
+## dissolve repeated polygons
+espPols <- unionSpatialPolygons(espMap, espMap$PROVMUN)
+
+## Extract Canarias islands from the SpatialPolygons object
+canarias <-  sapply(espPols@polygons, function(x)substr(x@ID, 1, 2) %in% c("35",  "38"))
+peninsulaPols <- espPols[!canarias]
+islandPols <- espPols[canarias]
+
+## Shift the island extent box to position them at the bottom right corner
+dy <- bbox(peninsulaPols)[2,1] - bbox(islandPols)[2,1]
+dx <- bbox(peninsulaPols)[1,2] - bbox(islandPols)[1,2]
+islandPols2 <- elide(islandPols, shift=c(dx, dy))
+bbIslands <- bbox(islandPols2)
+proj4string(islandPols2) <- proj4string(peninsulaPols)
+
+## Bind Peninsula (without islands) with shifted islands
+espPols <- rbind(peninsulaPols, islandPols2)
+
+votes2011 <- read.csv('data/votes2011.csv',
+                        colClasses=c('factor', 'factor', 'numeric', 'numeric'))
+
+## Match polygons and data using ID slot and PROVMUN column
+IDs <- sapply(espPols@polygons, function(x)x@ID)
+idx <- match(IDs, votes2011$PROVMUN)
+  
+##Places without information
+idxNA <- which(is.na(idx))
+
+##Information to be added to the SpatialPolygons object
+dat2add <- votes2011[idx, ]
+
+## SpatialPolygonsDataFrame uses row names to match polygons with data
+row.names(dat2add) <- IDs
+espMapVotes <- SpatialPolygonsDataFrame(espPols, dat2add)
+
+## Drop those places without information
+espMapVotes <- espMapVotes[-idxNA, ]
+
+## Save the result
+writeSpatialShape(espMapVotes, fn = "data/espMapVotes")
 
   ##################################################################
   ## CM SAF

@@ -126,6 +126,7 @@ sympy-plots-for-*.tex/
 *.sav
 
 # Emacs
+*.el
 *~
 .Rhistory
 *.tex
