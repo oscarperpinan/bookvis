@@ -67,7 +67,7 @@ changing only at the region boundaries. This method performs correctly
 with homogeneous regions, both in size and shape.
 
 This section details how to create a multivariate choropleth map to
-show the results of the 2011 Spanish general elections. It is inspired
+show the results of the 2016 Spanish general elections. It is inspired
 by the infographic from the /New York Times[fn:3]/, a multivariate
 choropleth map of the immigration behaviour in the United States.
 
@@ -80,6 +80,9 @@ interested in this procedure, or jump to the next section [[ref:sec:map]]
 where the maps are produced.
 
 #+begin_src R 
+library(sp)
+library(maptools)
+
 espMapVotes <- readShapePoly(fn = "data/espMapVotes", 
                         proj4string = CRS("+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"))
 #+end_src
@@ -112,14 +115,14 @@ Is projected: TRUE
 proj4string :
 [+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs]
 Data attributes:
-     SP_ID         PROVMUN     whichMax         Max             pcMax       
- 01001  :   1   01001  :   1   ABS :1234   Min.   :     1   Min.   :  2.00  
- 01002  :   1   01002  :   1   OTH :1191   1st Qu.:    72   1st Qu.: 37.40  
- 01003  :   1   01003  :   1   PP  :3521   Median :   224   Median : 44.54  
- 01004  :   1   01004  :   1   PSOE:2134   Mean   :  1694   Mean   : 45.09  
- 01006  :   1   01006  :   1               3rd Qu.:   783   3rd Qu.: 51.54  
- 01008  :   1   01008  :   1               Max.   :784986   Max.   :100.00  
- (Other):8074   (Other):8074
+    PROVMUN     whichMax         Max               pcMax      
+ 01001  :   1   ABS :2812   Min.   :     2.0   Min.   :21.33  
+ 01002  :   1   C.s :   3   1st Qu.:    54.0   1st Qu.:31.68  
+ 01003  :   1   OTH : 170   Median :   162.0   Median :35.64  
+ 01004  :   1   PP  :4212   Mean   :  1395.9   Mean   :37.58  
+ 01006  :   1   PSOE: 776   3rd Qu.:   636.5   3rd Qu.:41.27  
+ 01008  :   1   UP  : 137   Max.   :696804.0   Max.   :94.74  
+ (Other):8104
 #+end_example
 
 =pcMax= is a quantitative variable that can be adequately displayed
@@ -131,14 +134,14 @@ with a sequential palette, that is the default option in =spplot=
 spplot(espMapVotes["pcMax"], col = 'transparent')
 #+end_src
 
-#+CAPTION: Quantitative choropleth map displaying the percentage of votes obtained by the predominant political option in each municipality in the 2011 Spanish general elections.
+#+CAPTION: Quantitative choropleth map displaying the percentage of votes obtained by the predominant political option in each municipality in the 2016 Spanish general elections.
 #+LABEL: fig:pcMax
 #+RESULTS:
 [[file:figs/pcMax.pdf]]
 
 
 On the other hand, =whichMax= is a categorical value with four levels:
-the two main parties (=PP= and =PSOE=), the abstention results
+the main parties (=PP=, =PSOE=, =UP=, =Cs=), the abstention results
 (=ABS=), and the rest of the parties (=OTH=). Figure [[fig:whichMax]]
 encodes these levels with a qualitative palette with constant hues and
 varying chroma and luminance for each class using the package
@@ -178,7 +181,7 @@ qualPal <- hcl(hue, c=50, l=70)
 spplot(espMapVotes["whichMax"], col = 'transparent', col.regions = qualPal)
 #+end_src
 
-#+CAPTION: Categorical choropleth map displaying the name of the predominant political option in each municipality in the 2011 Spanish general elections.
+#+CAPTION: Categorical choropleth map displaying the name of the predominant political option in each municipality in the 2016 Spanish general elections.
 #+LABEL: fig:whichMax
 #+RESULTS:
 [[file:figs/whichMax.pdf]]
@@ -345,5 +348,5 @@ p +
 
 [fn:3] [[http://www.nytimes.com/interactive/2009/03/10/us/20090310-immigration-explorer.html]]
 
-[fn:7] [[http://www.ine.es/]] > Products and services > Publications > Download the PC-Axis program > Municipal maps
+
 

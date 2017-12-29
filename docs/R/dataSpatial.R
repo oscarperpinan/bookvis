@@ -1,8 +1,8 @@
-  ##################################################################
-  ## Initial configuration
-  ##################################################################
-  ## Clone or download the repository and set the working directory
-  ## with setwd to the folder where the repository is located.
+##################################################################
+## Initial configuration
+##################################################################
+## Clone or download the repository and set the working directory
+## with setwd to the folder where the repository is located.
 
   ##################################################################
   ## Air Quality in Madrid
@@ -118,30 +118,34 @@ write.csv2(datos11, 'data/airQuality.csv')
   ## Spanish General Elections
   ##################################################################
 
-  dat2011 <- read.csv('data/GeneralSpanishElections2011.gz')
-  
-  census <- dat2011$Total.censo.electoral
-  validVotes <- dat2011$Votos.válidos
-  ## Election results per political party and municipality
-  votesData <- dat2011[, 12:1023]
-  ## Abstention as an additional party
-  votesData$ABS <- census - validVotes
-  ## Winner party at each municipality
-  whichMax <- apply(votesData,  1, function(x)names(votesData)[which.max(x)])
-  ## Results of the winner party at each municipality
-  Max <- apply(votesData, 1, max)
-  ## OTH for everything but PP, PSOE and ABS
-  whichMax[!(whichMax %in% c('PP',  'PSOE', 'ABS'))] <- 'OTH'
-  ## Percentage of votes with the electoral census
-  pcMax <- Max/census * 100
-  
-  ## Province-Municipality code. sprintf formats a number with leading zeros.
-  PROVMUN <- with(dat2011, paste(sprintf('%02d', Código.de.Provincia),
-                                 sprintf('%03d', Código.de.Municipio),
-                                 sep=""))
-  
-  votes2011 <- data.frame(PROVMUN, whichMax, Max, pcMax)
-  write.csv(votes2011, 'data/votes2011.csv', row.names=FALSE)
+dat2016 <- read.csv('data/GeneralSpanishElections2016.csv')
+
+census <- dat2016$Total.censo.electoral
+validVotes <- dat2016$Votos.válidos
+## Election results per political party and municipality
+votesData <- dat2016[, -(1:13)]
+## Abstention as an additional party
+votesData$ABS <- census - validVotes
+## UP is a coalition of several parties
+UPcols <- grep("PODEMOS|ECP", names(votesData))
+votesData$UP <- rowSums(votesData[, UPcols])
+votesData[, UPcols] <- NULL
+## Winner party at each municipality
+whichMax <- apply(votesData,  1, function(x)names(votesData)[which.max(x)])
+## Results of the winner party at each municipality
+Max <- apply(votesData, 1, max)
+## OTH for everything but PP, PSOE, UP, Cs, and ABS
+whichMax[!(whichMax %in% c('PP', 'PSOE', 'UP', 'C.s', 'ABS'))] <- 'OTH'
+## Percentage of votes with the electoral census
+pcMax <- Max/census * 100
+
+## Province-Municipality code. sprintf formats a number with leading zeros.
+PROVMUN <- with(dat2016, paste(sprintf('%02d', Código.de.Provincia),
+                               sprintf('%03d', Código.de.Municipio),
+                               sep=""))
+
+votes2016 <- data.frame(PROVMUN, whichMax, Max, pcMax)
+write.csv(votes2016, 'data/votes2016.csv', row.names=FALSE)
 
 ##################################################################
 ## Administrative boundaries
@@ -180,18 +184,18 @@ proj4string(islandPols2) <- proj4string(peninsulaPols)
 ## Bind Peninsula (without islands) with shifted islands
 espPols <- rbind(peninsulaPols, islandPols2)
 
-votes2011 <- read.csv('data/votes2011.csv',
+votes2016 <- read.csv('data/votes2016.csv',
                         colClasses=c('factor', 'factor', 'numeric', 'numeric'))
 
 ## Match polygons and data using ID slot and PROVMUN column
 IDs <- sapply(espPols@polygons, function(x)x@ID)
-idx <- match(IDs, votes2011$PROVMUN)
+idx <- match(IDs, votes2016$PROVMUN)
   
 ##Places without information
 idxNA <- which(is.na(idx))
 
 ##Information to be added to the SpatialPolygons object
-dat2add <- votes2011[idx, ]
+dat2add <- votes2016[idx, ]
 
 ## SpatialPolygonsDataFrame uses row names to match polygons with data
 row.names(dat2add) <- IDs

@@ -2,15 +2,15 @@
 #+OPTIONS: ^:nil
 
 #+begin_src R :exports none :tangle no
-  setwd('~/Dropbox/chapman/book/')
+setwd('~/github/bookvis/')
 #+end_src
 
 #+begin_src R :exports none  
-  ##################################################################
-  ## Initial configuration
-  ##################################################################
-  ## Clone or download the repository and set the working directory
-  ## with setwd to the folder where the repository is located.
+##################################################################
+## Initial configuration
+##################################################################
+## Clone or download the repository and set the working directory
+## with setwd to the folder where the repository is located.
 #+end_src
 
 * Air Quality in Madrid
@@ -246,14 +246,14 @@ label:sec:dataChoropleth
   ##################################################################
 #+end_src
 
-The results from the 2011 Spanish general elections[fn:9] are
+The results from the 2016 Spanish general elections[fn:9] are
 available from the Ministry webpage[fn:10] and at the =data= folder of
 the book repository. Each region of the map will represent the
 percentage of votes (=pcMax=) obtained by the predominant political
-option (=whichMax=) at the corresponding municipality.  Only four
-groups are considered: the two main parties (=PP= and =PSOE=), the
-abstention results (=ABS=), and the remaining parties (=OTH=). Each
-region will be identified by the =PROVMUN= code.
+option (=whichMax=) at the corresponding municipality.  Only six
+groups are considered: the four main parties (=PP=, =PSOE=, =UP=,
+=Cs=), the abstention results (=ABS=), and the remaining parties
+(=OTH=). Each region will be identified by the =PROVMUN= code.
 
 
 #+INDEX: apply@\texttt{apply}
@@ -261,30 +261,34 @@ region will be identified by the =PROVMUN= code.
 
 
 #+begin_src R 
-  dat2011 <- read.csv('data/GeneralSpanishElections2011.gz')
-  
-  census <- dat2011$Total.censo.electoral
-  validVotes <- dat2011$Votos.válidos
-  ## Election results per political party and municipality
-  votesData <- dat2011[, 12:1023]
-  ## Abstention as an additional party
-  votesData$ABS <- census - validVotes
-  ## Winner party at each municipality
-  whichMax <- apply(votesData,  1, function(x)names(votesData)[which.max(x)])
-  ## Results of the winner party at each municipality
-  Max <- apply(votesData, 1, max)
-  ## OTH for everything but PP, PSOE and ABS
-  whichMax[!(whichMax %in% c('PP',  'PSOE', 'ABS'))] <- 'OTH'
-  ## Percentage of votes with the electoral census
-  pcMax <- Max/census * 100
-  
-  ## Province-Municipality code. sprintf formats a number with leading zeros.
-  PROVMUN <- with(dat2011, paste(sprintf('%02d', Código.de.Provincia),
-                                 sprintf('%03d', Código.de.Municipio),
-                                 sep=""))
-  
-  votes2011 <- data.frame(PROVMUN, whichMax, Max, pcMax)
-  write.csv(votes2011, 'data/votes2011.csv', row.names=FALSE)
+dat2016 <- read.csv('data/GeneralSpanishElections2016.csv')
+
+census <- dat2016$Total.censo.electoral
+validVotes <- dat2016$Votos.válidos
+## Election results per political party and municipality
+votesData <- dat2016[, -(1:13)]
+## Abstention as an additional party
+votesData$ABS <- census - validVotes
+## UP is a coalition of several parties
+UPcols <- grep("PODEMOS|ECP", names(votesData))
+votesData$UP <- rowSums(votesData[, UPcols])
+votesData[, UPcols] <- NULL
+## Winner party at each municipality
+whichMax <- apply(votesData,  1, function(x)names(votesData)[which.max(x)])
+## Results of the winner party at each municipality
+Max <- apply(votesData, 1, max)
+## OTH for everything but PP, PSOE, UP, Cs, and ABS
+whichMax[!(whichMax %in% c('PP', 'PSOE', 'UP', 'C.s', 'ABS'))] <- 'OTH'
+## Percentage of votes with the electoral census
+pcMax <- Max/census * 100
+
+## Province-Municipality code. sprintf formats a number with leading zeros.
+PROVMUN <- with(dat2016, paste(sprintf('%02d', Código.de.Provincia),
+                               sprintf('%03d', Código.de.Municipio),
+                               sep=""))
+
+votes2016 <- data.frame(PROVMUN, whichMax, Max, pcMax)
+write.csv(votes2016, 'data/votes2016.csv', row.names=FALSE)
 #+end_src
 
 ** Administrative Boundaries
@@ -371,20 +375,20 @@ espPols <- rbind(peninsulaPols, islandPols2)
 
 The final step is to link the data with the polygons. The =ID= slot of
 each polygon is the key to find the correspondent registry in the
-=votes2011= dataset.
+=votes2016= dataset.
 #+begin_src R
-votes2011 <- read.csv('data/votes2011.csv',
+votes2016 <- read.csv('data/votes2016.csv',
                         colClasses=c('factor', 'factor', 'numeric', 'numeric'))
 
 ## Match polygons and data using ID slot and PROVMUN column
 IDs <- sapply(espPols@polygons, function(x)x@ID)
-idx <- match(IDs, votes2011$PROVMUN)
+idx <- match(IDs, votes2016$PROVMUN)
   
 ##Places without information
 idxNA <- which(is.na(idx))
 
 ##Information to be added to the SpatialPolygons object
-dat2add <- votes2011[idx, ]
+dat2add <- votes2016[idx, ]
 
 ## SpatialPolygonsDataFrame uses row names to match polygons with data
 row.names(dat2add) <- IDs
@@ -494,6 +498,8 @@ package.
 
 * Footnotes
 
+[fn:7] [[http://www.ine.es/]] > Products and services > Publications > Download the PC-Axis program > Municipal maps
+
 [fn:1] [[http://www.eea.europa.eu/soer/countries/es/]]
 
 [fn:2] http://www.mambiente.munimadrid.es/opencms/opencms/calaire/consulta/descarga_opendata.html
@@ -506,9 +512,9 @@ package.
 
 [fn:6] [[http://neo.sci.gsfc.nasa.gov]]
 
-[fn:9] [[http://en.wikipedia.org/wiki/Spanish_general_election_2011]]
+[fn:9] https://en.wikipedia.org/wiki/Spanish_general_election,_2016
 
-[fn:10] [[http://www.infoelectoral.mir.es/docxl/04_201105_1.zip]]
+[fn:10] http://www.infoelectoral.mir.es/infoelectoral/docxl/02_201606_1.zip
 
 
 

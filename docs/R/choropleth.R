@@ -44,6 +44,9 @@ lattice.options(default.theme = myTheme,
 ## Choropleth maps
 ##################################################################
 
+library(sp)
+library(maptools)
+
 espMapVotes <- readShapePoly(fn = "data/espMapVotes", 
                         proj4string = CRS("+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"))
 
