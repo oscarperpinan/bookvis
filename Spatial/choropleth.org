@@ -306,6 +306,20 @@ names(pList) <- classes
 do.call(c, pList)
 #+end_src
 
+** Interactive
+#+begin_src R
+mapView(espMapVotes, zcol = "whichMax",
+        legend = TRUE,
+        col.regions = quantPal)
+#+end_src
+
+#+begin_src R
+mapView(espMapVotes, zcol = "pcMaxInt",
+        legend = TRUE,
+        col.regions = qualPal)
+#+end_src
+
+
 ** COMMENT \floweroneleft Categorical and Quantitative Variables Combined in a Multivariate Choropleth Map
 #+begin_src R :exports none
 ##################################################################

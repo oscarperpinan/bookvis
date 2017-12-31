@@ -121,3 +121,11 @@ pList <- lapply(1:nClasses, function(i){
 names(pList) <- classes
 
 do.call(c, pList)
+
+mapView(espMapVotes, zcol = "whichMax",
+        legend = TRUE,
+        col.regions = quantPal)
+
+mapView(espMapVotes, zcol = "pcMaxInt",
+        legend = TRUE,
+        col.regions = qualPal)
