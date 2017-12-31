@@ -50,106 +50,74 @@ library(maptools)
 espMapVotes <- readShapePoly(fn = "data/espMapVotes", 
                         proj4string = CRS("+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"))
 
-##################################################################
-## Map
-##################################################################
+library(RColorBrewer)
+
+## Number of intervals (colors)
+N <- 6
+## Sequential palette
+quantPal <- brewer.pal(n = N, "Oranges")
+
+ucN <- 1000
+ucQuantPal <- colorRampPalette(quantPal)(ucN)
 
 ## The polygons boundaries are not displayed thanks to col = 'transparent' 
-spplot(espMapVotes["pcMax"], col = 'transparent')
+spplot(espMapVotes["pcMax"],
+       col.regions = ucQuantPal,
+       cuts = ucN,
+       col = 'transparent')
 
-library(colorspace)  
+ggplot(as.data.frame(espMapVotes),
+       aes(pcMax,
+           fill = whichMax,
+           colour = whichMax)) +
+    geom_density(alpha = 0.1) +
+    theme_bw()
+
+library(classInt)
+
+## Compute intervals with the same number of elements
+intQuant <- classIntervals(espMapVotes$pcMax,
+                           n = N, style = "quantile")
+## Compute intervals with the natural breaks algorithm
+intFisher <- classIntervals(espMapVotes$pcMax,
+                            n = N, style = "fisher")
+
+plot(intQuant, pal = quantPal, main = "")
+
+plot(intFisher, pal = quantPal, main = "")
+
+## Add a new categorical variable with cut, using the computed breaks
+espMapVotes$pcMaxInt <- cut(espMapVotes$pcMax,
+                            breaks = intFisher$brks)
+
+spplot(espMapVotes["pcMaxInt"],
+       col = 'transparent',
+       col.regions = quantPal)
 
 classes <- levels(factor(espMapVotes$whichMax))
 nClasses <- length(classes)
 
-qualPal <- rainbow_hcl(nClasses, start=30, end=300)
-
-## distance between hues
-step <- 360/nClasses 
-## hues equally spaced
-hue = (30 + step*(seq_len(nClasses)-1))%%360 
-qualPal <- hcl(hue, c=50, l=70)
+qualPal <- brewer.pal(nClasses, "Dark2")
 
 spplot(espMapVotes["whichMax"], col = 'transparent', col.regions = qualPal)
 
-##################################################################
-## Categorical and quantitative variables combined in a multivariate choropleth map
-##################################################################
-
-classes <- levels(factor(espMapVotes$whichMax))
-nClasses <- length(classes)
-step <- 360/nClasses
-multiPal <- lapply(1:nClasses, function(i){
-    rev(sequential_hcl(16, h = (30 + step*(i-1))%%360))
-})
+provinces <- readShapePoly(fn="data/spain_provinces",
+                        proj4string = CRS("+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"))
 
 pList <- lapply(1:nClasses, function(i){
     ## Only those polygons corresponding to a level are selected
-    mapClass <- espMapVotes[espMapVotes$whichMax==classes[i],]
-    pClass <- spplot(mapClass['pcMax'], col.regions=multiPal[[i]],
-                     col='transparent',
-                     ## labels only needed in the last legend
-                     colorkey=(if (i==nClasses) TRUE else list(labels=rep('', 6))),
-                     at = seq(0, 100, by=20))
+    mapClass <- subset(espMapVotes, 
+                       whichMax == classes[i])
+    ## Use natural breaks classification
+    mapClass$pcMaxInt <- cut(mapClass$pcMax,
+                             breaks = intFisher$brks)
+    ## Produce the graphic
+    pClass <- spplot(mapClass, "pcMaxInt",
+                     col.regions = quantPal,
+                     col='transparent')
+    
+    pClass +  layer(sp.polygons(provinces, lwd = 0.1))
 })
+names(pList) <- classes
 
-p <- Reduce('+', pList)
-
-## Function to add a title to a legend
-addTitle <- function(legend, title){
-    titleGrob <- textGrob(title, gp=gpar(fontsize=8), hjust=1, vjust=1)
-    ## retrieve the legend from the trellis object
-    legendGrob <- eval(as.call(c(as.symbol(legend$fun), legend$args)))
-    ## Layout of the legend WITH the title
-    ly <- grid.layout(ncol=1, nrow=2,
-                      widths=unit(0.9, 'grobwidth', data=legendGrob))
-    ## Create a frame to host the original legend and the title
-    fg <- frameGrob(ly, name=paste('legendTitle', title, sep='_'))
-    ## Add the grobs to the frame
-    pg <- packGrob(fg, titleGrob, row=2)
-    pg <- packGrob(pg, legendGrob, row=1)
-}
-
-## Access each trellis object from pList...
-for (i in seq_along(classes)){
-    ## extract the legend (automatically created by spplot)...
-    lg <- pList[[i]]$legend$right
-    ## ... and add the addTitle function to the legend component of each trellis object
-    pList[[i]]$legend$right <- list(fun='addTitle',
-                                    args=list(legend=lg, title=classes[i]))
-}
-
-## List of legends
-legendList <- lapply(pList, function(x){
-    lg <- x$legend$right
-    clKey <- eval(as.call(c(as.symbol(lg$fun), lg$args)))
-    clKey
-})
-
-## Function to pack the list of legends in a unique legend
-## Adapted from latticeExtra::: mergedTrellisLegendGrob
-packLegend <- function(legendList){
-    N <- length(legendList)
-    ly <- grid.layout(nrow = 1,  ncol = N)
-    g <- frameGrob(layout = ly, name = "mergedLegend")
-    for (i in 1:N) g <- packGrob(g, legendList[[i]], col = i)
-    g
-}
-
-## The legend of p will include all the legends
-p$legend$right <- list(fun = 'packLegend',  args = list(legendList = legendList))
-
-## Read the provinces shape file
-provinces <- readShapePoly(fn="data/spain_provinces",
-                        proj4string = CRS("+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"))
-## Omit the Canarian islands
-canarias <- provinces$PROV %in% c(35, 38)
-peninsulaLines <- provinces[!canarias,]
-
-p +
-    layer(sp.polygons(peninsulaLines,  lwd = 0.1)) +
-    layer(grid.rect(x=bbIslands[1,1], y=bbIslands[2,1],
-                    width=diff(bbIslands[1,]),
-                    height=diff(bbIslands[2,]),
-                    default.units='native', just=c('left', 'bottom'),
-                    gp=gpar(lwd=0.5, fill='transparent')))
+do.call(c, pList)

@@ -6,6 +6,7 @@
 setwd('~/github/bookvis/')
 #+end_src
 
+
 #+begin_src R :exports none  
 ##################################################################
 ## Initial configuration
@@ -66,18 +67,14 @@ tool to visualize a variable uniformly distributed within each region,
 changing only at the region boundaries. This method performs correctly
 with homogeneous regions, both in size and shape.
 
-This section details how to create a multivariate choropleth map to
-show the results of the 2016 Spanish general elections. It is inspired
-by the infographic from the /New York Times[fn:3]/, a multivariate
-choropleth map of the immigration behaviour in the United States.
-
-The section ref:sec:dataChoropleth describes how to define a
+This section details how to create choropleth maps depicting the
+results of the 2016 Spanish general elections. The section
+ref:sec:dataChoropleth describes how to define a
 =SpatialPolygonsDataFrame= combining the data from a =data.frame= and
 the spatial information of the administrative boundaries from a
 shapefile. The result is stored in the =data= folder, in a set of
-files named =espMapVotes.*=. You can visit it for details if you not
-interested in this procedure, or jump to the next section [[ref:sec:map]]
-where the maps are produced.
+files named =espMapVotes.*=. You can visit it for details if you are
+interested in this procedure.
 
 #+begin_src R 
 library(sp)
@@ -87,18 +84,9 @@ espMapVotes <- readShapePoly(fn = "data/espMapVotes",
                         proj4string = CRS("+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"))
 #+end_src
 
-** Map
-label:sec:map
-#+begin_src R :exports none
-##################################################################
-## Map
-##################################################################
-#+end_src
-
-The =SpatialPolygonsDataFrame= constructed in the section
-ref:sec:dataChoropleth contains two main variables: =whichMax=, the
-name of the predominant political option, and =pcMax=, the percentage
-of votes obtained by this political option.
+This =SpatialPolygonsDataFrame= contains two main variables:
+=whichMax=, the name of the predominant political option, and =pcMax=,
+the percentage of votes obtained by this political option.
 
 #+begin_src R :results output :exports results :tangle no
 summary(espMapVotes)
@@ -125,57 +113,159 @@ Data attributes:
  (Other):8104
 #+end_example
 
-=pcMax= is a quantitative variable that can be adequately displayed
-with a sequential palette, that is the default option in =spplot=
-(Figure [[fig:pcMax]]).
+** Quantitative variable
+label:sec:quantitative_choropleth
+First, let's display =pcMax=, a quantitative variable increasing from low to high. This type of variables are well suited to sequential palettes, that communicate the progression from low to high with light colors associated to low values, and dark colors linked to high values. The well-known service ColorBrewer[fn:1] provides several choices, available in =R= via the =RColorBrewer= package cite:Neuwirth2011. 
 
-#+begin_src R :results output graphics :exports both :file figs/pcMax.pdf
-## The polygons boundaries are not displayed thanks to col = 'transparent' 
-spplot(espMapVotes["pcMax"], col = 'transparent')
+#+INDEX: Packages!RColorBrewer\texttt{RColorBrewer}
+#+INDEX: brewer.pal\texttt{brewer.pal}
+
+#+begin_src R
+library(RColorBrewer)
+
+## Number of intervals (colors)
+N <- 6
+## Sequential palette
+quantPal <- brewer.pal(n = N, "Oranges")
 #+end_src
 
-#+CAPTION: Quantitative choropleth map displaying the percentage of votes obtained by the predominant political option in each municipality in the 2016 Spanish general elections.
-#+LABEL: fig:pcMax
+The most common approach with choropleth maps, the classed choropleth,
+is to divide the data into classes. Although this method produces a
+filtered view of the data, it reduces the random noise in the
+information, and makes it easy to compare regions. A different
+alternative is the unclassed choropleth, where each unique data value
+gets a unique color. This approach is recommended to get a unfiltered
+view of the data and highlight overall geographic patterns of the
+variable.
+
+Figure ref:fig:pcMaxUC is an unclassed choropleth depicting the
+=pcMax= variable. It uses a palette created by interpolation with the
+=colorRampPalette= function.
+ 
+#+begin_src R
+ucN <- 1000
+ucQuantPal <- colorRampPalette(quantPal)(ucN)
+#+end_src
+
+#+begin_src R :results output graphics :exports both :file figs/pcMaxUC.pdf
+## The polygons boundaries are not displayed thanks to col = 'transparent' 
+spplot(espMapVotes["pcMax"],
+       col.regions = ucQuantPal,
+       cuts = ucN,
+       col = 'transparent')
+       
+#+end_src
+
+#+CAPTION: Quantitative choropleth map displaying the percentage of votes obtained by the predominant political option in each municipality in the 2016 Spanish general elections using a continuous color ramp (unclassed choropleth).
+#+LABEL: fig:pcMaxUC
+#+RESULTS:
+[[file:figs/pcMaxUC.pdf]]
+
+
+It is evident in figure ref:fig:pcMaxUC that the =pcMax= variable is
+concentrated in the 0.2-0.4 range. Figure ref:fig:densityChoropleth
+displays the density estimation of this variable grouping by the
+political option. This result suggests to use data classification.
+#+begin_src R :results output graphics :exports both :file figs/densityChoropleth.pdf
+ggplot(as.data.frame(espMapVotes),
+       aes(pcMax,
+           fill = whichMax,
+           colour = whichMax)) +
+    geom_density(alpha = 0.1) +
+    theme_bw()
+#+end_src
+
+#+CAPTION: Density estimation of the predominant political option in each municipality in the 2016 Spanish general elections grouping by the political option.
+#+LABEL: fig:densityChoropleth
+#+RESULTS:
+[[file:figs/densityChoropleth.pdf]]
+
+The number of data classes is the result of a compromise between
+information amount and map legibility. A general recommendation is to
+use 3 to 7 number of classes, depending on the data. 
+
+On the other hand, there is a wide catalog of classification methods,
+and the =classInt= package implements most of them (previously used in  section ref:sec:classification_bubble). Figures
+ref:fig:quantile_breaks and ref:fig:fisher_quantile depict the
+empirical cumulative distribution function of =pcMax= with the
+intervals computed with the quantile method and the natural breaks
+method, a clustering method that seeks to reduce the variance within
+classes and maximize the variance between classes. As it can be
+inferred from the density estimation (Figure
+ref:fig:densityChoropleth), the natural breaks method is preferred in
+this example, because with the quantile method very different values
+will be assigned to the same class.
+
+#+INDEX: Packages!classInt@\texttt{classInt}
+#+INDEX: classIntervals@\texttt{classIntervals}
+
+#+begin_src R
+library(classInt)
+
+## Compute intervals with the same number of elements
+intQuant <- classIntervals(espMapVotes$pcMax,
+                           n = N, style = "quantile")
+## Compute intervals with the natural breaks algorithm
+intFisher <- classIntervals(espMapVotes$pcMax,
+                            n = N, style = "fisher")
+#+end_src
+
+#+begin_src R :results output graphics :exports both :file figs/quantile_intervals.pdf
+plot(intQuant, pal = quantPal, main = "")
+#+end_src
+
+#+begin_src R :results output graphics :exports both :file figs/fisher_intervals.pdf
+plot(intFisher, pal = quantPal, main = "")
+#+end_src
+
+#+CAPTION: Quantile method for setting class intervals 
+#+LABEL: fig:quantile_intervals
+#+RESULTS:
+[[file:figs/quantile_intervals.pdf]]
+#+CAPTION: Natural breaks method for setting class intervals 
+#+LABEL: fig:fisher_intervals
+#+RESULTS:
+[[file:figs/fisher_intervals.pdf]]
+
+
+Figure ref:fig:pcMax is a classed choropleth with the natural breaks classification. It is produced with =spplot= displaying a categorical variable created with the function =cut= and the breaks computed with =classIntervals=.
+
+#+begin_src R :results output graphics :exports both :file figs/pcMax.pdf
+## Add a new categorical variable with cut, using the computed breaks
+espMapVotes$pcMaxInt <- cut(espMapVotes$pcMax,
+                            breaks = intFisher$brks)
+
+spplot(espMapVotes["pcMaxInt"],
+       col = 'transparent',
+       col.regions = quantPal)
+#+end_src
+
 #+RESULTS:
 [[file:figs/pcMax.pdf]]
 
+#+CAPTION: Quantitative choropleth map displaying the percentage of votes obtained by the predominant political option in each municipality in the 2016 Spanish general elections using a classification (classed choropleth).
+#+LABEL: fig:pcMax
+
+#+RESULTS:
+[[file:figs/pcMax.pdf]]
+
+** Qualitative variable
 
 On the other hand, =whichMax= is a categorical value with four levels:
 the main parties (=PP=, =PSOE=, =UP=, =Cs=), the abstention results
 (=ABS=), and the rest of the parties (=OTH=). Figure [[fig:whichMax]]
-encodes these levels with a qualitative palette with constant hues and
-varying chroma and luminance for each class using the package
-=colorspace= \cite{Zeileis.Hornik.ea2009}. In order to improve the
-color discrimination, hues are equally spaced along the HCL (Hue,
-Chroma, Luminance) based color wheel.
+encodes these levels with a qualitative palette from ColorBrewer.
 
-
-#+INDEX: Packages!colorspace@\texttt{colorspace}
-#+INDEX: rainbow_hcl@\texttt{rainbow\_hcl}
+#+INDEX: Packages!RColorBrewer\texttt{RColorBrewer}
+#+INDEX: brewer.pal\texttt{brewer.pal}
 
 #+begin_src R 
-library(colorspace)  
-
 classes <- levels(factor(espMapVotes$whichMax))
 nClasses <- length(classes)
 
-qualPal <- rainbow_hcl(nClasses, start=30, end=300)
+qualPal <- brewer.pal(nClasses, "Dark2")
 #+end_src
 
-For the definition of a combined palette in the next section, it is
-interesting to note that the colors provided by =rainbow_hcl= can be
-obtained with the following code where the distances between hues and
-their values are computed explicitly.
-
-#+INDEX: hcl@\texttt{hcl}
-
-#+begin_src R 
-## distance between hues
-step <- 360/nClasses 
-## hues equally spaced
-hue = (30 + step*(seq_len(nClasses)-1))%%360 
-qualPal <- hcl(hue, c=50, l=70)
-#+end_src
 
 #+begin_src R :results output graphics :exports both :file figs/whichMax.pdf
 spplot(espMapVotes["whichMax"], col = 'transparent', col.regions = qualPal)
@@ -186,7 +276,37 @@ spplot(espMapVotes["whichMax"], col = 'transparent', col.regions = qualPal)
 #+RESULTS:
 [[file:figs/whichMax.pdf]]
 
-** \floweroneleft Categorical and Quantitative Variables Combined in a Multivariate Choropleth Map
+** Categorical and Quantitative Variables combined in a matrix of maps
+
+#+INDEX: spplot@\texttt{spplot}
+#+begin_src R
+provinces <- readShapePoly(fn="data/spain_provinces",
+                        proj4string = CRS("+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"))
+#+end_src
+
+#+begin_src R 
+pList <- lapply(1:nClasses, function(i){
+    ## Only those polygons corresponding to a level are selected
+    mapClass <- subset(espMapVotes, 
+                       whichMax == classes[i])
+    ## Use natural breaks classification
+    mapClass$pcMaxInt <- cut(mapClass$pcMax,
+                             breaks = intFisher$brks)
+    ## Produce the graphic
+    pClass <- spplot(mapClass, "pcMaxInt",
+                     col.regions = quantPal,
+                     col='transparent')
+    
+    pClass +  layer(sp.polygons(provinces, lwd = 0.1))
+})
+names(pList) <- classes
+#+end_src
+
+#+begin_src R
+do.call(c, pList)
+#+end_src
+
+** COMMENT \floweroneleft Categorical and Quantitative Variables Combined in a Multivariate Choropleth Map
 #+begin_src R :exports none
 ##################################################################
 ## Categorical and quantitative variables combined in a multivariate choropleth map
@@ -206,6 +326,8 @@ luminance are calculated with the =sequential_hcl= function.
 #+INDEX: sequential_hcl@\texttt{sequential\_hcl}
 
 #+begin_src R
+library(colorspace)
+
 classes <- levels(factor(espMapVotes$whichMax))
 nClasses <- length(classes)
 step <- 360/nClasses
@@ -233,12 +355,13 @@ individual maps.
 pList <- lapply(1:nClasses, function(i){
     ## Only those polygons corresponding to a level are selected
     mapClass <- espMapVotes[espMapVotes$whichMax==classes[i],]
-    pClass <- spplot(mapClass['pcMax'], col.regions=multiPal[[i]],
+    pClass <- spplot(mapClass['pcMax'], ##col.regions=multiPal[[i]],
                      col='transparent',
                      ## labels only needed in the last legend
-                     colorkey=(if (i==nClasses) TRUE else list(labels=rep('', 6))),
+##                     colorkey=(if (i==nClasses) TRUE else list(labels=rep('', 6))),
                      at = seq(0, 100, by=20))
 })
+names(pList) <- classes
 
 p <- Reduce('+', pList)
 #+end_src
@@ -262,6 +385,8 @@ the main work inside this function.
 #+INDEX: Packages!grid@\texttt{grid}
 
 #+begin_src R
+library(grid)
+
 ## Function to add a title to a legend
 addTitle <- function(legend, title){
     titleGrob <- textGrob(title, gp=gpar(fontsize=8), hjust=1, vjust=1)
@@ -330,8 +455,11 @@ peninsulaLines <- provinces[!canarias,]
 #+end_src
 
 #+begin_src R :results output graphics :exports both :file figs/mapLegends.png
+## Main plot
 p +
-    layer(sp.polygons(peninsulaLines,  lwd = 0.1)) +
+    ## Provinces boundaries
+    layer(sp.polygons(peninsulaLines, lwd = 0.1)) +
+    ## Canarian islands
     layer(grid.rect(x=bbIslands[1,1], y=bbIslands[2,1],
                     width=diff(bbIslands[1,]),
                     height=diff(bbIslands[2,]),
@@ -345,6 +473,8 @@ p +
 [[file:figs/mapLegends.png]]
 
 * Footnotes
+
+[fn:1] http://colorbrewer2.org
 
 [fn:3] [[http://www.nytimes.com/interactive/2009/03/10/us/20090310-immigration-explorer.html]]
 
