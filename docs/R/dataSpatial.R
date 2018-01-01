@@ -160,35 +160,20 @@ download.file('ftp://www.ine.es/pcaxis/mapas_completo_municipal.rar',
               'mapas_completo_municipal.rar')
 system2('unrar', c('e', 'mapas_completo_municipal.rar'))
 
-espMap <- readShapePoly(fn="esp_muni_0109",
+spMap <- readShapePoly(fn="esp_muni_0109",
                         proj4string = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs")
-Encoding(levels(espMap$NOMBRE)) <- "latin1"
+Encoding(levels(spMap$NOMBRE)) <- "latin1"
 
 setwd(old)
 
 ## dissolve repeated polygons
-espPols <- unionSpatialPolygons(espMap, espMap$PROVMUN)
-
-## Extract Canarias islands from the SpatialPolygons object
-canarias <-  sapply(espPols@polygons, function(x)substr(x@ID, 1, 2) %in% c("35",  "38"))
-peninsulaPols <- espPols[!canarias]
-islandPols <- espPols[canarias]
-
-## Shift the island extent box to position them at the bottom right corner
-dy <- bbox(peninsulaPols)[2,1] - bbox(islandPols)[2,1]
-dx <- bbox(peninsulaPols)[1,2] - bbox(islandPols)[1,2]
-islandPols2 <- elide(islandPols, shift=c(dx, dy))
-bbIslands <- bbox(islandPols2)
-proj4string(islandPols2) <- proj4string(peninsulaPols)
-
-## Bind Peninsula (without islands) with shifted islands
-espPols <- rbind(peninsulaPols, islandPols2)
+spPols <- unionSpatialPolygons(spMap, spMap$PROVMUN)
 
 votes2016 <- read.csv('data/votes2016.csv',
                         colClasses=c('factor', 'factor', 'numeric', 'numeric'))
 
 ## Match polygons and data using ID slot and PROVMUN column
-IDs <- sapply(espPols@polygons, function(x)x@ID)
+IDs <- sapply(spPols@polygons, function(x)x@ID)
 idx <- match(IDs, votes2016$PROVMUN)
   
 ##Places without information
@@ -199,13 +184,31 @@ dat2add <- votes2016[idx, ]
 
 ## SpatialPolygonsDataFrame uses row names to match polygons with data
 row.names(dat2add) <- IDs
-espMapVotes <- SpatialPolygonsDataFrame(espPols, dat2add)
+spMapVotes <- SpatialPolygonsDataFrame(spPols, dat2add)
 
 ## Drop those places without information
-espMapVotes <- espMapVotes[-idxNA, ]
+spMapVotes0 <- spMapVotes[-idxNA, ]
 
 ## Save the result
-writeSpatialShape(espMapVotes, fn = "data/espMapVotes")
+writeSpatialShape(spMapVotes0, fn = "data/spMapVotes0")
+
+## Extract Canarias islands from the SpatialPolygons object
+canarias <-  sapply(spMapVotes0@polygons, function(x)substr(x@ID, 1, 2) %in% c("35",  "38"))
+peninsula <- spMapVotes0[!canarias,]
+island <- spMapVotes0[canarias,]
+
+## Shift the island extent box to position them at the bottom right corner
+dy <- bbox(peninsula)[2,1] - bbox(island)[2,1]
+dx <- bbox(peninsula)[1,2] - bbox(island)[1,2]
+island2 <- elide(island, shift = c(dx, dy))
+bbIslands <- bbox(island2)
+proj4string(island2) <- proj4string(peninsula)
+
+## Bind Peninsula (without islands) with shifted islands
+spMapVotes <- rbind(peninsula, island2)
+
+## Save the result
+writeSpatialShape(spMapVotes, fn = "data/spMapVotes")
 
   ##################################################################
   ## CM SAF

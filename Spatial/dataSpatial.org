@@ -291,6 +291,24 @@ votes2016 <- data.frame(PROVMUN, whichMax, Max, pcMax)
 write.csv(votes2016, 'data/votes2016.csv', row.names=FALSE)
 #+end_src
 
+#+begin_src R :results output :exports results :tangle no
+votes2016 <- read.csv('data/votes2016.csv',
+                        colClasses=c('factor', 'factor', 'numeric', 'numeric'))
+
+summary(votes2016)
+#+end_src
+
+#+RESULTS:
+:     PROVMUN     whichMax         Max             pcMax      
+:  01001  :   1   ABS :2817   Min.   :     2   Min.   :21.33  
+:  01002  :   1   C.s :   3   1st Qu.:    54   1st Qu.:31.69  
+:  01003  :   1   OTH : 170   Median :   162   Median :35.64  
+:  01004  :   1   PP  :4214   Mean   :  1394   Mean   :37.58  
+:  01006  :   1   PSOE: 783   3rd Qu.:   637   3rd Qu.:41.25  
+:  01008  :   1   UP  : 138   Max.   :696804   Max.   :94.74  
+:  (Other):8119
+
+
 ** Administrative Boundaries
 
 #+begin_src R :exports none
@@ -301,7 +319,7 @@ write.csv(votes2016, 'data/votes2016.csv', row.names=FALSE)
 
 The Spanish administrative boundaries are available as shapefiles at
 the INE (Instituto Nacional de Estadística) webpage[fn:7]. Both the
-municipalities, =espMap=, and province boundaries, =provinces=, are
+municipalities, =spMap=, and province boundaries, =provinces=, are
 read as =SpatialPolygonsDataFrame= with =readShapePoly=.
 
 
@@ -326,17 +344,17 @@ download.file('ftp://www.ine.es/pcaxis/mapas_completo_municipal.rar',
               'mapas_completo_municipal.rar')
 system2('unrar', c('e', 'mapas_completo_municipal.rar'))
 
-espMap <- readShapePoly(fn="esp_muni_0109",
+spMap <- readShapePoly(fn="esp_muni_0109",
                         proj4string = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs")
-Encoding(levels(espMap$NOMBRE)) <- "latin1"
+Encoding(levels(spMap$NOMBRE)) <- "latin1"
 
 setwd(old)
 #+end_src
 
 #+begin_src R :exports none :tangle no
-espMap <- readShapePoly(fn="/home/datos/mapas_completo_municipal/esp_muni_0109",
+spMap <- readShapePoly(fn="/home/datos/mapas_completo_municipal/esp_muni_0109",
                         proj4string = CRS("+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"))
-Encoding(levels(espMap$NOMBRE)) <- "latin1"
+Encoding(levels(spMap$NOMBRE)) <- "latin1"
 #+end_src  
 
 Some of the polygons are repeated and can be dissolved with
@@ -346,34 +364,10 @@ Some of the polygons are repeated and can be dissolved with
 
 #+begin_src R 
 ## dissolve repeated polygons
-espPols <- unionSpatialPolygons(espMap, espMap$PROVMUN) 
+spPols <- unionSpatialPolygons(spMap, spMap$PROVMUN) 
 #+end_src
 
-Spanish maps are commonly displayed with the Canarian islands next
-to the peninsula. First we have to extract the polygons of the
-islands and the polygons of the peninsula, and then shift the
-coordinates of the islands with =elide=. Finally, a new
-=SpatialPolygons= object binds the shifted islands with the
-peninsula.
-
-#+begin_src R
-## Extract Canarias islands from the SpatialPolygons object
-canarias <-  sapply(espPols@polygons, function(x)substr(x@ID, 1, 2) %in% c("35",  "38"))
-peninsulaPols <- espPols[!canarias]
-islandPols <- espPols[canarias]
-
-## Shift the island extent box to position them at the bottom right corner
-dy <- bbox(peninsulaPols)[2,1] - bbox(islandPols)[2,1]
-dx <- bbox(peninsulaPols)[1,2] - bbox(islandPols)[1,2]
-islandPols2 <- elide(islandPols, shift=c(dx, dy))
-bbIslands <- bbox(islandPols2)
-proj4string(islandPols2) <- proj4string(peninsulaPols)
-
-## Bind Peninsula (without islands) with shifted islands
-espPols <- rbind(peninsulaPols, islandPols2)
-#+end_src
-
-The final step is to link the data with the polygons. The =ID= slot of
+The main step is to link the data with the polygons. The =ID= slot of
 each polygon is the key to find the correspondent registry in the
 =votes2016= dataset.
 #+begin_src R
@@ -381,7 +375,7 @@ votes2016 <- read.csv('data/votes2016.csv',
                         colClasses=c('factor', 'factor', 'numeric', 'numeric'))
 
 ## Match polygons and data using ID slot and PROVMUN column
-IDs <- sapply(espPols@polygons, function(x)x@ID)
+IDs <- sapply(spPols@polygons, function(x)x@ID)
 idx <- match(IDs, votes2016$PROVMUN)
   
 ##Places without information
@@ -392,15 +386,41 @@ dat2add <- votes2016[idx, ]
 
 ## SpatialPolygonsDataFrame uses row names to match polygons with data
 row.names(dat2add) <- IDs
-espMapVotes <- SpatialPolygonsDataFrame(espPols, dat2add)
+spMapVotes <- SpatialPolygonsDataFrame(spPols, dat2add)
 
 ## Drop those places without information
-espMapVotes <- espMapVotes[-idxNA, ]
+spMapVotes0 <- spMapVotes[-idxNA, ]
 
 ## Save the result
-writeSpatialShape(espMapVotes, fn = "data/espMapVotes")
+writeSpatialShape(spMapVotes0, fn = "data/spMapVotes0")
 #+end_src
 
+Finally, Spanish maps are commonly displayed with the Canarian islands next
+to the peninsula. First we have to extract the polygons of the
+islands and the polygons of the peninsula, and then shift the
+coordinates of the islands with =elide=. Finally, a new
+=SpatialPolygons= object binds the shifted islands with the
+peninsula.
+
+#+begin_src R
+## Extract Canarias islands from the SpatialPolygons object
+canarias <-  sapply(spMapVotes0@polygons, function(x)substr(x@ID, 1, 2) %in% c("35",  "38"))
+peninsula <- spMapVotes0[!canarias,]
+island <- spMapVotes0[canarias,]
+
+## Shift the island extent box to position them at the bottom right corner
+dy <- bbox(peninsula)[2,1] - bbox(island)[2,1]
+dx <- bbox(peninsula)[1,2] - bbox(island)[1,2]
+island2 <- elide(island, shift = c(dx, dy))
+bbIslands <- bbox(island2)
+proj4string(island2) <- proj4string(peninsula)
+
+## Bind Peninsula (without islands) with shifted islands
+spMapVotes <- rbind(peninsula, island2)
+
+## Save the result
+writeSpatialShape(spMapVotes, fn = "data/spMapVotes")
+#+end_src
 
 * CM SAF
 \label{sec:CMSAF}
