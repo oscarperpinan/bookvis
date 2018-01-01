@@ -106,7 +106,7 @@ nClasses <- length(classes)
 
 qualPal <- brewer.pal(nClasses, "Dark2")
 
-spplot(spMapVotes[1:100, "whichMax"],
+spplot(spMapVotes["whichMax"],
        col.regions = qualPal,
        col = 'transparent',
        sp.layout = provinceLines)
@@ -130,10 +130,13 @@ do.call(c, pList)
 
 library(mapview)
 
+spMapVotes0 <- readShapePoly(fn = "data/spMapVotes0", 
+                        proj4string = CRS("+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"))
+
 mapView(spMapVotes0, zcol = "whichMax",
         legend = TRUE,
-        col.regions = quantPal)
+        col.regions = qualPal)
 
 mapView(spMapVotes0, zcol = "pcMax",
         legend = TRUE,
-        col.regions = qualPal)
+        col.regions = quantPal)

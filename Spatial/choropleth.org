@@ -242,6 +242,8 @@ intFisher <- classIntervals(spMapVotes$pcMax,
                             n = N, style = "fisher")
 #+end_src
 
+#+RESULTS:
+
 #+begin_src R :results output graphics :exports both :file figs/quantile_intervals.pdf
 plot(intQuant, pal = quantPal, main = "")
 #+end_src
@@ -289,8 +291,21 @@ spplot(spMapVotes["pcMaxInt"],
 
 On the other hand, =whichMax= is a categorical value with four levels:
 the main parties (=PP=, =PSOE=, =UP=, =Cs=), the abstention results
-(=ABS=), and the rest of the parties (=OTH=). Figure [[fig:whichMax]]
-encodes these levels with a qualitative palette from ColorBrewer.
+(=ABS=), and the rest of the parties (=OTH=). 
+
+#+begin_src R :results output :exports results :tangle no
+table(spMapVotes$whichMax)
+#+end_src
+
+#+RESULTS:
+| ABS  | 2812 |
+| C.s  |    3 |
+| OTH  |  170 |
+| PP   | 4212 |
+| PSOE |  776 |
+| UP   |  137 |
+
+Figure [[fig:whichMax]] encodes these levels with a qualitative palette from ColorBrewer.
 
 #+INDEX: Packages!RColorBrewer\texttt{RColorBrewer}
 #+INDEX: brewer.pal\texttt{brewer.pal}
@@ -304,7 +319,7 @@ qualPal <- brewer.pal(nClasses, "Dark2")
 
 
 #+begin_src R :results output graphics :exports both :file figs/whichMax.pdf
-spplot(spMapVotes[1:100, "whichMax"],
+spplot(spMapVotes["whichMax"],
        col.regions = qualPal,
        col = 'transparent',
        sp.layout = provinceLines)
@@ -350,16 +365,26 @@ library(mapview)
 #+end_src
 
 #+begin_src R
+spMapVotes0 <- readShapePoly(fn = "data/spMapVotes0", 
+                        proj4string = CRS("+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"))
+
+#+end_src
+
+#+begin_src R
 mapView(spMapVotes0, zcol = "whichMax",
         legend = TRUE,
-        col.regions = quantPal)
+        col.regions = qualPal)
 #+end_src
+
+#+RESULTS:
 
 #+begin_src R
 mapView(spMapVotes0, zcol = "pcMax",
         legend = TRUE,
-        col.regions = qualPal)
+        col.regions = quantPal)
 #+end_src
+
+#+RESULTS:
 
 
 ** COMMENT \floweroneleft Categorical and Quantitative Variables Combined in a Multivariate Choropleth Map
