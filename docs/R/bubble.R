@@ -200,6 +200,7 @@
   proj4string(streetsMadrid) <- CRS("+proj=utm +zone=30")
   streetsMadrid <- spTransform(streetsMadrid, CRS=CRS("+proj=longlat +ellps=WGS84"))
 
+## spplot with sp.layout version
   spDistricts <- list('sp.polygons', distritosMadrid, fill='gray97', lwd=0.3)
   spStreets <- list('sp.lines', streetsMadrid, lwd=0.05)
   spNames <- list(sp.pointLabel, NO2sp,
@@ -212,6 +213,7 @@
          scales=list(draw=TRUE),
          key.space=NO2key)
 
+## lattice with layer version
   pNO2 +
       layer(sp.pointLabel(NO2sp,
                           labels=substring(NO2sp$codEst, 7),
@@ -221,6 +223,29 @@
           sp.polygons(distritosMadrid, fill='gray97', lwd=0.3)
           sp.lines(streetsMadrid, lwd=0.05)
       })
+
+## ggplot version
+NO2df <- data.frame(NO2sp)
+distritosMadridDF <- fortify(distritosMadrid)
+streetsMadridDF <- fortify(streetsMadrid)
+
+ggplot()+
+    geom_polygon(data = distritosMadridDF,
+                 aes(long, lat, group = id,
+                     fill = NULL, size = NULL),
+                 fill = 'lightgray', alpha = 0.2,
+                 color = 'black') +
+    geom_path(data = streetsMadridDF,
+              aes(long, lat, group = group),
+              color = 'lightgray') +
+    geom_point(data = NO2df,
+               aes(long, lat,
+                   size = classNO2,
+                   fill = classNO2),
+               pch = 21, col = 'black') + 
+    scale_fill_manual(values=airPal) +
+    scale_size_manual(values=dentAQ*2) +
+    theme_bw()
 
 ##################################################################
 ## Spatial interpolation
@@ -241,6 +266,15 @@ spplot(airKrige["var1.pred"],
     })
 
 ##################################################################
+## mapView
+##################################################################
+
+pal <- colorRampPalette(airPal)(100)
+
+mapview(NO2sp, zcol = "mean", cex = "mean",
+        col.regions = pal, legend = TRUE)
+
+##################################################################
 ## GeoJSON and OpenStreepMap
 ##################################################################
 
@@ -254,7 +288,7 @@ writeOGR(NO2sp, 'data/NO2.geojson', 'NO2sp', driver='GeoJSON')
   plotKML(NO2sp["mean"], points_names=NO2sp$codEst)
 
 ##################################################################
-## Additional information with tooltips and hyperlinks
+## gridSVG
 ##################################################################
 
   library(XML)

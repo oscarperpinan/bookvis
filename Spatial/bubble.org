@@ -255,13 +255,14 @@ context.
 ##################################################################
 #+end_src
 A suitable method is to download data from a provider such as Google
-Maps\textsuperscript{\texttrademark} or OpenStreetMap and transform it adequately. There are several
-packages that provide an interface to query several map servers. On
-one hand, =RGoogleMaps=, =OpenStreetMaps=, and =ggmap= provide raster
-images from static maps obtained from Google Maps, Stamen,
-OpenStreetMap, etc.; on the other hand, =osmar= is able to access
-OpenStreetMap data and convert it into classes provided by existing R
-packages (mainly =sp= and =igraph0= objects).
+Maps\textsuperscript{\texttrademark} or OpenStreetMap and transform it
+adequately. There are several packages that provide an interface to
+query several map servers. On one hand, =RGoogleMaps=,
+=OpenStreetMaps=, and =ggmap= provide raster images from static maps
+obtained from Google Maps, Stamen, OpenStreetMap, etc.; on the other
+hand, =osmar= is able to access OpenStreetMap data and convert it into
+classes provided by existing R packages (mainly =sp= and =igraph0=
+objects).
 
 Among these options, I have chosen the Stamen watercolor maps
 available through the =ggmap= \cite{Kahle.Wickham2013} and
@@ -417,7 +418,7 @@ shapefiles from the nomecalles web service[fn:1].
   library(maptools)
   library(rgdal)
   
-  distritosMadrid <- readShapePoly('~/Datos/nomecalles/Distritos de Madrid/200001331')
+  distritosMadrid <- readShapePoly('/home/datos/nomecalles/Distritos de Madrid/200001331')
   proj4string(distritosMadrid) <- CRS("+proj=utm +zone=30")
   distritosMadrid <- spTransform(distritosMadrid, CRS=CRS("+proj=longlat +ellps=WGS84"))
   
@@ -427,7 +428,7 @@ shapefiles from the nomecalles web service[fn:1].
   ## streetsMadrid <- spTransform(streetsMadrid, CRS=CRS("+proj=longlat +ellps=WGS84"))
   ## writeLinesShape(streetsMadrid, '~/Datos/nomecalles/Callejero_ Ejes de viales/streetsMadrid')
   
-  streetsMadrid <- readShapeLines('~/Datos/nomecalles/Callejero_ Ejes de viales/streetsMadrid.shp')
+  streetsMadrid <- readShapeLines('/home/datos/nomecalles/Callejero_ Ejes de viales/streetsMadrid.shp')
   proj4string(streetsMadrid) <- CRS("+proj=longlat +ellps=WGS84")
 #+end_src
 
@@ -444,6 +445,7 @@ final result.
 
 
 #+begin_src R :eval no-export
+## spplot with sp.layout version
   spDistricts <- list('sp.polygons', distritosMadrid, fill='gray97', lwd=0.3)
   spStreets <- list('sp.lines', streetsMadrid, lwd=0.05)
   spNames <- list(sp.pointLabel, NO2sp,
@@ -459,6 +461,7 @@ final result.
 #+end_src
 
 #+begin_src R :results output graphics :exports both :file figs/airMadrid.png :width 4000 :height 4000 :res 600
+## lattice with layer version
   pNO2 +
       layer(sp.pointLabel(NO2sp,
                           labels=substring(NO2sp$codEst, 7),
@@ -480,17 +483,31 @@ The =ggplot2= package is not able to work directly with
 several =fortify= methods to convert objects from these classes into a
 conventional =data.frame=. You should beware that the =fortify=
 process for large objects (such as the =SpatialLinesDataFrame= in our
-example) requires too much time to be completed.
-# #+begin_src R 
-#   NO2df <- data.frame(NO2sp)
-#   distritosMadridDF <- fortify(distritosMadrid)
-  
-#   ggplot(data=NO2df, aes(long, lat, size=classNO2, fill=classNO2)) +
-#       geom_point(pch=21, col='black') + theme_bw() +
-#       scale_fill_manual(values=airPal) +
-#       scale_size_manual(values=dentAQ*2) +
-#       geom_polygon(data=distritosMadridDF, aes(long, lat, group=id, fill=NULL, size=NULL), fill='lightgray', color='black')
-# #+end_src
+example) may require a long time to be completed.
+#+begin_src R :exports none :results none
+## ggplot version
+NO2df <- data.frame(NO2sp)
+distritosMadridDF <- fortify(distritosMadrid)
+streetsMadridDF <- fortify(streetsMadrid)
+
+ggplot()+
+    geom_polygon(data = distritosMadridDF,
+                 aes(long, lat, group = id,
+                     fill = NULL, size = NULL),
+                 fill = 'lightgray', alpha = 0.2,
+                 color = 'black') +
+    geom_path(data = streetsMadridDF,
+              aes(long, lat, group = group),
+              color = 'lightgray') +
+    geom_point(data = NO2df,
+               aes(long, lat,
+                   size = classNO2,
+                   fill = classNO2),
+               pch = 21, col = 'black') + 
+    scale_fill_manual(values=airPal) +
+    scale_size_manual(values=dentAQ*2) +
+    theme_bw()
+#+end_src
 
 
 ** Spatial Interpolation
@@ -548,86 +565,6 @@ spplot(airKrige["var1.pred"],
 #+RESULTS[e7439ec0ee815727d28fb2e1b30578c2484919e2]:
 [[file:figs/airMadrid_krige.png]]
 
-** Export to Other Formats
-
-A different approach is to use an external data viewer, due to its
-features or its large community of users. Two tools deserve to be
-mentioned: GeoJSON rendered within GitHub repositories, and KML files
-imported in Google Earth\texttrademark.
-
-*** GeoJSON and OpenStreetMap
-#+begin_src R :exports none
-##################################################################
-## GeoJSON and OpenStreepMap
-##################################################################
-#+end_src
-GeoJSON is an open computer file format for encoding collections of
-simple geographical features along with their nonspatial attributes
-using JavaScript Object Notation (JSON). These files can be easily
-rendered within GitHub repositories. GitHub uses Leaflet.js[fn:4] to
-represent the data and MapBox[fn:2] with OpenStreetMap[fn:3] for the
-underlying map data.
-
-Our =SpatialPointsDataFrame= can be converted to a GeoJSON file with
-=writeOGR= from the =rgdal= package. 
-
-
-#+INDEX: Packages!rgdal@\texttt{rgdal}
-#+INDEX: writeOGR@\texttt{writeOGR}
-#+INDEX: GeoJSON
-
-
-#+begin_src R :eval no-export
-library(rgdal)
-writeOGR(NO2sp, 'data/NO2.geojson', 'NO2sp', driver='GeoJSON')
-#+end_src
-
-Figure \ref{fig:geojson} shows a snapshot of the rendering of this
-GeoJSON file, available from the GitHub repository. There you can zoom
-on the map and click on the stations to display the data.
-
-#+BEGIN_EXPORT latex
-\begin{figure}
-\includegraphics[width=0.9\textwidth]{figs/geojson.png}
-\caption{\label{fig:geojson}$NO_2$ data in a GeoJSON file rendered within the GitHub repository.}
-\end{figure}
-#+END_EXPORT
-
-
-*** Keyhole Markup Language
-
-Keyhole Markup Language (KML) is a file format to display geographic
-data within Internet-based, two-dimensional maps and three-dimensional
-Earth browsers. KML uses a tag-based structure with nested elements
-and attributes, and is based on the XML standard. KML became an
-international standard of the Open Geospatial Consortium
-in 2008. Google Earth was the first program able to view and
-graphically edit KML files, although Marble, an open-source project,
-also offers KML support.
-
-
-#+INDEX: Packages!rgdal@\texttt{rgdal}
-#+INDEX: Packages!plotKML@\texttt{plotKML}
-#+INDEX: KML
-
-
-There are several packages able to generate KML files. For example,
-the =writeOGR= function from the =rgdal= package can also write KML
-files:
-#+begin_src R :eval no-export
-  library(rgdal)
-  writeOGR(NO2sp, dsn='NO2_mean.kml', layer='mean', driver='KML')
-#+end_src
-
-However, the =plotKML= package provides a simpler interface and
-includes a wide set of options:
-#+begin_src R :eval no-export
-  library(plotKML)
-  plotKML(NO2sp["mean"], points_names=NO2sp$codEst)
-#+end_src
-
-Both functions produce a file that can be directly opened with Google
-Earth or Marble.
 
 ** Interactive
 Additional Information with Tooltips and Hyperlinks
@@ -639,42 +576,125 @@ Additional Information with Tooltips and Hyperlinks
 #+end_src
 
 #+begin_src R
-mapview(NO2sp, zcol = "mean", cex = "mean")
-#+end_src
+pal <- colorRampPalette(airPal)(100)
 
-** \floweroneleft gridSVG
-#+begin_src R :exports none
+mapview(NO2sp, zcol = "mean", cex = "mean",
+        col.regions = pal, legend = TRUE)
+#+end_src
+*** Export to Other Formats
+
+ A different approach is to use an external data viewer, due to its
+ features or its large community of users. Two tools deserve to be
+ mentioned: GeoJSON rendered within GitHub repositories, and KML files
+ imported in Google Earth\texttrademark.
+
+**** GeoJSON and OpenStreetMap
+ #+begin_src R :exports none
+##################################################################
+## GeoJSON and OpenStreepMap
+##################################################################
+ #+end_src
+ GeoJSON is an open computer file format for encoding collections of
+ simple geographical features along with their nonspatial attributes
+ using JavaScript Object Notation (JSON). These files can be easily
+ rendered within GitHub repositories. GitHub uses Leaflet.js[fn:4] to
+ represent the data and MapBox[fn:2] with OpenStreetMap[fn:3] for the
+ underlying map data.
+
+ Our =SpatialPointsDataFrame= can be converted to a GeoJSON file with
+ =writeOGR= from the =rgdal= package. 
+
+
+ #+INDEX: Packages!rgdal@\texttt{rgdal}
+ #+INDEX: writeOGR@\texttt{writeOGR}
+ #+INDEX: GeoJSON
+
+
+ #+begin_src R :eval no-export
+library(rgdal)
+writeOGR(NO2sp, 'data/NO2.geojson', 'NO2sp', driver='GeoJSON')
+ #+end_src
+
+ Figure \ref{fig:geojson} shows a snapshot of the rendering of this
+ GeoJSON file, available from the GitHub repository. There you can zoom
+ on the map and click on the stations to display the data.
+
+ #+BEGIN_EXPORT latex
+ \begin{figure}
+ \includegraphics[width=0.9\textwidth]{figs/geojson.png}
+ \caption{\label{fig:geojson}$NO_2$ data in a GeoJSON file rendered within the GitHub repository.}
+ \end{figure}
+ #+END_EXPORT
+
+
+**** Keyhole Markup Language
+
+ Keyhole Markup Language (KML) is a file format to display geographic
+ data within Internet-based, two-dimensional maps and three-dimensional
+ Earth browsers. KML uses a tag-based structure with nested elements
+ and attributes, and is based on the XML standard. KML became an
+ international standard of the Open Geospatial Consortium
+ in 2008. Google Earth was the first program able to view and
+ graphically edit KML files, although Marble, an open-source project,
+ also offers KML support.
+
+
+ #+INDEX: Packages!rgdal@\texttt{rgdal}
+ #+INDEX: Packages!plotKML@\texttt{plotKML}
+ #+INDEX: KML
+
+
+ There are several packages able to generate KML files. For example,
+ the =writeOGR= function from the =rgdal= package can also write KML
+ files:
+ #+begin_src R :eval no-export
+  library(rgdal)
+  writeOGR(NO2sp, dsn='NO2_mean.kml', layer='mean', driver='KML')
+ #+end_src
+
+ However, the =plotKML= package provides a simpler interface and
+ includes a wide set of options:
+ #+begin_src R :eval no-export
+  library(plotKML)
+  plotKML(NO2sp["mean"], points_names=NO2sp$codEst)
+ #+end_src
+
+ Both functions produce a file that can be directly opened with Google
+ Earth or Marble.
+
+*** \floweroneleft gridSVG
+ #+begin_src R :exports none
 ##################################################################
 ## gridSVG
 ##################################################################
-#+end_src
-Now, let's suppose you need to know the median and standard deviation
-of the time series of a certain station. Moreover, you would like to
-watch the photography of that station; or even better, you wish to visit
-its webpage for additional information. A frequent solution is to
-produce interactive graphics with tooltips and hyperlinks.
+ #+end_src
+ Now, let's suppose you need to know the median and standard deviation
+ of the time series of a certain station. Moreover, you would like to
+ watch the photography of that station; or even better, you wish to visit
+ its webpage for additional information. A frequent solution is to
+ produce interactive graphics with tooltips and hyperlinks.
 
-The =gridSVG= package is able to create an SVG graphic, where each
-component owns a =title= attribute; the content of this attribute is
-commonly displayed as a tooltip when the mouse hovers over the
-element. The content of this attribute can be modified thanks to the
-=grid.garnish= function. Moreover, the =grid.hyperlink= function can
-add hyperlinks to the correspondent graphical element.
+ The =gridSVG= package is able to create an SVG graphic, where each
+ component owns a =title= attribute; the content of this attribute is
+ commonly displayed as a tooltip when the mouse hovers over the
+ element. The content of this attribute can be modified thanks to the
+ =grid.garnish= function. Moreover, the =grid.hyperlink= function can
+ add hyperlinks to the correspondent graphical element.
 
-The tooltips will display the photography of the station, the name of
-the station, and the statistics previously calculated with =aggregate=
-in the first step of this chapter.  The station images are downloaded
-from the Munimadrid webpage. The =htmlParse= function from the =XML=
-package parses each station page, and the station photograph is
-extracted with =getNodeSet= and =xmlAttrs=.
-
-
-#+INDEX: Packages!XML@\texttt{XML}
-#+INDEX: htmlParse@\texttt{htmlParse}
-#+INDEX: getNodeSet@\texttt{getNodeSet}
+ The tooltips will display the photography of the station, the name of
+ the station, and the statistics previously calculated with =aggregate=
+ in the first step of this chapter.  The station images are downloaded
+ from the Munimadrid webpage. The =htmlParse= function from the =XML=
+ package parses each station page, and the station photograph is
+ extracted with =getNodeSet= and =xmlAttrs=.
 
 
-#+begin_src R :eval no-export
+ #+INDEX: Packages!XML@\texttt{XML}
+ #+INDEX: htmlParse@\texttt{htmlParse}
+ #+INDEX: getNodeSet@\texttt{getNodeSet}
+
+
+ #+begin_src R :eval no-export
   library(XML)
 
   old <- setwd('images')
@@ -695,25 +715,25 @@ extracted with =getNodeSet= and =xmlAttrs=.
     download.file(imageURL, destfile=paste(codEst, '.jpg', sep=''))
   }
   setwd(old)
-#+end_src
+ #+end_src
 
-Next, we attach the hyperlink and the SVG information to each
-circle.
+ Next, we attach the hyperlink and the SVG information to each
+ circle.
  
 
 
-#+INDEX: Packages!gridSVG@\texttt{gridSVG}
-#+INDEX: JavaScript
-#+INDEX: grid.garnish@\texttt{grid.garnish}
-#+INDEX: grid.hyperlink@\texttt{grid.hyperlink}
-#+INDEX: grid.export@\texttt{grid.export}
+ #+INDEX: Packages!gridSVG@\texttt{gridSVG}
+ #+INDEX: JavaScript
+ #+INDEX: grid.garnish@\texttt{grid.garnish}
+ #+INDEX: grid.hyperlink@\texttt{grid.hyperlink}
+ #+INDEX: grid.export@\texttt{grid.export}
 
 
-#+begin_src R 
+ #+begin_src R 
   print(pNO2 + layer_(sp.polygons(distritosMadrid, fill='gray97', lwd=0.3)))
-#+end_src
+ #+end_src
 
-#+begin_src R 
+ #+begin_src R 
   library(gridSVG)
   
   NO2df <- as.data.frame(NO2sp)
@@ -737,12 +757,12 @@ circle.
     paste(imageInfo, info, sep='<br />')
   })
   grid.garnish('points.panel', title=tooltips,  grep=TRUE, group=FALSE)
-#+end_src
+ #+end_src
 
-#+RESULTS[b2d8b3e7ab5cc3986acf8d01610339b0a26d0eb0]:
+ #+RESULTS[b2d8b3e7ab5cc3986acf8d01610339b0a26d0eb0]:
 
 
-#+begin_src R 
+ #+begin_src R 
   ## Webpage of each station
   rootURL <- 'http://www.mambiente.munimadrid.es'
   urlList <- sapply(seq_len(nrow(NO2df)), function(i){
@@ -754,22 +774,22 @@ circle.
     })
   
   grid.hyperlink('points.panel', urlList, grep=TRUE, group=FALSE)
-#+end_src
+ #+end_src
 
-#+RESULTS[8191337354457eb6b2b7c4cf4beb3f2e521fec4c]:
+ #+RESULTS[8191337354457eb6b2b7c4cf4beb3f2e521fec4c]:
 
-The =title= attribute can be accessed with the JavaScript plug-ins
-jQuery[fn:8] and jQuery UI[fn:6] to display tooltips when the mouse
-hovers over each station. The =grid.script= function creates objects
-containing links to these plug-ins. And =grid.export= uses these
-objects to produce an SVG document with script elements.
-
-
-#+INDEX: jQuery
-#+INDEX: jQuery UI
+ The =title= attribute can be accessed with the JavaScript plug-ins
+ jQuery[fn:8] and jQuery UI[fn:6] to display tooltips when the mouse
+ hovers over each station. The =grid.script= function creates objects
+ containing links to these plug-ins. And =grid.export= uses these
+ objects to produce an SVG document with script elements.
 
 
-#+begin_src R
+ #+INDEX: jQuery
+ #+INDEX: jQuery UI
+
+
+ #+begin_src R
   ## Add jQuery and jQuery UI scripts
   grid.script(file='http://code.jquery.com/jquery-1.8.3.js')
   grid.script(file='http://code.jquery.com/ui/1.9.2/jquery-ui.js')
@@ -778,13 +798,13 @@ objects to produce an SVG document with script elements.
   ## Produce the SVG graphic: the results of grid.garnish,
   ## grid.hyperlink and grid.script are converted to SVG code
   grid.export('figs/airMadrid.svg')
-#+end_src
+ #+end_src
 
-These plug-ins will work only after the file =airMadrid.svg= created by
-=grid.export= is inserted in a HTML file with standard headers. Figure
-\ref{fig:airMadridTooltip} shows a capture of the result.
+ These plug-ins will work only after the file =airMadrid.svg= created by
+ =grid.export= is inserted in a HTML file with standard headers. Figure
+ \ref{fig:airMadridTooltip} shows a capture of the result.
 
-#+begin_src R
+ #+begin_src R
   htmlBegin <- '<!DOCTYPE html>
   <html>
   <head>
@@ -800,17 +820,17 @@ These plug-ins will work only after the file =airMadrid.svg= created by
     
   writeLines(paste(htmlBegin, svgText, htmlEnd, sep='\n'),
              'airMadrid.html')
-#+end_src
+ #+end_src
 
-#+RESULTS[86f1c1ed2c5b2b4e4e11e843c412fc1fac30518f]:
+ #+RESULTS[86f1c1ed2c5b2b4e4e11e843c412fc1fac30518f]:
 
 
-#+BEGIN_EXPORT latex
-\begin{figure}
-\includegraphics[width=0.9\textwidth]{figs/airMadridTooltip.png}
-\caption{\label{fig:airMadridTooltip}Tooltips generated with \texttt{gridSVG} using jQuery and jQuery UI.}
-\end{figure}
-#+END_EXPORT
+ #+BEGIN_EXPORT latex
+ \begin{figure}
+ \includegraphics[width=0.9\textwidth]{figs/airMadridTooltip.png}
+ \caption{\label{fig:airMadridTooltip}Tooltips generated with \texttt{gridSVG} using jQuery and jQuery UI.}
+ \end{figure}
+ #+END_EXPORT
 
 
 * Footnotes
