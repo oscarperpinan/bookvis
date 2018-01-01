@@ -47,8 +47,13 @@ lattice.options(default.theme = myTheme,
 library(sp)
 library(maptools)
 
-espMapVotes <- readShapePoly(fn = "data/espMapVotes", 
+spMapVotes <- readShapePoly(fn = "data/spMapVotes", 
                         proj4string = CRS("+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"))
+
+provinces <- readShapePoly(fn="data/spain_provinces",
+                        proj4string = CRS("+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"))
+
+provinceLines <- list("sp.polygons", provinces, lwd = 0.1)
 
 library(RColorBrewer)
 
@@ -61,12 +66,13 @@ ucN <- 1000
 ucQuantPal <- colorRampPalette(quantPal)(ucN)
 
 ## The polygons boundaries are not displayed thanks to col = 'transparent' 
-spplot(espMapVotes["pcMax"],
+spplot(spMapVotes["pcMax"],
        col.regions = ucQuantPal,
        cuts = ucN,
-       col = 'transparent')
+       col = 'transparent',
+       sp.layout = provinceLines)
 
-ggplot(as.data.frame(espMapVotes),
+ggplot(as.data.frame(spMapVotes),
        aes(pcMax,
            fill = whichMax,
            colour = whichMax)) +
@@ -76,10 +82,10 @@ ggplot(as.data.frame(espMapVotes),
 library(classInt)
 
 ## Compute intervals with the same number of elements
-intQuant <- classIntervals(espMapVotes$pcMax,
+intQuant <- classIntervals(spMapVotes$pcMax,
                            n = N, style = "quantile")
 ## Compute intervals with the natural breaks algorithm
-intFisher <- classIntervals(espMapVotes$pcMax,
+intFisher <- classIntervals(spMapVotes$pcMax,
                             n = N, style = "fisher")
 
 plot(intQuant, pal = quantPal, main = "")
@@ -87,26 +93,27 @@ plot(intQuant, pal = quantPal, main = "")
 plot(intFisher, pal = quantPal, main = "")
 
 ## Add a new categorical variable with cut, using the computed breaks
-espMapVotes$pcMaxInt <- cut(espMapVotes$pcMax,
+spMapVotes$pcMaxInt <- cut(spMapVotes$pcMax,
                             breaks = intFisher$brks)
 
-spplot(espMapVotes["pcMaxInt"],
+spplot(spMapVotes["pcMaxInt"],
        col = 'transparent',
-       col.regions = quantPal)
+       col.regions = quantPal,
+       sp.layout = provinceLines)
 
-classes <- levels(factor(espMapVotes$whichMax))
+classes <- levels(factor(spMapVotes$whichMax))
 nClasses <- length(classes)
 
 qualPal <- brewer.pal(nClasses, "Dark2")
 
-spplot(espMapVotes["whichMax"], col = 'transparent', col.regions = qualPal)
-
-provinces <- readShapePoly(fn="data/spain_provinces",
-                        proj4string = CRS("+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"))
+spplot(spMapVotes[1:100, "whichMax"],
+       col.regions = qualPal,
+       col = 'transparent',
+       sp.layout = provinceLines)
 
 pList <- lapply(1:nClasses, function(i){
     ## Only those polygons corresponding to a level are selected
-    mapClass <- subset(espMapVotes, 
+    mapClass <- subset(spMapVotes, 
                        whichMax == classes[i])
     ## Use natural breaks classification
     mapClass$pcMaxInt <- cut(mapClass$pcMax,
@@ -114,18 +121,19 @@ pList <- lapply(1:nClasses, function(i){
     ## Produce the graphic
     pClass <- spplot(mapClass, "pcMaxInt",
                      col.regions = quantPal,
-                     col='transparent')
-    
-    pClass +  layer(sp.polygons(provinces, lwd = 0.1))
+                     col='transparent',
+		     sp.layout = provinceLines)
 })
 names(pList) <- classes
 
 do.call(c, pList)
 
-mapView(espMapVotes, zcol = "whichMax",
+library(mapview)
+
+mapView(spMapVotes0, zcol = "whichMax",
         legend = TRUE,
         col.regions = quantPal)
 
-mapView(espMapVotes, zcol = "pcMaxInt",
+mapView(spMapVotes0, zcol = "pcMax",
         legend = TRUE,
         col.regions = qualPal)

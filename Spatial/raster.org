@@ -36,6 +36,7 @@ multivariate rasters. Read Chapter \ref{cha:dataSpatial} for
 details about these datasets.
 
 ** Quantitative Data
+label:sec:quantitative_raster
 #+begin_src R :exports none
   ##################################################################
   ## Quantitative data

@@ -127,6 +127,7 @@ will contain two columns with latitude and longitude values).
 #+end_src
 
 ** Optimal Classification and Sizes to Improve Discrimination
+label:sec:classification_bubble
 #+begin_src R :exports none
 ##################################################################
 ## Optimal classification and sizes to improve discrimination
@@ -139,7 +140,7 @@ Two main improvements can be added to Figure
   uniform distribution assumed with =cut=). A suitable approach is
   the =classInterval= function of the =classInt= package, which
   implements the Fisher-Jenks optimal classification
-  algorithm. 
+  algorithm[fn:5]. 
 
 #+INDEX: Packages!classInt@\texttt{classInt}
 #+INDEX: classIntervals@\texttt{classIntervals}
@@ -813,6 +814,8 @@ These plug-ins will work only after the file =airMadrid.svg= created by
 
 
 * Footnotes
+
+[fn:5] This classification method will be used in section ref:sec:quantitative_choropleth with a choropleth map.
 
 [fn:1] [[http://www.madrid.org/nomecalles/]]
 
