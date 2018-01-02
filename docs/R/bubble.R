@@ -1,40 +1,44 @@
-  ##################################################################
-  ## Initial configuration
-  ##################################################################
-  ## Clone or download the repository and set the working directory
-  ## with setwd to the folder where the repository is located.
-  
-  library(lattice)
-  library(ggplot2)
-  library(latticeExtra)
-  
-  myTheme <- custom.theme.2(pch=19, cex=0.7,
-                            region=rev(brewer.pal(9, 'YlOrRd')),
-                            symbol = brewer.pal(n=8, name = "Dark2"))
-  myTheme$strip.background$col='transparent'
-  myTheme$strip.shingle$col='transparent'
-  myTheme$strip.border$col='transparent'
-  
-  xscale.components.custom <- function(...){
-      ans <- xscale.components.default(...)
-      ans$top=FALSE
-      ans}
-  yscale.components.custom <- function(...){
-      ans <- yscale.components.default(...)
-      ans$right=FALSE
-      ans}
-  myArgs <- list(as.table=TRUE,
-                 between=list(x=0.5, y=0.2),
-                 xscale.components = xscale.components.custom,
-                 yscale.components = yscale.components.custom)
-  defaultArgs <- lattice.options()$default.args
-  
-  lattice.options(default.theme = myTheme,
-                  default.args = modifyList(defaultArgs, myArgs))
+##################################################################
+## Initial configuration
+##################################################################
+## Clone or download the repository and set the working directory
+## with setwd to the folder where the repository is located.
 
-  ##################################################################
-  ## Proportional symbol mapping
-  ##################################################################
+library(lattice)
+library(ggplot2)
+library(latticeExtra)
+
+myTheme <- custom.theme.2(pch=19, cex=0.7,
+                          region=rev(brewer.pal(9, 'YlOrRd')),
+                          symbol = brewer.pal(n=8, name = "Dark2"))
+myTheme$strip.background$col='transparent'
+myTheme$strip.shingle$col='transparent'
+myTheme$strip.border$col='transparent'
+
+xscale.components.custom <- function(...)
+{
+    ans <- xscale.components.default(...)
+    ans$top=FALSE
+    ans
+}
+yscale.components.custom <- function(...)
+{
+    ans <- yscale.components.default(...)
+    ans$right=FALSE
+    ans
+}
+myArgs <- list(as.table=TRUE,
+               between=list(x=0.5, y=0.2),
+               xscale.components = xscale.components.custom,
+               yscale.components = yscale.components.custom)
+defaultArgs <- lattice.options()$default.args
+
+lattice.options(default.theme = myTheme,
+                default.args = modifyList(defaultArgs, myArgs))
+
+##################################################################
+## Proportional symbol mapping
+##################################################################
 
 ##################################################################
 ## Introduction
@@ -44,72 +48,82 @@
 ## Proportional symbol with spplot
 ##################################################################
 
-  library(sp)
-  
-  load('data/NO2sp.RData')
+library(sp)
 
-  airPal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(5)
-  
-  spplot(NO2sp["mean"], col.regions=airPal, cex=sqrt(1:5),
-         edge.col='black', scales=list(draw=TRUE),
-         key.space='right')
+load('data/NO2sp.RData')
 
-  NO2df <- data.frame(NO2sp)
-  NO2df$Mean <- cut(NO2sp$mean, 5)
+airPal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(5)
   
-  ggplot(data=NO2df, aes(long, lat, size=Mean, fill=Mean)) +
-      geom_point(pch=21, col='black') + theme_bw() +
-      scale_fill_manual(values=airPal)
+spplot(NO2sp["mean"],
+       col.regions = airPal, ## Palette
+       cex = sqrt(1:5), ## Size of circles
+       edge.col = 'black', ## Color of border
+       scales = list(draw = TRUE), ## Draw scales
+       key.space = 'right') ## Put legend on the right
+
+NO2df <- data.frame(NO2sp)
+NO2df$Mean <- cut(NO2sp$mean, 5)
+  
+ggplot(data = NO2df,
+       aes(long, lat, size = Mean, fill = Mean)) +
+    geom_point(pch = 21, col = 'black') +
+    scale_fill_manual(values = airPal) +
+    theme_bw()
 
 ##################################################################
 ## Optimal classification and sizes to improve discrimination
 ##################################################################
 
-  library(classInt)
-  ## The number of classes is chosen between the Sturges and the
-  ## Scott rules.
-  nClasses <- 5
-  intervals <- classIntervals(NO2sp$mean, n=nClasses, style='fisher')
-  ## Number of classes is not always the same as the proposed number
-  nClasses <- length(intervals$brks) - 1
+library(classInt)
+## The number of classes is chosen between the Sturges and the
+## Scott rules.
+nClasses <- 5
+intervals <- classIntervals(NO2sp$mean, n = nClasses, style = 'fisher')
+## Number of classes is not always the same as the proposed number
+nClasses <- length(intervals$brks) - 1
 
-  op <- options(digits=4)
-  tab <- print(intervals)
-  options(op)
+op <- options(digits = 4)
+tab <- print(intervals)
+options(op)
 
-  ## Complete Dent set of circle radii (mm)
-  dent <- c(0.64, 1.14, 1.65, 2.79, 4.32, 6.22, 9.65, 12.95, 15.11)
-  ## Subset for our dataset
-  dentAQ <- dent[seq_len(nClasses)]
-  ## Link Size and Class: findCols returns the class number of each
-  ## point; cex is the vector of sizes for each data point
-  idx <- findCols(intervals)
-  cexNO2 <- dentAQ[idx]
+## Complete Dent set of circle radii (mm)
+dent <- c(0.64, 1.14, 1.65, 2.79, 4.32, 6.22, 9.65, 12.95, 15.11)
+## Subset for our dataset
+dentAQ <- dent[seq_len(nClasses)]
+## Link Size and Class: findCols returns the class number of each
+## point; cex is the vector of sizes for each data point
+idx <- findCols(intervals)
+cexNO2 <- dentAQ[idx]
 
-  NO2sp$classNO2 <- factor(names(tab)[idx])
+## spplot version
+NO2sp$classNO2 <- factor(names(tab)[idx])  
 
-  ## ggplot2 version
-  NO2df <- data.frame(NO2sp)
-  
-  ggplot(data=NO2df, aes(long, lat, size=classNO2, fill=classNO2)) +
-      geom_point(pch=21, col='black') + theme_bw() +
-      scale_fill_manual(values=airPal) +
-      scale_size_manual(values=dentAQ*2)
+## Definition of an improved key with title and background
+NO2key <- list(x = 0.98, y = 0.02, corner = c(1, 0),
+               title = expression(NO[2]~~(paste(mu, plain(g))/m^3)),
+               cex.title = .75, cex = 0.7,
+               background = 'gray92')
 
-  ## spplot version
-  
-  ## Definition of an improved key with title and background
-  NO2key <- list(x=0.98, y=0.02, corner=c(1, 0),
-                title=expression(NO[2]~~(paste(mu, plain(g))/m^3)),
-                cex.title=.75, cex=0.7,
-                background='gray92')
-  
-  pNO2 <- spplot(NO2sp["classNO2"],
-                 col.regions=airPal,  cex=dentAQ,
-                 edge.col='black',
-                 scales=list(draw=TRUE),
-                 key.space=NO2key)
-  pNO2
+pNO2 <- spplot(NO2sp["classNO2"],
+               col.regions = airPal,
+               cex = dentAQ,
+               edge.col = 'black',
+               scales = list(draw = TRUE),
+               key.space = NO2key)
+pNO2
+
+## ggplot2 version
+NO2df$classNO2 <- factor(names(tab)[idx])  
+
+ggplot(data = NO2df,
+       aes(long, lat,
+           size = classNO2,
+           fill = classNO2)) +
+    geom_point(pch = 21, col = 'black') +
+    scale_fill_manual(values = airPal) +
+    scale_size_manual(values = dentAQ*2)  +
+    coord_equal() + 
+    xlab("") + ylab("") + theme_bw()
 
 ##################################################################
 ## Spatial context with underlying layers and labels
@@ -119,113 +133,126 @@
 ## Static image
 ##################################################################
 
-  madridBox <- bbox(NO2sp)
+## Bounding box of data
+madridBox <- bbox(NO2sp)
+## Extend the limits to get a slightly larger map
+madridBox <- t(apply(madridBox, 1,
+                   extendrange, f = 0.05))
 
-  ## ggmap solution
-  library(ggmap)
-  madridGG <- get_map(c(madridBox), maptype='watercolor', source='stamen')
+## ggmap solution
+library(ggmap)
+madridGG <- get_map(c(madridBox),
+                    maptype = 'watercolor',
+                    source = 'stamen')
 
-  ## OpenStreetMap solution
-  library(OpenStreetMap)
-  ul <- madridBox[c(4, 1)]
-  lr <- madridBox[c(2, 3)]
-  madridOM <- openmap(ul, lr, type='stamen-watercolor')
-  madridOM <- openproj(madridOM)
+## OpenStreetMap solution
+library(OpenStreetMap)
+ul <- madridBox[c(4, 1)]
+lr <- madridBox[c(2, 3)]
+madridOM <- openmap(ul, lr,
+                    type = 'stamen-watercolor')
+madridOM <- openproj(madridOM)
 
-  NO2df <- data.frame(NO2sp)
-  
-  ## ggmap
-  ggmap(madridGG) +
-      geom_point(data=NO2df,
-                 aes(long, lat, size=classNO2, fill=classNO2),
-                 pch=21, col='black') +
-         scale_fill_manual(values=airPal) +
-         scale_size_manual(values=dentAQ*2)
-  
-  ##OpenStreetMap
-  autoplot(madridOM) + 
-      geom_point(data=NO2df,
-                 aes(long, lat, size=classNO2, fill=classNO2),
-                 pch=21, col='black') +
-      scale_fill_manual(values=airPal) +
-      scale_size_manual(values=dentAQ*2)
+## ggmap
+ggmap(madridGG) +
+    geom_point(data = NO2df,
+               aes(long, lat,
+                   size = classNO2,
+                   fill = classNO2),
+               pch = 21, col = 'black') +
+    scale_fill_manual(values = airPal) +
+    scale_size_manual(values = dentAQ*2)
 
-  ## the 'bb' attribute stores the bounding box of the get_map result
-  bbMap <- attr(madridGG, 'bb')
-  ## This information is needed to resize the image with grid.raster
-  height <- with(bbMap, ur.lat - ll.lat)
-  width <- with(bbMap, ur.lon - ll.lon)
-  
-  pNO2 + layer(grid.raster(madridGG,
-                            width=width, height=height,
-                            default.units='native'),
-               under=TRUE)
+##OpenStreetMap
+autoplot(madridOM) + 
+    geom_point(data = NO2df,
+               aes(long, lat,
+                   size = classNO2,
+                   fill = classNO2),
+               pch=21, col = 'black') +
+    scale_fill_manual(values = airPal) +
+    scale_size_manual(values = dentAQ*2)
 
-  tile <- madridOM$tile[[1]]
-  
-  height <- with(tile$bbox, p1[2] - p2[2])
-  width <- with(tile$bbox, p2[1] - p1[1])
-  
-  colors <- as.raster(matrix(tile$colorData,
-                             ncol=tile$yres,
-                             nrow=tile$xres,
-                             byrow=TRUE))
-  
-  pNO2 + layer(grid.raster(colors,
-                           width=width,
-                           height=height,
-                           default.units='native'),
-               under=TRUE)
+## the 'bb' attribute stores the bounding box of the get_map result
+bbMap <- attr(madridGG, 'bb')
+## This information is needed to resize the image with grid.raster
+height <- with(bbMap, ur.lat - ll.lat)
+width <- with(bbMap, ur.lon - ll.lon)
+
+pNO2 +
+    layer(grid.raster(madridGG,
+                      width = width, height = height,
+                      default.units = 'native'),
+          under = TRUE)
+
+tile <- madridOM$tile[[1]]
+
+height <- with(tile$bbox, p1[2] - p2[2])
+width <- with(tile$bbox, p2[1] - p1[1])
+
+OMraster <- as.raster(matrix(tile$colorData,
+                             ncol = tile$yres,
+                             nrow = tile$xres,
+                             byrow = TRUE))
+
+pNO2 + layer(grid.raster(OMraster,
+                         width = width,
+                         height = height,
+                         default.units = 'native'),
+             under = TRUE)
 
 ##################################################################
 ## Vector data
 ##################################################################
 
-  library(maptools)
-  library(rgdal)
-    
-  ## nomecalles http://www.madrid.org/nomecalles/Callejero_madrid.icm
-  ## Form at http://www.madrid.org/nomecalles/DescargaBDTCorte.icm
-  
-  ## Madrid districts
-  unzip('Distritos de Madrid.zip')
-  distritosMadrid <- readShapePoly('Distritos de Madrid/200001331')
-  proj4string(distritosMadrid) <- CRS("+proj=utm +zone=30")
-  distritosMadrid <- spTransform(distritosMadrid, CRS=CRS("+proj=longlat +ellps=WGS84"))
-  
-  ## Madrid streets
-  unzip('Callejero_ Ejes de viales.zip')
-  streets <- readShapeLines('Callejero_ Ejes de viales/call2011.shp')
-  streetsMadrid <- streets[streets$CMUN=='079',]
-  proj4string(streetsMadrid) <- CRS("+proj=utm +zone=30")
-  streetsMadrid <- spTransform(streetsMadrid, CRS=CRS("+proj=longlat +ellps=WGS84"))
+library(maptools)
+library(rgdal)
+
+## nomecalles http://www.madrid.org/nomecalles/Callejero_madrid.icm
+## Form at http://www.madrid.org/nomecalles/DescargaBDTCorte.icm
+
+## Madrid districts
+unzip('Distritos de Madrid.zip')
+distritosMadrid <- readShapePoly('Distritos de Madrid/200001331')
+proj4string(distritosMadrid) <- CRS("+proj=utm +zone=30")
+distritosMadrid <- spTransform(distritosMadrid, CRS=CRS("+proj=longlat +ellps=WGS84"))
+
+## Madrid streets
+unzip('Callejero_ Ejes de viales.zip')
+streets <- readShapeLines('Callejero_ Ejes de viales/call2011.shp')
+streetsMadrid <- streets[streets$CMUN=='079',]
+proj4string(streetsMadrid) <- CRS("+proj=utm +zone=30")
+streetsMadrid <- spTransform(streetsMadrid, CRS=CRS("+proj=longlat +ellps=WGS84"))
 
 ## spplot with sp.layout version
-  spDistricts <- list('sp.polygons', distritosMadrid, fill='gray97', lwd=0.3)
-  spStreets <- list('sp.lines', streetsMadrid, lwd=0.05)
-  spNames <- list(sp.pointLabel, NO2sp,
-                  labels=substring(NO2sp$codEst, 7),
-                  cex=0.6, fontfamily='Palatino')
-  
-  spplot(NO2sp["classNO2"], col.regions=airPal, cex=dentAQ,
-         edge.col='black', alpha=0.8,
-         sp.layout=list(spDistricts, spStreets, spNames),
-         scales=list(draw=TRUE),
-         key.space=NO2key)
+spDistricts <- list('sp.polygons', distritosMadrid,
+                    fill = 'gray97', lwd = 0.3)
+spStreets <- list('sp.lines', streetsMadrid,
+                  lwd = 0.05)
+spNames <- list(sp.pointLabel, NO2sp,
+                labels = substring(NO2sp$codEst, 7),
+                cex = 0.6, fontfamily = 'Palatino')
+
+spplot(NO2sp["classNO2"],
+       col.regions = airPal, cex = dentAQ,
+       edge.col = 'black', alpha = 0.8,
+       sp.layout = list(spDistricts, spStreets, spNames),
+       scales = list(draw = TRUE),
+       key.space = NO2key)
 
 ## lattice with layer version
-  pNO2 +
-      layer(sp.pointLabel(NO2sp,
-                          labels=substring(NO2sp$codEst, 7),
-                          cex=0.8, fontfamily='Palatino')
-            ) +
-      layer_({
-          sp.polygons(distritosMadrid, fill='gray97', lwd=0.3)
-          sp.lines(streetsMadrid, lwd=0.05)
-      })
+pNO2 +
+    layer(sp.pointLabel(NO2sp,
+                        labels = substring(NO2sp$codEst, 7),
+                        cex = 0.8, fontfamily = 'Palatino')
+          ) +
+    layer_(
+    {
+        sp.polygons(distritosMadrid, fill = 'gray97', lwd = 0.3)
+        sp.lines(streetsMadrid, lwd = 0.05)
+    })
 
 ## ggplot version
-NO2df <- data.frame(NO2sp)
 distritosMadridDF <- fortify(distritosMadrid)
 streetsMadridDF <- fortify(streetsMadrid)
 
@@ -251,18 +278,18 @@ ggplot()+
 ## Spatial interpolation
 ##################################################################
 
-  library(gstat)
-  
-  airGrid <- spsample(NO2sp, type='regular', n=1e5)
-  gridded(airGrid) <- TRUE
-  airKrige <- krige(mean ~ 1, NO2sp, airGrid)
+library(gstat)
+
+airGrid <- spsample(NO2sp, type='regular', n=1e5)
+gridded(airGrid) <- TRUE
+airKrige <- krige(mean ~ 1, NO2sp, airGrid)
 
 spplot(airKrige["var1.pred"],
-       col.regions=colorRampPalette(airPal)) +
-  layer({
-    sp.polygons(distritosMadrid, fill='transparent', lwd=0.3)
-    sp.lines(streetsMadrid, lwd=0.07)
-    sp.points(NO2sp, pch=21, alpha=0.8, fill='gray50', col='black')
+       col.regions = colorRampPalette(airPal)) +
+    layer({
+        sp.polygons(distritosMadrid, fill='transparent', lwd = 0.3)
+        sp.lines(streetsMadrid, lwd=0.07)
+        sp.points(NO2sp, pch = 21, alpha = 0.8, fill = 'gray50', col = 'black')
     })
 
 ##################################################################
