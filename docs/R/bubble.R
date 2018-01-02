@@ -139,21 +139,12 @@ madridBox <- bbox(NO2sp)
 madridBox <- t(apply(madridBox, 1,
                    extendrange, f = 0.05))
 
-## ggmap solution
 library(ggmap)
 madridGG <- get_map(c(madridBox),
                     maptype = 'watercolor',
                     source = 'stamen')
 
-## OpenStreetMap solution
-library(OpenStreetMap)
-ul <- madridBox[c(4, 1)]
-lr <- madridBox[c(2, 3)]
-madridOM <- openmap(ul, lr,
-                    type = 'stamen-watercolor')
-madridOM <- openproj(madridOM)
-
-## ggmap
+## ggmap with ggplot
 ggmap(madridGG) +
     geom_point(data = NO2df,
                aes(long, lat,
@@ -163,43 +154,20 @@ ggmap(madridGG) +
     scale_fill_manual(values = airPal) +
     scale_size_manual(values = dentAQ*2)
 
-##OpenStreetMap
-autoplot(madridOM) + 
-    geom_point(data = NO2df,
-               aes(long, lat,
-                   size = classNO2,
-                   fill = classNO2),
-               pch=21, col = 'black') +
-    scale_fill_manual(values = airPal) +
-    scale_size_manual(values = dentAQ*2)
+## ggmap with spplot
+## Project the data into the web mercator projection
+NO2merc <- spTransform(NO2sp, CRS("+init=epsg:3857"))
 
-## the 'bb' attribute stores the bounding box of the get_map result
-bbMap <- attr(madridGG, 'bb')
-## This information is needed to resize the image with grid.raster
-height <- with(bbMap, ur.lat - ll.lat)
-width <- with(bbMap, ur.lon - ll.lon)
+## sp.layout definition
+stamen <- list(panel.ggmap, madridGG, first = TRUE)
 
-pNO2 +
-    layer(grid.raster(madridGG,
-                      width = width, height = height,
-                      default.units = 'native'),
-          under = TRUE)
-
-tile <- madridOM$tile[[1]]
-
-height <- with(tile$bbox, p1[2] - p2[2])
-width <- with(tile$bbox, p2[1] - p1[1])
-
-OMraster <- as.raster(matrix(tile$colorData,
-                             ncol = tile$yres,
-                             nrow = tile$xres,
-                             byrow = TRUE))
-
-pNO2 + layer(grid.raster(OMraster,
-                         width = width,
-                         height = height,
-                         default.units = 'native'),
-             under = TRUE)
+spplot(NO2merc["classNO2"],
+       col.regions = airPal,
+       cex = dentAQ,
+       edge.col = 'black',
+       sp.layout = stamen,
+       scales = list(draw = TRUE),
+       key.space = NO2key)
 
 ##################################################################
 ## Vector data

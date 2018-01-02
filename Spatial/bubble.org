@@ -293,8 +293,6 @@ context.
 ##################################################################
 #+end_src
 
-#+RESULTS:
-
 A suitable method is to download data from a provider such as Google
 Maps\textsuperscript{\texttrademark} or OpenStreetMap and transform it
 adequately. There are several packages that provide an interface to
@@ -302,16 +300,14 @@ query several map servers: =RGoogleMaps=, =OpenStreetMaps=, and
 =ggmap= provide raster images from static maps obtained from Google
 Maps, Stamen, OpenStreetMap, etc..
 
-Among these options, I have chosen the Stamen watercolor maps
-available through the =ggmap= cite:Kahle.Wickham2013 and
-=OpenStreetMaps= packages cite:Fellows.Stotz2013. It is worth noting
-that these map tiles are published by Stamen Design under a Creative
-Commons licence CC BY-3.0 (Attribution). They produce these maps with
-data by OpenStreetMap also published under a Creative Commons licence
-BY-SA (Attribution - ShareAlike).
+Among these options, I have chosen the Stamen watercolor maps, and the
+=ggmap= package cite:Kahle.Wickham2013. It is worth noting that these
+map tiles are published by Stamen Design under a Creative Commons
+licence CC BY-3.0 (Attribution). They produce these maps with data by
+OpenStreetMap also published under a Creative Commons licence BY-SA
+(Attribution - ShareAlike).
 
 #+INDEX: Packages!ggmap@\texttt{ggmap}
-#+INDEX: Packages!OpenStreetMap@\texttt{OpenStreetMap}
 
 #+begin_src R
 ## Bounding box of data
@@ -322,7 +318,6 @@ madridBox <- t(apply(madridBox, 1,
 #+end_src
 
 #+begin_src R 
-## ggmap solution
 library(ggmap)
 madridGG <- get_map(c(madridBox),
                     maptype = 'watercolor',
@@ -330,17 +325,7 @@ madridGG <- get_map(c(madridBox),
 #+end_src
 
 #+begin_src R :eval no-export
-## OpenStreetMap solution
-library(OpenStreetMap)
-ul <- madridBox[c(4, 1)]
-lr <- madridBox[c(2, 3)]
-madridOM <- openmap(ul, lr,
-                    type = 'stamen-watercolor')
-madridOM <- openproj(madridOM)
-#+end_src
-
-#+begin_src R :eval no-export
-## ggmap
+## ggmap with ggplot
 ggmap(madridGG) +
     geom_point(data = NO2df,
                aes(long, lat,
@@ -349,61 +334,37 @@ ggmap(madridGG) +
                pch = 21, col = 'black') +
     scale_fill_manual(values = airPal) +
     scale_size_manual(values = dentAQ*2)
-
-##OpenStreetMap
-autoplot(madridOM) + 
-    geom_point(data = NO2df,
-               aes(long, lat,
-                   size = classNO2,
-                   fill = classNO2),
-               pch=21, col = 'black') +
-    scale_fill_manual(values = airPal) +
-    scale_size_manual(values = dentAQ*2)  
 #+end_src
 
 Although =ggmap= is designed to work with the =ggplot2= package, the
-result of =get_map= is only a =raster= object with
-attributes. Therefore, it can be easily displayed with =grid.raster=
-as an underlying layer of the previous =spplot= result (Figure
-ref:fig:airMadrid_stamen).
+result of =get_map= is only a =raster= object with attributes. It can
+be added to a =spplot= graphic with the =panel.ggmap= function
+included in the =sp= package. This function is based on the
+=grid.raster= function. Previously, the =SpatialPointsDataFrame= must
+be transformed with =spTransform= because the Stamen maps use the Web
+Mercator projection[fn:7]. The result, using the =sp.layout= argument,
+is shown in Figure ref:fig:airMadrid_stamen.
 
 #+begin_src R :results output graphics :exports both :file figs/airMadrid_stamen.pdf
-## the 'bb' attribute stores the bounding box of the get_map result
-bbMap <- attr(madridGG, 'bb')
-## This information is needed to resize the image with grid.raster
-height <- with(bbMap, ur.lat - ll.lat)
-width <- with(bbMap, ur.lon - ll.lon)
+## ggmap with spplot
+## Project the data into the web mercator projection
+NO2merc <- spTransform(NO2sp, CRS("+init=epsg:3857"))
 
-pNO2 +
-    layer(grid.raster(madridGG,
-                      width = width, height = height,
-                      default.units = 'native'),
-          under = TRUE)
+## sp.layout definition
+stamen <- list(panel.ggmap, madridGG, first = TRUE)
+
+spplot(NO2merc["classNO2"],
+       col.regions = airPal,
+       cex = dentAQ,
+       edge.col = 'black',
+       sp.layout = stamen,
+       scales = list(draw = TRUE),
+       key.space = NO2key)
 #+end_src
 
 #+CAPTION: Annual average of $NO_2$ measurements in Madrid. label:fig:airMadrid_stamen
 #+RESULTS[fea21c22315e2622233bf425bdcf71b27918f9e1]:
 [[file:figs/airMadrid_stamen.pdf]]
-
-The result of =openmap= is more sophisticated but can also be
-converted and displayed with =grid.raster=.
-#+begin_src R :eval no-export
-tile <- madridOM$tile[[1]]
-
-height <- with(tile$bbox, p1[2] - p2[2])
-width <- with(tile$bbox, p2[1] - p1[1])
-
-OMraster <- as.raster(matrix(tile$colorData,
-                             ncol = tile$yres,
-                             nrow = tile$xres,
-                             byrow = TRUE))
-
-pNO2 + layer(grid.raster(OMraster,
-                         width = width,
-                         height = height,
-                         default.units = 'native'),
-             under = TRUE)
-#+end_src
 
 *** Vector Data
 #+begin_src R :exports none
@@ -424,7 +385,6 @@ and =sp.lines= functions provided by the =sp= package.
 
 For our example, the Madrid district and streets are available as
 shapefiles from the nomecalles web service[fn:1].
-
 
 #+INDEX: Data!nomecalles
 #+INDEX: spTransform@\texttt{spTransform}
@@ -864,6 +824,8 @@ file:figs/airMadridTooltip.png
 
 
 * Footnotes
+
+[fn:7] https://epsg.io/3857
 
 [fn:5] This classification method will be used in section ref:sec:quantitative_choropleth with a choropleth map.
 
