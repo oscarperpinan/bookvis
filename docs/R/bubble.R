@@ -282,6 +282,20 @@ writeOGR(NO2sp, 'data/NO2.geojson', 'NO2sp', driver='GeoJSON')
   library(plotKML)
   plotKML(NO2sp["mean"], points_names=NO2sp$codEst)
 
+library(rgl)
+
+colorClasses <- airPal[NO2df$classNO2]
+
+plot3d(x = NO2df$long, 
+       y = NO2df$lat,
+       z = NO2df$alt, 
+       xlab = 'Longitude', 
+       ylab = 'Latitude', 
+       zlab = 'Altitude', 
+       type = 's', 
+       col = colorClasses,
+       radius = NO2df$mean/10)
+
 ##################################################################
 ## gridSVG
 ##################################################################
