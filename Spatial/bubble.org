@@ -656,6 +656,23 @@ file:figs/geojson.png
  Both functions produce a file that can be directly opened with Google
  Earth or Marble.
 
+*** rgl
+#+begin_src R
+library(rgl)
+
+colorClasses <- airPal[NO2df$classNO2]
+
+plot3d(x = NO2df$long, 
+       y = NO2df$lat,
+       z = NO2df$alt, 
+       xlab = 'Longitude', 
+       ylab = 'Latitude', 
+       zlab = 'Altitude', 
+       type = 's', 
+       col = colorClasses,
+       radius = NO2df$mean/10)
+#+end_src
+
 *** \floweroneleft gridSVG
  #+begin_src R :exports none
 ##################################################################
