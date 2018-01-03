@@ -264,10 +264,59 @@ spplot(airKrige["var1.pred"],
 ## mapView
 ##################################################################
 
-pal <- colorRampPalette(airPal)(100)
+library(mapview)
+
+pal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(100)
 
 mapview(NO2sp, zcol = "mean", cex = "mean",
-        col.regions = pal, legend = TRUE)
+        col.regions = pal, legend = TRUE,
+        label = NO2sp$Nombre)
+
+img <- paste('images/', NO2sp$codEst, '.jpg', sep='')
+
+mapview(NO2sp, zcol = "mean", cex = "mean",
+        col.regions = pal, legend = TRUE,
+        map.type = "Esri.WorldImagery",
+        label = NO2sp$Nombre,
+        popup = popupImage(img, src = "local"))
+
+airQuality <- read.csv2('data/airQuality.csv')
+
+NO2 <- subset(airQuality, codParam == 8)
+NO2$tt <- with(NO2,
+               as.Date(paste(year, month, day, sep = '-')))
+
+stations <- unique(NO2$codEst)
+
+pList <- lapply(stations, function(i)
+    xyplot(dat ~ tt, data = NO2,
+           subset = (codEst == i),
+           type = 'l',
+           xlab = '', ylab = '')
+    )
+
+mapview(NO2sp, zcol = "mean", cex = "mean",
+        col.regions = pal, legend = TRUE,
+        map.type = "Esri.WorldImagery",
+        label = NO2sp$Nombre,
+        popup = popupGraph(pList))
+
+mapMean <- mapview(NO2sp, zcol = "mean", cex = "mean",
+                   col.regions = pal, legend = TRUE,
+                   map.types = "OpenStreetMap.Mapnik",
+                   label = NO2sp$Nombre)
+
+mapMedian <- mapview(NO2sp, zcol = "median", cex = "median",
+                     col.regions = pal, legend = TRUE,
+                     map.type = "Stamen.Watercolor",
+                     label = NO2sp$Nombre)
+
+mapSD <- mapview(NO2sp, zcol = "sd", cex = "sd",
+                 col.regions = pal, legend = TRUE,
+                 map.type = "Esri.WorldImagery",
+                 label = NO2sp$Nombre)
+
+sync(mapMean, mapMedian, mapSD, ncol = 3)
 
 ##################################################################
 ## GeoJSON and OpenStreepMap

@@ -574,11 +574,75 @@ Additional Information with Tooltips and Hyperlinks
 #+end_src
 
 #+begin_src R
-pal <- colorRampPalette(airPal)(100)
+library(mapview)
+
+pal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(100)
 
 mapview(NO2sp, zcol = "mean", cex = "mean",
-        col.regions = pal, legend = TRUE)
+        col.regions = pal, legend = TRUE,
+        label = NO2sp$Nombre)
 #+end_src
+
+**** Popup Image
+#+begin_src R
+img <- paste('images/', NO2sp$codEst, '.jpg', sep='')
+
+mapview(NO2sp, zcol = "mean", cex = "mean",
+        col.regions = pal, legend = TRUE,
+        map.type = "Esri.WorldImagery",
+        label = NO2sp$Nombre,
+        popup = popupImage(img, src = "local"))
+#+end_src
+
+**** Popup Graph
+#+begin_src R
+airQuality <- read.csv2('data/airQuality.csv')
+
+NO2 <- subset(airQuality, codParam == 8)
+NO2$tt <- with(NO2,
+               as.Date(paste(year, month, day, sep = '-')))
+
+stations <- unique(NO2$codEst)
+
+pList <- lapply(stations, function(i)
+    xyplot(dat ~ tt, data = NO2,
+           subset = (codEst == i),
+           type = 'l',
+           xlab = '', ylab = '')
+    )
+#+end_src
+
+#+begin_src R
+mapview(NO2sp, zcol = "mean", cex = "mean",
+        col.regions = pal, legend = TRUE,
+        map.type = "Esri.WorldImagery",
+        label = NO2sp$Nombre,
+        popup = popupGraph(pList))
+#+end_src
+
+**** Sync
+
+Providers: http://leaflet-extras.github.io/leaflet-providers/preview/
+
+#+begin_src R
+mapMean <- mapview(NO2sp, zcol = "mean", cex = "mean",
+                   col.regions = pal, legend = TRUE,
+                   map.types = "OpenStreetMap.Mapnik",
+                   label = NO2sp$Nombre)
+
+mapMedian <- mapview(NO2sp, zcol = "median", cex = "median",
+                     col.regions = pal, legend = TRUE,
+                     map.type = "Stamen.Watercolor",
+                     label = NO2sp$Nombre)
+
+mapSD <- mapview(NO2sp, zcol = "sd", cex = "sd",
+                 col.regions = pal, legend = TRUE,
+                 map.type = "Esri.WorldImagery",
+                 label = NO2sp$Nombre)
+
+sync(mapMean, mapMedian, mapSD, ncol = 3)
+#+end_src
+
 *** Export to Other Formats
 
  A different approach is to use an external data viewer, due to its
@@ -692,12 +756,16 @@ plot3d(x = NO2df$long,
  =grid.garnish= function. Moreover, the =grid.hyperlink= function can
  add hyperlinks to the correspondent graphical element.
 
- The tooltips will display the photography of the station, the name of
- the station, and the statistics previously calculated with =aggregate=
- in the first step of this chapter.  The station images are downloaded
- from the Munimadrid webpage. The =htmlParse= function from the =XML=
- package parses each station page, and the station photograph is
- extracted with =getNodeSet= and =xmlAttrs=.
+The tooltips will display the photography of the station, the name of
+the station, and the statistics previously calculated with =aggregate=
+in the first step of this chapter.  The station images are downloaded
+from the Munimadrid webpage.
+
+http://www.mambiente.munimadrid.es/opencms/opencms/calaire/SistemaIntegral/SistVigilancia/Estaciones/
+
+The =htmlParse= function from the =XML= package parses each station
+ page, and the station photograph is extracted with =getNodeSet= and
+ =xmlAttrs=.
 
 
  #+INDEX: Packages!XML@\texttt{XML}
