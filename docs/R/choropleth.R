@@ -131,7 +131,10 @@ do.call(c, pList)
 ##################################################################
 
 multiPal <- sapply(1:nClasses, function(i)
-    colorRampPalette(c(qualPal[i], 'gray90'))(N))
+{
+    colorAlpha <- adjustcolor(qualPal[i], alpha = 0.4)
+    colorRampPalette(c(qualPal[i], colorAlpha), alpha = TRUE)(N)
+})
 
 pList <- lapply(1:nClasses, function(i){
     ## Only those polygons corresponding to a level are selected

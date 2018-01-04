@@ -372,7 +372,10 @@ luminance will vary according to the percentage of votes
 
 #+begin_src R
 multiPal <- sapply(1:nClasses, function(i)
-    colorRampPalette(c(qualPal[i], 'gray90'))(N))
+{
+    colorAlpha <- adjustcolor(qualPal[i], alpha = 0.4)
+    colorRampPalette(c(qualPal[i], colorAlpha), alpha = TRUE)(N)
+})
 #+end_src
 
 With this multivariate palette we can produce a list of maps
