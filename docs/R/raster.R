@@ -71,9 +71,12 @@ mapview(SISav, legend = TRUE) + mapview(spSIAR, zcol = 'Estacion')
 ## Excursus: 3D visualization
 ##################################################################
 
-  plot3D(DEM, maxpixels=5e4)
+plot3D(DEM, maxpixels = 5e4)
 
-writeSTL('figs/DEM.stl')
+par3d(viewport = c(0, 30, 250, 250))
+
+writeWebGL(filename = 'docs/images/rgl/DEM.html',
+           width = 800)
 
   ##################################################################
   ## Diverging palettes
@@ -174,11 +177,11 @@ SISav <- SISav - meanRad
   ## China and India  
   ext <- extent(65, 135, 5, 55)
   
-  pop <- raster('875430rgb-167772161.0.FLOAT.TIFF')
+  pop <- raster('data/875430rgb-167772161.0.FLOAT.TIFF')
   pop <- crop(pop, ext)
   pop[pop==99999] <- NA
   
-  landClass <- raster('241243rgb-167772161.0.TIFF')
+  landClass <- raster('data/241243rgb-167772161.0.TIFF')
   landClass <- crop(landClass, ext)
 
   landClass[landClass %in% c(0, 254)] <- NA
@@ -198,19 +201,21 @@ SISav <- SISav - meanRad
   rat$classes <- c('Forest', 'Land', 'Urban', 'Snow')
   levels(landClass) <- rat
 
-  library(rasterVis)
+library(rasterVis)
   
-  pal <- c('palegreen4', # Forest
-           'lightgoldenrod', # Land
-           'indianred4', # Urban
-           'snow3')      # Snow
+qualPal <- c('palegreen4', # Forest
+         'lightgoldenrod', # Land
+         'indianred4', # Urban
+         'snow3')      # Snow
+
+qualTheme <- rasterTheme(region = qualPal,
+                        panel.background = list(col='lightskyblue1')
+                        )
+
   
-  catTheme <- modifyList(rasterTheme(),
-                         list(panel.background = list(col='lightskyblue1'),
-                              regions = list(col= pal)))
-  
-  levelplot(landClass, maxpixels=3.5e5, par.settings=catTheme,
-            panel=panel.levelplot.raster)
+levelplot(landClass, maxpixels=3.5e5,
+          par.settings=qualTheme,
+          panel=panel.levelplot.raster)
 
   pPop <- levelplot(pop, zscaleLog=10, par.settings=BTCTheme,
                     maxpixels=3.5e5, panel=panel.levelplot.raster)
@@ -225,75 +230,72 @@ SISav <- SISav - meanRad
 ## Multivariate legend
 ##################################################################
 
-  library(colorspace)
-  ## at for each sub-levelplot is obtained from the global levelplot
-  at <- pPop$legend$bottom$args$key$at
-  classes <- rat$classes
-  nClasses <- length(classes)
-  
-  pList <- lapply(1:nClasses, function(i){
+classes <- rat$classes
+nClasses <- length(classes)
+
+logPopAt <- c(0, 0.5, 1.85, 4)
+
+nIntervals <- length(logPopAt) - 1
+
+multiPal <- sapply(1:nClasses, function(i)
+{
+    colorAlpha <- adjustcolor(qualPal[i], alpha = 0.4)
+    colorRampPalette(c(qualPal[i],
+                       colorAlpha),
+                     alpha = TRUE)(nIntervals)
+})
+
+pList <- lapply(1:nClasses, function(i){
     landSub <- landClass
     ## Those cells from a different land class are set to NA...
     landSub[!(landClass==i)] <- NA
     ## ... and the resulting raster masks the population raster
     popSub <- mask(pop, landSub)
-    ## The HCL color wheel is divided in nClasses
-    step <- 360/nClasses
-    ## and a sequential palette is constructed with a hue from one of
-    ## the color wheel parts
-    cols <- rev(sequential_hcl(16, h = (30 + step*(i-1))%%360))
-  
-    pClass <- levelplot(popSub, zscaleLog=10, at=at,
-                        maxpixels=3.5e5,
-                        ## labels only needed in the last legend
-                        colorkey=(if (i==nClasses) TRUE else list(labels=list(labels=rep('', 17)))),
-                        col.regions=cols, margin=FALSE)
-  })
+    ## Palette
+    pal <- multiPal[, i]
 
-  p <- Reduce('+', pList)
-  ## Function to add a title to a legend
-  addTitle <- function(legend, title){
-    titleGrob <- textGrob(title, gp=gpar(fontsize=8), hjust=0.5, vjust=1)
-    ## retrieve the legend from the trellis object
-    legendGrob <- eval(as.call(c(as.symbol(legend$fun), legend$args)))
-    ## Layout of the legend WITH the title
-    ly <- grid.layout(ncol=1, nrow=2,
-                      widths=unit(0.9, 'grobwidth', data=legendGrob))
-    ## Create a frame to host the original legend and the title
-    fg <- frameGrob(ly, name=paste('legendTitle', title, sep='_'))
-    ## Add the grobs to the frame
-    pg <- packGrob(fg, titleGrob, row=2)
-    pg <- packGrob(pg, legendGrob, row=1)
-    }
-  
-  ## Access each trellis object from pList...
-  for (i in seq_len(nClasses)){
-    ## extract the legend (automatically created by spplot)...
-    lg <- pList[[i]]$legend$right
-    ## ... and add the addTitle function to the legend component of each trellis object
-    pList[[i]]$legend$right <- list(fun='addTitle',
-                                    args=list(legend=lg, title=classes[i]))
-  }
-  
-  ## List of legends
-  legendList <- lapply(pList, function(x){
-    lg <- x$legend$right
-    clKey <- eval(as.call(c(as.symbol(lg$fun), lg$args)))
-    clKey
-  })
-  
-  ## Function to pack the list of legends in a unique legend
-  ## Adapted from latticeExtra::: mergedTrellisLegendGrob
-  packLegend <- function(legendList){
-    N <- length(legendList)
-    ly <- grid.layout(nrow = 1,  ncol = N)
-    g <- frameGrob(layout = ly, name = "mergedLegend")
-    for (i in 1:N) g <- packGrob(g, legendList[[i]], col = i)
-    g
-  }
-  
-  ## The legend of p will include all the legends
-  p$legend$right <- list(fun = 'packLegend',  args = list(legendList = legendList))
-  
-  
-  p
+    pClass <- levelplot(log10(popSub),
+                        at = logPopAt,
+                        maxpixels = 3.5e5,
+                        col.regions = pal,
+                        colorkey = FALSE,
+                        margin=FALSE)
+})
+
+p <- Reduce('+', pList)
+
+library(grid)
+
+legend <- layer(
+{
+    ## Center of the legend (rectangle)
+    x0 <- 128
+    y0 <- 20
+    ## Width and height of the legend
+    w <- 10
+    h <- w / nClasses * nIntervals
+    ## Legend
+    grid.raster(multiPal, interpolate = FALSE,
+                      x = unit(x0, "native"),
+                      y = unit(y0, "native"),
+                width = unit(w, "native"))
+    ## x-axis of the legend
+    grid.text(classes,
+              x = unit(seq(x0 - w/2,
+                           x0 + w/2,
+                           length = nClasses),
+                       "native"),
+              y = unit(y0 + h/2, "native"),
+              gp = gpar(fontsize = 4))
+    ## y-axis of the legend
+    grid.text(logPopAt[-1],
+              x = unit(x0 + w/2, "native"),
+              y = unit(seq(y0 - h/2,
+                           y0 + h/2,
+                           length = nIntervals),
+                       "native"),
+              just = 'left',
+              gp = gpar(fontsize = 4))
+})
+
+p + legend

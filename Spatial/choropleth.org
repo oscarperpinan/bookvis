@@ -413,6 +413,8 @@ options(op)
 #+end_src
 
 #+begin_src R
+blibrary(grid)
+
 legend <- layer(
 {
     x0 <- 1000000
