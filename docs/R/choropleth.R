@@ -113,20 +113,80 @@ spplot(spMapVotes["whichMax"],
 
 pList <- lapply(1:nClasses, function(i){
     ## Only those polygons corresponding to a level are selected
-    mapClass <- subset(spMapVotes, 
+    mapClass <- subset(spMapVotes,
                        whichMax == classes[i])
-    ## Use natural breaks classification
-    mapClass$pcMaxInt <- cut(mapClass$pcMax,
-                             breaks = intFisher$brks)
     ## Produce the graphic
     pClass <- spplot(mapClass, "pcMaxInt",
                      col.regions = quantPal,
                      col='transparent',
+		     colorkey = FALSE,
 		     sp.layout = provinceLines)
 })
 names(pList) <- classes
 
 do.call(c, pList)
+
+##################################################################
+## Categorical and quantitative variables combined in a multivariate choropleth map
+##################################################################
+
+multiPal <- sapply(1:nClasses, function(i)
+    colorRampPalette(c(qualPal[i], 'gray90'))(N))
+
+pList <- lapply(1:nClasses, function(i){
+    ## Only those polygons corresponding to a level are selected
+    mapClass <- subset(spMapVotes,
+                       whichMax == classes[i])
+    ## Palette
+    pal <- multiPal[, i]
+    ## Produce the graphic
+    pClass <- spplot(mapClass, "pcMaxInt",
+                     col.regions = pal,
+                     col='transparent',
+		     colorkey = FALSE)
+})
+names(pList) <- classes
+p <- Reduce('+', pList)
+
+op <- options(digits = 4)
+tabFisher <- print(intFisher)
+intervals <- names(tabFisher)
+options(op)
+
+legend <- layer(
+{
+    x0 <- 1000000
+    y0 <- 4500000
+    w <- 100000
+    grid.raster(multiPal, interpolate = FALSE,
+                      x = unit(x0, "native"),
+                      y = unit(y0, "native"),
+                width = unit(w, "native"))
+    grid.text(classes,
+              x = unit(seq(x0 - w/2,
+                           x0 + w/2,
+                           length = nClasses),
+                       "native"),
+              y = unit(y0 + w/2, "native"),
+              gp = gpar(fontsize = 4))
+    grid.text(intervals,
+              x = unit(x0 + w/2, "native"),
+              y = unit(seq(y0 - w/2,
+                           y0 + w/2,
+                           length = length(intervals)),
+                       "native"),
+              gp = gpar(fontsize = 4))
+})
+
+## Main plot
+p + legend + 
+    ## Provinces boundaries
+    layer(sp.polygons(peninsulaLines, lwd = 0.1)) +
+    layer(grid.rect(x=bbIslands[1,1], y=bbIslands[2,1],
+                    width=diff(bbIslands[1,]),
+                    height=diff(bbIslands[2,]),
+                    default.units='native', just=c('left', 'bottom'),
+                    gp=gpar(lwd=0.5, fill='transparent')))
 
 library(mapview)
 

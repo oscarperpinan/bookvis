@@ -330,9 +330,9 @@ spplot(spMapVotes["whichMax"],
 #+RESULTS:
 [[file:figs/whichMax.pdf]]
 
-** Categorical and Quantitative Variables combined in a matrix of maps
+** Categorical and Quantitative Variables combined in a Multivariate Choropleth Map
 
-
+*** Matrix of graphics
 #+INDEX: spplot@\texttt{spplot}
 #+INDEX: lapply@\texttt{lapply}
 #+INDEX: do.call\texttt{do.call}
@@ -340,15 +340,13 @@ spplot(spMapVotes["whichMax"],
 #+begin_src R 
 pList <- lapply(1:nClasses, function(i){
     ## Only those polygons corresponding to a level are selected
-    mapClass <- subset(spMapVotes, 
+    mapClass <- subset(spMapVotes,
                        whichMax == classes[i])
-    ## Use natural breaks classification
-    mapClass$pcMaxInt <- cut(mapClass$pcMax,
-                             breaks = intFisher$brks)
     ## Produce the graphic
     pClass <- spplot(mapClass, "pcMaxInt",
                      col.regions = quantPal,
                      col='transparent',
+		     colorkey = FALSE,
 		     sp.layout = provinceLines)
 })
 names(pList) <- classes
@@ -357,6 +355,110 @@ names(pList) <- classes
 #+begin_src R
 do.call(c, pList)
 #+end_src
+
+*** Multivariate map
+#+begin_src R :exports none
+##################################################################
+## Categorical and quantitative variables combined in a multivariate choropleth map
+##################################################################
+#+end_src
+
+Following the inspiring example of the infographic from the /New
+York Times/, we will combine both choropleth maps to produce a
+multivariate map: the hue of each polygon will be determined by
+the name of the predominant option (=whichMax=) but the chroma and
+luminance will vary according to the percentage of votes
+(=pcMax=). 
+
+#+begin_src R
+multiPal <- sapply(1:nClasses, function(i)
+    colorRampPalette(c(qualPal[i], 'gray90'))(N))
+#+end_src
+
+With this multivariate palette we can produce a list of maps
+extracting the polygons according to each class and filling with
+the appropiate color from this palette. The resulting list of
+=trellis= objects can be combined with =Reduce= and the
+=+.trellis= function of the =latticeExtra= and produce a =trellis=
+object.
+
+#+INDEX: Reduce@\texttt{Reduce} 
+#+INDEX: spplot@\texttt{spplot}
+
+#+begin_src R 
+pList <- lapply(1:nClasses, function(i){
+    ## Only those polygons corresponding to a level are selected
+    mapClass <- subset(spMapVotes,
+                       whichMax == classes[i])
+    ## Palette
+    pal <- multiPal[, i]
+    ## Produce the graphic
+    pClass <- spplot(mapClass, "pcMaxInt",
+                     col.regions = pal,
+                     col='transparent',
+		     colorkey = FALSE)
+})
+names(pList) <- classes
+p <- Reduce('+', pList)
+#+end_src
+
+#+begin_src R
+op <- options(digits = 4)
+tabFisher <- print(intFisher)
+intervals <- names(tabFisher)
+options(op)
+#+end_src
+
+#+begin_src R
+legend <- layer(
+{
+    x0 <- 1000000
+    y0 <- 4500000
+    w <- 100000
+    grid.raster(multiPal, interpolate = FALSE,
+                      x = unit(x0, "native"),
+                      y = unit(y0, "native"),
+                width = unit(w, "native"))
+    grid.text(classes,
+              x = unit(seq(x0 - w/2,
+                           x0 + w/2,
+                           length = nClasses),
+                       "native"),
+              y = unit(y0 + w/2, "native"),
+              gp = gpar(fontsize = 4))
+    grid.text(intervals,
+              x = unit(x0 + w/2, "native"),
+              y = unit(seq(y0 - w/2,
+                           y0 + w/2,
+                           length = length(intervals)),
+                       "native"),
+              gp = gpar(fontsize = 4))
+})
+#+end_src
+
+Figure [[fig:mapLegends]] displays the result with the province boundaries
+superposed (only for the peninsula due to a problem with the
+definition of boundaries the Canarian islands in the file) and a
+rectangle to separate the Canarian islands from the remainder of the
+map.
+
+#+begin_src R :results output graphics :exports both :file figs/mapLegends.png
+## Main plot
+p + legend + 
+    ## Provinces boundaries
+    layer(sp.polygons(peninsulaLines, lwd = 0.1)) +
+    layer(grid.rect(x=bbIslands[1,1], y=bbIslands[2,1],
+                    width=diff(bbIslands[1,]),
+                    height=diff(bbIslands[2,]),
+                    default.units='native', just=c('left', 'bottom'),
+                    gp=gpar(lwd=0.5, fill='transparent')))
+#+end_src
+
+#+CAPTION: Spanish general elections results. The map shows the result of the most voted option in each municipality.
+#+LABEL: fig:mapLegends
+#+RESULTS:
+[[file:figs/mapLegends.png]]
+
 
 ** Interactive
 
@@ -387,171 +489,8 @@ mapView(spMapVotes0, zcol = "pcMax",
 #+RESULTS:
 
 
-** COMMENT \floweroneleft Categorical and Quantitative Variables Combined in a Multivariate Choropleth Map
-#+begin_src R :exports none
-##################################################################
-## Categorical and quantitative variables combined in a multivariate choropleth map
-##################################################################
-#+end_src
-
-Following the inspiring example of the infographic from the /New
-York Times/, we will combine both choropleth maps to produce a
-multivariate map: the hue of each polygon will be determined by
-the name of the predominant option (=whichMax=) but the chroma and
-luminance will vary according to the percentage of votes
-(=pcMax=). Hues are computed with the same method as in Figure
-[[fig:whichMax]], while the corresponding values of chroma and
-luminance are calculated with the =sequential_hcl= function.
 
 
-#+INDEX: sequential_hcl@\texttt{sequential\_hcl}
-
-#+begin_src R
-library(colorspace)
-
-classes <- levels(factor(spMapVotes$whichMax))
-nClasses <- length(classes)
-step <- 360/nClasses
-multiPal <- lapply(1:nClasses, function(i){
-    rev(sequential_hcl(16, h = (30 + step*(i-1))%%360))
-})
-#+end_src
-
-With this multivariate palette we can produce a list of maps
-extracting the polygons according to each class and filling with
-the appropiate color from this palette. The resulting list of
-=trellis= objects can be combined with =Reduce= and the
-=+.trellis= function of the =latticeExtra= and produce a =trellis=
-object.
-
-It is important to note that, to ensure the legend's homogeneity, the
-breakpoints defined by the =at= argument are the same for all the
-individual maps.
-
-
-#+INDEX: Reduce@\texttt{Reduce} 
-#+INDEX: spplot@\texttt{spplot}
-
-#+begin_src R 
-pList <- lapply(1:nClasses, function(i){
-    ## Only those polygons corresponding to a level are selected
-    mapClass <- spMapVotes[spMapVotes$whichMax==classes[i],]
-    pClass <- spplot(mapClass['pcMax'], ##col.regions=multiPal[[i]],
-                     col='transparent',
-                     ## labels only needed in the last legend
-##                     colorkey=(if (i==nClasses) TRUE else list(labels=rep('', 6))),
-                     at = seq(0, 100, by=20))
-})
-names(pList) <- classes
-
-p <- Reduce('+', pList)
-#+end_src
-
-The legend of this =trellis= object must be defined manually. The main
-operation is to merge the legends from the components of the list of
-maps to obtain a bivariate legend.
-
-The first step is to add a title to each individual legend.  This is a
-little complex because =levelplot= (the engine under the =spplot=
-method) does not include a title in its color key. The solution is to
-define a function to add the title and include it as an argument to
-the legend component of each =trellis= object. The =print.trellis=
-method will process this function when displaying the =trellis=
-object. The =frameGrob= and =packGrob= of the =grid= package will do
-the main work inside this function.
-
-
-#+INDEX: textGrob@\texttt{textGrob}
-#+INDEX: packGrob@\texttt{packGrob}
-#+INDEX: Packages!grid@\texttt{grid}
-
-#+begin_src R
-library(grid)
-
-## Function to add a title to a legend
-addTitle <- function(legend, title){
-    titleGrob <- textGrob(title, gp=gpar(fontsize=8), hjust=1, vjust=1)
-    ## retrieve the legend from the trellis object
-    legendGrob <- eval(as.call(c(as.symbol(legend$fun), legend$args)))
-    ## Layout of the legend WITH the title
-    ly <- grid.layout(ncol=1, nrow=2,
-                      widths=unit(0.9, 'grobwidth', data=legendGrob))
-    ## Create a frame to host the original legend and the title
-    fg <- frameGrob(ly, name=paste('legendTitle', title, sep='_'))
-    ## Add the grobs to the frame
-    pg <- packGrob(fg, titleGrob, row=2)
-    pg <- packGrob(pg, legendGrob, row=1)
-}
-
-## Access each trellis object from pList...
-for (i in seq_along(classes)){
-    ## extract the legend (automatically created by spplot)...
-    lg <- pList[[i]]$legend$right
-    ## ... and add the addTitle function to the legend component of each trellis object
-    pList[[i]]$legend$right <- list(fun='addTitle',
-                                    args=list(legend=lg, title=classes[i]))
-}
-#+end_src
-
-Now that every component of =pList= includes a legend with a title,
-the legend of the =p= trellis object can be modified to store the
-merged legends from the set of components of =pList=.
-
-#+begin_src R
-## List of legends
-legendList <- lapply(pList, function(x){
-    lg <- x$legend$right
-    clKey <- eval(as.call(c(as.symbol(lg$fun), lg$args)))
-    clKey
-})
-
-## Function to pack the list of legends in a unique legend
-## Adapted from latticeExtra::: mergedTrellisLegendGrob
-packLegend <- function(legendList){
-    N <- length(legendList)
-    ly <- grid.layout(nrow = 1,  ncol = N)
-    g <- frameGrob(layout = ly, name = "mergedLegend")
-    for (i in 1:N) g <- packGrob(g, legendList[[i]], col = i)
-    g
-}
-
-## The legend of p will include all the legends
-p$legend$right <- list(fun = 'packLegend',  args = list(legendList = legendList))
-
-#+end_src
-
-Figure [[fig:mapLegends]] displays the result with the province boundaries
-superposed (only for the peninsula due to a problem with the
-definition of boundaries the Canarian islands in the file) and a
-rectangle to separate the Canarian islands from the remainder of the
-map.
-
-#+begin_src R
-## Read the provinces shape file
-provinces <- readShapePoly(fn="data/spain_provinces",
-                        proj4string = CRS("+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"))
-## Omit the Canarian islands
-canarias <- provinces$PROV %in% c(35, 38)
-peninsulaLines <- provinces[!canarias,]
-#+end_src
-
-#+begin_src R :results output graphics :exports both :file figs/mapLegends.png
-## Main plot
-p +
-    ## Provinces boundaries
-    layer(sp.polygons(peninsulaLines, lwd = 0.1)) +
-    ## Canarian islands
-    layer(grid.rect(x=bbIslands[1,1], y=bbIslands[2,1],
-                    width=diff(bbIslands[1,]),
-                    height=diff(bbIslands[2,]),
-                    default.units='native', just=c('left', 'bottom'),
-                    gp=gpar(lwd=0.5, fill='transparent')))
-#+end_src
-
-#+CAPTION: Spanish general elections results. The map shows the result of the most voted option in each municipality.
-#+LABEL: fig:mapLegends
-#+RESULTS:
-[[file:figs/mapLegends.png]]
 
 * Footnotes
 
