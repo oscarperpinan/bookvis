@@ -3,26 +3,25 @@
 #+BIND: org-latex-image-default-height "0.45\\textheight"
 
 #+begin_src R :exports none :tangle no
-  setwd('~/Dropbox/chapman/book/')
+setwd('~/github/bookvis/')
 #+end_src
 
 
 #+begin_src R :exports none  
-  ##################################################################
-  ## Initial configuration
-  ##################################################################
-  ## Clone or download the repository and set the working directory
-  ## with setwd to the folder where the repository is located.
-  
+##################################################################
+## Initial configuration
+##################################################################
+## Clone or download the repository and set the working directory
+## with setwd to the folder where the repository is located.
 #+end_src
 
 * Raster Maps
-\label{cha:raster}
+label:cha:raster
 
 #+begin_src R :exports none
-  ##################################################################
-  ## Raster maps
-  ##################################################################
+##################################################################
+## Raster maps
+##################################################################
 #+end_src
 
 A raster data structure is a matrix of cells organized into rows and
@@ -32,15 +31,15 @@ This section describes how to display a raster with two different
 examples: CM-SAF solar irradiation rasters will illustrate the use of
 quantitative data, and land cover and population data from the
 NEO-NASA project will exemplify the display of categorical data and
-multivariate rasters. Read Chapter \ref{cha:dataSpatial} for
+multivariate rasters. Read Chapter ref:cha:dataSpatial for
 details about these datasets.
 
 ** Quantitative Data
 label:sec:quantitative_raster
 #+begin_src R :exports none
-  ##################################################################
-  ## Quantitative data
-  ##################################################################
+##################################################################
+## Quantitative data
+##################################################################
 #+end_src
 
 As an example of quantitative data, this section displays the
@@ -62,10 +61,10 @@ value).
 
 
 #+begin_src R :results output graphics :exports both :file figs/leveplotSISavOrig.pdf
-  library(raster)
-  library(rasterVis)
-  SISav <- raster('data/SISav')
-  levelplot(SISav)
+library(raster)
+library(rasterVis)
+SISav <- raster('data/SISav')
+levelplot(SISav)
 #+end_src
 
 #+CAPTION: Annual average of solar radiation displayed with a sequential palette.
@@ -76,7 +75,7 @@ value).
 Although the solar irradiation distribution reveals the physical
 structure of the region, it is recommended to add the geographic
 context with a layer of administrative boundaries (Figure
-\ref{fig:levelplotCMSAF_boundaries}).
+ref:fig:levelplotCMSAF_boundaries).
 
 
 #+INDEX: Packages!maps@\texttt{maps}
@@ -86,16 +85,16 @@ context with a layer of administrative boundaries (Figure
 
 
 #+begin_src R 
-  library(maps)
-  library(mapdata)
-  library(maptools)
-  
-  ext <- as.vector(extent(SISav))
-  boundaries <- map('worldHires',
-                    xlim=ext[1:2], ylim=ext[3:4],
-                    plot=FALSE)
-  boundaries <- map2SpatialLines(boundaries,
-                                 proj4string=CRS(projection(SISav)))
+library(maps)
+library(mapdata)
+library(maptools)
+
+ext <- as.vector(extent(SISav))
+boundaries <- map('worldHires',
+                  xlim=ext[1:2], ylim=ext[3:4],
+                  plot=FALSE)
+boundaries <- map2SpatialLines(boundaries,
+                               proj4string=CRS(projection(SISav)))
 #+end_src
 
 
@@ -105,7 +104,9 @@ context with a layer of administrative boundaries (Figure
 
 
 #+begin_src R :results output graphics :exports both :file figs/leveplotSISavBoundaries.pdf
-  levelplot(SISav) + layer(sp.lines(boundaries, lwd=0.5))
+levelplot(SISav) +
+    layer(sp.lines(boundaries,
+                   lwd = 0.5))
 #+end_src
 
 #+CAPTION: Annual average of solar radiation with administrative boundaries.
@@ -113,25 +114,6 @@ context with a layer of administrative boundaries (Figure
 #+RESULTS:
 [[file:figs/leveplotSISavBoundaries.pdf]]
 
-*** Mapview
-
-#+begin_src R
-library(mapview)
-
-mapview(SISav, legend = TRUE)
-#+end_src
-
-#+begin_src R
-  SIAR <- read.csv("data/SIAR.csv")
-
-  spSIAR <- SpatialPointsDataFrame(SIAR[, c(6, 7)],
-                                   SIAR[, -c(6, 7)],
-                                   proj4str = CRS(projection(SISav)))
-#+end_src
-
-#+begin_src R
-mapview(SISav, legend = TRUE) + mapview(spSIAR, zcol = 'Estacion')
-#+end_src
 
 *** Hill Shading
 #+LABEL: sec:hill-shading
@@ -144,7 +126,7 @@ A frequent method to improve the display of meteorological rasters is
 the hill shading or shaded relief technique, a method of representing
 relief on a map by depicting the shadows that would be cast by high
 ground if light comes from a certain sun position (Figure
-\ref{fig:hillShading}).
+ref:fig:hillShading).
 
 The procedure is as follows:
 
@@ -202,42 +184,6 @@ The procedure is as follows:
 #+RESULTS:
 [[file:figs/hillShading.png]]
 
-*** Excursus: 3D Visualization label:sec:3dvisualization
-#+begin_src R :exports none
-##################################################################
-## Excursus: 3D visualization
-##################################################################
-#+end_src
-An alternative method for a DEM is 3D visualization where the user can
-rotate or zoom the figure. This solution is available thanks to the
-=rgl= package, which provides functions for 3D interactive
-graphics. The =plot3D= function in the =rasterVis= package is a
-wrapper to this package for =RasterLayer= objects.
-
-
-#+INDEX: Packages!rgl@\texttt{rgl}
-#+INDEX: 3D visualization
-#+INDEX: WebGL
-#+INDEX: STL
-
-
-#+begin_src R
-plot3D(DEM, maxpixels = 5e4)
-#+end_src
-
-The output scene can be exported to several formats such as =STL= with
-=writeSTL=, a format commonly used in 3D printing, or WebGL with
-=writeWebGL= to be rendered in a browser (Figure \ref{fig:DEM_web}).
-
-#+begin_src R :eval no-export
-par3d(viewport = c(0, 30, 250, 250))
-
-writeWebGL(filename = 'docs/images/rgl/DEM.html',
-           width = 800)
-#+end_src
-
-#+CAPTION: 3D visualization of a Digital Elevation Model using the WebGL format. label:fig:DEM_Web
-[[file:figs/DEM_WebGL.png]]
 
 *** Diverging Palettes
 #+begin_src R :exports none
@@ -250,7 +196,7 @@ Next, instead of displaying the absolute values of each cell, we will
 analyze the differences between each cell and the global average
 value. This average is computed with the =cellStats= function and
 substracted from the original =RasterLayer=. Figure
-\ref{fig:xyplotSISav} displays the relation between these scaled
+ref:fig:xyplotSISav displays the relation between these scaled
 values and latitude (=y=), with five different groups defined by the
 longitude (=cut(x, 5)=). It is evident that larger irradiation values
 are associated with lower latitudes. However, there is no such clear
@@ -294,9 +240,9 @@ ColorBrewer with purple for positive values and orange for
 negative values. In order to underline the position of the
 interval containing zero, the center color of this palette is
 substituted with pure white. The resulting palette is displayed in
-Figure \ref{fig:showDivPal} with the custom =showPal=
+Figure ref:fig:showDivPal with the custom =showPal=
 function. The corresponding correspondent raster map produced with this palette
-is displayed in Figure \ref{fig:divPal_SISav_naive}.  Although
+is displayed in Figure ref:fig:divPal_SISav_naive.  Although
 extreme positive and negative values can be easily discriminated,
 the zero value is not associated with white because the data range
 is not symmetrical around zero.
@@ -384,10 +330,10 @@ that creates another interpolating function which maps colors with
 values between 0 and 1. Therefore, a new palette is created,
 extracting colors from the original palette, such that the central
 color (white) is associated with the interval containing zero. This
-palette is displayed in Figure \ref{fig:showBreak2Pal}.
+palette is displayed in Figure ref:fig:showBreak2Pal.
 
 The raster map produced with this new palette is displayed in Figure
-\ref{fig:divPalSISav}. Now zero is clearly associated with the white
+ref:fig:divPalSISav. Now zero is clearly associated with the white
 color.
 
 #+INDEX: colorRamp@\texttt{colorRamp}
@@ -442,7 +388,7 @@ palette will be represented.
 
 An alternative way for finer control is to fill the =regions$col=
 component of the theme with our palette after it has been created
-(Figure \ref{fig:divPal_SISav_regions}).
+(Figure ref:fig:divPal_SISav_regions).
 
 #+begin_src R :results output graphics :exports both :file figs/divPalSISav_regions.pdf
   divTheme <- rasterTheme()
@@ -451,7 +397,7 @@ component of the theme with our palette after it has been created
   levelplot(SISav, par.settings=divTheme, at=breaks, contour=TRUE)
 #+end_src
 
-#+CAPTION: Same as Figure \ref{fig:divPalSISav} but colors are assigned directly to the =regions$col= component of the theme.
+#+CAPTION: Same as Figure ref:fig:divPalSISav but colors are assigned directly to the =regions$col= component of the theme.
 #+LABEL: fig:divPal_SISav_regions
 #+RESULTS:
 [[file:figs/divPalSISav_regions.pdf]]
@@ -461,7 +407,7 @@ classification algorithm with the =classInt= package. With this
 approach it is likely that zero will not be perfectly centered in its
 corresponding interval. The remaining code is exactly the same as
 above, replacing the =breaks= vector with the result of the
-=classIntervals= function. Figure \ref{fig:divPalSISav_classInt}
+=classIntervals= function. Figure ref:fig:divPalSISav_classInt
 displays the result.
 
 
@@ -485,14 +431,14 @@ displays the result.
 #+begin_src R :results output graphics :exports both :file figs/divPalSISav_classInt.pdf
   idx <- findInterval(SISav[], breaks, rightmost.closed=TRUE)
   mids <- tapply(SISav[], idx, median)
-  mids
+
   mx <- max(abs(breaks))
   pal <- break2pal(mids, mx, divRamp)
   divTheme$regions$col <- pal
   levelplot(SISav, par.settings=divTheme, at=breaks, contour=TRUE)
 #+end_src
 
-#+CAPTION: Same as Figure \ref{fig:divPal_SISav_regions} but defining intervals with the optimal classification method.
+#+CAPTION: Same as Figure ref:fig:divPal_SISav_regions but defining intervals with the optimal classification method.
 #+LABEL: fig:divPalSISav_classInt
 #+RESULTS:
 [[file:figs/divPalSISav_classInt.pdf]]
@@ -565,17 +511,8 @@ package includes the =ratify= method to define a layer as categorical
 data, filling it with integer values associated to a Raster Attribute
 Table (RAT).
 
-# 
-# \begin{figure}
-# \includegraphics[width=0.3\textwidth]{figs/lcc_key.jpg}
-# \caption{\label{fig:lccKey}Codes of land cover classification}
-# \end{figure}
-# 
-
-
 #+INDEX: ratify@\texttt{ratify}
 #+INDEX: cut@\texttt{cut}
-
 
 #+begin_src R
   landClass[landClass %in% c(0, 254)] <- NA
@@ -601,7 +538,7 @@ This categorical raster can be displayed with the =levelplot= method
 of the =rasterVis= package. Previously, a theme is defined with the
 background color set to =lightskyblue1= to display the sea areas
 (filled with =NA= values), and the region palette is defined with
-adequate colors (Figure \ref{fig:landClass}).
+adequate colors (Figure ref:fig:landClass).
 
 
 #+INDEX: Packages!rasterVis@\texttt{rasterVis}
@@ -634,7 +571,7 @@ levelplot(landClass, maxpixels=3.5e5,
 [[file:figs/landClass.pdf]]
 
 Let's explore the relation between the land cover and population
-density rasters. Figure \ref{fig:populationNASA} displays this
+density rasters. Figure ref:fig:populationNASA displays this
 latter raster using a logarithmic scale.
 
 #+begin_src R :results output graphics :exports both :file figs/populationNASA.pdf
@@ -650,7 +587,7 @@ latter raster using a logarithmic scale.
 
 Both rasters can be joined together with the =stack= method to
 create a new =RasterStack= object. Figure
-\ref{fig:histogramLandClass} displays the distribution of the
+ref:fig:histogramLandClass displays the distribution of the
 logarithm of the population density associated to each land class.
 
 
@@ -678,14 +615,11 @@ logarithm of the population density associated to each land class.
 ##################################################################
 #+end_src
 We can reproduce the code used to create the multivariate
-choropleth (Section \ref{sec:multiChoropleth}) using the
+choropleth (Section ref:sec:multiChoropleth) using the
 =levelplot= function from the =rasterVis= package. Again, the
 result is a list of =trellis= objects. Each of these objects is
 the representation of the population density in a particular land
-class. The =+.trellis= function of the =latticeExtra= package with
-=Reduce= superposes the elements of this list and produces a
-=trellis= object. Figure \ref{fig:popLandClass} displays the
-result.
+class. 
 
 #+begin_src R
 classes <- rat$classes
@@ -728,6 +662,10 @@ pList <- lapply(1:nClasses, function(i){
 #+end_src
 
 #+RESULTS:
+
+The =+.trellis= function of the =latticeExtra= package with
+=Reduce= superposes the elements of this list and produces a
+=trellis= object. 
 
 #+begin_src R
 p <- Reduce('+', pList)
@@ -773,6 +711,7 @@ legend <- layer(
 
 #+RESULTS:
 
+Figure ref:fig:popLandClass displays the result.
 
 #+begin_src R :results output graphics :exports results :width 2000 :height 2000 :res 300 :file figs/popLandClass.png
 p + legend
@@ -782,3 +721,78 @@ p + legend
 #+LABEL: fig:popLandClass
 #+RESULTS:
 [[file:figs/popLandClass.png]]
+
+** Interactive
+*** 3D Visualization label:sec:3dvisualization
+#+begin_src R :exports none
+##################################################################
+## 3D visualization
+##################################################################
+#+end_src
+An alternative method for a DEM is 3D visualization where the user can
+rotate or zoom the figure. This solution is available thanks to the
+=rgl= package, which provides functions for 3D interactive
+graphics. The =plot3D= function in the =rasterVis= package is a
+wrapper to this package for =RasterLayer= objects.
+
+
+#+INDEX: Packages!rgl@\texttt{rgl}
+#+INDEX: 3D visualization
+#+INDEX: WebGL
+#+INDEX: STL
+
+
+#+begin_src R
+plot3D(DEM, maxpixels = 5e4)
+#+end_src
+
+The output scene can be exported to several formats such as =STL= with
+=writeSTL=, a format commonly used in 3D printing, or WebGL with
+=writeWebGL= to be rendered in a browser (Figure ref:fig:DEM_web).
+
+#+begin_src R :eval no-export
+par3d(viewport = c(0, 30, 250, 250))
+
+writeWebGL(filename = 'docs/images/rgl/DEM.html',
+           width = 800)
+#+end_src
+
+#+CAPTION: 3D visualization of a Digital Elevation Model using the WebGL format. label:fig:DEM_Web
+[[file:figs/DEM_WebGL.png]]
+
+*** Mapview [[label:mapview_raster]]
+
+#+INDEX: Packages!mapview@\texttt{mapview}
+#+INDEX: Interactive visualization
+
+#+begin_src R
+library(mapview)
+#+end_src
+
+#+begin_src R
+merc <- CRS("+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs")
+
+SISmerc <- projectRaster(SISav, crs = merc)
+
+mvSIS <- mapview(SISmerc, legend = TRUE)
+#+end_src
+
+#+begin_src R
+SIAR <- read.csv("data/SIAR.csv")
+
+spSIAR <- SpatialPointsDataFrame(SIAR[, c(6, 7)],
+                                 SIAR[, -c(6, 7)],
+                                 proj4str = CRS(projection(SISav)))
+
+#+end_src
+
+#+begin_src R
+SIARmerc <- spTransform(spSIAR, merc)
+
+mvSIAR <- mapview(SIARmerc,
+                  label = spSIAR$Estacion)
+#+end_src
+
+#+begin_src R
+mvSIS + mvSIAR
+#+end_src

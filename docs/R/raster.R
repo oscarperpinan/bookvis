@@ -1,46 +1,36 @@
-  ##################################################################
-  ## Initial configuration
-  ##################################################################
-  ## Clone or download the repository and set the working directory
-  ## with setwd to the folder where the repository is located.
+##################################################################
+## Initial configuration
+##################################################################
+## Clone or download the repository and set the working directory
+## with setwd to the folder where the repository is located.
 
-  ##################################################################
-  ## Raster maps
-  ##################################################################
+##################################################################
+## Raster maps
+##################################################################
 
-  ##################################################################
-  ## Quantitative data
-  ##################################################################
+##################################################################
+## Quantitative data
+##################################################################
 
-  library(raster)
-  library(rasterVis)
-  SISav <- raster('data/SISav')
-  levelplot(SISav)
+library(raster)
+library(rasterVis)
+SISav <- raster('data/SISav')
+levelplot(SISav)
 
-  library(maps)
-  library(mapdata)
-  library(maptools)
-  
-  ext <- as.vector(extent(SISav))
-  boundaries <- map('worldHires',
-                    xlim=ext[1:2], ylim=ext[3:4],
-                    plot=FALSE)
-  boundaries <- map2SpatialLines(boundaries,
-                                 proj4string=CRS(projection(SISav)))
+library(maps)
+library(mapdata)
+library(maptools)
 
-  levelplot(SISav) + layer(sp.lines(boundaries, lwd=0.5))
+ext <- as.vector(extent(SISav))
+boundaries <- map('worldHires',
+                  xlim=ext[1:2], ylim=ext[3:4],
+                  plot=FALSE)
+boundaries <- map2SpatialLines(boundaries,
+                               proj4string=CRS(projection(SISav)))
 
-library(mapview)
-
-mapview(SISav, legend = TRUE)
-
-  SIAR <- read.csv("data/SIAR.csv")
-
-  spSIAR <- SpatialPointsDataFrame(SIAR[, c(6, 7)],
-                                   SIAR[, -c(6, 7)],
-                                   proj4str = CRS(projection(SISav)))
-
-mapview(SISav, legend = TRUE) + mapview(spSIAR, zcol = 'Estacion')
+levelplot(SISav) +
+    layer(sp.lines(boundaries,
+                   lwd = 0.5))
 
 ##################################################################
 ## Hill shading
@@ -66,17 +56,6 @@ mapview(SISav, legend = TRUE) + mapview(spSIAR, zcol = 'Estacion')
             margin=FALSE, colorkey=FALSE) +
       levelplot(hs, par.settings=hsTheme, maxpixels=1e6) +
       layer(sp.lines(boundaries, lwd=0.5))
-
-##################################################################
-## Excursus: 3D visualization
-##################################################################
-
-plot3D(DEM, maxpixels = 5e4)
-
-par3d(viewport = c(0, 30, 250, 250))
-
-writeWebGL(filename = 'docs/images/rgl/DEM.html',
-           width = 800)
 
   ##################################################################
   ## Diverging palettes
@@ -163,7 +142,7 @@ SISav <- SISav - meanRad
 
   idx <- findInterval(SISav[], breaks, rightmost.closed=TRUE)
   mids <- tapply(SISav[], idx, median)
-  mids
+
   mx <- max(abs(breaks))
   pal <- break2pal(mids, mx, divRamp)
   divTheme$regions$col <- pal
@@ -299,3 +278,35 @@ legend <- layer(
 })
 
 p + legend
+
+##################################################################
+## 3D visualization
+##################################################################
+
+plot3D(DEM, maxpixels = 5e4)
+
+par3d(viewport = c(0, 30, 250, 250))
+
+writeWebGL(filename = 'docs/images/rgl/DEM.html',
+           width = 800)
+
+library(mapview)
+
+merc <- CRS("+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs")
+
+SISmerc <- projectRaster(SISav, crs = merc)
+
+mvSIS <- mapview(SISmerc, legend = TRUE)
+
+SIAR <- read.csv("data/SIAR.csv")
+
+spSIAR <- SpatialPointsDataFrame(SIAR[, c(6, 7)],
+                                 SIAR[, -c(6, 7)],
+                                 proj4str = CRS(projection(SISav)))
+
+SIARmerc <- spTransform(spSIAR, merc)
+
+mvSIAR <- mapview(SIARmerc,
+                  label = spSIAR$Estacion)
+
+mvSIS + mvSIAR
