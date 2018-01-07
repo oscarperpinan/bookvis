@@ -464,6 +464,25 @@ p + legend +
 #+RESULTS:
 [[file:figs/mapLegends.png]]
 
+** ggplot2
+#+begin_src R
+nc <- st_read("data/spMapVotes.shp")
+st_crs(nc) <- "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"
+#+end_src
+
+#+begin_src R
+ggplot(nc) +
+    geom_sf(aes(fill = pcMax),
+            color = "transparent") + 
+    scale_fill_brewer(palette = "Oranges")
+#+end_src
+
+#+begin_src R
+ggplot(nc) +
+    geom_sf(aes(fill = whichMax),
+            color = "transparent") +
+    scale_fill_brewer(palette = "Dark2")
+#+end_src
 
 ** Interactive
 

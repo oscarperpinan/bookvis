@@ -156,6 +156,8 @@ tabFisher <- print(intFisher)
 intervals <- names(tabFisher)
 options(op)
 
+blibrary(grid)
+
 legend <- layer(
 {
     x0 <- 1000000
@@ -190,6 +192,19 @@ p + legend +
                     height=diff(bbIslands[2,]),
                     default.units='native', just=c('left', 'bottom'),
                     gp=gpar(lwd=0.5, fill='transparent')))
+
+nc <- st_read("data/spMapVotes.shp")
+st_crs(nc) <- "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"
+
+ggplot(nc) +
+    geom_sf(aes(fill = pcMax),
+            color = "transparent") + 
+    scale_fill_brewer(palette = "Oranges")
+
+ggplot(nc) +
+    geom_sf(aes(fill = whichMax),
+            color = "transparent") +
+    scale_fill_brewer(palette = "Dark2")
 
 library(mapview)
 
