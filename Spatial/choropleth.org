@@ -336,30 +336,75 @@ spplot(spMapVotes["whichMax"],
 #+RESULTS:
 [[file:figs/whichMax.pdf]]
 
-** Categorical and Quantitative Variables combined in a Multivariate Choropleth Map
+** ggplot2
+25830 http://spatialreference.org/ref/epsg/etrs89-utm-zone-30n/
+"+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"
 
-*** Matrix of graphics
-#+INDEX: spplot@\texttt{spplot}
-#+INDEX: lapply@\texttt{lapply}
-#+INDEX: do.call\texttt{do.call}
+#+begin_src R
+library(sf)
 
-#+begin_src R 
-pList <- lapply(1:nClasses, function(i){
-    ## Only those polygons corresponding to a level are selected
-    mapClass <- subset(spMapVotes,
-                       whichMax == classes[i])
-    ## Produce the graphic
-    pClass <- spplot(mapClass, "pcMaxInt",
-                     col.regions = quantPal,
-                     col='transparent',
-		     colorkey = FALSE,
-		     sp.layout = provinceLines)
-})
-names(pList) <- classes
+sfMapVotes <- st_read("data/spMapVotes.shp")
+st_crs(sfMapVotes) <- 25830
 #+end_src
 
 #+begin_src R
-do.call(c, pList)
+sfProvs <- st_read("data/spain_provinces.shp")
+st_crs(sfProvs) <- 25830
+#+end_src
+
+#+begin_src R
+sfMapVotes$pcMaxInt <- cut(sfMapVotes$pcMax,
+                           breaks = intFisher$brks)
+#+end_src
+
+
+#+begin_src R
+ggplot(sfMapVotes) +
+    geom_sf(aes(fill = pcMaxInt),
+            color = "transparent") +
+    scale_fill_brewer(palette = "Oranges") +
+    geom_sf(data = sfProvs,
+            fill = 'transparent',
+            show.legend = FALSE) +
+    theme_bw()
+#+end_src
+
+#+begin_src R
+ggplot(sfMapVotes) +
+    geom_sf(aes(fill = whichMax),
+            color = "transparent") +
+    scale_fill_brewer(palette = 'Dark2') +
+    geom_sf(data = sfProvs,
+            fill = 'transparent',
+            show.legend = FALSE) +
+    theme_bw()
+#+end_src
+
+** Categorical and Quantitative Variables combined in a Multivariate Choropleth Map
+
+*** Matrix of graphics
+#+begin_src R
+## spplot version
+spplot(spMapVotes, "pcMaxInt",
+       formula = pcMaxInt ~ xlabelpoint + ylabelpoint | whichMax,
+       col.regions = quantPal,
+       col='transparent',
+       sp.layout = provinceLines)
+
+#+end_src
+
+#+begin_src R
+## ggplot2 version
+ggplot(sfMapVotes) +
+    geom_sf(aes(fill = pcMaxInt),
+            color = "transparent") +
+    facet_wrap(~whichMax, nrow = 2) +
+    scale_fill_brewer(palette = "Oranges") +
+    geom_sf(data = sfProvs,
+            fill = 'transparent',
+            size = 0.1,
+            show.legend = FALSE) +
+    theme_bw()
 #+end_src
 
 *** Multivariate map
@@ -419,7 +464,7 @@ options(op)
 #+end_src
 
 #+begin_src R
-blibrary(grid)
+library(grid)
 
 legend <- layer(
 {
@@ -470,48 +515,6 @@ p + legend +
 #+RESULTS:
 [[file:figs/mapLegends.png]]
 
-** ggplot2
-25830 http://spatialreference.org/ref/epsg/etrs89-utm-zone-30n/
-"+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"
-
-#+begin_src R
-library(sf)
-
-sfMapVotes <- st_read("data/spMapVotes.shp")
-st_crs(sfMapVotes) <- 25830
-#+end_src
-
-#+begin_src R
-sfProvs <- st_read("data/spain_provinces.shp")
-st_crs(sfProvs) <- 25830
-#+end_src
-
-#+begin_src R
-sfMapVotes$pcMaxInt <- cut(sfMapVotes$pcMax,
-                           breaks = intFisher$brks)
-#+end_src
-
-
-#+begin_src R
-ggplot(sfMapVotes) +
-    geom_sf(aes(fill = pcMaxInt),
-            color = "transparent") +
-    scale_fill_brewer(palette = "Oranges") +
-    geom_sf(data = sfProvs, fill = 'transparent', show.legend = FALSE) +
-    theme_bw()
-#+end_src
-
-#+begin_src R
-ggplot(sfMapVotes) +
-    geom_sf(aes(fill = whichMax),
-            color = "transparent") +
-    scale_fill_brewer(palette = 'Dark2') +
-    geom_sf(data = sfProvs,
-            fill = 'transparent',
-            show.legend = FALSE) +
-    theme_bw()
-#+end_src
-
 ** Interactive
 
 #+begin_src R
@@ -519,13 +522,13 @@ library(mapview)
 #+end_src
 
 #+begin_src R
-spMapVotes0 <- readShapePoly(fn = "data/spMapVotes0", 
-                        proj4string = CRS("+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"))
+sfMapVotes0 <- st_read("data/spMapVotes0.shp")
+st_crs(sfMapVotes0) <- 25830
 
 #+end_src
 
 #+begin_src R
-mapView(spMapVotes0, zcol = "whichMax",
+mapView(sfMapVotes0, zcol = "whichMax",
         legend = TRUE,
         col.regions = qualPal)
 #+end_src
@@ -533,7 +536,7 @@ mapView(spMapVotes0, zcol = "whichMax",
 #+RESULTS:
 
 #+begin_src R
-mapView(spMapVotes0, zcol = "pcMax",
+mapView(sfMapVotes0, zcol = "pcMax",
         legend = TRUE,
         col.regions = quantPal)
 #+end_src
