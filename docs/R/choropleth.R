@@ -195,18 +195,30 @@ p + legend +
 
 library(sf)
 
-nc <- st_read("data/spMapVotes.shp")
-st_crs(nc) <- 25830
+sfMapVotes <- st_read("data/spMapVotes.shp")
+st_crs(sfMapVotes) <- 25830
 
-ggplot(nc) +
-    geom_sf(aes(fill = pcMax),
-            color = "transparent") + 
-    scale_fill_brewer(palette = "Oranges")
+sfProvs <- st_read("data/spain_provinces.shp")
+st_crs(sfProvs) <- 25830
 
-ggplot(nc) +
+sfMapVotes$pcMaxInt <- cut(sfMapVotes$pcMax,
+                           breaks = intFisher$brks)
+
+ggplot(sfMapVotes) +
+    geom_sf(aes(fill = pcMaxInt),
+            color = "transparent") +
+    scale_fill_brewer(palette = "Oranges") +
+    geom_sf(data = sfProvs, fill = 'transparent', show.legend = FALSE) +
+    theme_bw()
+
+ggplot(sfMapVotes) +
     geom_sf(aes(fill = whichMax),
             color = "transparent") +
-    scale_fill_brewer(palette = "Dark2")
+    scale_fill_brewer(palette = 'Dark2') +
+    geom_sf(data = sfProvs,
+            fill = 'transparent',
+            show.legend = FALSE) +
+    theme_bw()
 
 library(mapview)
 
