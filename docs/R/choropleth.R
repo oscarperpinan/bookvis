@@ -45,13 +45,13 @@ lattice.options(default.theme = myTheme,
 ##################################################################
 
 library(sp)
-library(maptools)
+library(rgdal)
 
-spMapVotes <- readShapePoly(fn = "data/spMapVotes", 
-                        proj4string = CRS("+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"))
+spMapVotes <- readOGR("data/spMapVotes.shp", 
+                      p4s = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs")
 
-provinces <- readShapePoly(fn="data/spain_provinces",
-                        proj4string = CRS("+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"))
+provinces <- readOGR("data/spain_provinces.shp",
+                     p4s = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs")
 
 provinceLines <- list("sp.polygons", provinces, lwd = 0.1)
 
@@ -187,14 +187,16 @@ legend <- layer(
 p + legend + 
     ## Provinces boundaries
     layer(sp.polygons(peninsulaLines, lwd = 0.1)) +
-    layer(grid.rect(x=bbIslands[1,1], y=bbIslands[2,1],
-                    width=diff(bbIslands[1,]),
-                    height=diff(bbIslands[2,]),
-                    default.units='native', just=c('left', 'bottom'),
-                    gp=gpar(lwd=0.5, fill='transparent')))
+    layer(grid.rect(x = bbIslands[1,1], y = bbIslands[2,1],
+                    width = diff(bbIslands[1,]),
+                    height = diff(bbIslands[2,]),
+                    default.units = 'native', just = c('left', 'bottom'),
+                    gp = gpar(lwd = 0.5, fill = 'transparent')))
+
+library(sf)
 
 nc <- st_read("data/spMapVotes.shp")
-st_crs(nc) <- "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"
+st_crs(nc) <- 25830
 
 ggplot(nc) +
     geom_sf(aes(fill = pcMax),
