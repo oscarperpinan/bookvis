@@ -107,12 +107,15 @@ write.csv2(datos11, 'data/airQuality.csv')
   NO2agg <- do.call(cbind, NO2agg)
   NO2agg <- as.data.frame(NO2agg)
 
-  library(maptools)
-  ## Link aggregated data with stations to obtain a SpatialPointsDataFrame.
-  ## Codigo and codEst are the stations codes
-  idxNO2 <- match(airStations$Codigo, NO2agg$codEst)
-  NO2sp <- spCbind(airStations[, c('Nombre', 'alt')], NO2agg[idxNO2, ])
-  save(NO2sp, file='data/NO2sp.RData')
+library(rgdal)
+library(maptools)
+## Link aggregated data with stations to obtain a SpatialPointsDataFrame.
+## Codigo and codEst are the stations codes
+idxNO2 <- match(airStations$Codigo, NO2agg$codEst)
+NO2sp <- spCbind(airStations[, c('Nombre', 'alt')], NO2agg[idxNO2, ])
+## Save the result
+writeOGR(NO2sp, dsn = 'data/', layer = 'NO2sp',
+         driver = 'ESRI Shapefile')
 
   ##################################################################
   ## Spanish General Elections
@@ -152,7 +155,7 @@ write.csv(votes2016, 'data/votes2016.csv', row.names=FALSE)
 ##################################################################
 
 library(sp)
-library(maptools)
+library(rgdal)
 
 old <- setwd(tempdir())
 
@@ -160,8 +163,8 @@ download.file('ftp://www.ine.es/pcaxis/mapas_completo_municipal.rar',
               'mapas_completo_municipal.rar')
 system2('unrar', c('e', 'mapas_completo_municipal.rar'))
 
-spMap <- readShapePoly(fn="esp_muni_0109",
-                        proj4string = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs")
+spMap <- readOGR("esp_muni_0109.shp",
+                 p4s = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs")
 Encoding(levels(spMap$NOMBRE)) <- "latin1"
 
 setwd(old)
@@ -190,7 +193,8 @@ spMapVotes <- SpatialPolygonsDataFrame(spPols, dat2add)
 spMapVotes0 <- spMapVotes[-idxNA, ]
 
 ## Save the result
-writeSpatialShape(spMapVotes0, fn = "data/spMapVotes0")
+writeOGR(spMapVotes0, dsn = 'data/', layer = 'spMapVotes0',
+         drive = 'ESRI Shapefile')
 
 ## Extract Canarias islands from the SpatialPolygons object
 canarias <-  sapply(spMapVotes0@polygons, function(x)substr(x@ID, 1, 2) %in% c("35",  "38"))
@@ -208,7 +212,8 @@ proj4string(island2) <- proj4string(peninsula)
 spMapVotes <- rbind(peninsula, island2)
 
 ## Save the result
-writeSpatialShape(spMapVotes, fn = "data/spMapVotes")
+writeOGR(spMapVotes, dsn = 'data/', layer = 'spMapVotes',
+         drive = 'ESRI Shapefile')
 
   ##################################################################
   ## CM SAF

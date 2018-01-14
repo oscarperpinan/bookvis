@@ -221,19 +221,23 @@ matching against the shared key column (=airStations$Codigo= and
 =NO2agg$codEst=):
 
 
-#+INDEX: Packages!maptools@\texttt{maptools}
+#+INDEX: Packages!rgdal@\texttt{rgdal}
+#+INDEX: Packages!maptools\texttt{maptools}
 #+INDEX: aggregate@\texttt{aggregate} 
 #+INDEX: match@\texttt{match}
 #+INDEX: spCbind@\texttt{spCbind}
 
 
 #+begin_src R
-  library(maptools)
-  ## Link aggregated data with stations to obtain a SpatialPointsDataFrame.
-  ## Codigo and codEst are the stations codes
-  idxNO2 <- match(airStations$Codigo, NO2agg$codEst)
-  NO2sp <- spCbind(airStations[, c('Nombre', 'alt')], NO2agg[idxNO2, ])
-  save(NO2sp, file='data/NO2sp.RData')
+library(rgdal)
+library(maptools)
+## Link aggregated data with stations to obtain a SpatialPointsDataFrame.
+## Codigo and codEst are the stations codes
+idxNO2 <- match(airStations$Codigo, NO2agg$codEst)
+NO2sp <- spCbind(airStations[, c('Nombre', 'alt')], NO2agg[idxNO2, ])
+## Save the result
+writeOGR(NO2sp, dsn = 'data/', layer = 'NO2sp',
+         driver = 'ESRI Shapefile')
 #+end_src
 
 
@@ -320,20 +324,20 @@ summary(votes2016)
 The Spanish administrative boundaries are available as shapefiles at
 the INE (Instituto Nacional de Estadística) webpage[fn:7]. Both the
 municipalities, =spMap=, and province boundaries, =provinces=, are
-read as =SpatialPolygonsDataFrame= with =readShapePoly=.
+read as =SpatialPolygonsDataFrame= with =readOGR=.
 
 
-#+INDEX: Packages!maptools@\texttt{maptools}
+#+INDEX: Packages!rgdal\texttt{rgdal}
 #+INDEX: Packages!sp@\texttt{sp}
 
 #+begin_src R
 library(sp)
-library(maptools)
+library(rgdal)
 #+end_src
 
 
 #+INDEX: INE
-#+INDEX: readShapePoly@\texttt{readShapePoly}
+#+INDEX: readOGR\texttt{readOGR}
 #+INDEX: Encoding@\texttt{Encoding}
 
 
@@ -344,16 +348,16 @@ download.file('ftp://www.ine.es/pcaxis/mapas_completo_municipal.rar',
               'mapas_completo_municipal.rar')
 system2('unrar', c('e', 'mapas_completo_municipal.rar'))
 
-spMap <- readShapePoly(fn="esp_muni_0109",
-                        proj4string = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs")
+spMap <- readOGR("esp_muni_0109.shp",
+                 p4s = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs")
 Encoding(levels(spMap$NOMBRE)) <- "latin1"
 
 setwd(old)
 #+end_src
 
 #+begin_src R :exports none :tangle no
-spMap <- readShapePoly(fn="/home/datos/mapas_completo_municipal/esp_muni_0109",
-                        proj4string = CRS("+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"))
+spMap <- readOGR("/home/datos/mapas_completo_municipal/esp_muni_0109.shp",
+                 p4s = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs")
 Encoding(levels(spMap$NOMBRE)) <- "latin1"
 #+end_src  
 
@@ -392,7 +396,8 @@ spMapVotes <- SpatialPolygonsDataFrame(spPols, dat2add)
 spMapVotes0 <- spMapVotes[-idxNA, ]
 
 ## Save the result
-writeSpatialShape(spMapVotes0, fn = "data/spMapVotes0")
+writeOGR(spMapVotes0, dsn = 'data/', layer = 'spMapVotes0',
+         drive = 'ESRI Shapefile')
 #+end_src
 
 Finally, Spanish maps are commonly displayed with the Canarian islands next
@@ -419,7 +424,8 @@ proj4string(island2) <- proj4string(peninsula)
 spMapVotes <- rbind(peninsula, island2)
 
 ## Save the result
-writeSpatialShape(spMapVotes, fn = "data/spMapVotes")
+writeOGR(spMapVotes, dsn = 'data/', layer = 'spMapVotes',
+         drive = 'ESRI Shapefile')
 #+end_src
 
 * CM SAF
