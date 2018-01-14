@@ -3,23 +3,23 @@
 #+BIND: org-latex-image-default-height "0.45\\textheight"
 
 #+begin_src R :exports none :tangle no
-  setwd('~/Dropbox/chapman/book/')
+setwd('~/github/bookvis')
 #+end_src
 
 #+begin_src R :exports none  
-  ##################################################################
-  ## Initial configuration
-  ##################################################################
-  ## Clone or download the repository and set the working directory
-  ## with setwd to the folder where the repository is located.
+##################################################################
+## Initial configuration
+##################################################################
+## Clone or download the repository and set the working directory
+## with setwd to the folder where the repository is located.
   
 #+end_src
 
 * Physical Maps
 #+begin_src R :exports none
-  ##################################################################
-  ## Physical maps
-  ##################################################################
+##################################################################
+## Physical maps
+##################################################################
 #+end_src
 Brazil[fn:1], the world's fifth largest country, is one of the
 seventeen megadiverse countries[fn:2], home to diverse wildlife,
@@ -38,15 +38,12 @@ map of this exceptional country using data from several data services.
 #+END_LaTeX
 
 #+begin_src R 
-  library(raster)
-  library(rasterVis)
-  library(maptools)
-  library(rgeos)
-  library(latticeExtra)
-  library(colorspace)
-  
-  ## Longitude-Latitude projection
-  proj <- CRS(' +proj=longlat +ellps=WGS84')
+library(raster)
+library(rasterVis)
+library(rgdal)
+library(rgeos)
+library(latticeExtra)
+library(colorspace)
 #+end_src
 
 ** Retrieving Data
@@ -60,8 +57,7 @@ terrain elevation, rivers and lakes, and sea depth.
 
 
 #+INDEX: download.file@\texttt{download.file}
-#+INDEX: readShapePoly@\texttt{readShapePoly}
-#+INDEX: readShapeLines@\texttt{readShapeLines}
+#+INDEX: readOGR@\texttt{readOGR}
 #+INDEX: Encoding@\texttt{Encoding}
 #+INDEX: raster@\texttt{raster}
 #+INDEX: Data!GADM
@@ -70,48 +66,48 @@ terrain elevation, rivers and lakes, and sea depth.
 #+END_LaTeX
 
   1. The administrative boundaries are available from GADM[fn:4]. The
-     =readShapePoly= function reads data from the downloaded shapefile
-     and creates a =SpatialPolygonsDataFrame= object.
+     =readOGR= function reads data from the downloaded shapefile and
+     creates a =SpatialPolygonsDataFrame= object.
      #+begin_src R :eval no-export
-       old <- setwd(tempdir())
-              
-       download.file('http://biogeo.ucdavis.edu/data/gadm2/shp/BRA_adm.zip',
-                     'BRA_adm.zip')
-       unzip('BRA_adm.zip')
-       brazilAdm <- readShapePoly('BRA_adm1.shp', proj4string=proj)
-       Encoding(levels(brazilAdm$NAME_1)) <- 'latin1'
+     old <- setwd(tempdir())
+
+     download.file('http://biogeo.ucdavis.edu/data/gadm2.8/shp/BRA_adm_shp.zip',
+                   'BRA_adm.zip')
+     unzip('BRA_adm.zip')
+     brazilAdm <- readOGR(dsn = '.', layer = 'BRA_adm1')
+     Encoding(levels(brazilAdm$NAME_1)) <- 'latin1'
      #+end_src
 
   2. The terrain elevation or digital elevation model (DEM) is
      available from DIVA-GIS[fn:3]. The =raster= function reads the
      file and creates a =RasterLayer= object.
      #+begin_src R :eval no-export
-       download.file('http://biogeo.ucdavis.edu/data/diva/alt/BRA_alt.zip',
-                     'BRA_alt.zip')
-       unzip('BRA_alt.zip')
-       brazilDEM <- raster('BRA_alt')
+     download.file('http://biogeo.ucdavis.edu/data/diva/alt/BRA_alt.zip',
+                   'BRA_alt.zip')
+     unzip('BRA_alt.zip')
+     brazilDEM <- raster('BRA_alt')
      #+end_src
   3. The water lines (rivers and lakes) are available from Natural
      Earth Data[fn:5]. The =readShapeLines= function reads data from
      the downloaded shapefile and creates a =SpatialLinesDataFrame=
      object.
      #+begin_src R :eval no-export
-       ## World Water lines (Natural Earth)
-       download.file('http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/physical/ne_10m_rivers_lake_centerlines.zip',
-                     'neRivers.zip')
-       unzip('neRivers.zip')
-       worldlRiv <- readShapeLines('ne_10m_rivers_lake_centerlines', proj4string = proj)
+     ## World Water lines (Natural Earth)
+     download.file('http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/physical/ne_10m_rivers_lake_centerlines.zip',
+                   'neRivers.zip')
+     unzip('neRivers.zip')
+     worldlRiv <- readOGR(dsn = '.', layer = 'ne_10m_rivers_lake_centerlines')
      #+end_src
   4. Finally, the sea depth is also available from Natural Earth
      Data[fn:5]. The raster covers the whole world so it must be
      cropped by the extent of the DEM raster.
      #+begin_src R :eval no-export
-       download.file('http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/raster/OB_LR.zip',
-                     'neSea.zip')
-       unzip('neSea.zip')
-       worldSea <- raster('OB_LR.tif')
-       brazilSea <- crop(worldSea, brazilDEM)
-       setwd(old)
+     download.file('http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/raster/OB_LR.zip',
+                   'neSea.zip')
+     unzip('neSea.zip')
+     worldSea <- raster('OB_LR.tif')
+     brazilSea <- crop(worldSea, brazilDEM)
+     setwd(old)
      #+end_src
 
 ** Intersection of Shapefiles and Elevation Model
@@ -135,40 +131,38 @@ converted to =SpatialPolygons=. The intersection is a new
 #+END_LaTeX
 
 #+begin_src R :eval no-export
-  ## only those features labeled as "River" are needed
-  worlRiv<- worlRiv[worlRiv$featurecla=='River',]
-  
-  ## Define the extent of Brazil as a SpatialPolygons
-  extBrazil <- as(extent(brazilDEM), 'SpatialPolygons')
-  proj4string(extBrazil) <- proj
-  
-  ## and intersect it with worldRiv to extract brazilian rivers
-  ## from the world database
-  brazilRiv <- gIntersection(worldRiv, extBrazil, byid=TRUE)
-  ## and especially the famous Amazonas River
-  amazonas <- worldRiv[worldRiv$name=='Amazonas',]
+## only those features labeled as "River" are needed
+worldRiv<- worldRiv[worldRiv$featurecla=='River',]
+
+## Define the extent of Brazil as a SpatialPolygons
+extBrazil <- as(extent(brazilDEM), 'SpatialPolygons')
+proj4string(extBrazil) <- proj4string(worldRiv)
+
+## and intersect it with worldRiv to extract brazilian rivers
+## from the world database
+brazilRiv <- gIntersection(worldRiv, extBrazil, byid=TRUE)
+## and especially the famous Amazonas River
+amazonas <- worldRiv[worldRiv$name=='Amazonas',]
 #+end_src
 
 #+begin_src R :exports none :tangle no
-  proj <- CRS(' +proj=longlat +ellps=WGS84')
-  
-  brazilAdm <- readShapePoly('~/Datos/BRA_adm/BRA_adm1.shp', proj4string=proj)
-  Encoding(levels(brazilAdm$NAME_1)) <- 'latin1'
-  
-  brazilDEM <- raster('~/Datos/BRA_alt/BRA_alt')
-  
-  worldSea <- raster('~/Datos/NaturalEarth/OB_LR.tif')
-  brazilSea <- crop(worldSea, brazilDEM)
-  
-  worldRiv <- readShapeLines('~/Datos/NaturalEarth/ne_10m_rivers_lake_centerlines', proj4string = proj)
-  worldRiv<- worldRiv[worldRiv$featurecla=='River',]
-  
-  extBrazil <- as(extent(brazilDEM), 'SpatialPolygons')
-  proj4string(extBrazil) <- proj
-  
-  brazilRiv <- gIntersection(worldRiv, extBrazil, byid=TRUE)
+brazilAdm <- readOGR(dsn = '/home/datos/BRA_adm/', layer = 'BRA_adm1')
+Encoding(levels(brazilAdm$NAME_1)) <- 'latin1'
 
-  amazonas <- worldRiv[worldRiv$name=='Amazonas',]
+brazilDEM <- raster('/home/datos/BRA_alt/BRA_alt')
+
+worldSea <- raster('/home/datos/NaturalEarth/OB_LR.tif')
+brazilSea <- crop(worldSea, brazilDEM)
+
+worldRiv <- readOGR(dsn = '/home/datos/NaturalEarth/', layer = 'ne_10m_rivers_lake_centerlines')
+worldRiv<- worldRiv[worldRiv$featurecla=='River',]
+
+extBrazil <- as(extent(brazilDEM), 'SpatialPolygons')
+proj4string(extBrazil) <- proj4string(worldRiv)
+
+brazilRiv <- gIntersection(worldRiv, extBrazil, byid=TRUE)
+
+amazonas <- worldRiv[worldRiv$name=='Amazonas',]
 #+end_src
 
 ** Labels
@@ -190,10 +184,10 @@ placed in the average centroid.
 #+END_LaTeX
 
 #+begin_src R
-  ## Locations of labels of each polygon
-  centroids <- coordinates(brazilAdm)
-  ## Location of the "Brazil" label (average of the set of polygons centroids)
-  xyBrazil <- apply(centroids, 2, mean)
+## Locations of labels of each polygon
+centroids <- coordinates(brazilAdm)
+## Location of the "Brazil" label (average of the set of polygons centroids)
+xyBrazil <- apply(centroids, 2, mean)
 #+end_src
 
 Some region names are too long to be displayed in one line. Thus, a
@@ -206,13 +200,13 @@ words.
 #+END_LaTeX
 
 #+begin_src R 
-  admNames <- strsplit(as.character(brazilAdm$NAME_1), ' ')
+admNames <- strsplit(as.character(brazilAdm$NAME_1), ' ')
   
-  admNames <- sapply(admNames,
+admNames <- sapply(admNames,
                    FUN=function(s){
-                     sep=if (length(s)>2) '\n' else  ' '
-                     paste(s, collapse=sep)
-                     })
+                       sep=if (length(s)>2) '\n' else  ' '
+                       paste(s, collapse=sep)
+                   })
 #+end_src
 
 ** Overlaying Layers of Information
@@ -228,11 +222,11 @@ of four layers:
    =rasterVis= package. The palette is defined with =brewer.pal=
    (Figure [[fig:rastersBrazil]]).
    #+begin_src R
-       blueTheme <- rasterTheme(region=brewer.pal(n=9, 'Blues'))
+   blueTheme <- rasterTheme(region=brewer.pal(n=9, 'Blues'))
   
-       seaPlot <- levelplot(brazilSea, par.settings=blueTheme,
-                           maxpixels=1e6, panel=panel.levelplot.raster,
-                           margin=FALSE, colorkey=FALSE)
+   seaPlot <- levelplot(brazilSea, par.settings=blueTheme,
+                        maxpixels=1e6, panel=panel.levelplot.raster,
+                        margin=FALSE, colorkey=FALSE)
    #+end_src
 
    
@@ -244,11 +238,11 @@ of four layers:
   produced by the =terrain_hcl= function from the =colorspace= package
   \cite{Ihaka.Murrell.ea2011} (Figure [[fig:rastersBrazil]]).
   #+begin_src R
-      terrainTheme <- rasterTheme(region=terrain_hcl(15))
+  terrainTheme <- rasterTheme(region=terrain_hcl(15))
   
-      altPlot <- levelplot(brazilDEM, par.settings=terrainTheme,
-                           maxpixels=1e6, panel=panel.levelplot.raster,
-                           margin=FALSE, colorkey=FALSE)
+  altPlot <- levelplot(brazilDEM, par.settings=terrainTheme,
+                       maxpixels=1e6, panel=panel.levelplot.raster,
+                       margin=FALSE, colorkey=FALSE)
   #+end_src
 
   
@@ -264,7 +258,7 @@ of four layers:
    values.
 
    #+begin_src R
-       amazonasLab <- label(amazonas, 'Amazonas')
+   amazonasLab <- label(amazonas, 'Amazonas')
    #+end_src
 
 4. The administrative boundaries represented by the
@@ -283,24 +277,24 @@ of four layers:
 
 
   #+begin_src R :results output graphics :exports both :file figs/brazil.png :width 2000 :height 2000 :res 300
-       seaPlot + altPlot + layer({
-          ## Rivers
-          sp.lines(brazilRiv, col='darkblue', lwd=0.2)
-          ## Amazonas
-          sp.lineLabel(amazonas, amazonasLab, 
-                       lwd=1, col='darkblue', col.line='darkblue',
-                       cex=0.5, fontfamily='Palatino')
-          ## Administrative boundaries
-          sp.polygons(brazilAdm, col='black', lwd=0.2)
-          ## Centroids of administrative boundaries ...
-          panel.points(centroids, col='black')
-          ## ... with their labels
-          panel.pointLabel(centroids, labels=admNames,
-                           cex=0.7, fontfamily='Palatino', lineheight=.8)
-          ## Country name
-          panel.text(xyBrazil[1], xyBrazil[2], labels='B R A Z I L',
-                     cex=1.5, fontfamily = 'Palatino', fontface=2)
-      })
+  seaPlot + altPlot + layer({
+      ## Rivers
+      sp.lines(brazilRiv, col='darkblue', lwd=0.2)
+      ## Amazonas
+      sp.lineLabel(amazonas, amazonasLab, 
+                   lwd=1, col='darkblue', col.line='darkblue',
+                   cex=0.5, fontfamily='Palatino')
+      ## Administrative boundaries
+      sp.polygons(brazilAdm, col='black', lwd=0.2)
+      ## Centroids of administrative boundaries ...
+      panel.points(centroids, col='black')
+      ## ... with their labels
+      panel.pointLabel(centroids, labels=admNames,
+                       cex=0.7, fontfamily='Palatino', lineheight=.8)
+      ## Country name
+      panel.text(xyBrazil[1], xyBrazil[2], labels='B R A Z I L',
+                 cex=1.5, fontfamily = 'Palatino', fontface=2)
+  })
    #+end_src
 
 #+begin_src R :results output graphics :exports results :file figs/rastersBrazil.png :width 2000 :height 2000 :res 300
