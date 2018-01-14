@@ -49,8 +49,9 @@ lattice.options(default.theme = myTheme,
 ##################################################################
 
 library(sp)
+library(rgdal)
 
-load('data/NO2sp.RData')
+NO2sp <- readOGR(dsn = 'data/', layer = 'NO2sp')
 
 airPal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(5)
   
@@ -173,7 +174,6 @@ spplot(NO2merc["classNO2"],
 ## Vector data
 ##################################################################
 
-library(maptools)
 library(rgdal)
 
 ## nomecalles http://www.madrid.org/nomecalles/Callejero_madrid.icm
@@ -181,16 +181,18 @@ library(rgdal)
 
 ## Madrid districts
 unzip('Distritos de Madrid.zip')
-distritosMadrid <- readShapePoly('Distritos de Madrid/200001331')
-proj4string(distritosMadrid) <- CRS("+proj=utm +zone=30")
-distritosMadrid <- spTransform(distritosMadrid, CRS=CRS("+proj=longlat +ellps=WGS84"))
+distritosMadrid <- readOGR('Distritos de Madrid/200001331.shp',
+                           p4s = '+proj=utm +zone=30')
+distritosMadrid <- spTransform(distritosMadrid,
+                               CRS = CRS("+proj=longlat +ellps=WGS84"))
 
 ## Madrid streets
 unzip('Callejero_ Ejes de viales.zip')
-streets <- readShapeLines('Callejero_ Ejes de viales/call2011.shp')
+streets <- readOGR('Callejero_ Ejes de viales/call2011.shp',
+                   p4s = '+proj=utm +zone=30')
 streetsMadrid <- streets[streets$CMUN=='079',]
-proj4string(streetsMadrid) <- CRS("+proj=utm +zone=30")
-streetsMadrid <- spTransform(streetsMadrid, CRS=CRS("+proj=longlat +ellps=WGS84"))
+streetsMadrid <- spTransform(streetsMadrid,
+                             CRS = CRS("+proj=longlat +ellps=WGS84"))
 
 ## spplot with sp.layout version
 spDistricts <- list('sp.polygons', distritosMadrid,

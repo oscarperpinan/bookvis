@@ -106,10 +106,15 @@ the =lattice= package. Both color and size can be combined in a unique
 graphical output because =spplot= accepts both of them (Figure
 ref:fig:airMadrid_spplot). 
 
+#+INDEX: Packages!rgdal@\texttt{rgdal}
+#+INDEX: Packages!sp@\texttt{sp}
+#+INDEX: readOGR\texttt{readOGR}
+
 #+begin_src R
 library(sp)
+library(rgdal)
 
-load('data/NO2sp.RData')
+NO2sp <- readOGR(dsn = 'data/', layer = 'NO2sp')
 #+end_src
 
 With =colorRampPalette= I define a sequential palette whose colors
@@ -377,11 +382,11 @@ neither modify the image nor use its content to produce additional
 information.  A different approach is to use digital vector data
 (points, lines, and polygons). A popular format for vectorial data is
 the shapefile, commonly used by public and private providers to
-distribute information. A shapefile can be read with =readShapePoly=
-and =readShapeLines= from the =rgdal= package. These functions produce
-a =SpatialPolygonsDataFrame= and a =SpatialLinesDataFrame= objects,
-respectively. These objects can be displayed with the =sp.polygons=
-and =sp.lines= functions provided by the =sp= package.
+distribute information. A shapefile can be read with =readOGR= from
+the =rgdal= package. The =SpatialPolygonsDataFrame= and
+=SpatialLinesDataFrame= objects produced by this function can be
+displayed with the =sp.polygons= and =sp.lines= functions provided by
+the =sp= package.
 
 For our example, the Madrid district and streets are available as
 shapefiles from the nomecalles web service[fn:1].
@@ -390,7 +395,7 @@ shapefiles from the nomecalles web service[fn:1].
 #+INDEX: spTransform@\texttt{spTransform}
 #+INDEX: Packages!rgdal@\texttt{rgdal}
 #+INDEX: Packages!sp@\texttt{sp}
-#+INDEX: readShapeLines@\texttt{readShapeLines}
+#+INDEX: readOGR\texttt{readOGR}
 #+INDEX: layer@\texttt{layer}
 #+INDEX: +.trellis@\texttt{+.trellis}
 #+INDEX: sp.polygons@\texttt{sp.polygons}
@@ -399,7 +404,6 @@ shapefiles from the nomecalles web service[fn:1].
 
 
 #+begin_src R :eval no-export
-library(maptools)
 library(rgdal)
 
 ## nomecalles http://www.madrid.org/nomecalles/Callejero_madrid.icm
@@ -407,28 +411,29 @@ library(rgdal)
 
 ## Madrid districts
 unzip('Distritos de Madrid.zip')
-distritosMadrid <- readShapePoly('Distritos de Madrid/200001331')
-proj4string(distritosMadrid) <- CRS("+proj=utm +zone=30")
-distritosMadrid <- spTransform(distritosMadrid, CRS=CRS("+proj=longlat +ellps=WGS84"))
+distritosMadrid <- readOGR('Distritos de Madrid/200001331.shp',
+                           p4s = '+proj=utm +zone=30')
+distritosMadrid <- spTransform(distritosMadrid,
+                               CRS = CRS("+proj=longlat +ellps=WGS84"))
 
 ## Madrid streets
 unzip('Callejero_ Ejes de viales.zip')
-streets <- readShapeLines('Callejero_ Ejes de viales/call2011.shp')
+streets <- readOGR('Callejero_ Ejes de viales/call2011.shp',
+                   p4s = '+proj=utm +zone=30')
 streetsMadrid <- streets[streets$CMUN=='079',]
-proj4string(streetsMadrid) <- CRS("+proj=utm +zone=30")
-streetsMadrid <- spTransform(streetsMadrid, CRS=CRS("+proj=longlat +ellps=WGS84"))
+streetsMadrid <- spTransform(streetsMadrid,
+                             CRS = CRS("+proj=longlat +ellps=WGS84"))
 #+end_src
 
 #+begin_src R :exports none :tangle no
-library(maptools)
 library(rgdal)
 
-distritosMadrid <- readShapePoly('/home/datos/nomecalles/Distritos de Madrid/200001331')
-proj4string(distritosMadrid) <- CRS("+proj=utm +zone=30")
-distritosMadrid <- spTransform(distritosMadrid, CRS=CRS("+proj=longlat +ellps=WGS84"))
+distritosMadrid <- readOGR('/home/datos/nomecalles/Distritos de Madrid/200001331.shp')
+distritosMadrid <- spTransform(distritosMadrid,
+                               CRS = CRS("+proj=longlat +ellps=WGS84"))
 
-streetsMadrid <- readShapeLines('/home/datos/nomecalles/Callejero_ Ejes de viales/streetsMadrid.shp')
-proj4string(streetsMadrid) <- CRS("+proj=longlat +ellps=WGS84")
+streetsMadrid <- readOGR('/home/datos/nomecalles/Callejero_ Ejes de viales/streetsMadrid.shp',
+                         p4s = '+proj=longlat +ellps=WGS84')
 #+end_src
 
 These shapefiles can be included in the plot with the =sp.layout=
