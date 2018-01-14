@@ -100,11 +100,9 @@ encode the groups.
 
 #+RESULTS:
 
-The =NO2sp= =SpatialPointsDataFrame= can be easily displayed with the
-=spplot= method provided by the =sp= package, based on =xyplot= from
-the =lattice= package. Both color and size can be combined in a unique
-graphical output because =spplot= accepts both of them (Figure
-ref:fig:airMadrid_spplot). 
+The =spplot= method provided by the =sp= package, based on =xyplot=
+from the =lattice= package, is able to display
+=SpatialPointsDataFrame= objects, among others classes.
 
 #+INDEX: Packages!rgdal@\texttt{rgdal}
 #+INDEX: Packages!sp@\texttt{sp}
@@ -117,10 +115,12 @@ library(rgdal)
 NO2sp <- readOGR(dsn = 'data/', layer = 'NO2sp')
 #+end_src
 
-With =colorRampPalette= I define a sequential palette whose colors
-denote the value of the variable (green for lower values of the
-contaminant, brown for intermediate values, and black for highest
-values).
+Both color and size can be combined in a unique graphical output
+because =spplot= accepts both of them (Figure
+ref:fig:airMadrid_spplot).  A sequential palette is defined with
+=colorRampPalette=, with colors denoting the value of the variable
+(green for lower values of the contaminant, brown for intermediate
+values, and black for highest values).
 
 #+begin_src R :results output graphics :exports both :file figs/airMadrid_spplot.pdf
 airPal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(5)
@@ -137,17 +137,33 @@ spplot(NO2sp["mean"],
 #+RESULTS[979e89aa398f2ccf2f32fe340b31dd3124320fe1]:
 [[file:figs/airMadrid_spplot.pdf]]
 
-The =ggplot2= version of this code needs to transform the
-=SpatialPointsDataFrame= to a conventional =data.frame= (which will
-contain two columns with latitude and longitude values).
+** Proportional Symbol with =ggplot=
+#+begin_src R :exports none
+##################################################################
+## Proportional symbol with ggplot
+##################################################################
+#+end_src
+
+The =ggplot2= package is able to display spatial point observations
+with the =geom_sf= function. This function understands the classes
+defined by the =sf= package, that provides the function
+=st_read= to read the data:
+
+#+INDEX: Packages!sf@\texttt{sf}
+#+INDEX: geom_sf\texttt{geom_sf}
 
 #+begin_src R :eval no-export
-NO2df <- data.frame(NO2sp)
-NO2df$Mean <- cut(NO2sp$mean, 5)
-  
-ggplot(data = NO2df,
-       aes(long, lat, size = Mean, fill = Mean)) +
-    geom_point(pch = 21, col = 'black') +
+library(sf)
+
+NO2sf <- st_read(dsn = 'data', layer = 'NO2sp')
+## Create a categorical variable
+NO2sf$Mean <- cut(NO2sf$mean, 5)
+#+end_src
+
+#+begin_src R
+ggplot(data = NO2sf) + 
+    geom_sf(aes(size = Mean, fill = Mean),
+            pch = 21, col = 'black') +
     scale_fill_manual(values = airPal) +
     theme_bw()
 #+end_src
@@ -261,18 +277,16 @@ pNO2
 #+RESULTS[9f53f6015cd95a3fec85c3619d7aba384e1fa0f2]:
 [[file:figs/airMadrid_classes.pdf]]
 
+The =ggplot= version uses the same categorical variable, added to the =NO2sf= object.
 #+begin_src R :eval no-export
 ## ggplot2 version
-NO2df$classNO2 <- factor(names(tab)[idx])  
+NO2sf$classNO2 <- factor(names(tab)[idx])  
 
-ggplot(data = NO2df,
-       aes(long, lat,
-           size = classNO2,
-           fill = classNO2)) +
-    geom_point(pch = 21, col = 'black') +
+ggplot(data = NO2sf) +
+    geom_sf(aes(size = classNO2, fill = classNO2),
+            pch = 21, col = 'black') +
     scale_fill_manual(values = airPal) +
-    scale_size_manual(values = dentAQ*2)  +
-    coord_equal() + 
+    scale_size_manual(values = dentAQ * 2)  +
     xlab("") + ylab("") + theme_bw() 
 #+end_src
 
@@ -324,31 +338,39 @@ madridBox <- t(apply(madridBox, 1,
 
 #+begin_src R 
 library(ggmap)
+
 madridGG <- get_map(c(madridBox),
                     maptype = 'watercolor',
                     source = 'stamen')
 #+end_src
 
+=ggmap= is designed to work with the =ggplot2= package. Unfortunately,
+at the time of writing these pages, it is not able to work with
+=geom_sf=, so the =SpatialPointsDataFrame= object must be converted to
+a =data.frame=.
+
 #+begin_src R :eval no-export
 ## ggmap with ggplot
+NO2df <- as.data.frame(NO2sp)
+
 ggmap(madridGG) +
     geom_point(data = NO2df,
-               aes(long, lat,
-                   size = classNO2,
-                   fill = classNO2),
+                aes(coords.x1, coords.x2, 
+                    size = classNO2,
+                    fill = classNO2),
                pch = 21, col = 'black') +
     scale_fill_manual(values = airPal) +
     scale_size_manual(values = dentAQ*2)
 #+end_src
 
-Although =ggmap= is designed to work with the =ggplot2= package, the
-result of =get_map= is only a =raster= object with attributes. It can
-be added to a =spplot= graphic with the =panel.ggmap= function
-included in the =sp= package. This function is based on the
-=grid.raster= function. Previously, the =SpatialPointsDataFrame= must
-be transformed with =spTransform= because the Stamen maps use the Web
-Mercator projection[fn:7]. The result, using the =sp.layout= argument,
-is shown in Figure ref:fig:airMadrid_stamen.
+The result of =get_map= is only a =raster= object[fn:9] with
+attributes. It can be added to a =spplot= graphic with the
+=panel.ggmap= function included in the =sp= package. This function is
+based on the =grid.raster= function. Previously, the
+=SpatialPointsDataFrame= must be transformed with =spTransform=
+because the Stamen maps use the Web Mercator projection[fn:7]. The
+result, using the =sp.layout= argument, is shown in Figure
+ref:fig:airMadrid_stamen.
 
 #+begin_src R :results output graphics :exports both :file figs/airMadrid_stamen.pdf
 ## ggmap with spplot
@@ -382,14 +404,23 @@ neither modify the image nor use its content to produce additional
 information.  A different approach is to use digital vector data
 (points, lines, and polygons). A popular format for vectorial data is
 the shapefile, commonly used by public and private providers to
-distribute information. A shapefile can be read with =readOGR= from
-the =rgdal= package. The =SpatialPolygonsDataFrame= and
-=SpatialLinesDataFrame= objects produced by this function can be
-displayed with the =sp.polygons= and =sp.lines= functions provided by
-the =sp= package.
+distribute information. For our example, the Madrid district and
+streets are available as shapefiles from the nomecalles web
+service[fn:1].
 
-For our example, the Madrid district and streets are available as
-shapefiles from the nomecalles web service[fn:1].
+A shapefile can be read with =readOGR= from the =rgdal= package, or
+with =st_read= from the =sf= package. 
+
+**** =readOGR= and =spplot=
+#+begin_src R :exports none
+##################################################################
+## rgdal and spplot
+##################################################################
+#+end_src
+
+The =SpatialPolygonsDataFrame= and =SpatialLinesDataFrame= objects
+produced by the =readOGR= function can be displayed with the
+=sp.polygons= and =sp.lines= functions provided by the =sp= package.
 
 #+INDEX: Data!nomecalles
 #+INDEX: spTransform@\texttt{spTransform}
@@ -484,33 +515,68 @@ pNO2 +
 #+RESULTS[9a7c3da06d85b8561c35982dc98f313e21205f1a]:
 [[file:figs/airMadrid.png]]
 
-The =ggplot2= package is not able to work directly with
-=SpatialLines*= or =SpatialPolygon*= objects. Instead, it includes
-several =fortify= methods to convert objects from these classes into a
-conventional =data.frame=. You should beware that the =fortify=
-process for large objects (such as the =SpatialLinesDataFrame= in our
-example) may require a long time to be completed.
-#+begin_src R :exports none :results none
-## ggplot version
-distritosMadridDF <- fortify(distritosMadrid)
-streetsMadridDF <- fortify(streetsMadrid)
 
+**** =sf= and =ggplot=
+#+begin_src R :exports none
+##################################################################
+## sf and ggplot
+##################################################################
+#+end_src
+
+The =sf= objects produced by the =st_read= function can be displayed
+with =ggplot= and =geom_sf=.  The =ggplot2= version of this figure
+uses =geom_sf=. The shapefiles must be read with the =st_read=
+function of the =sf= package.
+
+#+INDEX: Packages!sf@\texttt{sf}
+#+INDEX: st_read\texttt{st_read}
+#+INDEX: st_transform\texttt{st_transform}
+
+#+begin_src R :eval no-export
+library(sf)
+
+## Madrid districts
+distritosMadridSF <- st_read(dsn = 'Distritos de Madrid/',
+                           layer = '200001331')
+distritosMadridSF <- st_transform(distritosMadridSF,
+                               crs = "+proj=longlat +ellps=WGS84")
+
+## Madrid streets
+streetsSF <- st_read(dsn = 'Callejero_ Ejes de viales/',
+                           layer = 'call2011',
+                           crs = '+proj=longlat +ellps=WGS84')
+
+streetsMadridSF <- streetsSF[streetsSF$CMUN=='079',]
+streetsMadridSF <- st_transform(streetsMadridSF,
+                              crs = "+proj=longlat +ellps=WGS84")
+#+end_src
+
+#+begin_src R :exports none :tangle no
+distritosMadridSF <- st_read(dsn = '/home/datos/nomecalles/Distritos de Madrid/',
+                           layer = '200001331')
+distritosMadridSF <- st_transform(distritosMadridSF,
+                               crs = "+proj=longlat +ellps=WGS84")
+
+streetsMadridSF <- st_read(dsn = '/home/datos/nomecalles/Callejero_ Ejes de viales/',
+                         layer = 'streetsMadrid', 
+                         crs = '+proj=longlat +ellps=WGS84')
+#+end_src
+
+#+begin_src R :exports none :results none
 ggplot()+
-    geom_polygon(data = distritosMadridDF,
-                 aes(long, lat, group = id,
-                     fill = NULL, size = NULL),
-                 fill = 'lightgray', alpha = 0.2,
-                 color = 'black') +
-    geom_path(data = streetsMadridDF,
-              aes(long, lat, group = group),
-              color = 'lightgray') +
-    geom_point(data = NO2df,
-               aes(long, lat,
-                   size = classNO2,
-                   fill = classNO2),
-               pch = 21, col = 'black') + 
-    scale_fill_manual(values=airPal) +
-    scale_size_manual(values=dentAQ*2) +
+    geom_sf(data = streetsMadridSF,
+            size = 0.05,
+            color = 'lightgray') +
+    geom_sf(data = distritosMadridSF,
+            fill = 'lightgray', alpha = 0.2,
+            size = 0.3,
+            color = 'black') +
+    geom_sf(data = NO2sf,
+            aes(size = classNO2,
+                fill = classNO2),
+            pch = 21, col = 'black') + 
+    scale_fill_manual(values = airPal) +
+    scale_size_manual(values = dentAQ * 2) +
     theme_bw()
 #+end_src
 
@@ -567,7 +633,6 @@ spplot(airKrige["var1.pred"],
 #+CAPTION: Kriging annual average of $NO_2$ measurements in Madrid. label:fig:airMadrid_krige
 #+RESULTS[e7439ec0ee815727d28fb2e1b30578c2484919e2]:
 [[file:figs/airMadrid_krige.png]]
-
 
 ** Interactive
 Additional Information with Tooltips and Hyperlinks
@@ -729,10 +794,12 @@ file:figs/geojson.png
 #+begin_src R
 library(rgl)
 
+NO2df <- as.data.frame(NO2sp)
+
 colorClasses <- airPal[NO2df$classNO2]
 
-plot3d(x = NO2df$long, 
-       y = NO2df$lat,
+plot3d(x = NO2df$coords.x1, 
+       y = NO2df$coords.x2,
        z = NO2df$alt, 
        xlab = 'Longitude', 
        ylab = 'Latitude', 
@@ -743,23 +810,24 @@ plot3d(x = NO2df$long,
 #+end_src
 
 *** \floweroneleft gridSVG
- #+begin_src R :exports none
+#+begin_src R :exports none
 ##################################################################
 ## gridSVG
 ##################################################################
- #+end_src
- Now, let's suppose you need to know the median and standard deviation
- of the time series of a certain station. Moreover, you would like to
- watch the photography of that station; or even better, you wish to visit
- its webpage for additional information. A frequent solution is to
- produce interactive graphics with tooltips and hyperlinks.
+#+end_src
 
- The =gridSVG= package is able to create an SVG graphic, where each
- component owns a =title= attribute; the content of this attribute is
- commonly displayed as a tooltip when the mouse hovers over the
- element. The content of this attribute can be modified thanks to the
- =grid.garnish= function. Moreover, the =grid.hyperlink= function can
- add hyperlinks to the correspondent graphical element.
+Now, let's suppose you need to know the median and standard deviation
+of the time series of a certain station. Moreover, you would like to
+watch the photography of that station; or even better, you wish to
+visit its webpage for additional information. A frequent solution is
+to produce interactive graphics with tooltips and hyperlinks.
+
+The =gridSVG= package is able to create an SVG graphic, where each
+component owns a =title= attribute; the content of this attribute is
+commonly displayed as a tooltip when the mouse hovers over the
+element. The content of this attribute can be modified thanks to the
+=grid.garnish= function. Moreover, the =grid.hyperlink= function can
+add hyperlinks to the correspondent graphical element.
 
 The tooltips will display the photography of the station, the name of
 the station, and the statistics previously calculated with =aggregate=
@@ -769,8 +837,8 @@ from the Munimadrid webpage.
 http://www.mambiente.munimadrid.es/opencms/opencms/calaire/SistemaIntegral/SistVigilancia/Estaciones/
 
 The =htmlParse= function from the =XML= package parses each station
- page, and the station photograph is extracted with =getNodeSet= and
- =xmlAttrs=.
+page, and the station photograph is extracted with =getNodeSet= and
+=xmlAttrs=.
 
 
  #+INDEX: Packages!XML@\texttt{XML}
@@ -914,6 +982,8 @@ file:figs/airMadridTooltip.png
 
 
 * Footnotes
+
+[fn:9] Do not confuse a =raster= object with the =Raster*= objects of the =raster= package.
 
 [fn:7] https://epsg.io/3857
 

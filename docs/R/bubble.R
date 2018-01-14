@@ -62,12 +62,19 @@ spplot(NO2sp["mean"],
        scales = list(draw = TRUE), ## Draw scales
        key.space = 'right') ## Put legend on the right
 
-NO2df <- data.frame(NO2sp)
-NO2df$Mean <- cut(NO2sp$mean, 5)
-  
-ggplot(data = NO2df,
-       aes(long, lat, size = Mean, fill = Mean)) +
-    geom_point(pch = 21, col = 'black') +
+##################################################################
+## Proportional symbol with ggplot
+##################################################################
+
+library(sf)
+
+NO2sf <- st_read(dsn = 'data', layer = 'NO2sp')
+## Create a categorical variable
+NO2sf$Mean <- cut(NO2sf$mean, 5)
+
+ggplot(data = NO2sf) + 
+    geom_sf(aes(size = Mean, fill = Mean),
+            pch = 21, col = 'black') +
     scale_fill_manual(values = airPal) +
     theme_bw()
 
@@ -114,16 +121,13 @@ pNO2 <- spplot(NO2sp["classNO2"],
 pNO2
 
 ## ggplot2 version
-NO2df$classNO2 <- factor(names(tab)[idx])  
+NO2sf$classNO2 <- factor(names(tab)[idx])  
 
-ggplot(data = NO2df,
-       aes(long, lat,
-           size = classNO2,
-           fill = classNO2)) +
-    geom_point(pch = 21, col = 'black') +
+ggplot(data = NO2sf) +
+    geom_sf(aes(size = classNO2, fill = classNO2),
+            pch = 21, col = 'black') +
     scale_fill_manual(values = airPal) +
-    scale_size_manual(values = dentAQ*2)  +
-    coord_equal() + 
+    scale_size_manual(values = dentAQ * 2)  +
     xlab("") + ylab("") + theme_bw()
 
 ##################################################################
@@ -141,16 +145,19 @@ madridBox <- t(apply(madridBox, 1,
                    extendrange, f = 0.05))
 
 library(ggmap)
+
 madridGG <- get_map(c(madridBox),
                     maptype = 'watercolor',
                     source = 'stamen')
 
 ## ggmap with ggplot
+NO2df <- as.data.frame(NO2sp)
+
 ggmap(madridGG) +
     geom_point(data = NO2df,
-               aes(long, lat,
-                   size = classNO2,
-                   fill = classNO2),
+                aes(coords.x1, coords.x2, 
+                    size = classNO2,
+                    fill = classNO2),
                pch = 21, col = 'black') +
     scale_fill_manual(values = airPal) +
     scale_size_manual(values = dentAQ*2)
@@ -172,6 +179,10 @@ spplot(NO2merc["classNO2"],
 
 ##################################################################
 ## Vector data
+##################################################################
+
+##################################################################
+## rgdal and spplot
 ##################################################################
 
 library(rgdal)
@@ -222,26 +233,41 @@ pNO2 +
         sp.lines(streetsMadrid, lwd = 0.05)
     })
 
-## ggplot version
-distritosMadridDF <- fortify(distritosMadrid)
-streetsMadridDF <- fortify(streetsMadrid)
+##################################################################
+## sf and ggplot
+##################################################################
+
+library(sf)
+
+## Madrid districts
+distritosMadridSF <- st_read(dsn = 'Distritos de Madrid/',
+                           layer = '200001331')
+distritosMadridSF <- st_transform(distritosMadridSF,
+                               crs = "+proj=longlat +ellps=WGS84")
+
+## Madrid streets
+streetsSF <- st_read(dsn = 'Callejero_ Ejes de viales/',
+                           layer = 'call2011',
+                           crs = '+proj=longlat +ellps=WGS84')
+
+streetsMadridSF <- streetsSF[streetsSF$CMUN=='079',]
+streetsMadridSF <- st_transform(streetsMadridSF,
+                              crs = "+proj=longlat +ellps=WGS84")
 
 ggplot()+
-    geom_polygon(data = distritosMadridDF,
-                 aes(long, lat, group = id,
-                     fill = NULL, size = NULL),
-                 fill = 'lightgray', alpha = 0.2,
-                 color = 'black') +
-    geom_path(data = streetsMadridDF,
-              aes(long, lat, group = group),
-              color = 'lightgray') +
-    geom_point(data = NO2df,
-               aes(long, lat,
-                   size = classNO2,
-                   fill = classNO2),
-               pch = 21, col = 'black') + 
-    scale_fill_manual(values=airPal) +
-    scale_size_manual(values=dentAQ*2) +
+    geom_sf(data = streetsMadridSF,
+            size = 0.05,
+            color = 'lightgray') +
+    geom_sf(data = distritosMadridSF,
+            fill = 'lightgray', alpha = 0.2,
+            size = 0.3,
+            color = 'black') +
+    geom_sf(data = NO2sf,
+            aes(size = classNO2,
+                fill = classNO2),
+            pch = 21, col = 'black') + 
+    scale_fill_manual(values = airPal) +
+    scale_size_manual(values = dentAQ * 2) +
     theme_bw()
 
 ##################################################################
@@ -335,10 +361,12 @@ writeOGR(NO2sp, 'data/NO2.geojson', 'NO2sp', driver='GeoJSON')
 
 library(rgl)
 
+NO2df <- as.data.frame(NO2sp)
+
 colorClasses <- airPal[NO2df$classNO2]
 
-plot3d(x = NO2df$long, 
-       y = NO2df$lat,
+plot3d(x = NO2df$coords.x1, 
+       y = NO2df$coords.x2,
        z = NO2df$alt, 
        xlab = 'Longitude', 
        ylab = 'Latitude', 
