@@ -14,14 +14,6 @@ setwd('~/github/bookvis/')
 ## with setwd to the folder where the repository is located.
 #+end_src
 
-* Vector Fields
-label:sec:vector
-
-#+begin_src R :exports none
-##################################################################
-## Vector fields
-##################################################################
-#+end_src
 
 Many objects in our natural environment exhibit directional
 features that are naturally represented by vector data. Vector
@@ -31,7 +23,9 @@ electromagnetic forces. A suitable visualization method has to
 display both the magnitude and the direction of the vectors at any
 point.
 
-This section illustrates two visualization techniques, arrow plots and
+* Introduction
+
+This chapter illustrates two visualization techniques, arrow plots and
 stream lines, with the help of the wind direction and speed forecast
 published by MeteoGalicia (see Section ref:sec:animationST_var for
 details).
@@ -52,7 +46,7 @@ windField <- stack(wSpeed, wDir)
 names(windField) <- c('magnitude', 'direction')
 #+end_src
 
-** Arrow Plot
+* Arrow Plot
 #+begin_src R :exports none
 ##################################################################
 ## Arrow plot
@@ -79,7 +73,7 @@ vectorplot(windField, isField = TRUE,
 #+RESULTS:
 [[file:figs/vectorplot.pdf]]
 
-** Streamlines
+* Streamlines
 #+begin_src R :exports none
 ##################################################################
 ## Streamlines

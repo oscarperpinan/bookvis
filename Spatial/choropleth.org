@@ -55,13 +55,7 @@ lattice.options(default.theme = myTheme,
 #+RESULTS:
 
 
-* Choropleth Maps
-\label{sec:multiChoropleth}
-#+begin_src R :exports none
-##################################################################
-## Choropleth maps
-##################################################################
-#+end_src
+
 
 A choropleth map shades regions according to the measurement of a
 variable displayed on the map. The choropleth map is an appropriate
@@ -69,7 +63,8 @@ tool to visualize a variable uniformly distributed within each region,
 changing only at the region boundaries. This method performs correctly
 with homogeneous regions, both in size and shape.
 
-This section details how to create choropleth maps depicting the
+* Introduction
+This chapter details how to create choropleth maps depicting the
 results of the 2016 Spanish general elections. The section
 ref:sec:dataChoropleth describes how to define a
 =SpatialPolygonsDataFrame= combining the data from a =data.frame= and
@@ -137,7 +132,7 @@ provinceLines <- list("sp.polygons", provinces, lwd = 0.1)
 
 #+RESULTS:
 
-** Quantitative variable
+* Quantitative variable
 label:sec:quantitative_choropleth
 
 First, let's display =pcMax=, a quantitative variable increasing from
@@ -286,7 +281,7 @@ spplot(spMapVotes["pcMaxInt"],
 [[file:figs/pcMax.pdf]]
 
 
-** Qualitative variable
+* Qualitative variable
 
 On the other hand, =whichMax= is a categorical value with four levels:
 the main parties (=PP=, =PSOE=, =UP=, =Cs=), the abstention results
@@ -328,7 +323,7 @@ spplot(spMapVotes["whichMax"],
 #+RESULTS:
 [[file:figs/whichMax.pdf]]
 
-** ggplot2
+* ggplot2
 25830 http://spatialreference.org/ref/epsg/etrs89-utm-zone-30n/
 "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"
 
@@ -372,9 +367,9 @@ ggplot(sfMapVotes) +
     theme_bw()
 #+end_src
 
-** Categorical and Quantitative Variables combined in a Multivariate Choropleth Map
+* Categorical and Quantitative Variables combined in a Multivariate Choropleth Map
 
-*** Matrix of graphics
+** Matrix of graphics
 #+begin_src R
 ## spplot version
 spplot(spMapVotes, "pcMaxInt",
@@ -399,7 +394,8 @@ ggplot(sfMapVotes) +
     theme_bw()
 #+end_src
 
-*** Multivariate map
+** Multivariate map
+label:sec:multiChoropleth
 #+begin_src R :exports none
 ##################################################################
 ## Categorical and quantitative variables combined in a multivariate choropleth map
@@ -506,7 +502,7 @@ p + legend +
 #+RESULTS:
 [[file:figs/mapLegends.png]]
 
-** Interactive
+* Interactive
 
 #+begin_src R
 library(mapview)

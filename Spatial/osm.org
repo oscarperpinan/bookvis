@@ -14,13 +14,7 @@ setwd('~/github/bookvis/')
 ## with setwd to the folder where the repository is located.
 #+end_src
 
-* \floweroneleft OpenStreetMap with Hill Shade Layers
-
-#+begin_src R :exports none
-##################################################################
-## OpenStreetMap with Hill Shade layers
-##################################################################
-#+end_src
+* Reference maps
 
 Although I was born in Madrid, Galicia (north of Spain) is a very
 special region for me. More precisely, the Cedeira and Valdoviño

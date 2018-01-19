@@ -49,25 +49,6 @@ lattice.options(default.theme = myTheme,
 #+end_src
 
 
-* Proportional Symbol Mapping
-label:sec:bubble
-#+begin_src R :exports none
-##################################################################
-## Proportional symbol mapping
-##################################################################
-#+end_src
-
-#+RESULTS:
-   
-** Introduction
-#+begin_src R :exports none
-##################################################################
-## Introduction
-##################################################################
-#+end_src
-
-#+RESULTS:
-
 The proportional symbol technique uses symbols of different sizes
 to represent data associated with areas or point locations, with
 circles being the most frequently used geometric symbol. The data
@@ -78,6 +59,7 @@ mathematical scaling to account for visual understimation of
 larger symbols; and range grading, where data are grouped, and each
 class is represented with a single symbol size. 
 
+* Introduction
 In this chapter we display data from a grid of sensors belonging to
 the Integrated Air Quality system of the Madrid City Council (Section
 ref:sec:airQualityData) with circles as the proportional symbol, and
@@ -90,7 +72,7 @@ task. Colors from a sequential palette will complement symbol size to
 encode the groups.
 
 
-** Proportional Symbol with =spplot=
+* Proportional Symbol with =spplot=
 #+begin_src R :exports none
 ##################################################################
 ## Proportional symbol with spplot
@@ -136,7 +118,7 @@ spplot(NO2sp["mean"],
 #+RESULTS[979e89aa398f2ccf2f32fe340b31dd3124320fe1]:
 [[file:figs/airMadrid_spplot.pdf]]
 
-** Proportional Symbol with =ggplot=
+* Proportional Symbol with =ggplot=
 #+begin_src R :exports none
 ##################################################################
 ## Proportional symbol with ggplot
@@ -169,7 +151,7 @@ ggplot(data = NO2sf) +
 
 #+RESULTS:
 
-** Optimal Classification and Sizes to Improve Discrimination
+* Optimal Classification and Sizes to Improve Discrimination
 label:sec:classification_bubble
 #+begin_src R :exports none
 ##################################################################
@@ -291,7 +273,7 @@ ggplot(data = NO2sf) +
 
 #+RESULTS:
 
-** Spatial Context with Underlying Layers and Labels
+* Spatial Context with Underlying Layers and Labels
 #+begin_src R :exports none
 ##################################################################
 ## Spatial context with underlying layers and labels
@@ -304,7 +286,7 @@ The spatial distribution of the stations is better understood if
 we add underlying layers with information about the spatial
 context. 
 
-*** Static Image
+** Static Image
 #+begin_src R :exports none
 ##################################################################
 ## Static image
@@ -392,7 +374,7 @@ spplot(NO2merc["classNO2"],
 #+RESULTS[fea21c22315e2622233bf425bdcf71b27918f9e1]:
 [[file:figs/airMadrid_stamen.pdf]]
 
-*** Vector Data
+** Vector Data
 #+begin_src R :exports none
 ##################################################################
 ## Vector data
@@ -410,7 +392,7 @@ service[fn:1].
 A shapefile can be read with =readOGR= from the =rgdal= package, or
 with =st_read= from the =sf= package. 
 
-**** =readOGR= and =spplot=
+*** =readOGR= and =spplot=
 #+begin_src R :exports none
 ##################################################################
 ## rgdal and spplot
@@ -514,7 +496,7 @@ pNO2 +
 [[file:figs/airMadrid.png]]
 
 
-**** =sf= and =ggplot=
+*** =sf= and =ggplot=
 #+begin_src R :exports none
 ##################################################################
 ## sf and ggplot
@@ -579,7 +561,7 @@ ggplot()+
 #+end_src
 
 
-** Spatial Interpolation
+* Spatial Interpolation
 #+begin_src R :exports none
 ##################################################################
 ## Spatial interpolation
@@ -632,9 +614,9 @@ spplot(airKrige["var1.pred"],
 #+RESULTS[e7439ec0ee815727d28fb2e1b30578c2484919e2]:
 [[file:figs/airMadrid_krige.png]]
 
-** Interactive
+* Interactive
 Additional Information with Tooltips and Hyperlinks
-*** mapview
+** mapview
 #+begin_src R :exports none
 ##################################################################
 ## mapView
@@ -651,7 +633,7 @@ mapview(NO2sp, zcol = "mean", cex = "mean",
         label = NO2sp$Nombre)
 #+end_src
 
-**** Popup Image
+*** Popup Image
 #+begin_src R
 img <- paste('images/', NO2sp$codEst, '.jpg', sep='')
 
@@ -662,7 +644,7 @@ mapview(NO2sp, zcol = "mean", cex = "mean",
         popup = popupImage(img, src = "local"))
 #+end_src
 
-**** Popup Graph
+*** Popup Graph
 #+begin_src R
 airQuality <- read.csv2('data/airQuality.csv')
 
@@ -688,7 +670,7 @@ mapview(NO2sp, zcol = "mean", cex = "mean",
         popup = popupGraph(pList))
 #+end_src
 
-**** Sync
+*** Sync
 
 Providers: http://leaflet-extras.github.io/leaflet-providers/preview/
 
@@ -711,14 +693,14 @@ mapSD <- mapview(NO2sp, zcol = "sd", cex = "sd",
 sync(mapMean, mapMedian, mapSD, ncol = 3)
 #+end_src
 
-*** Export to Other Formats
+** Export to Other Formats
 
- A different approach is to use an external data viewer, due to its
- features or its large community of users. Two tools deserve to be
- mentioned: GeoJSON rendered within GitHub repositories, and KML files
- imported in Google Earth\texttrademark.
+A different approach is to use an external data viewer, due to its
+features or its large community of users. Two tools deserve to be
+mentioned: GeoJSON rendered within GitHub repositories, and KML files
+imported in Google Earth\texttrademark.
 
-**** GeoJSON and OpenStreetMap
+*** GeoJSON and OpenStreetMap
 #+begin_src R :exports none
 ##################################################################
 ## GeoJSON and OpenStreepMap
@@ -750,7 +732,7 @@ on the map and click on the stations to display the data.
 file:figs/geojson.png
 
 
-**** Keyhole Markup Language
+*** Keyhole Markup Language
 
 Keyhole Markup Language (KML) is a file format to display geographic
 data within Internet-based, two-dimensional maps and three-dimensional
@@ -786,7 +768,7 @@ plotKML(NO2sp["mean"], points_names=NO2sp$codEst)
 Both functions produce a file that can be directly opened with Google
 Earth or Marble.
 
-*** rgl
+** rgl
 #+begin_src R
 library(rgl)
 
@@ -805,7 +787,7 @@ plot3d(x = NO2df$coords.x1,
        radius = NO2df$mean/10)
 #+end_src
 
-*** \floweroneleft gridSVG
+** \floweroneleft gridSVG
 #+begin_src R :exports none
 ##################################################################
 ## gridSVG

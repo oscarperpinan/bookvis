@@ -353,7 +353,7 @@ label:part:Spatial
 
  Real objects represented by GIS data can be divided into two abstractions: discrete objects (e.g., a road or a river) represented with vector data (points, lines, and polygons), and continuous fields (such as elevation or solar radiation) represented with raster data. The =sp= and =sf= packages are the preferred option to use vector data in =R=, and the =raster= package is the choice for raster data [fn:18].
 
- This part exposes several examples where vector and raster data are displayed to show geographic location of features and physical landscape features of a place (reference and physical maps, Chapter ref:cha:refer-phys-maps) or a specific variable in the context of a geographic reference (thematic maps, Chapter ref:cha:thematicMaps). These examples make use of several datasets (available at the book website) described in Chapter ref:cha:dataSpatial.
+ This part exposes several examples where vector and raster data are displayed to show geographic location of features and physical landscape features of a place (reference and physical maps, Chapter ref:cha:refer-phys-maps) or a specific variable in the context of a geographic reference (thematic maps, Chapters ref:cha:bubble, ref:cha:choropleth, and ref:cha:raster). These examples make use of several datasets (available at the book website) described in Chapter ref:cha:dataSpatial.
 
 *** Packages
   label:sec:spatial-packages
@@ -515,22 +515,37 @@ The =sf= package implements =plot= methods for displaying data using =base= grap
 
  -  The "Spatial.ly" [fn:29] and "Kartograph" [fn:30] webpages publish a variety of beautiful visualization examples.
 
-** Thematic Maps
- label:cha:thematicMaps
+** Thematic Maps: Proportional Symbol Mapping
+label:cha:bubble
 
- A thematic map focuses on a specific theme or variable, commonly using geographic data such as coastlines, boundaries, and places as points of reference for the variable being mapped. These maps provide specific information about particular locations or areas (proportional symbol mapping and choropleth maps) and information about spatial patterns (isarithmic and raster maps). The following sections illustrate the code you need to produce these maps, with a final section devoted to the visualization of vector fields.
+A thematic map focuses on a specific theme or variable, commonly using geographic data such as coastlines, boundaries, and places as points of reference for the variable being mapped. These maps provide specific information about particular locations or areas (proportional symbol mapping and choropleth maps) and information about spatial patterns (isarithmic and raster maps). The present and following chapters illustrate the code you need to produce these maps.
+
 #+INCLUDE: "Spatial/bubble.org"
+
+** Thematic Maps: Choropleth Maps
+label:cha:choropleth
+
 #+INCLUDE: "Spatial/choropleth.org"
+
+** Thematic Maps: Raster Maps
+label:cha:raster
+
 #+INCLUDE: "Spatial/raster.org"
+
+** Vector Data
+label:cha:vector
+
 #+INCLUDE: "Spatial/vector.org"
 
-** Reference and Physical Maps
+** Physical and Reference Maps
  label:cha:refer-phys-maps
 
- A reference map focuses on the geographic location of features. In these maps, cities are named and major transport routes are identified. In addition, natural features such as rivers and mountains are named, and elevation is shown using a simple color shading.
  A physical map shows the physical landscape features of a place.  Mountains and elevation changes are usually shown with different colors and shades to show relief, using green to show lower elevations and browns for high elevations.
 
- This chapter details how to create a reference map of a northern region of Spain using data from OpenStreetMap and a physical map of Brazil with data from different sources.
+ A reference map focuses on the geographic location of features. In these maps, cities are named and major transport routes are identified. In addition, natural features such as rivers and mountains are named, and elevation is shown using a simple color shading.
+
+ This chapter details how to create a physical map of Brazil with data from different sources, and a reference map of a northern region of Spain using data from OpenStreetMap.
+
 #+INCLUDE: "Spatial/physical.org"
 #+INCLUDE: "Spatial/osm.org"
 
