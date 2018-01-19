@@ -27,7 +27,7 @@ Sys.setlocale("LC_TIME", 'C')
 
 In the chapter ref:cha:rasterST a multilayer raster is displayed as a
 3D object with a matrix of levelplots using the small-multiple
-technique (section ref:sec:levelplot) and as a 2D object after
+technique (section ref:sec:levelplot_st) and as a 2D object after
 aggregation following a certain direction (section
 ref:sec:spacetime_plot).
 
@@ -241,7 +241,7 @@ the entire 3D dataset.
 
 ** 3D animation
 
-In section ref:sec:3dvisualiation an interactive 3D plot of a Digital
+In section ref:sec:3dvisualization an interactive 3D plot of a Digital
 Elevation Model was produced with the =rgl= package, a visualization
 device system for R using OpenGL as the rendering backend. With the
 next code this package generates a 3D animation depicting the cloud

@@ -30,7 +30,7 @@ dioxide, and environmental noise[fn:1].
 
 The surveillance system of the Integrated Air Quality system of the
 Madrid City Council consists of twenty-four remote stations, equipped
-with analyzers for gases (NO_{X}, CO, ozone, BT_{X}, HCs, SO_{2}) and
+with analyzers for gases ($NO_X$, CO, ozone, $BT_X$, HCs, $SO_2$) and
 particles (PM10, PM2.5), which measure pollution in different areas of
 the urban environment. In addition, many of the stations also include
 sensors to provide meteorological data.
@@ -524,19 +524,19 @@ package.
 
 * Footnotes
 
-[fn:7] [[http://www.ine.es/]] > Products and services > Publications > Download the PC-Axis program > Municipal maps
+[fn:7] http://www.ine.es/ > Products and services > Publications > Download the PC-Axis program > Municipal maps
 
-[fn:1] [[http://www.eea.europa.eu/soer/countries/es/]]
+[fn:1] http://www.eea.europa.eu/soer/countries/es/
 
 [fn:2] http://www.mambiente.munimadrid.es/opencms/opencms/calaire/consulta/descarga_opendata.html
 
-[fn:3] [[http://www.mambiente.munimadrid.es/opencms/export/sites/default/calaire/Anexos/INTPHORA-DIA.pdf]]
+[fn:3] http://www.mambiente.munimadrid.es/opencms/export/sites/default/calaire/Anexos/INTPHORA-DIA.pdf
 
-[fn:4] [[http://www.bsrn.awi.de/en/home/]]
+[fn:4] http://www.bsrn.awi.de/en/home/
 
-[fn:5] [[http://eospso.gsfc.nasa.gov/]]
+[fn:5] http://eospso.gsfc.nasa.gov/
 
-[fn:6] [[http://neo.sci.gsfc.nasa.gov]]
+[fn:6] http://neo.sci.gsfc.nasa.gov
 
 [fn:9] https://en.wikipedia.org/wiki/Spanish_general_election,_2016
 

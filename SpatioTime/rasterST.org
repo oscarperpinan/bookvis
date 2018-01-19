@@ -217,7 +217,7 @@ strongly nonlinear due to the presence of clouds.
 The level plots of Figures [[fig:SISdm]] and [[fig:SISmm]]
 display the full 3D space-time with a grid of panels where each layer
 is printed. In other words, the raster is sliced, and the collection of
-pieces is shown in a table. In the section ref:sec:animationST, this
+pieces is shown in a table. In the section ref:sec:animationST_var, this
 collection of layers will be displayed sequentially like frames of a
 movie to build an animation. In this section, the 3D raster is reduced
 to a 2D matrix with spatial aggregation following a certain

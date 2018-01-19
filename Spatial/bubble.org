@@ -48,7 +48,6 @@ lattice.options(default.theme = myTheme,
                 default.args = modifyList(defaultArgs, myArgs))
 #+end_src
 
-#+RESULTS:
 
 * Proportional Symbol Mapping
 label:sec:bubble
@@ -150,7 +149,7 @@ defined by the =sf= package, that provides the function
 =st_read= to read the data:
 
 #+INDEX: Packages!sf@\texttt{sf}
-#+INDEX: geom_sf\texttt{geom_sf}
+#+INDEX: geom_sf@\texttt{geom\_sf}
 
 #+begin_src R :eval no-export
 library(sf)
@@ -510,8 +509,7 @@ pNO2 +
     })
 #+end_src
 
-#+CAPTION: Annual average of $NO_2$ measurements in Madrid using shapefiles (lines and polygons) and text as geographical context.
-#+NAME: fig:airMadrid
+#+CAPTION: Annual average of $NO_2$ measurements in Madrid using shapefiles (lines and polygons) and text as geographical context. label:fig:airMadrid
 #+RESULTS[9a7c3da06d85b8561c35982dc98f313e21205f1a]:
 [[file:figs/airMadrid.png]]
 
@@ -529,8 +527,8 @@ uses =geom_sf=. The shapefiles must be read with the =st_read=
 function of the =sf= package.
 
 #+INDEX: Packages!sf@\texttt{sf}
-#+INDEX: st_read\texttt{st_read}
-#+INDEX: st_transform\texttt{st_transform}
+#+INDEX: st_read@\texttt{st\_read}
+#+INDEX: st_transform@\texttt{st\_transform}
 
 #+begin_src R :eval no-export
 library(sf)
@@ -721,35 +719,32 @@ sync(mapMean, mapMedian, mapSD, ncol = 3)
  imported in Google Earth\texttrademark.
 
 **** GeoJSON and OpenStreetMap
- #+begin_src R :exports none
+#+begin_src R :exports none
 ##################################################################
 ## GeoJSON and OpenStreepMap
 ##################################################################
- #+end_src
- GeoJSON is an open computer file format for encoding collections of
- simple geographical features along with their nonspatial attributes
- using JavaScript Object Notation (JSON). These files can be easily
- rendered within GitHub repositories. GitHub uses Leaflet.js[fn:4] to
- represent the data and MapBox[fn:2] with OpenStreetMap[fn:3] for the
- underlying map data.
+#+end_src
+GeoJSON is an open computer file format for encoding collections of
+simple geographical features along with their nonspatial attributes
+using JavaScript Object Notation (JSON). These files can be easily
+rendered within GitHub repositories. GitHub uses Leaflet[fn:4] to
+represent the data and MapBox[fn:2] with OpenStreetMap[fn:10] for the
+underlying map data. Our =SpatialPointsDataFrame= can be converted to
+a GeoJSON file with =writeOGR= from the =rgdal= package.
 
- Our =SpatialPointsDataFrame= can be converted to a GeoJSON file with
- =writeOGR= from the =rgdal= package. 
-
-
- #+INDEX: Packages!rgdal@\texttt{rgdal}
- #+INDEX: writeOGR@\texttt{writeOGR}
- #+INDEX: GeoJSON
+#+INDEX: Packages!rgdal@\texttt{rgdal}
+#+INDEX: writeOGR@\texttt{writeOGR}
+#+INDEX: GeoJSON
 
 
- #+begin_src R :eval no-export
+#+begin_src R :eval no-export
 library(rgdal)
 writeOGR(NO2sp, 'data/NO2.geojson', 'NO2sp', driver='GeoJSON')
- #+end_src
+#+end_src
 
- Figure ref:fig:geojson shows a snapshot of the rendering of this
- GeoJSON file, available from the GitHub repository. There you can zoom
- on the map and click on the stations to display the data.
+Figure ref:fig:geojson shows a snapshot of the rendering of this
+GeoJSON file, available from the GitHub repository. There you can zoom
+on the map and click on the stations to display the data.
 
 #+CAPTION: label:fig:geojson $NO_2$ data in a GeoJSON file rendered within the GitHub repository.
 file:figs/geojson.png
@@ -757,38 +752,39 @@ file:figs/geojson.png
 
 **** Keyhole Markup Language
 
- Keyhole Markup Language (KML) is a file format to display geographic
- data within Internet-based, two-dimensional maps and three-dimensional
- Earth browsers. KML uses a tag-based structure with nested elements
- and attributes, and is based on the XML standard. KML became an
- international standard of the Open Geospatial Consortium
- in 2008. Google Earth was the first program able to view and
- graphically edit KML files, although Marble, an open-source project,
- also offers KML support.
+Keyhole Markup Language (KML) is a file format to display geographic
+data within Internet-based, two-dimensional maps and three-dimensional
+Earth browsers. KML uses a tag-based structure with nested elements
+and attributes, and is based on the XML standard. KML became an
+international standard of the Open Geospatial Consortium
+in 2008. Google Earth was the first program able to view and
+graphically edit KML files, although Marble, an open-source project,
+also offers KML support.
+
+#+INDEX: Packages!rgdal@\texttt{rgdal}
+#+INDEX: Packages!plotKML@\texttt{plotKML}
+#+INDEX: KML
 
 
- #+INDEX: Packages!rgdal@\texttt{rgdal}
- #+INDEX: Packages!plotKML@\texttt{plotKML}
- #+INDEX: KML
+There are several packages able to generate KML files. For example,
+the =writeOGR= function from the =rgdal= package can also write KML
+files:
 
+#+begin_src R :eval no-export
+library(rgdal)
+writeOGR(NO2sp, dsn='NO2_mean.kml', layer='mean', driver='KML')
+#+end_src
 
- There are several packages able to generate KML files. For example,
- the =writeOGR= function from the =rgdal= package can also write KML
- files:
- #+begin_src R :eval no-export
-  library(rgdal)
-  writeOGR(NO2sp, dsn='NO2_mean.kml', layer='mean', driver='KML')
- #+end_src
+However, the =plotKML= package provides a simpler interface and
+includes a wide set of options:
 
- However, the =plotKML= package provides a simpler interface and
- includes a wide set of options:
- #+begin_src R :eval no-export
-  library(plotKML)
-  plotKML(NO2sp["mean"], points_names=NO2sp$codEst)
- #+end_src
+#+begin_src R :eval no-export
+library(plotKML)
+plotKML(NO2sp["mean"], points_names=NO2sp$codEst)
+#+end_src
 
- Both functions produce a file that can be directly opened with Google
- Earth or Marble.
+Both functions produce a file that can be directly opened with Google
+Earth or Marble.
 
 *** rgl
 #+begin_src R
@@ -841,16 +837,17 @@ page, and the station photograph is extracted with =getNodeSet= and
 =xmlAttrs=.
 
 
- #+INDEX: Packages!XML@\texttt{XML}
- #+INDEX: htmlParse@\texttt{htmlParse}
- #+INDEX: getNodeSet@\texttt{getNodeSet}
+#+INDEX: Packages!XML@\texttt{XML}
+#+INDEX: htmlParse@\texttt{htmlParse}
+#+INDEX: getNodeSet@\texttt{getNodeSet}
 
 
- #+begin_src R :eval no-export
-  library(XML)
+#+begin_src R :eval no-export
+library(XML)
 
-  old <- setwd('images')
-  for (i in 1:nrow(NO2df)){
+old <- setwd('images')
+for (i in 1:nrow(NO2df))
+{
     codEst <- NO2df[i, "codEst"]
     ## Webpage of each station
     codURL <- as.numeric(substr(codEst, 7, 8))
@@ -865,32 +862,33 @@ page, and the station photograph is extracted with =getNodeSet= and
     imageURL <- xmlAttrs(imageStation)[1]
     imageURL <- paste(rootURL, imageURL, sep='')
     download.file(imageURL, destfile=paste(codEst, '.jpg', sep=''))
-  }
-  setwd(old)
- #+end_src
+}
+setwd(old)
+#+end_src
 
- Next, we attach the hyperlink and the SVG information to each
- circle.
- 
-
-
- #+INDEX: Packages!gridSVG@\texttt{gridSVG}
- #+INDEX: JavaScript
- #+INDEX: grid.garnish@\texttt{grid.garnish}
- #+INDEX: grid.hyperlink@\texttt{grid.hyperlink}
- #+INDEX: grid.export@\texttt{grid.export}
+Next, we attach the hyperlink and the SVG information to each
+circle.
 
 
- #+begin_src R 
-  print(pNO2 + layer_(sp.polygons(distritosMadrid, fill='gray97', lwd=0.3)))
- #+end_src
 
- #+begin_src R 
-  library(gridSVG)
-  
-  NO2df <- as.data.frame(NO2sp)
-  
-  tooltips <- sapply(seq_len(nrow(NO2df)), function(i){
+#+INDEX: Packages!gridSVG@\texttt{gridSVG}
+#+INDEX: JavaScript
+#+INDEX: grid.garnish@\texttt{grid.garnish}
+#+INDEX: grid.hyperlink@\texttt{grid.hyperlink}
+#+INDEX: grid.export@\texttt{grid.export}
+
+
+#+begin_src R 
+print(pNO2 + layer_(sp.polygons(distritosMadrid, fill='gray97', lwd=0.3)))
+#+end_src
+
+#+begin_src R 
+library(gridSVG)
+
+NO2df <- as.data.frame(NO2sp)
+
+tooltips <- sapply(seq_len(nrow(NO2df)), function(i)
+{
     codEst <- NO2df[i, "codEst"]
     ## Information to be attached to each line
     stats <- paste(c('Mean', 'Median', 'SD'),
@@ -907,74 +905,74 @@ page, and the station photograph is extracted with =getNodeSet= and
     info <- paste(nameStation, stats, sep='<br />')
     ## Tooltip includes the image and the text
     paste(imageInfo, info, sep='<br />')
-  })
-  grid.garnish('points.panel', title=tooltips,  grep=TRUE, group=FALSE)
- #+end_src
+})
+grid.garnish('points.panel', title=tooltips,  grep=TRUE, group=FALSE)
+#+end_src
 
- #+RESULTS[b2d8b3e7ab5cc3986acf8d01610339b0a26d0eb0]:
+#+RESULTS[b2d8b3e7ab5cc3986acf8d01610339b0a26d0eb0]:
 
 
- #+begin_src R 
-  ## Webpage of each station
-  rootURL <- 'http://www.mambiente.munimadrid.es'
-  urlList <- sapply(seq_len(nrow(NO2df)), function(i){
+#+begin_src R 
+## Webpage of each station
+rootURL <- 'http://www.mambiente.munimadrid.es'
+urlList <- sapply(seq_len(nrow(NO2df)), function(i){
     codEst <- NO2df[i, "codEst"]
     codURL <- as.numeric(substr(codEst, 7, 8))
     stationURL <- paste(rootURL,
                         '/opencms/opencms/calaire/contenidos/estaciones/estacion',
                         codURL, '.html', sep='')
-    })
-  
-  grid.hyperlink('points.panel', urlList, grep=TRUE, group=FALSE)
- #+end_src
+})
 
- #+RESULTS[8191337354457eb6b2b7c4cf4beb3f2e521fec4c]:
+grid.hyperlink('points.panel', urlList, grep=TRUE, group=FALSE)
+#+end_src
 
- The =title= attribute can be accessed with the JavaScript plug-ins
- jQuery[fn:8] and jQuery UI[fn:6] to display tooltips when the mouse
- hovers over each station. The =grid.script= function creates objects
- containing links to these plug-ins. And =grid.export= uses these
- objects to produce an SVG document with script elements.
+#+RESULTS[8191337354457eb6b2b7c4cf4beb3f2e521fec4c]:
 
-
- #+INDEX: jQuery
- #+INDEX: jQuery UI
+The =title= attribute can be accessed with the JavaScript plug-ins
+jQuery[fn:8] and jQuery UI[fn:6] to display tooltips when the mouse
+hovers over each station. The =grid.script= function creates objects
+containing links to these plug-ins. And =grid.export= uses these
+objects to produce an SVG document with script elements.
 
 
- #+begin_src R
-  ## Add jQuery and jQuery UI scripts
-  grid.script(file='http://code.jquery.com/jquery-1.8.3.js')
-  grid.script(file='http://code.jquery.com/ui/1.9.2/jquery-ui.js')
-  ## Simple JavaScript code to initialize the tooltip
-  grid.script(file='js/myTooltip.js')
-  ## Produce the SVG graphic: the results of grid.garnish,
-  ## grid.hyperlink and grid.script are converted to SVG code
-  grid.export('figs/airMadrid.svg')
- #+end_src
+#+INDEX: jQuery
+#+INDEX: jQuery UI
 
- These plug-ins will work only after the file =airMadrid.svg= created by
- =grid.export= is inserted in a HTML file with standard headers. Figure
- ref:fig:airMadridTooltip shows a capture of the result.
 
- #+begin_src R
-  htmlBegin <- '<!DOCTYPE html>
-  <html>
-  <head>
-  <title>Tooltips with jQuery and gridSVG</title>
-  <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.2/themes/smoothness/jquery-ui.css" />
-  <meta charset="utf-8">
-  </head>
-  <body>'
-  
-  htmlEnd <- '</body> </html>'
-    
-  svgText <- paste(readLines('figs/airMadrid.svg'), collapse='\n')
-    
-  writeLines(paste(htmlBegin, svgText, htmlEnd, sep='\n'),
-             'airMadrid.html')
- #+end_src
+#+begin_src R
+## Add jQuery and jQuery UI scripts
+grid.script(file='http://code.jquery.com/jquery-1.8.3.js')
+grid.script(file='http://code.jquery.com/ui/1.9.2/jquery-ui.js')
+## Simple JavaScript code to initialize the tooltip
+grid.script(file='js/myTooltip.js')
+## Produce the SVG graphic: the results of grid.garnish,
+## grid.hyperlink and grid.script are converted to SVG code
+grid.export('figs/airMadrid.svg')
+#+end_src
 
- #+RESULTS[86f1c1ed2c5b2b4e4e11e843c412fc1fac30518f]:
+These plug-ins will work only after the file =airMadrid.svg= created by
+=grid.export= is inserted in a HTML file with standard headers. Figure
+ref:fig:airMadridTooltip shows a capture of the result.
+
+#+begin_src R
+htmlBegin <- '<!DOCTYPE html>
+<html>
+<head>
+<title>Tooltips with jQuery and gridSVG</title>
+<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.2/themes/smoothness/jquery-ui.css" />
+<meta charset="utf-8">
+</head>
+<body>'
+
+htmlEnd <- '</body> </html>'
+
+svgText <- paste(readLines('figs/airMadrid.svg'), collapse='\n')
+
+writeLines(paste(htmlBegin, svgText, htmlEnd, sep='\n'),
+           'airMadrid.html')
+#+end_src
+
+#+RESULTS[86f1c1ed2c5b2b4e4e11e843c412fc1fac30518f]:
 
 
 #+CAPTION: label:fig:airMadridTooltip Tooltips generated with \texttt{gridSVG} using jQuery and jQuery UI.
@@ -983,9 +981,13 @@ file:figs/airMadridTooltip.png
 
 * Footnotes
 
+[fn:10] https://www.openstreetmap.org/
+
+[fn:4] [[http://leafletjs.com/]]
+
 [fn:9] Do not confuse a =raster= object with the =Raster*= objects of the =raster= package.
 
-[fn:7] https://epsg.io/3857
+[fn:7] [[https://epsg.io/3857]]
 
 [fn:5] This classification method will be used in section ref:sec:quantitative_choropleth with a choropleth map.
 
@@ -993,11 +995,8 @@ file:figs/airMadridTooltip.png
 
 [fn:8] [[http://jquery.com/]]
 
-[fn:6] http://jqueryui.com/
+[fn:6] [[http://jqueryui.com/]]
 
-[fn:2] http://www.mapbox.com/
+[fn:2] [[http://www.mapbox.com/]]
 
-[fn:3] http://www.openstreetmap.org/
-
-[fn:4] http://leafletjs.com/
-
+[fn:3] [[http://www.openstreetmap.org/]]

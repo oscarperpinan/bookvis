@@ -189,8 +189,7 @@ spplot(spMapVotes["pcMax"],
        sp.layout = provinceLines)    
 #+end_src
 
-#+CAPTION: Quantitative choropleth map displaying the percentage of votes obtained by the predominant political option in each municipality in the 2016 Spanish general elections using a continuous color ramp (unclassed choropleth).
-#+LABEL: fig:pcMaxUC
+#+CAPTION: Quantitative choropleth map displaying the percentage of votes obtained by the predominant political option in each municipality in the 2016 Spanish general elections using a continuous color ramp (unclassed choropleth). label:fig:pcMaxUC
 #+RESULTS:
 [[file:figs/pcMaxUC.pdf]]
 
@@ -201,7 +200,7 @@ displays the density estimation of this variable grouping by the
 political option. This result suggests to use data classification.
 
 #+INDEX: ggplot@\texttt{ggplot}
-#+INDEX: geom_density\texttt{geom_density}
+#+INDEX: geom_density@\texttt{geom\_density}
 
 #+begin_src R :results output graphics :exports both :file figs/densityChoropleth.pdf
 ggplot(as.data.frame(spMapVotes),
@@ -212,8 +211,7 @@ ggplot(as.data.frame(spMapVotes),
     theme_bw()
 #+end_src
 
-#+CAPTION: Density estimation of the predominant political option in each municipality in the 2016 Spanish general elections grouping by the political option.
-#+LABEL: fig:densityChoropleth
+#+CAPTION: Density estimation of the predominant political option in each municipality in the 2016 Spanish general elections grouping by the political option. label:fig:densityChoropleth
 #+RESULTS:
 [[file:figs/densityChoropleth.pdf]]
 
@@ -224,7 +222,7 @@ use 3 to 7 number of classes, depending on the data.
 On the other hand, there is a wide catalog of classification methods,
 and the =classInt= package implements most of them (previously used in
 section ref:sec:classification_bubble). Figures
-ref:fig:quantile_breaks and ref:fig:fisher_quantile depict the
+ref:fig:quantile_intervals and ref:fig:fisher_intervals depict the
 empirical cumulative distribution function of =pcMax= with the
 intervals computed with the quantile method and the natural breaks
 method, a clustering method that seeks to reduce the variance within
@@ -258,12 +256,11 @@ plot(intQuant, pal = quantPal, main = "")
 plot(intFisher, pal = quantPal, main = "")
 #+end_src
 
-#+CAPTION: Quantile method for setting class intervals 
-#+LABEL: fig:quantile_intervals
+#+CAPTION: Quantile method for setting class intervals label:fig:quantile_intervals
 #+RESULTS:
 [[file:figs/quantile_intervals.pdf]]
-#+CAPTION: Natural breaks method for setting class intervals 
-#+LABEL: fig:fisher_intervals
+
+#+CAPTION: Natural breaks method for setting class intervals label:fig:fisher_intervals
 #+RESULTS:
 [[file:figs/fisher_intervals.pdf]]
 
@@ -284,14 +281,10 @@ spplot(spMapVotes["pcMaxInt"],
        sp.layout = provinceLines)
 #+end_src
 
+#+CAPTION: Quantitative choropleth map displaying the percentage of votes obtained by the predominant political option in each municipality in the 2016 Spanish general elections using a classification (classed choropleth). label:fig:pcMax
 #+RESULTS:
 [[file:figs/pcMax.pdf]]
 
-#+CAPTION: Quantitative choropleth map displaying the percentage of votes obtained by the predominant political option in each municipality in the 2016 Spanish general elections using a classification (classed choropleth).
-#+LABEL: fig:pcMax
-
-#+RESULTS:
-[[file:figs/pcMax.pdf]]
 
 ** Qualitative variable
 
@@ -311,7 +304,7 @@ table(spMapVotes$whichMax)
 | PSOE |  776 |
 | UP   |  137 |
 
-Figure [[fig:whichMax]] encodes these levels with a qualitative palette from ColorBrewer.
+Figure ref:fig:whichMax encodes these levels with a qualitative palette from ColorBrewer.
 
 #+INDEX: Packages!RColorBrewer\texttt{RColorBrewer}
 #+INDEX: brewer.pal\texttt{brewer.pal}
@@ -331,8 +324,7 @@ spplot(spMapVotes["whichMax"],
        sp.layout = provinceLines)
 #+end_src
 
-#+CAPTION: Categorical choropleth map displaying the name of the predominant political option in each municipality in the 2016 Spanish general elections.
-#+LABEL: fig:whichMax
+#+CAPTION: Categorical choropleth map displaying the name of the predominant political option in each municipality in the 2016 Spanish general elections. label:fig:whichMax
 #+RESULTS:
 [[file:figs/whichMax.pdf]]
 
@@ -492,7 +484,7 @@ legend <- layer(
 })
 #+end_src
 
-Figure [[fig:mapLegends]] displays the result with the province boundaries
+Figure ref:fig:mapLegends displays the result with the province boundaries
 superposed (only for the peninsula due to a problem with the
 definition of boundaries the Canarian islands in the file) and a
 rectangle to separate the Canarian islands from the remainder of the
@@ -510,8 +502,7 @@ p + legend +
                     gp = gpar(lwd = 0.5, fill = 'transparent')))
 #+end_src
 
-#+CAPTION: Spanish general elections results. The map shows the result of the most voted option in each municipality.
-#+LABEL: fig:mapLegends
+#+CAPTION: Spanish general elections results. The map shows the result of the most voted option in each municipality. label:fig:mapLegends
 #+RESULTS:
 [[file:figs/mapLegends.png]]
 
@@ -553,7 +544,7 @@ mapView(sfMapVotes0, zcol = "pcMax",
 
 [fn:1] http://colorbrewer2.org
 
-[fn:3] [[http://www.nytimes.com/interactive/2009/03/10/us/20090310-immigration-explorer.html]]
+[fn:3] http://www.nytimes.com/interactive/2009/03/10/us/20090310-immigration-explorer.html
 
 
 

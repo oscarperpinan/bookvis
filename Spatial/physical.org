@@ -35,7 +35,6 @@ map of this exceptional country using data from several data services.
 #+INDEX: Packages!rgeos@\texttt{rgeos}  
 #+INDEX: Packages!colorspace@\texttt{colorspace}  
 #+INDEX: CRS@\texttt{CRS}
-#+END_LaTeX
 
 #+begin_src R 
 library(raster)
@@ -63,7 +62,6 @@ terrain elevation, rivers and lakes, and sea depth.
 #+INDEX: Data!GADM
 #+INDEX: Data!DIVA-GIS
 #+INDEX: Data!Natural Earth Data
-#+END_LaTeX
 
   1. The administrative boundaries are available from GADM[fn:4]. The
      =readOGR= function reads data from the downloaded shapefile and
@@ -128,7 +126,6 @@ converted to =SpatialPolygons=. The intersection is a new
 
 #+INDEX: gIntersection@\texttt{gIntersection}
 #+INDEX: extent@\texttt{extent}
-#+END_LaTeX
 
 #+begin_src R :eval no-export
 ## only those features labeled as "River" are needed
@@ -181,7 +178,6 @@ placed in the average centroid.
 
 #+INDEX: coordinates@\texttt{coordinates}
 #+INDEX: apply@\texttt{apply}
-#+END_LaTeX
 
 #+begin_src R
 ## Locations of labels of each polygon
@@ -197,7 +193,6 @@ words.
 
 #+INDEX: sapply@\texttt{sapply}
 #+INDEX: strsplit@\texttt{strsplit}
-#+END_LaTeX
 
 #+begin_src R 
 admNames <- strsplit(as.character(brazilAdm$NAME_1), ' ')

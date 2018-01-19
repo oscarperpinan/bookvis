@@ -3,19 +3,19 @@
 #+BIND: org-latex-image-default-height "0.45\\textheight"
 
 #+begin_src R :exports none :tangle no
-  setwd('~/Dropbox/chapman/book/')
+setwd('~/github/bookvis/')
 #+end_src
 
 #+begin_src R :exports none  
-  ##################################################################
-  ## Initial configuration
-  ##################################################################
-  ## Clone or download the repository and set the working directory
-  ## with setwd to the folder where the repository is located.
+##################################################################
+## Initial configuration
+##################################################################
+## Clone or download the repository and set the working directory
+## with setwd to the folder where the repository is located.
 #+end_src
 
 * Vector Fields
-<<sec:vector>>
+label:sec:vector
 
 #+begin_src R :exports none
 ##################################################################
@@ -33,7 +33,7 @@ point.
 
 This section illustrates two visualization techniques, arrow plots and
 stream lines, with the help of the wind direction and speed forecast
-published by MeteoGalicia (see Section \ref{sec:animationST} for
+published by MeteoGalicia (see Section ref:sec:animationST_var for
 details).
 
 
@@ -43,13 +43,13 @@ details).
 
 
 #+begin_src R 
-  library(raster)
-  library(rasterVis)
-  
-  wDir <- raster('data/wDir')/180*pi
-  wSpeed <- raster('data/wSpeed')
-  windField <- stack(wSpeed, wDir)
-  names(windField) <- c('magnitude', 'direction')
+library(raster)
+library(rasterVis)
+
+wDir <- raster('data/wDir')/180*pi
+wSpeed <- raster('data/wSpeed')
+windField <- stack(wSpeed, wDir)
+names(windField) <- c('magnitude', 'direction')
 #+end_src
 
 ** Arrow Plot
@@ -60,7 +60,7 @@ details).
 #+end_src
 A frequent vector visualization technique is the arrow plot, which
 draws a small arrow at discrete points within the vector field
-(Figure [[fig:vectorplot]]). This approach is best suited for
+(Figure ref:fig:vectorplot). This approach is best suited for
 small datasets. If the grid of discrete points gets too dense or
 if the variations in magnitude are too big, the images tend to be
 visually confusing.
@@ -69,12 +69,13 @@ visually confusing.
 #+INDEX: vectorplot@\texttt{vectorplot}
 
 #+begin_src R :results output graphics :exports both :file figs/vectorplot.pdf
-  vectorplot(windField, isField=TRUE, par.settings=BTCTheme(),
-             colorkey=FALSE, scales=list(draw=FALSE))
+vectorplot(windField, isField = TRUE,
+           par.settings = BTCTheme(),
+           colorkey = FALSE,
+           scales = list(draw = FALSE))
 #+end_src
 
-#+CAPTION: Arrow plot of the wind vector field.
-#+LABEL: fig:vectorplot
+#+CAPTION: Arrow plot of the wind vector field. label:fig:vectorplot
 #+RESULTS:
 [[file:figs/vectorplot.pdf]]
 
@@ -95,29 +96,28 @@ portion, /streamlet/, is calculated by integrating the underlying
 vector field at that point. The main color of each streamlet indicates
 local vector magnitude. Streamlets are composed of points whose sizes,
 positions, and color degradation encode the local vector direction
-(Figure [[fig:streamplot]]).
+(Figure ref:fig:streamplot).
 
 
 #+INDEX: streamplot@\texttt{streamplot}
 #+INDEX: brewer.pal@\texttt{brewer.pal}
 
 #+begin_src R :results output graphics :exports both :file figs/streamplot.pdf
-  myTheme <- streamTheme(region=rev(brewer.pal(n=4, name='Greys')),
-                                      symbol=BTC(n=9, beg=20))
-  streamplot(windField, isField=TRUE,
-             par.settings=myTheme,
-             droplet=list(pc=12),
-             streamlet=list(L=5, h=5),
-             scales=list(draw=FALSE),
-             panel=panel.levelplot.raster)
+myTheme <- streamTheme(region = rev(brewer.pal(n = 4, name = 'Greys')),
+                       symbol = BTC(n = 9, beg = 20))
+streamplot(windField, isField = TRUE,
+           par.settings = myTheme,
+           droplet = list(pc = 12),
+           streamlet = list(L = 5, h = 5),
+           scales = list(draw = FALSE),
+           panel = panel.levelplot.raster)
 #+end_src
 
-#+CAPTION: Streamlines of the wind vector field.
-#+LABEL: fig:streamplot
+#+CAPTION: Streamlines of the wind vector field. label:fig:streamplot
 #+RESULTS:
 [[file:figs/streamplot.pdf]]
 
-The magic of Figure [[fig:streamplot]] is that it is able to show the
+The magic of Figure ref:fig:streamplot is that it is able to show the
 underlying physical structure of the spatial region only displaying
 wind speed and direction. It is easy to recognize the Iberian
 Peninsula surrounded by strong winds along the eastern and northern

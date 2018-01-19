@@ -135,7 +135,7 @@ xyplot(wt ~ mpg | am, data = mtcars, groups = cyl)
 
 #+INDEX: Packages!ggplot2@=ggplot2
 
- The =ggplot2= package cite:Wickham2016 is an implementation of the system proposed in /The Grammar of Graphics/ cite:Wilkinson1999, a general scheme for data visualization that breaks up graphs into semantic components such as scales and layers. Under this framework, the definition of the graphic with =ggplot2= is done with a combination of several functions that provides the components, instead of the formula interface of
+ The =ggplot2= package cite:Wickham2016 is an implementation of the system proposed in /The Grammar of Graphics/ cite:Wilkinson2005, a general scheme for data visualization that breaks up graphs into semantic components such as scales and layers. Under this framework, the definition of the graphic with =ggplot2= is done with a combination of several functions that provides the components, instead of the formula interface of
  =lattice=.
 
  With =ggplot2=, a graphic is composed of:
@@ -179,7 +179,7 @@ Which package to choose is, for a wide range of datasets, a question of personal
 
  - =sp= cite:Pebesma2012 and =sf= cite:Pebesma2018 provide a coherent set of classes and methods for the major spatial data types: points, lines, polygons, and grids (Sections ref:sec:sp and ref:sec:sf). =spacetime= cite:Pebesma2012 defines classes and methods for spatiotemporal  data, and methods for plotting data as map sequences or multiple time series (Section ref:sec:spacetime).
 
- - =raster= cite:Hijmans2013 is a major extension of gridded spatial data classes. It provides a unified access method to different raster formats, permitting large objects to be analyzed with the definition of basic and high-level processing functions (Sections ref:sec:raster and ref:sec:rasterST). =rasterVis= cite:Perpinan.Hijmans2013 provides enhanced visualization of raster data with methods for spatiotemporal rasters (Sections ref:sec:rasterVis and ref:sec:rastervisST).
+ - =raster= cite:Hijmans2013 is a major extension of gridded spatial data classes. It provides a unified access method to different raster formats, permitting large objects to be analyzed with the definition of basic and high-level processing functions (Sections ref:sec:raster and ref:sec:rasterST). =rasterVis= cite:Perpinan.Hijmans2017 provides enhanced visualization of raster data with methods for spatiotemporal rasters (Sections ref:sec:rasterVis and ref:sec:rastervisST).
 
  - *=htmlwidgets= R interfaces for JavaScript libraries.*
 
@@ -351,7 +351,7 @@ label:part:Spatial
 
  Spatial data (also known as geospatial data) are directly or indirectly referenced to a location on the surface of the Earth. Their spatial reference is composed of coordinate values and a system of reference for these coordinates. Spatial data are often accessed, manipulated, or analyzed through Geographic Information Systems (GIS).
 
- Real objects represented by GIS data can be divided into two abstractions: discrete objects (e.g., a road or a river) represented with vector data (points, lines, and polygons), and continuous fields (such as elevation or solar radiation) represented with raster data. The =sp= package is the preferred option to use vector data in =R=, and the =raster= package is the choice for raster data [fn:18].
+ Real objects represented by GIS data can be divided into two abstractions: discrete objects (e.g., a road or a river) represented with vector data (points, lines, and polygons), and continuous fields (such as elevation or solar radiation) represented with raster data. The =sp= and =sf= packages are the preferred option to use vector data in =R=, and the =raster= package is the choice for raster data [fn:18].
 
  This part exposes several examples where vector and raster data are displayed to show geographic location of features and physical landscape features of a place (reference and physical maps, Chapter ref:cha:refer-phys-maps) or a specific variable in the context of a geographic reference (thematic maps, Chapter ref:cha:thematicMaps). These examples make use of several datasets (available at the book website) described in Chapter ref:cha:dataSpatial.
 
@@ -456,7 +456,7 @@ The =sf= package implements =plot= methods for displaying data using =base= grap
  label:sec:rasterVis
 #+INDEX: Packages!rasterVis@\texttt{rasterVis}
 
- The =rasterVis= package cite:Perpinan.Hijmans2013 complements the =raster= package, providing a set of methods for enhanced visualization and interaction. This package defines visualization methods (=levelplot=) for quantitative data and categorical data, both for univariate and multivariate rasters.
+ The =rasterVis= package cite:Perpinan.Hijmans2017 complements the =raster= package, providing a set of methods for enhanced visualization and interaction. This package defines visualization methods (=levelplot=) for quantitative data and categorical data, both for univariate and multivariate rasters.
 
  It also includes several methods in the frame of the Exploratory Data Analysis approach: scatterplots with =xyplot=, histograms and density plots with =histogram= and =densityplot=, violin and boxplots with =bwplot=, and a matrix of scatterplots with =splom=.
 
@@ -603,7 +603,7 @@ label:part:SpaceTime
  label:sec:rastervisST
 #+INDEX: Packages!rasterVis@\texttt{rasterVis}
 
- =rasterVis= cite:Perpinan.Hijmans2013 provides three methods to display spatiotemporal rasters:
+ =rasterVis= cite:Perpinan.Hijmans2017 provides three methods to display spatiotemporal rasters:
 
  1. =hovmoller= produces Hovmöller diagrams cite:Hovmoeller1949a. The axes of this kind of diagram are typically longitude or latitude (x-axis) and time (ordinate or y-axis) with the value of some aggregated field represented through color. However, the user can define the direction with =dirXY= and the summary function with =FUN=.
 
@@ -674,7 +674,7 @@ inspired by the =grid= package.
 
 [fn:33] [[https://stat.ethz.ch/mailman/listinfo/R-SIG-Geo/]]
 
-[fn:18] Although =sp= and =raster= are the most important packages, there are an increasing number of packages designed to work with spatial data. They are summarized in the corresponding CRAN Task View. Read Section ref:cha:further-reading-spatial for details.
+[fn:18] Although =sp=, =sf=, and =raster= are the most important packages, there are an increasing number of packages designed to work with spatial data. They are summarized in the corresponding CRAN Task View. Read Section ref:cha:further-reading-spatial for details.
 
 [fn:19] [[http://CRAN.R-project.org/view=Spatial]]
 

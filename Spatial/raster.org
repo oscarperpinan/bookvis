@@ -47,7 +47,7 @@ distribution of annual solar irradiation over the Iberian peninsula
 using the estimates from CM SAF. The =RasterLayer= object of annual
 averages of solar irradiation estimated by CM SAF can be easily
 displayed with the =levelplot= method of the =rasterVis=
-package. Figure [[fig:levelplotCMSAF]] illustrates this raster with
+package. Figure [[ref:fig:levelplotCMSAF]] illustrates this raster with
 marginal graphics to show the column (longitude) and row (latitude)
 summaries of the =RasterLayer= object. The summary is computed with
 the function defined by =FUN.margin= (which uses =mean= as the default
@@ -67,8 +67,7 @@ SISav <- raster('data/SISav')
 levelplot(SISav)
 #+end_src
 
-#+CAPTION: Annual average of solar radiation displayed with a sequential palette.
-#+LABEL: fig:levelplotCMSAF
+#+CAPTION: Annual average of solar radiation displayed with a sequential palette. label:fig:levelplotCMSAF
 #+RESULTS:
 [[file:figs/leveplotSISavOrig.pdf]]
 
@@ -109,14 +108,13 @@ levelplot(SISav) +
                    lwd = 0.5))
 #+end_src
 
-#+CAPTION: Annual average of solar radiation with administrative boundaries.
-#+LABEL: fig:levelplotCMSAF_boundaries
+#+CAPTION: Annual average of solar radiation with administrative boundaries. label:fig:levelplotCMSAF_boundaries
 #+RESULTS:
 [[file:figs/leveplotSISavBoundaries.pdf]]
 
 
 *** Hill Shading
-#+LABEL: sec:hill-shading
+label:sec:hill-shading
 #+begin_src R :exports none
 ##################################################################
 ## Hill shading
@@ -136,15 +134,15 @@ The procedure is as follows:
 
 
 #+begin_src R :eval no-export
-  old <- setwd(tempdir())
-  download.file('http://biogeo.ucdavis.edu/data/diva/msk_alt/ESP_msk_alt.zip', 'ESP_msk_alt.zip')
-  unzip('ESP_msk_alt.zip', exdir='.')
-  
-  DEM <- raster('ESP_msk_alt')
+old <- setwd(tempdir())
+download.file('http://biogeo.ucdavis.edu/data/diva/msk_alt/ESP_msk_alt.zip', 'ESP_msk_alt.zip')
+unzip('ESP_msk_alt.zip', exdir='.')
+
+DEM <- raster('ESP_msk_alt')
 #+end_src
 
 #+begin_src R :exports none :tangle no
-  DEM <- raster('/home/datos/ESP_msk_alt/ESP_msk_alt')
+DEM <- raster('/home/datos/ESP_msk_alt/ESP_msk_alt')
 #+end_src
 
 - Compute the hill shade raster with =terrain= and =hillShade= from =raster=.
@@ -154,13 +152,13 @@ The procedure is as follows:
 
 
 #+begin_src R
-  slope <- terrain(DEM, 'slope')
-  aspect <- terrain(DEM, 'aspect')
-  hs <- hillShade(slope=slope, aspect=aspect,
-                  angle=20, direction=30)
+slope <- terrain(DEM, 'slope')
+aspect <- terrain(DEM, 'aspect')
+hs <- hillShade(slope = slope, aspect = aspect,
+                angle = 20, direction = 30)
 #+end_src
 #+begin_src R :eval no-export
-  setwd(old)
+setwd(old)
 #+end_src
 
 - Combine the result with the previous map using semitransparency.
@@ -170,26 +168,25 @@ The procedure is as follows:
 
 
 #+begin_src R :results output graphics :exports both :width 2000 :height 2000 :res 300 :file figs/hillShading.png
-  ## hillShade theme: gray colors and semitransparency
-  hsTheme <- modifyList(GrTheme(), list(regions=list(alpha=0.6)))
+## hillShade theme: gray colors and semitransparency
+hsTheme <- modifyList(GrTheme(), list(regions=list(alpha=0.6)))
   
-  levelplot(SISav, panel=panel.levelplot.raster,
-            margin=FALSE, colorkey=FALSE) +
-      levelplot(hs, par.settings=hsTheme, maxpixels=1e6) +
-      layer(sp.lines(boundaries, lwd=0.5))
+levelplot(SISav, panel = panel.levelplot.raster,
+          margin = FALSE, colorkey = FALSE) +
+    levelplot(hs, par.settings = hsTheme, maxpixels = 1e6) +
+    layer(sp.lines(boundaries, lwd = 0.5))
 #+end_src
 
-#+CAPTION: Hill shading of annual average of solar radiation.
-#+LABEL: fig:hillShading
+#+CAPTION: Hill shading of annual average of solar radiation. label:fig:hillShading
 #+RESULTS:
 [[file:figs/hillShading.png]]
 
 
 *** Diverging Palettes
 #+begin_src R :exports none
-  ##################################################################
-  ## Diverging palettes
-  ##################################################################
+##################################################################
+## Diverging palettes
+##################################################################
 #+end_src
 
 Next, instead of displaying the absolute values of each cell, we will
@@ -219,15 +216,15 @@ SISav <- SISav - meanRad
 
 
 #+begin_src R :results output graphics :exports both :width 2000 :height 2000 :res 300 :file figs/xyplotSISav.png 
-  xyplot(layer ~ y, data = SISav,
-         groups=cut(x, 5),
-         par.settings=rasterTheme(symbol=plinrain(n=5, end=200)),
-         xlab = 'Latitude', ylab = 'Solar radiation (scaled)',  
-         auto.key=list(space='right', title='Longitude', cex.title=1.3))
+xyplot(layer ~ y, data = SISav,
+       groups = cut(x, 5),
+       par.settings = rasterTheme(symbol = plinrain(n=5, end = 200)),
+       xlab = 'Latitude', ylab = 'Solar radiation (scaled)',  
+       auto.key = list(space = 'right',
+                       title = 'Longitude', cex.title = 1.3))
 #+end_src
 
-#+CAPTION: Relation between scaled annual average radiation and latitude for several longitude groups.
-#+LABEL: fig:xyplotSISav
+#+CAPTION: Relation between scaled annual average radiation and latitude for several longitude groups. label:fig:xyplotSISav
 #+RESULTS:
 [[file:figs/xyplotSISav.png]]
 
@@ -253,33 +250,31 @@ is not symmetrical around zero.
 
 
 #+begin_src R :results output graphics :exports both :file figs/showDivPal.pdf
-  divPal <- brewer.pal(n=9, 'PuOr')
-  divPal[5] <- "#FFFFFF"
+divPal <- brewer.pal(n = 9, 'PuOr')
+divPal[5] <- "#FFFFFF"
   
-  showPal <- function(pal, labs=pal, cex=0.6, ...){
-    barplot(rep(1, length(pal)), col=pal,
-            names.arg=labs, cex.names=cex,
+showPal <- function(pal, labs = pal, cex = 0.6, ...){
+    barplot(rep(1, length(pal)), col = pal,
+            names.arg = labs, cex.names = cex,
             axes=FALSE, ...)
-  }
-  
-  showPal(divPal)
+}
+
+showPal(divPal)
 #+end_src
 
-#+CAPTION: Purple-Orange diverging palette using white as middle color.
-#+LABEL: fig:showDivPal
+#+CAPTION: Purple-Orange diverging palette using white as middle color. label:fig:showDivPal
 #+ATTR_LaTeX: :height 0.3\textheight
 #+RESULTS:
 [[file:figs/showDivPal.pdf]]
 
 
 #+begin_src R :results output graphics :exports both :file figs/divPal_SISav_naive.pdf
-  divTheme <- rasterTheme(region=divPal)
-  
-  levelplot(SISav, contour=TRUE, par.settings=divTheme)
+divTheme <- rasterTheme(region = divPal)
+
+levelplot(SISav, contour = TRUE, par.settings = divTheme)
 #+end_src
 
-#+CAPTION: Asymmetric raster data (scaled annual average irradiation) displayed with a symmetric diverging palette.
-#+LABEL: fig:divPal_SISav_naive
+#+CAPTION: Asymmetric raster data (scaled annual average irradiation) displayed with a symmetric diverging palette. label:fig:divPal_SISav_naive
 #+RESULTS:
 [[file:figs/divPal_SISav_naive.pdf]]
 
@@ -288,19 +283,19 @@ asymmetrical data range. The first step is to create a set of
 breaks such that the zero value is the center of one of the
 intervals.
 #+begin_src R 
-  rng <- range(SISav[])
-  ## Number of desired intervals
-  nInt <- 15
-  ## Increment corresponding to the range and nInt
-  inc0 <- diff(rng)/nInt
-  ## Number of intervals from the negative extreme to zero
-  n0 <- floor(abs(rng[1])/inc0)
-  ## Update the increment adding 1/2 to position zero in the center of an interval
-  inc <- abs(rng[1])/(n0 + 1/2)
-  ## Number of intervals from zero to the positive extreme
-  n1 <- ceiling((rng[2]/inc - 1/2) + 1)
-  ## Collection of breaks
-  breaks <- seq(rng[1], by=inc, length= n0 + 1 + n1)
+rng <- range(SISav[])
+## Number of desired intervals
+nInt <- 15
+## Increment corresponding to the range and nInt
+inc0 <- diff(rng)/nInt
+## Number of intervals from the negative extreme to zero
+n0 <- floor(abs(rng[1])/inc0)
+## Update the increment adding 1/2 to position zero in the center of an interval
+inc <- abs(rng[1])/(n0 + 1/2)
+## Number of intervals from zero to the positive extreme
+n1 <- ceiling((rng[2]/inc - 1/2) + 1)
+## Collection of breaks
+breaks <- seq(rng[1], by=inc, length= n0 + 1 + n1)
 #+end_src
 
 The next step is to compute the midpoints of each interval. These
@@ -312,12 +307,12 @@ will be connected with a color of the palette.
 
 
 #+begin_src R 
-  ## Midpoints computed with the median of each interval
-  idx <- findInterval(SISav[], breaks, rightmost.closed=TRUE)
-  mids <- tapply(SISav[], idx, median)
-  ## Maximum of the absolute value both limits
-  mx <- max(abs(breaks))
-  mids
+## Midpoints computed with the median of each interval
+idx <- findInterval(SISav[], breaks, rightmost.closed=TRUE)
+mids <- tapply(SISav[], idx, median)
+## Maximum of the absolute value both limits
+mx <- max(abs(breaks))
+mids
 #+end_src
 
 A simple method to relate the palette and the intervals is with a
@@ -340,36 +335,35 @@ color.
 #+INDEX: rgb@\texttt{rgb}
 
 #+begin_src R :results output graphics :exports both :file figs/showBreak2Pal.pdf
-  break2pal <- function(x, mx, pal){
+break2pal <- function(x, mx, pal){
     ## x = mx gives y = 1
     ## x = 0 gives y = 0.5
     y <- 1/2*(x/mx + 1)
-    rgb(pal(y), maxColorValue=255)
-  }
-  
-  ## Interpolating function that maps colors with [0, 1]
-  ## rgb(divRamp(0.5), maxColorValue=255) gives "#FFFFFF" (white)
-  divRamp <- colorRamp(divPal)
-  ## Diverging palette where white is associated with the interval
-  ## containing the zero
-  pal <- break2pal(mids, mx, divRamp)
-  showPal(pal, round(mids, 1))
+    rgb(pal(y), maxColorValue = 255)
+}
+
+## Interpolating function that maps colors with [0, 1]
+## rgb(divRamp(0.5), maxColorValue=255) gives "#FFFFFF" (white)
+divRamp <- colorRamp(divPal)
+## Diverging palette where white is associated with the interval
+## containing the zero
+pal <- break2pal(mids, mx, divRamp)
+showPal(pal, round(mids, 1))
 #+end_src
 
-#+CAPTION: Modified diverging palette related with the asymmetrical raster data.
-#+LABEL: fig:showBreak2Pal
+#+CAPTION: Modified diverging palette related with the asymmetrical raster data. label:fig:showBreak2Pal
 #+ATTR_LaTeX: :height 0.3\textheight
 #+RESULTS:
 [[file:figs/showBreak2Pal.pdf]]
 
 
 #+begin_src R :results output graphics :exports both :file figs/divPalSISav.pdf
-  levelplot(SISav, par.settings=rasterTheme(region=pal),
-            at=breaks, contour=TRUE)
+levelplot(SISav,
+          par.settings = rasterTheme(region = pal),
+          at = breaks, contour = TRUE)
 #+end_src
 
-#+CAPTION: Asymmetric raster data (scaled annual average irradiation) displayed with a modified diverging palette.
-#+LABEL: fig:divPalSISav
+#+CAPTION: Asymmetric raster data (scaled annual average irradiation) displayed with a modified diverging palette. label:fig:divPalSISav
 #+RESULTS:
 [[file:figs/divPalSISav.pdf]]
 
@@ -391,14 +385,16 @@ component of the theme with our palette after it has been created
 (Figure ref:fig:divPal_SISav_regions).
 
 #+begin_src R :results output graphics :exports both :file figs/divPalSISav_regions.pdf
-  divTheme <- rasterTheme()
-  
-  divTheme$regions$col <- pal
-  levelplot(SISav, par.settings=divTheme, at=breaks, contour=TRUE)
+divTheme <- rasterTheme()
+
+divTheme$regions$col <- pal
+levelplot(SISav,
+          par.settings = divTheme,
+          at = breaks,
+          contour = TRUE)
 #+end_src
 
-#+CAPTION: Same as Figure ref:fig:divPalSISav but colors are assigned directly to the =regions$col= component of the theme.
-#+LABEL: fig:divPal_SISav_regions
+#+CAPTION: Same as Figure ref:fig:divPalSISav but colors are assigned directly to the =regions$col= component of the theme. label:fig:divPal_SISav_regions
 #+RESULTS:
 [[file:figs/divPalSISav_regions.pdf]]
 
@@ -416,39 +412,36 @@ displays the result.
 
 
 #+begin_src R 
-  library(classInt)
-  
-  cl <- classIntervals(SISav[],
-                       ## n=15, style='equal')
-                       ## style='hclust')
-                       ## style='sd')
-                       style='kmeans')
-                       ## style='quantile')
-  cl
-  breaks <- cl$brks
+library(classInt)
+
+cl <- classIntervals(SISav[], style='kmeans')
+breaks <- cl$brks
 #+end_src
 
 #+begin_src R :results output graphics :exports both :file figs/divPalSISav_classInt.pdf
-  idx <- findInterval(SISav[], breaks, rightmost.closed=TRUE)
-  mids <- tapply(SISav[], idx, median)
+idx <- findInterval(SISav[], breaks, rightmost.closed = TRUE)
+mids <- tapply(SISav[], idx, median)
 
-  mx <- max(abs(breaks))
-  pal <- break2pal(mids, mx, divRamp)
-  divTheme$regions$col <- pal
-  levelplot(SISav, par.settings=divTheme, at=breaks, contour=TRUE)
+mx <- max(abs(breaks))
+pal <- break2pal(mids, mx, divRamp)
+divTheme$regions$col <- pal
+
+levelplot(SISav,
+          par.settings = divTheme,
+          at=breaks,
+          contour=TRUE)
 #+end_src
 
-#+CAPTION: Same as Figure ref:fig:divPal_SISav_regions but defining intervals with the optimal classification method.
-#+LABEL: fig:divPalSISav_classInt
+#+CAPTION: Same as Figure ref:fig:divPal_SISav_regions but defining intervals with the optimal classification method. label:fig:divPalSISav_classInt
 #+RESULTS:
 [[file:figs/divPalSISav_classInt.pdf]]
 
 
 ** Categorical Data
 #+begin_src R :exports none
-  ##################################################################
-  ## Categorical data
-  ##################################################################
+##################################################################
+## Categorical data
+##################################################################
 #+end_src
 
 Land cover is the observed physical cover on the Earth's surface. A
@@ -472,35 +465,20 @@ area of India and China, and cleaned (=99999= cells are replaced with
 
 
 #+begin_src R :eval no-export
-  library(raster)
-  ## China and India  
-  ext <- extent(65, 135, 5, 55)
-  
-  pop <- raster('data/875430rgb-167772161.0.FLOAT.TIFF')
-  pop <- crop(pop, ext)
-  pop[pop==99999] <- NA
-  
-  landClass <- raster('data/241243rgb-167772161.0.TIFF')
-  landClass <- crop(landClass, ext)
+library(raster)
+## China and India  
+ext <- extent(65, 135, 5, 55)
+
+pop <- raster('data/875430rgb-167772161.0.FLOAT.TIFF')
+pop <- crop(pop, ext)
+pop[pop==99999] <- NA
+
+landClass <- raster('data/241243rgb-167772161.0.TIFF')
+landClass <- crop(landClass, ext)
 #+end_src
 
 #+RESULTS:
 
-#+begin_src R :exports none :tangle no
-  library(raster)
-  
-  ext <- extent(65, 135, 5, 55)
-  
-  pop <- raster('~/Datos/Nasa/875430rgb-167772161.0.FLOAT.TIFF')
-  pop <- crop(pop, ext)
-  pop[pop==99999] <- NA
-  
-  landClass <- raster('~/Datos/Nasa/241243rgb-167772161.0.TIFF')
-  landClass <- crop(landClass, ext)
-#+end_src
-
-#+RESULTS:
-: TRUE
 
 Each land cover type is designated with a different key: the sea is
 labeled with 0; forests with 1 to 5; shrublands, grasslands, and
@@ -515,22 +493,22 @@ Table (RAT).
 #+INDEX: cut@\texttt{cut}
 
 #+begin_src R
-  landClass[landClass %in% c(0, 254)] <- NA
-  ## Only four groups are needed:
-  ## Forests: 1:5
-  ## Shrublands, etc: 6:11
-  ## Agricultural/Urban: 12:14
-  ## Snow: 15:16
-  landClass <- cut(landClass, c(0, 5, 11, 14, 16))
-  ## Add a Raster Attribute Table and define the raster as categorical data
-  landClass <- ratify(landClass)
-  ## Configure the RAT: first create a RAT data.frame using the
-  ## levels method; second, set the values for each class (to be
-  ## used by levelplot); third, assign this RAT to the raster
-  ## using again levels
-  rat <- levels(landClass)[[1]]
-  rat$classes <- c('Forest', 'Land', 'Urban', 'Snow')
-  levels(landClass) <- rat
+landClass[landClass %in% c(0, 254)] <- NA
+## Only four groups are needed:
+## Forests: 1:5
+## Shrublands, etc: 6:11
+## Agricultural/Urban: 12:14
+## Snow: 15:16
+landClass <- cut(landClass, c(0, 5, 11, 14, 16))
+## Add a Raster Attribute Table and define the raster as categorical data
+landClass <- ratify(landClass)
+## Configure the RAT: first create a RAT data.frame using the
+## levels method; second, set the values for each class (to be
+## used by levelplot); third, assign this RAT to the raster
+## using again levels
+rat <- levels(landClass)[[1]]
+rat$classes <- c('Forest', 'Land', 'Urban', 'Snow')
+levels(landClass) <- rat
 #+end_src
 
 
@@ -560,13 +538,12 @@ qualTheme <- rasterTheme(region = qualPal,
                         )
 
   
-levelplot(landClass, maxpixels=3.5e5,
-          par.settings=qualTheme,
-          panel=panel.levelplot.raster)
+levelplot(landClass, maxpixels = 3.5e5,
+          par.settings = qualTheme,
+          panel = panel.levelplot.raster)
 #+end_src
 
-#+CAPTION: Land cover raster (categorical data).
-#+LABEL: fig:landClass
+#+CAPTION: Land cover raster (categorical data). label:fig:landClass
 #+RESULTS:
 [[file:figs/landClass.pdf]]
 
@@ -575,13 +552,14 @@ density rasters. Figure ref:fig:populationNASA displays this
 latter raster using a logarithmic scale.
 
 #+begin_src R :results output graphics :exports both :file figs/populationNASA.pdf
-  pPop <- levelplot(pop, zscaleLog=10, par.settings=BTCTheme,
-                    maxpixels=3.5e5, panel=panel.levelplot.raster)
-  pPop
+pPop <- levelplot(pop, zscaleLog = 10,
+                  par.settings = BTCTheme,
+                  maxpixels = 3.5e5,
+                  panel = panel.levelplot.raster)
+pPop
 #+end_src
 
-#+CAPTION: Population density raster.
-#+LABEL: fig:populationNASA
+#+CAPTION: Population density raster. label:fig:populationNASA
 #+RESULTS:
 [[file:figs/populationNASA.pdf]]
 
@@ -596,14 +574,13 @@ logarithm of the population density associated to each land class.
 
 
 #+begin_src R :results output graphics :exports both :file figs/histogramLandClass.pdf
-  s <- stack(pop, landClass)
-  names(s) <- c('pop', 'landClass')
-  histogram(~log10(pop)|landClass, data=s,
-            scales=list(relation='free'))
+s <- stack(pop, landClass)
+names(s) <- c('pop', 'landClass')
+histogram(~log10(pop) | landClass, data = s,
+          scales = list(relation = 'free'))
 #+end_src
 
-#+CAPTION: Distribution of the logarithm of the population density associated to each land class.
-#+LABEL: fig:histogramLandClass
+#+CAPTION: Distribution of the logarithm of the population density associated to each land class. label:fig:histogramLandClass
 #+RESULTS:
 [[file:figs/histogramLandClass.pdf]]
 
@@ -717,8 +694,7 @@ Figure ref:fig:popLandClass displays the result.
 p + legend
 #+end_src
 
-#+CAPTION: Population density for each land class (multivariate raster).
-#+LABEL: fig:popLandClass
+#+CAPTION: Population density for each land class (multivariate raster). label:fig:popLandClass
 #+RESULTS:
 [[file:figs/popLandClass.png]]
 
@@ -757,7 +733,7 @@ writeWebGL(filename = 'docs/images/rgl/DEM.html',
            width = 800)
 #+end_src
 
-#+CAPTION: 3D visualization of a Digital Elevation Model using the WebGL format. label:fig:DEM_Web
+#+CAPTION: 3D visualization of a Digital Elevation Model using the WebGL format. label:fig:DEM_web
 [[file:figs/DEM_WebGL.png]]
 
 *** Mapview [[label:mapview_raster]]
