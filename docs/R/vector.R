@@ -4,10 +4,6 @@
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
 
-##################################################################
-## Vector fields
-##################################################################
-
 library(raster)
 library(rasterVis)
 
@@ -20,8 +16,12 @@ names(windField) <- c('magnitude', 'direction')
 ## Arrow plot
 ##################################################################
 
+vectorTheme <- BTCTheme(regions = list(alpha = 0.7))
+
 vectorplot(windField, isField = TRUE,
-           par.settings = BTCTheme(),
+           aspX = 5, aspY = 5,
+           scaleSlope = FALSE, 
+           par.settings = vectorTheme,
            colorkey = FALSE,
            scales = list(draw = FALSE))
 
@@ -30,7 +30,8 @@ vectorplot(windField, isField = TRUE,
 ##################################################################
 
 myTheme <- streamTheme(region = rev(brewer.pal(n = 4, name = 'Greys')),
-                       symbol = BTC(n = 9, beg = 20))
+                       symbol = rev(brewer.pal(n = 9, "Blues")))
+
 streamplot(windField, isField = TRUE,
            par.settings = myTheme,
            droplet = list(pc = 12),

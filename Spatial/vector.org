@@ -30,7 +30,6 @@ stream lines, with the help of the wind direction and speed forecast
 published by MeteoGalicia (see Section ref:sec:animationST_var for
 details).
 
-
 #+INDEX: Packages!rasterVis@\texttt{rasterVis}
 #+INDEX: Packages!raster@\texttt{raster}
 #+INDEX: Data!Wind Speed
@@ -47,6 +46,7 @@ names(windField) <- c('magnitude', 'direction')
 #+end_src
 
 * Arrow Plot
+label:sec:vectorplot
 #+begin_src R :exports none
 ##################################################################
 ## Arrow plot
@@ -59,12 +59,15 @@ small datasets. If the grid of discrete points gets too dense or
 if the variations in magnitude are too big, the images tend to be
 visually confusing.
 
-
 #+INDEX: vectorplot@\texttt{vectorplot}
 
 #+begin_src R :results output graphics :exports both :file figs/vectorplot.pdf
+vectorTheme <- BTCTheme(regions = list(alpha = 0.7))
+
 vectorplot(windField, isField = TRUE,
-           par.settings = BTCTheme(),
+           aspX = 5, aspY = 5,
+           scaleSlope = FALSE, 
+           par.settings = vectorTheme,
            colorkey = FALSE,
            scales = list(draw = FALSE))
 #+end_src
@@ -98,7 +101,8 @@ positions, and color degradation encode the local vector direction
 
 #+begin_src R :results output graphics :exports both :file figs/streamplot.pdf
 myTheme <- streamTheme(region = rev(brewer.pal(n = 4, name = 'Greys')),
-                       symbol = BTC(n = 9, beg = 20))
+                       symbol = rev(brewer.pal(n = 9, "Blues")))
+
 streamplot(windField, isField = TRUE,
            par.settings = myTheme,
            droplet = list(pc = 12),
