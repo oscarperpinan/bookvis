@@ -41,19 +41,39 @@ lattice.options(default.theme = myTheme,
                 default.args = modifyList(defaultArgs, myArgs))
 
 ##################################################################
-## Choropleth maps
+## Read data
 ##################################################################
 
+## sp approach
 library(sp)
 library(rgdal)
 
 spMapVotes <- readOGR("data/spMapVotes.shp", 
                       p4s = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs")
 
+## sf approach
+library(sf)
+
+sfMapVotes <- st_read("data/spMapVotes.shp")
+st_crs(sfMapVotes) <- 25830
+
+##################################################################
+## Province Boundaries
+##################################################################
+
+## sp
 provinces <- readOGR("data/spain_provinces.shp",
                      p4s = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs")
 
 provinceLines <- list("sp.polygons", provinces, lwd = 0.1)
+
+## sf
+sfProvs <- st_read("data/spain_provinces.shp")
+st_crs(sfProvs) <- 25830
+
+##################################################################
+## Quantitative variable
+##################################################################
 
 library(RColorBrewer)
 
@@ -71,6 +91,10 @@ spplot(spMapVotes["pcMax"],
        cuts = ucN,
        col = 'transparent',
        sp.layout = provinceLines)
+
+##################################################################
+## Data classification
+##################################################################
 
 ggplot(as.data.frame(spMapVotes),
        aes(pcMax,
@@ -92,6 +116,8 @@ plot(intQuant, pal = quantPal, main = "")
 
 plot(intFisher, pal = quantPal, main = "")
 
+## spplot solution
+
 ## Add a new categorical variable with cut, using the computed breaks
 spMapVotes$pcMaxInt <- cut(spMapVotes$pcMax,
                             breaks = intFisher$brks)
@@ -101,24 +127,7 @@ spplot(spMapVotes["pcMaxInt"],
        col.regions = quantPal,
        sp.layout = provinceLines)
 
-classes <- levels(factor(spMapVotes$whichMax))
-nClasses <- length(classes)
-
-qualPal <- brewer.pal(nClasses, "Dark2")
-
-spplot(spMapVotes["whichMax"],
-       col.regions = qualPal,
-       col = 'transparent',
-       sp.layout = provinceLines)
-
-library(sf)
-
-sfMapVotes <- st_read("data/spMapVotes.shp")
-st_crs(sfMapVotes) <- 25830
-
-sfProvs <- st_read("data/spain_provinces.shp")
-st_crs(sfProvs) <- 25830
-
+## sf and geom_sf
 sfMapVotes$pcMaxInt <- cut(sfMapVotes$pcMax,
                            breaks = intFisher$brks)
 
@@ -131,6 +140,22 @@ ggplot(sfMapVotes) +
             show.legend = FALSE) +
     theme_bw()
 
+##################################################################
+## Qualitative variable
+##################################################################
+
+classes <- levels(factor(spMapVotes$whichMax))
+nClasses <- length(classes)
+
+qualPal <- brewer.pal(nClasses, "Dark2")
+
+## spplot solution
+spplot(spMapVotes["whichMax"],
+       col.regions = qualPal,
+       col = 'transparent',
+       sp.layout = provinceLines)
+
+## geom_sf solution
 ggplot(sfMapVotes) +
     geom_sf(aes(fill = whichMax),
             color = "transparent") +
@@ -139,6 +164,10 @@ ggplot(sfMapVotes) +
             fill = 'transparent',
             show.legend = FALSE) +
     theme_bw()
+
+##################################################################
+## Small multiples
+##################################################################
 
 ## spplot version
 spplot(spMapVotes, "pcMaxInt",
@@ -160,8 +189,17 @@ ggplot(sfMapVotes) +
     theme_bw()
 
 ##################################################################
-## Categorical and quantitative variables combined in a multivariate choropleth map
+## Bivariate map
 ##################################################################
+
+## Number of intervals.
+N <- 3
+
+intFisher <- classIntervals(spMapVotes$pcMax,
+                            n = N, style = "fisher")
+
+spMapVotes$pcMaxInt <- cut(spMapVotes$pcMax,
+                            breaks = intFisher$brks)
 
 multiPal <- sapply(1:nClasses, function(i)
 {
@@ -193,48 +231,59 @@ library(grid)
 
 legend <- layer(
 {
+    ## Position of the legend
     x0 <- 1000000
-    y0 <- 4500000
-    w <- 100000
+    y0 <- 4200000
+    ## Width of the legend 
+    w <- 120000
+    ## Height of the legend
+    h <- 100000
+    ## Colors
     grid.raster(multiPal, interpolate = FALSE,
                       x = unit(x0, "native"),
                       y = unit(y0, "native"),
-                width = unit(w, "native"))
+                width = unit(w, "native"),
+                height = unit(h, "native"))
+    ## x-axis (qualitative variable)
     grid.text(classes,
-              x = unit(seq(x0 - w/2,
-                           x0 + w/2,
+              x = unit(seq(x0 - w * (nClasses -1)/(2*nClasses),
+                           x0 + w * (nClasses -1)/(2*nClasses),
                            length = nClasses),
                        "native"),
-              y = unit(y0 + w/2, "native"),
+              y = unit(y0 + h/2, "native"),
+              just = "bottom",
+              rot = 10,
               gp = gpar(fontsize = 4))
+    ## y-axis (quantitative variable)
+    Ni <- length(intervals)
     grid.text(intervals,
               x = unit(x0 + w/2, "native"),
-              y = unit(seq(y0 - w/2,
-                           y0 + w/2,
-                           length = length(intervals)),
+              y = unit(seq(y0 - h * (Ni -1)/(2*Ni),
+                           y0 + h * (Ni -1)/(2*Ni),
+                           length = Ni),
                        "native"),
-              gp = gpar(fontsize = 4))
+              just = "left",
+              gp = gpar(fontsize = 6))
 })
 
 ## Main plot
-p + legend + 
-    ## Provinces boundaries
-    layer(sp.polygons(peninsulaLines, lwd = 0.1)) +
-    layer(grid.rect(x = bbIslands[1,1], y = bbIslands[2,1],
-                    width = diff(bbIslands[1,]),
-                    height = diff(bbIslands[2,]),
-                    default.units = 'native', just = c('left', 'bottom'),
-                    gp = gpar(lwd = 0.5, fill = 'transparent')))
+p + legend
+
+##################################################################
+## Interactive Graphics
+##################################################################
 
 library(mapview)
 
 sfMapVotes0 <- st_read("data/spMapVotes0.shp")
 st_crs(sfMapVotes0) <- 25830
 
-mapView(sfMapVotes0, zcol = "whichMax",
-        legend = TRUE,
-        col.regions = qualPal)
-
+## Quantitative variable, pcMax
 mapView(sfMapVotes0, zcol = "pcMax",
         legend = TRUE,
         col.regions = quantPal)
+
+## Qualitative variable, whichMax
+mapView(sfMapVotes0, zcol = "whichMax",
+        legend = TRUE,
+        col.regions = qualPal)

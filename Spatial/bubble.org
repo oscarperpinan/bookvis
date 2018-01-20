@@ -73,6 +73,14 @@ add a second perception channel to improve the discrimination
 task. Colors from a sequential palette will complement symbol size to
 encode the groups.
 
+Two alternative are available to import and display the data: 
+
+1. Import the data with the =rgdal= package and the function
+   =readOGR=, and display the information with the =sp= package and
+   the =spplot= function (based on =lattice= graphics).
+2. Import the data with the =sf= package and the function =st_read=,
+   and display the information with the =ggplot2= package and the
+   =geom_sf= function.
 
 * Proportional Symbol with =spplot=
 #+begin_src R :exports none
@@ -643,7 +651,7 @@ label:sec:mapview_bubble
 ##################################################################
 #+end_src
 
-The syntax of =mapview= resembles the syntax of =spplot=. Its first argument is the spatial object with the information and the variable to be depicted is selected with the argument =zcol=. Moreover, the size of the points can be linked to another variable with the argument =cex=, and their labels extracted from another variable with the argument =label=. 
+The syntax of =mapview=[fn:12] resembles the syntax of =spplot=. Its first argument is the spatial object with the information and the variable to be depicted is selected with the argument =zcol=. Moreover, the size of the points can be linked to another variable with the argument =cex=, and their labels extracted from another variable with the argument =label=. 
 
 The next code produces an HTML page with an interactive graphic inserted in it (Figure ref:fig:mapview_bubble_simple). When the mouse is hovered over a point its label is displayed, and if the point is selected a tooltip with the whole information is deployed.
 #+begin_src R
@@ -1043,6 +1051,8 @@ file:figs/airMadridTooltip.png
 
 
 * Footnotes
+
+[fn:12] The package =mapview= is able to work both with =sp= and =sf= objects. In this section the code works with =sp= objects, but would work without modification with =sf= objects.
 
 [fn:11] The list of provider is available in http://leaflet-extras.github.io/leaflet-providers/preview/
 
