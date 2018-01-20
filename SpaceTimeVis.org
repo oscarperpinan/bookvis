@@ -2,7 +2,7 @@
 
 #+AUTHOR: Oscar Perpiñán Lamigueiro
 
-#+DATE: December 2017
+#+DATE: January 2018
 
 #+SETUPFILE: config.org
 
@@ -163,16 +163,18 @@ Which package to choose is, for a wide range of datasets, a question of personal
   
 **** Interactive graphics
 
-*Details about =htmlwidgets=*
+Both =lattice= and =ggplot2= (and every package based on =grid=) generate static graphics. However, interactive web graphics produced with \textsf{R} have experienced a boost in recent years, mainly thanks to the package =htmlwidgets= cite:Vaidyanathan2017. This package provides a framework for creating \textsf{R} bindings to JavaScript libraries. This package is the base for important visualization packages such as =dygraphs=, =highcharter=, =plotly=, =leaflet= and =mapview=. They will be covered along the chapters of the book. 
+
+On the other hand, the package =gridSVG= cite:Murrell.Potter2017 converts any grid scene to an \textsf{SVG} document. The =grid.hyperlink= function allows a hyperlink to be associated with any component of the scene, the =grid.animate= function can be used to animate any component of a scene, and the =grid.garnish= function can be used to add \textsf{SVG} attributes to the components of a scene. By setting event handler attributes on a component, plus possibly using the =grid.script= function to add \textsf{JavaScript} to the scene, it is possible to make the component respond to user input such as mouse clicks.
 
 *** Packages
  label:sec:introduction-packages
 
- Throughout the book, several \textsf{R} packages are used. All of them are available from \textsf{CRAN}, and you must install them before
- using the code. Most of them are loaded at the start of the code of each chapter, although some of them are loaded later if they are used only inside optional sections (marked with \floweroneleft). You should install the last version available at \textsf{CRAN} to ensure correct functioning of the code.
+Throughout the book, several \textsf{R} packages are used. All of them are available from \textsf{CRAN}, and you must install them before
+using the code. Most of them are loaded at the start of the code of each chapter, although some of them are loaded later if they are used only inside optional sections (marked with \floweroneleft). You should install the last version available at \textsf{CRAN} to ensure correct functioning of the code.
 
- Although the introductory chapter of each part includes a section with an outline of the most relevant packages, some of them deserve to be
- highlighted here:
+Although the introductory chapter of each part includes a section with an outline of the most relevant packages, some of them deserve to be
+highlighted here:
 
  - =zoo= cite:Zeileis.Grothendieck2005 provides infrastructure for time series using arbitrary classes for the time
    stamps (Section ref:sec:zoo).
@@ -180,11 +182,6 @@ Which package to choose is, for a wide range of datasets, a question of personal
  - =sp= cite:Pebesma2012 and =sf= cite:Pebesma2018 provide a coherent set of classes and methods for the major spatial data types: points, lines, polygons, and grids (Sections ref:sec:sp and ref:sec:sf). =spacetime= cite:Pebesma2012 defines classes and methods for spatiotemporal  data, and methods for plotting data as map sequences or multiple time series (Section ref:sec:spacetime).
 
  - =raster= cite:Hijmans2013 is a major extension of gridded spatial data classes. It provides a unified access method to different raster formats, permitting large objects to be analyzed with the definition of basic and high-level processing functions (Sections ref:sec:raster and ref:sec:rasterST). =rasterVis= cite:Perpinan.Hijmans2017 provides enhanced visualization of raster data with methods for spatiotemporal rasters (Sections ref:sec:rasterVis and ref:sec:rastervisST).
-
- - *=htmlwidgets= R interfaces for JavaScript libraries.*
-
- - =gridSVG= cite:Murrell.Potter2017 converts any grid scene to an \textsf{SVG} document. The =grid.hyperlink= function allows a hyperlink to be associated with any component of the scene, the =grid.animate= function can be used to animate any component of a scene, and the =grid.garnish= function can be used to add \textsf{SVG} attributes to the components of a scene. By setting event handler attributes on a component, plus possibly using the =grid.script= function to add \textsf{JavaScript} to the scene, it is possible to make the component respond to user input such as mouse clicks.
-
 
 *** Software Used to Write This Book
  label:sec:software-book
