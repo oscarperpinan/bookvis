@@ -606,6 +606,7 @@ p + legend
 [[file:figs/mapLegends.pdf]]
 
 * Interactive Graphics
+label:sec:interactive_choropleth
 #+begin_src R :exports none  
 ##################################################################
 ## Interactive Graphics

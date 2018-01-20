@@ -5,16 +5,14 @@
 ## with setwd to the folder where the repository is located.
 
 ##################################################################
-## Raster maps
-##################################################################
-
-##################################################################
 ## Quantitative data
 ##################################################################
 
 library(raster)
 library(rasterVis)
+
 SISav <- raster('data/SISav')
+
 levelplot(SISav)
 
 library(maps)
@@ -50,9 +48,9 @@ hs <- hillShade(slope = slope, aspect = aspect,
 setwd(old)
 
 ## hillShade theme: gray colors and semitransparency
-hsTheme <- modifyList(GrTheme(), list(regions=list(alpha=0.6)))
+hsTheme <- GrTheme(regions = list(alpha = 0.6))
   
-levelplot(SISav, panel = panel.levelplot.raster,
+levelplot(SISav, 
           margin = FALSE, colorkey = FALSE) +
     levelplot(hs, par.settings = hsTheme, maxpixels = 1e6) +
     layer(sp.lines(boundaries, lwd = 0.5))
@@ -105,7 +103,6 @@ idx <- findInterval(SISav[], breaks, rightmost.closed=TRUE)
 mids <- tapply(SISav[], idx, median)
 ## Maximum of the absolute value both limits
 mx <- max(abs(breaks))
-mids
 
 break2pal <- function(x, mx, pal){
     ## x = mx gives y = 1
@@ -126,9 +123,8 @@ levelplot(SISav,
           par.settings = rasterTheme(region = pal),
           at = breaks, contour = TRUE)
 
-divTheme <- rasterTheme()
+divTheme <- rasterTheme(regions = list(col = pal))
 
-divTheme$regions$col <- pal
 levelplot(SISav,
           par.settings = divTheme,
           at = breaks,
@@ -155,7 +151,6 @@ levelplot(SISav,
 ## Categorical data
 ##################################################################
 
-library(raster)
 ## China and India  
 ext <- extent(65, 135, 5, 55)
 
@@ -183,8 +178,6 @@ rat <- levels(landClass)[[1]]
 rat$classes <- c('Forest', 'Land', 'Urban', 'Snow')
 levels(landClass) <- rat
 
-library(rasterVis)
-  
 qualPal <- c('palegreen4', # Forest
          'lightgoldenrod', # Land
          'indianred4', # Urban
@@ -194,15 +187,12 @@ qualTheme <- rasterTheme(region = qualPal,
                         panel.background = list(col='lightskyblue1')
                         )
 
-  
 levelplot(landClass, maxpixels = 3.5e5,
-          par.settings = qualTheme,
-          panel = panel.levelplot.raster)
+          par.settings = qualTheme)
 
 pPop <- levelplot(pop, zscaleLog = 10,
                   par.settings = BTCTheme,
-                  maxpixels = 3.5e5,
-                  panel = panel.levelplot.raster)
+                  maxpixels = 3.5e5)
 pPop
 
 s <- stack(pop, landClass)
@@ -211,7 +201,7 @@ histogram(~log10(pop) | landClass, data = s,
           scales = list(relation = 'free'))
 
 ##################################################################
-## Multivariate legend
+## Bivariate legend
 ##################################################################
 
 classes <- rat$classes
@@ -253,8 +243,8 @@ library(grid)
 legend <- layer(
 {
     ## Center of the legend (rectangle)
-    x0 <- 128
-    y0 <- 20
+    x0 <- 125
+    y0 <- 22
     ## Width and height of the legend
     w <- 10
     h <- w / nClasses * nIntervals
@@ -264,22 +254,30 @@ legend <- layer(
                       y = unit(y0, "native"),
                 width = unit(w, "native"))
     ## x-axis of the legend
+    ## x-axis (qualitative variable)
     grid.text(classes,
-              x = unit(seq(x0 - w/2,
-                           x0 + w/2,
+              x = unit(seq(x0 - w * (nClasses -1)/(2*nClasses),
+                           x0 + w * (nClasses -1)/(2*nClasses),
                            length = nClasses),
                        "native"),
               y = unit(y0 + h/2, "native"),
-              gp = gpar(fontsize = 4))
-    ## y-axis of the legend
-    grid.text(logPopAt[-1],
+              just = "bottom",
+              rot = 10,
+              gp = gpar(fontsize = 6))
+    ## y-axis (quantitative variable)
+    yLabs <- paste0("[",
+                    paste(logPopAt[-nIntervals],
+                          logPopAt[-1], sep = ","),
+                    "]")
+    grid.text(yLabs,
               x = unit(x0 + w/2, "native"),
-              y = unit(seq(y0 - h/2,
-                           y0 + h/2,
+              y = unit(seq(y0 - h * (nIntervals -1)/(2*nIntervals),
+                           y0 + h * (nIntervals -1)/(2*nIntervals),
                            length = nIntervals),
                        "native"),
-              just = 'left',
-              gp = gpar(fontsize = 4))
+              just = "left",
+              gp = gpar(fontsize = 6))
+
 })
 
 p + legend
@@ -294,6 +292,10 @@ par3d(viewport = c(0, 30, 250, 250))
 
 writeWebGL(filename = 'docs/images/rgl/DEM.html',
            width = 800)
+
+##################################################################
+## mapview
+##################################################################
 
 library(mapview)
 
