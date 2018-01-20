@@ -636,12 +636,18 @@ mapView(sfMapVotes0, zcol = "pcMax",
         col.regions = quantPal)
 #+end_src
 
+#+CAPTION: Snapshot of the interactive quantitative choropleth map produced with =mapview=. label:fig:mapview_pcMax
+file:figs/mapview_pcMax.png
+
 #+begin_src R
 ## Qualitative variable, whichMax
 mapView(sfMapVotes0, zcol = "whichMax",
         legend = TRUE,
         col.regions = qualPal)
 #+end_src
+
+#+CAPTION: Snapshot of the interactive qualitative choropleth map produced with =mapview=. label:fig:mapview_whichMax
+file:figs/mapview_whichMax.png
 
 * Footnotes
 
