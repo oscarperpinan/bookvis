@@ -37,14 +37,6 @@ lattice.options(default.theme = myTheme,
                 default.args = modifyList(defaultArgs, myArgs))
 
 ##################################################################
-## Proportional symbol mapping
-##################################################################
-
-##################################################################
-## Introduction
-##################################################################
-
-##################################################################
 ## Proportional symbol with spplot
 ##################################################################
 
@@ -289,6 +281,10 @@ spplot(airKrige["var1.pred"],
     })
 
 ##################################################################
+## Interactive graphics
+##################################################################
+
+##################################################################
 ## mapView
 ##################################################################
 
@@ -300,6 +296,10 @@ mapview(NO2sp, zcol = "mean", cex = "mean",
         col.regions = pal, legend = TRUE,
         label = NO2sp$Nombre)
 
+##################################################################
+## Tooltips with images and graphs
+##################################################################
+
 img <- paste('images/', NO2sp$codEst, '.jpg', sep='')
 
 mapview(NO2sp, zcol = "mean", cex = "mean",
@@ -308,14 +308,16 @@ mapview(NO2sp, zcol = "mean", cex = "mean",
         label = NO2sp$Nombre,
         popup = popupImage(img, src = "local"))
 
+## Read the time series
 airQuality <- read.csv2('data/airQuality.csv')
-
+## We need only NO2 data (codParam 8)
 NO2 <- subset(airQuality, codParam == 8)
+## Time index in a new column
 NO2$tt <- with(NO2,
                as.Date(paste(year, month, day, sep = '-')))
-
+## Stations code
 stations <- unique(NO2$codEst)
-
+## Loop to create a scatterplot for each station.
 pList <- lapply(stations, function(i)
     xyplot(dat ~ tt, data = NO2,
            subset = (codEst == i),
@@ -329,21 +331,26 @@ mapview(NO2sp, zcol = "mean", cex = "mean",
         label = NO2sp$Nombre,
         popup = popupGraph(pList))
 
+##################################################################
+## Synchronise multiple graphics  
+##################################################################
+
+## Map of the average value
 mapMean <- mapview(NO2sp, zcol = "mean", cex = "mean",
                    col.regions = pal, legend = TRUE,
                    map.types = "OpenStreetMap.Mapnik",
                    label = NO2sp$Nombre)
-
+## Map of the median
 mapMedian <- mapview(NO2sp, zcol = "median", cex = "median",
                      col.regions = pal, legend = TRUE,
                      map.type = "Stamen.Watercolor",
                      label = NO2sp$Nombre)
-
+## Map of the standard deviation
 mapSD <- mapview(NO2sp, zcol = "sd", cex = "sd",
                  col.regions = pal, legend = TRUE,
                  map.type = "Esri.WorldImagery",
                  label = NO2sp$Nombre)
-
+## All together
 sync(mapMean, mapMedian, mapSD, ncol = 3)
 
 ##################################################################
@@ -353,16 +360,27 @@ sync(mapMean, mapMedian, mapSD, ncol = 3)
 library(rgdal)
 writeOGR(NO2sp, 'data/NO2.geojson', 'NO2sp', driver='GeoJSON')
 
-  library(rgdal)
-  writeOGR(NO2sp, dsn='NO2_mean.kml', layer='mean', driver='KML')
+##################################################################
+## Keyhole Markup Language
+##################################################################
 
-  library(plotKML)
-  plotKML(NO2sp["mean"], points_names=NO2sp$codEst)
+library(rgdal)
+writeOGR(NO2sp, dsn='NO2_mean.kml', layer='mean', driver='KML')
+
+library(plotKML)
+plotKML(NO2sp["mean"], points_names=NO2sp$codEst)
+
+##################################################################
+## 3D visualization
+##################################################################
 
 library(rgl)
 
+## rgl does not understand Spatial* objects
 NO2df <- as.data.frame(NO2sp)
 
+## Color of each point according to its class
+airPal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(5)
 colorClasses <- airPal[NO2df$classNO2]
 
 plot3d(x = NO2df$coords.x1, 
@@ -379,34 +397,17 @@ plot3d(x = NO2df$coords.x1,
 ## gridSVG
 ##################################################################
 
-  library(XML)
+library(gridSVG)
 
-  old <- setwd('images')
-  for (i in 1:nrow(NO2df)){
-    codEst <- NO2df[i, "codEst"]
-    ## Webpage of each station
-    codURL <- as.numeric(substr(codEst, 7, 8))
-    rootURL <- 'http://www.mambiente.munimadrid.es'
-    stationURL <- paste(rootURL,
-                        '/opencms/opencms/calaire/contenidos/estaciones/estacion',
-                        codURL, '.html', sep='')
-    content <- htmlParse(stationURL, encoding='utf8')
-    ## Extracted with http://www.selectorgadget.com/
-    xPath <- '//*[contains(concat( " ", @class, " " ), concat( " ", "imagen_1", " " ))]'
-    imageStation <- getNodeSet(content, xPath)[[1]]
-    imageURL <- xmlAttrs(imageStation)[1]
-    imageURL <- paste(rootURL, imageURL, sep='')
-    download.file(imageURL, destfile=paste(codEst, '.jpg', sep=''))
-  }
-  setwd(old)
+print(pNO2 +
+      layer_(sp.polygons(distritosMadrid,
+                         fill = 'gray97',
+                         lwd = 0.3)))
 
-  print(pNO2 + layer_(sp.polygons(distritosMadrid, fill='gray97', lwd=0.3)))
+NO2df <- as.data.frame(NO2sp)
 
-  library(gridSVG)
-  
-  NO2df <- as.data.frame(NO2sp)
-  
-  tooltips <- sapply(seq_len(nrow(NO2df)), function(i){
+tooltips <- sapply(seq_len(nrow(NO2df)), function(i)
+{
     codEst <- NO2df[i, "codEst"]
     ## Information to be attached to each line
     stats <- paste(c('Mean', 'Median', 'SD'),
@@ -423,42 +424,45 @@ plot3d(x = NO2df$coords.x1,
     info <- paste(nameStation, stats, sep='<br />')
     ## Tooltip includes the image and the text
     paste(imageInfo, info, sep='<br />')
-  })
-  grid.garnish('points.panel', title=tooltips,  grep=TRUE, group=FALSE)
+})
+grid.garnish('points.panel',
+             title = tooltips,
+             grep = TRUE,
+             group = FALSE)
 
-  ## Webpage of each station
-  rootURL <- 'http://www.mambiente.munimadrid.es'
-  urlList <- sapply(seq_len(nrow(NO2df)), function(i){
+## Webpage of each station
+rootURL <- 'http://www.mambiente.munimadrid.es'
+urlList <- sapply(seq_len(nrow(NO2df)), function(i){
     codEst <- NO2df[i, "codEst"]
     codURL <- as.numeric(substr(codEst, 7, 8))
     stationURL <- paste(rootURL,
                         '/opencms/opencms/calaire/contenidos/estaciones/estacion',
                         codURL, '.html', sep='')
-    })
-  
-  grid.hyperlink('points.panel', urlList, grep=TRUE, group=FALSE)
+})
 
-  ## Add jQuery and jQuery UI scripts
-  grid.script(file='http://code.jquery.com/jquery-1.8.3.js')
-  grid.script(file='http://code.jquery.com/ui/1.9.2/jquery-ui.js')
-  ## Simple JavaScript code to initialize the tooltip
-  grid.script(file='js/myTooltip.js')
-  ## Produce the SVG graphic: the results of grid.garnish,
-  ## grid.hyperlink and grid.script are converted to SVG code
-  grid.export('figs/airMadrid.svg')
+grid.hyperlink('points.panel', urlList, grep=TRUE, group=FALSE)
 
-  htmlBegin <- '<!DOCTYPE html>
-  <html>
-  <head>
-  <title>Tooltips with jQuery and gridSVG</title>
-  <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.2/themes/smoothness/jquery-ui.css" />
-  <meta charset="utf-8">
-  </head>
-  <body>'
-  
-  htmlEnd <- '</body> </html>'
-    
-  svgText <- paste(readLines('figs/airMadrid.svg'), collapse='\n')
-    
-  writeLines(paste(htmlBegin, svgText, htmlEnd, sep='\n'),
-             'airMadrid.html')
+## Add jQuery and jQuery UI scripts
+grid.script(file='http://code.jquery.com/jquery-1.8.3.js')
+grid.script(file='http://code.jquery.com/ui/1.9.2/jquery-ui.js')
+## Simple JavaScript code to initialize the tooltip
+grid.script(file='js/myTooltip.js')
+## Produce the SVG graphic: the results of grid.garnish,
+## grid.hyperlink and grid.script are converted to SVG code
+grid.export('figs/airMadrid.svg')
+
+htmlBegin <- '<!DOCTYPE html>
+<html>
+<head>
+<title>Tooltips with jQuery and gridSVG</title>
+<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.2/themes/smoothness/jquery-ui.css" />
+<meta charset="utf-8">
+</head>
+<body>'
+
+htmlEnd <- '</body> </html>'
+
+svgText <- paste(readLines('figs/airMadrid.svg'), collapse='\n')
+
+writeLines(paste(htmlBegin, svgText, htmlEnd, sep='\n'),
+           'airMadrid.html')

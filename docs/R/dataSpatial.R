@@ -117,9 +117,35 @@ NO2sp <- spCbind(airStations[, c('Nombre', 'alt')], NO2agg[idxNO2, ])
 writeOGR(NO2sp, dsn = 'data/', layer = 'NO2sp',
          driver = 'ESRI Shapefile')
 
-  ##################################################################
-  ## Spanish General Elections
-  ##################################################################
+##################################################################
+## Photographs of the stations
+##################################################################
+
+library(XML)
+
+old <- setwd('images')
+for (i in 1:nrow(NO2df))
+{
+    codEst <- NO2df[i, "codEst"]
+    ## Webpage of each station
+    codURL <- as.numeric(substr(codEst, 7, 8))
+    rootURL <- 'http://www.mambiente.munimadrid.es'
+    stationURL <- paste(rootURL,
+                        '/opencms/opencms/calaire/contenidos/estaciones/estacion',
+                        codURL, '.html', sep='')
+    content <- htmlParse(stationURL, encoding='utf8')
+    ## Extracted with http://www.selectorgadget.com/
+    xPath <- '//*[contains(concat( " ", @class, " " ), concat( " ", "imagen_1", " " ))]'
+    imageStation <- getNodeSet(content, xPath)[[1]]
+    imageURL <- xmlAttrs(imageStation)[1]
+    imageURL <- paste(rootURL, imageURL, sep='')
+    download.file(imageURL, destfile=paste(codEst, '.jpg', sep=''))
+}
+setwd(old)
+
+##################################################################
+## Spanish General Elections
+##################################################################
 
 dat2016 <- read.csv('data/GeneralSpanishElections2016.csv')
 

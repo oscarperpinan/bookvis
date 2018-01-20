@@ -242,12 +242,57 @@ writeOGR(NO2sp, dsn = 'data/', layer = 'NO2sp',
 
 
 
+** Photographs of the stations
+label:sec:photographs_stations
+
+#+begin_src R :exports none
+##################################################################
+## Photographs of the stations
+##################################################################
+#+end_src
+
+#+INDEX: Packages!XML@\texttt{XML}
+#+INDEX: htmlParse@\texttt{htmlParse}
+#+INDEX: getNodeSet@\texttt{getNodeSet}
+
+The photographs of the stations are used for the tooltips of the interactive graphics (Section ref:sec:interactive_bubble). These photographs are downloaded from the Munimadrid webpage[fn:8] with the functions of the =XML= package. 
+
+The =htmlParse= function from the =XML= package parses each station
+page, and the station photograph is extracted with =getNodeSet= and
+=xmlAttrs=.
+
+
+#+begin_src R :eval no-export
+library(XML)
+
+old <- setwd('images')
+for (i in 1:nrow(NO2df))
+{
+    codEst <- NO2df[i, "codEst"]
+    ## Webpage of each station
+    codURL <- as.numeric(substr(codEst, 7, 8))
+    rootURL <- 'http://www.mambiente.munimadrid.es'
+    stationURL <- paste(rootURL,
+                        '/opencms/opencms/calaire/contenidos/estaciones/estacion',
+                        codURL, '.html', sep='')
+    content <- htmlParse(stationURL, encoding='utf8')
+    ## Extracted with http://www.selectorgadget.com/
+    xPath <- '//*[contains(concat( " ", @class, " " ), concat( " ", "imagen_1", " " ))]'
+    imageStation <- getNodeSet(content, xPath)[[1]]
+    imageURL <- xmlAttrs(imageStation)[1]
+    imageURL <- paste(rootURL, imageURL, sep='')
+    download.file(imageURL, destfile=paste(codEst, '.jpg', sep=''))
+}
+setwd(old)
+#+end_src
+
 * Spanish General Elections
 label:sec:dataChoropleth
+
 #+begin_src R :exports none
-  ##################################################################
-  ## Spanish General Elections
-  ##################################################################
+##################################################################
+## Spanish General Elections
+##################################################################
 #+end_src
 
 The results from the 2016 Spanish general elections[fn:9] are
@@ -523,6 +568,9 @@ package.
 
 
 * Footnotes
+
+[fn:8] http://www.mambiente.munimadrid.es/opencms/opencms/calaire/SistemaIntegral/SistVigilancia/Estaciones/
+
 
 [fn:7] http://www.ine.es/ > Products and services > Publications > Download the PC-Axis program > Municipal maps
 

@@ -48,6 +48,8 @@ lattice.options(default.theme = myTheme,
                 default.args = modifyList(defaultArgs, myArgs))
 #+end_src
 
+#+RESULTS:
+
 
 The proportional symbol technique uses symbols of different sizes
 to represent data associated with areas or point locations, with
@@ -78,8 +80,6 @@ encode the groups.
 ## Proportional symbol with spplot
 ##################################################################
 #+end_src
-
-#+RESULTS:
 
 The =spplot= method provided by the =sp= package, based on =xyplot=
 from the =lattice= package, is able to display
@@ -392,7 +392,7 @@ service[fn:1].
 A shapefile can be read with =readOGR= from the =rgdal= package, or
 with =st_read= from the =sf= package. 
 
-*** =readOGR= and =spplot=
+*** rgdal and spplot
 #+begin_src R :exports none
 ##################################################################
 ## rgdal and spplot
@@ -496,7 +496,7 @@ pNO2 +
 [[file:figs/airMadrid.png]]
 
 
-*** =sf= and =ggplot=
+*** sf and ggplot
 #+begin_src R :exports none
 ##################################################################
 ## sf and ggplot
@@ -614,15 +614,38 @@ spplot(airKrige["var1.pred"],
 #+RESULTS[e7439ec0ee815727d28fb2e1b30578c2484919e2]:
 [[file:figs/airMadrid_krige.png]]
 
-* Interactive
-Additional Information with Tooltips and Hyperlinks
-** mapview
+* Interactive Graphics
+label:sec:interactive_bubble
+#+begin_src R :exports none
+##################################################################
+## Interactive graphics
+##################################################################
+#+end_src
+
+#+INDEX: Interactive visualization
+
+Now, let's suppose you need to know the median and standard deviation
+of the time series of a certain station. Moreover, you would like to
+watch the photography of that station; or even better, you wish to
+visit its webpage for additional information. A frequent solution is
+to produce interactive graphics with tooltips and hyperlinks.
+
+In this section we visit several approaches to create these products.
+
+** mapview 
+label:sec:mapview_bubble
+
+#+INDEX: Packages!mapview@\texttt{mapview}
+
 #+begin_src R :exports none
 ##################################################################
 ## mapView
 ##################################################################
 #+end_src
 
+The syntax of =mapview= resembles the syntax of =spplot=. Its first argument is the spatial object with the information and the variable to be depicted is selected with the argument =zcol=. Moreover, the size of the points can be linked to another variable with the argument =cex=, and their labels extracted from another variable with the argument =label=. 
+
+The next code produces an HTML page with an interactive graphic inserted in it (Figure ref:fig:mapview_bubble_simple). When the mouse is hovered over a point its label is displayed, and if the point is selected a tooltip with the whole information is deployed.
 #+begin_src R
 library(mapview)
 
@@ -633,7 +656,27 @@ mapview(NO2sp, zcol = "mean", cex = "mean",
         label = NO2sp$Nombre)
 #+end_src
 
-*** Popup Image
+#+CAPTION: Snapshot of the interactive graphic produced with =mapview= depicting the annual average of $NO_2$ measurements in Madrid. label:fig:mapview_bubble_simple
+[[file:figs/mapview_simple.png]]
+
+*** Tooltips with images and graphs
+#+begin_src R :exports none
+##################################################################
+## Tooltips with images and graphs
+##################################################################
+#+end_src
+
+The tooltip included in the previous graphic is very simple: only text
+displaying a table with information. This tooltip can be improved
+thanks to the =popup= argument and the =popup*= family of
+functions. For example, the next code creates an interactive graphic
+whose tooltips show an image of the station (available in the =images=
+folder of the repository) using the =popupImage= function (Figure
+ref:fig:mapview_popup_images).
+
+As an additional feature, the provider[fn:11] of the background map is
+selected with the argument =map.type=.
+
 #+begin_src R
 img <- paste('images/', NO2sp$codEst, '.jpg', sep='')
 
@@ -644,16 +687,30 @@ mapview(NO2sp, zcol = "mean", cex = "mean",
         popup = popupImage(img, src = "local"))
 #+end_src
 
-*** Popup Graph
-#+begin_src R
-airQuality <- read.csv2('data/airQuality.csv')
+#+CAPTION: Snapshot of the interactive graphic produced with =mapview= with tooltips including images. label:fig:mapview_popup_images
+[[file:figs/mapview_popup_images.png]]
 
+
+A more sophisticated solution displays a scatterplot when a tooltip is
+deployed. The =popupGraph= function accepts a list of graphics and
+selects the one corresponding to the location selected by the
+user. This list is produced with the next code: first, the
+measurements time series is read and filtered; second, the stations
+code is extracted; finally, a loop with =lapply= creates a time series
+graphic for each station displaying the evolution of the measurements
+along the time period.
+
+#+begin_src R
+## Read the time series
+airQuality <- read.csv2('data/airQuality.csv')
+## We need only NO2 data (codParam 8)
 NO2 <- subset(airQuality, codParam == 8)
+## Time index in a new column
 NO2$tt <- with(NO2,
                as.Date(paste(year, month, day, sep = '-')))
-
+## Stations code
 stations <- unique(NO2$codEst)
-
+## Loop to create a scatterplot for each station.
 pList <- lapply(stations, function(i)
     xyplot(dat ~ tt, data = NO2,
            subset = (codEst == i),
@@ -661,6 +718,9 @@ pList <- lapply(stations, function(i)
            xlab = '', ylab = '')
     )
 #+end_src
+
+This list of graphics, =pList=, is provided to =mapview= through the
+=popup= argument with the function =popupGraph= (Figure ref:fig:mapview_popup_graphs).
 
 #+begin_src R
 mapview(NO2sp, zcol = "mean", cex = "mean",
@@ -670,28 +730,54 @@ mapview(NO2sp, zcol = "mean", cex = "mean",
         popup = popupGraph(pList))
 #+end_src
 
-*** Sync
+#+CAPTION: Snapshot of the interactive graphic produced with =mapview= with tooltips including time series graphics. label:fig:mapview_popup_graphs
+[[file:figs/mapview_popup_graphs.png]]
 
-Providers: http://leaflet-extras.github.io/leaflet-providers/preview/
+
+
+*** Synchronise multiple graphics  
+#+begin_src R :exports none
+##################################################################
+## Synchronise multiple graphics  
+##################################################################
+#+end_src
+
+The =mapview= package recreates the small multiple technique (Sections
+ref:SEC:sameScale and ref:SEC:groupVariable) with the functions =sync=
+and =latticeView=. With them, multiple variables can be rendered
+simultaneously and synchronised together (with the =sync= function):
+if a panel is zoomed, all other panels will also zoom; the mouse
+position in a panel is signaled with a red circle in the rest of
+panels.
+
+The next code generates three graphics to view different variables of
+the =NO2sp= object using different values in =zcol= and =cex=. All of
+them are viewed and synchronised together with =sync= (Figure
+ref:fig:mapview_sync):
 
 #+begin_src R
+## Map of the average value
 mapMean <- mapview(NO2sp, zcol = "mean", cex = "mean",
                    col.regions = pal, legend = TRUE,
                    map.types = "OpenStreetMap.Mapnik",
                    label = NO2sp$Nombre)
-
+## Map of the median
 mapMedian <- mapview(NO2sp, zcol = "median", cex = "median",
                      col.regions = pal, legend = TRUE,
                      map.type = "Stamen.Watercolor",
                      label = NO2sp$Nombre)
-
+## Map of the standard deviation
 mapSD <- mapview(NO2sp, zcol = "sd", cex = "sd",
                  col.regions = pal, legend = TRUE,
                  map.type = "Esri.WorldImagery",
                  label = NO2sp$Nombre)
-
+## All together
 sync(mapMean, mapMedian, mapSD, ncol = 3)
 #+end_src
+
+#+CAPTION: Snapshot of multiple interactive graphics produced with =mapview=. label:fig:mapview_sync
+[[file:figs/mapview_sync.png]]
+
 
 ** Export to Other Formats
 
@@ -733,6 +819,11 @@ file:figs/geojson.png
 
 
 *** Keyhole Markup Language
+#+begin_src R :exports none
+##################################################################
+## Keyhole Markup Language
+##################################################################
+#+end_src
 
 Keyhole Markup Language (KML) is a file format to display geographic
 data within Internet-based, two-dimensional maps and three-dimensional
@@ -768,12 +859,39 @@ plotKML(NO2sp["mean"], points_names=NO2sp$codEst)
 Both functions produce a file that can be directly opened with Google
 Earth or Marble.
 
-** rgl
+** 3D visualization
+#+begin_src R :exports none
+##################################################################
+## 3D visualization
+##################################################################
+#+end_src
+
+#+INDEX: Packages!rgl@\texttt{rgl}
+#+INDEX: 3D visualization
+#+INDEX: WebGL
+
+An alternative method is 3D visualization where the user can
+rotate or zoom the figure. This solution is available thanks to the
+=rgl= package, which provides functions for 3D interactive
+graphics. 
+
+Previously, the =SpatialPointsDataFrame= object must be converted to a
+=data.frame=. The =xyz= coordinates will be the longitude, latitude,
+and altitude of each station. The color of each point is determined by
+the corresponding class (Section ref:sec:classification_bubble), and
+the radius of each bubble depends on the mean value of the depicted
+variable. A snapshot of this graphic is displayed in Figure
+ref:fig:rgl_bubble.
+
+
 #+begin_src R
 library(rgl)
 
+## rgl does not understand Spatial* objects
 NO2df <- as.data.frame(NO2sp)
 
+## Color of each point according to its class
+airPal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(5)
 colorClasses <- airPal[NO2df$classNO2]
 
 plot3d(x = NO2df$coords.x1, 
@@ -787,6 +905,10 @@ plot3d(x = NO2df$coords.x1,
        radius = NO2df$mean/10)
 #+end_src
 
+#+CAPTION: Snapshot of the interactive graphic produced with =rgl=. label:fig:rgl_bubble
+[[file:figs/rgl_bubble.png]]
+
+
 ** \floweroneleft gridSVG
 #+begin_src R :exports none
 ##################################################################
@@ -794,11 +916,8 @@ plot3d(x = NO2df$coords.x1,
 ##################################################################
 #+end_src
 
-Now, let's suppose you need to know the median and standard deviation
-of the time series of a certain station. Moreover, you would like to
-watch the photography of that station; or even better, you wish to
-visit its webpage for additional information. A frequent solution is
-to produce interactive graphics with tooltips and hyperlinks.
+#+INDEX: Packages!gridSVG@\texttt{gridSVG}
+#+INDEX: JavaScript
 
 The =gridSVG= package is able to create an SVG graphic, where each
 component owns a =title= attribute; the content of this attribute is
@@ -807,65 +926,20 @@ element. The content of this attribute can be modified thanks to the
 =grid.garnish= function. Moreover, the =grid.hyperlink= function can
 add hyperlinks to the correspondent graphical element.
 
-The tooltips will display the photography of the station, the name of
-the station, and the statistics previously calculated with =aggregate=
-in the first step of this chapter.  The station images are downloaded
-from the Munimadrid webpage.
+The tooltips will display the photography of the station (Section
+ref:sec:photographs_stations), the name of the station, and the
+statistics previously calculated with =aggregate= in the first step of
+this chapter. 
 
-http://www.mambiente.munimadrid.es/opencms/opencms/calaire/SistemaIntegral/SistVigilancia/Estaciones/
-
-The =htmlParse= function from the =XML= package parses each station
-page, and the station photograph is extracted with =getNodeSet= and
-=xmlAttrs=.
-
-
-#+INDEX: Packages!XML@\texttt{XML}
-#+INDEX: htmlParse@\texttt{htmlParse}
-#+INDEX: getNodeSet@\texttt{getNodeSet}
-
-
-#+begin_src R :eval no-export
-library(XML)
-
-old <- setwd('images')
-for (i in 1:nrow(NO2df))
-{
-    codEst <- NO2df[i, "codEst"]
-    ## Webpage of each station
-    codURL <- as.numeric(substr(codEst, 7, 8))
-    rootURL <- 'http://www.mambiente.munimadrid.es'
-    stationURL <- paste(rootURL,
-                        '/opencms/opencms/calaire/contenidos/estaciones/estacion',
-                        codURL, '.html', sep='')
-    content <- htmlParse(stationURL, encoding='utf8')
-    ## Extracted with http://www.selectorgadget.com/
-    xPath <- '//*[contains(concat( " ", @class, " " ), concat( " ", "imagen_1", " " ))]'
-    imageStation <- getNodeSet(content, xPath)[[1]]
-    imageURL <- xmlAttrs(imageStation)[1]
-    imageURL <- paste(rootURL, imageURL, sep='')
-    download.file(imageURL, destfile=paste(codEst, '.jpg', sep=''))
-}
-setwd(old)
-#+end_src
-
-Next, we attach the hyperlink and the SVG information to each
-circle.
-
-
-
-#+INDEX: Packages!gridSVG@\texttt{gridSVG}
-#+INDEX: JavaScript
 #+INDEX: grid.garnish@\texttt{grid.garnish}
-#+INDEX: grid.hyperlink@\texttt{grid.hyperlink}
-#+INDEX: grid.export@\texttt{grid.export}
-
-
-#+begin_src R 
-print(pNO2 + layer_(sp.polygons(distritosMadrid, fill='gray97', lwd=0.3)))
-#+end_src
 
 #+begin_src R 
 library(gridSVG)
+
+print(pNO2 +
+      layer_(sp.polygons(distritosMadrid,
+                         fill = 'gray97',
+                         lwd = 0.3)))
 
 NO2df <- as.data.frame(NO2sp)
 
@@ -888,11 +962,18 @@ tooltips <- sapply(seq_len(nrow(NO2df)), function(i)
     ## Tooltip includes the image and the text
     paste(imageInfo, info, sep='<br />')
 })
-grid.garnish('points.panel', title=tooltips,  grep=TRUE, group=FALSE)
+grid.garnish('points.panel',
+             title = tooltips,
+             grep = TRUE,
+             group = FALSE)
 #+end_src
 
 #+RESULTS[b2d8b3e7ab5cc3986acf8d01610339b0a26d0eb0]:
 
+Next, we attach the hyperlink and the SVG information to
+each circle.
+
+#+INDEX: grid.hyperlink@\texttt{grid.hyperlink}
 
 #+begin_src R 
 ## Webpage of each station
@@ -919,7 +1000,7 @@ objects to produce an SVG document with script elements.
 
 #+INDEX: jQuery
 #+INDEX: jQuery UI
-
+#+INDEX: grid.export@\texttt{grid.export}
 
 #+begin_src R
 ## Add jQuery and jQuery UI scripts
@@ -962,6 +1043,8 @@ file:figs/airMadridTooltip.png
 
 
 * Footnotes
+
+[fn:11] The list of provider is available in http://leaflet-extras.github.io/leaflet-providers/preview/
 
 [fn:10] https://www.openstreetmap.org/
 
