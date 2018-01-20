@@ -44,10 +44,14 @@ splom(SISmm, xlab='', plot.loess=TRUE)
 ## Space-time and time series plots
 ##################################################################
 
-hovmoller(SISdm, par.settings=BTCTheme())
+hovmoller(SISdm)
 
 xyplot(SISdm, digits=1, col='black', lwd=0.2, alpha=0.6)
 
 horizonplot(SISdm, digits = 1,
             col.regions = rev(brewer.pal(n = 6, 'PuOr')),
             xlab = '', ylab = 'Latitude')
+
+library(mapview)
+
+cubeView(SISdm)

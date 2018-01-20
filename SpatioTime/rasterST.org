@@ -86,7 +86,7 @@ This multilayer raster can be displayed with each snapshot in a
 panel using the small-multiple technique. The problem with this
 approach is that only a limited number of panels can be correctly
 displayed on one page. In this example, we print the first 12
-days of the sequence (Figure [[fig:SISdm]]).
+days of the sequence (Figure ref:fig:SISdm).
 
 #+INDEX: levelplot@\texttt{levelplot}
 
@@ -94,8 +94,7 @@ days of the sequence (Figure [[fig:SISdm]]).
 levelplot(SISdm, layers=1:12, panel=panel.levelplot.raster)
 #+end_src
 
-#+CAPTION: Level plot of daily averages of solar radiation.
-#+LABEL: fig:SISdm
+#+CAPTION: Level plot of daily averages of solar radiation. label:fig:SISdm
 #+RESULTS:
 [[file:figs/SISdm.pdf]]
 
@@ -103,7 +102,7 @@ When the number of layers is very high, a partial solution is to
 aggregate the data, grouping the layers according to a time
 condition. For example, we can build a new space-time raster with
 the monthly averages using =zApply= and =as.yearmon=. This raster
-can be completely displayed on one page (Figure [[fig:SISmm]]),
+can be completely displayed on one page (Figure ref:fig:SISmm),
 although part of the information of the original data is lost in
 the aggregation procedure.
 
@@ -137,8 +136,7 @@ max values  :  74.62326, 123.82005, 167.88226, 249.85596, 313.51773, 340.51255, 
 levelplot(SISmm, panel=panel.levelplot.raster)
 #+end_src
 
-#+CAPTION: Level plot of monthly averages of solar radiation.
-#+LABEL: fig:SISmm
+#+CAPTION: Level plot of monthly averages of solar radiation. label:fig:SISmm
 #+RESULTS:
 [[file:figs/SISmm.pdf]]
 
@@ -154,10 +152,10 @@ scatterplot and the matrix of scatterplots, the histogram and kernel
 density plot, and the boxplot are among the most important tools in
 the frame of the Exploratory Data Analysis approach. Some of them were
 previously used with a spatial raster (chapter ref:cha:raster). In
-this section we will use the histogram (Figure [[fig:SISdm_hist]]),
+this section we will use the histogram (Figure ref:fig:SISdm_hist),
 the violin plot (a combination of a boxplot and a kernel density plot)
-(Figure [[fig:SISdm_boxplot]]), and the matrix of scatterplots
-(section ref:SEC:groupVariable, Figure [[fig:SISmm_splom]]).
+(Figure ref:fig:SISdm_boxplot), and the matrix of scatterplots
+(section ref:SEC:groupVariable, Figure ref:fig:SISmm_splom).
 
 #+INDEX: histogram@\texttt{histogram}
 
@@ -165,8 +163,7 @@ the violin plot (a combination of a boxplot and a kernel density plot)
 histogram(SISdm, FUN=as.yearmon)
 #+end_src
 
-#+CAPTION: Histogram of monthly distribution of solar radiation.
-#+LABEL: fig:SISdm_hist
+#+CAPTION: Histogram of monthly distribution of solar radiation. label:fig:SISdm_hist
 #+RESULTS:
 [[file:figs/SISdm_histogram.pdf]]
 
@@ -177,8 +174,7 @@ histogram(SISdm, FUN=as.yearmon)
 bwplot(SISdm, FUN=as.yearmon)
 #+end_src
 
-#+CAPTION: Violin plot of monthly distribution of solar radiation.
-#+LABEL: fig:SISdm_boxplot
+#+CAPTION: Violin plot of monthly distribution of solar radiation. label:fig:SISdm_boxplot
 #+RESULTS:
 [[file:figs/SISdm_boxplot.pdf]]
 
@@ -188,8 +184,7 @@ bwplot(SISdm, FUN=as.yearmon)
 splom(SISmm, xlab='', plot.loess=TRUE)
 #+end_src
 
-#+CAPTION: Scatterplot matrix of monthly averages together with their kernel density estimations in the diagonal frames.
-#+LABEL: fig:SISmm_splom
+#+CAPTION: Scatterplot matrix of monthly averages together with their kernel density estimations in the diagonal frames. label:fig:SISmm_splom
 #+RESULTS:
 [[file:figs/SISmm_splom.png]]
 
@@ -214,35 +209,35 @@ strongly nonlinear due to the presence of clouds.
 ##################################################################
 #+end_src
 
-The level plots of Figures [[fig:SISdm]] and [[fig:SISmm]]
+The level plots of Figures [[ref:fig:SISdm]] and [[ref:fig:SISmm]]
 display the full 3D space-time with a grid of panels where each layer
 is printed. In other words, the raster is sliced, and the collection of
 pieces is shown in a table. In the section ref:sec:animationST_var, this
 collection of layers will be displayed sequentially like frames of a
 movie to build an animation. In this section, the 3D raster is reduced
 to a 2D matrix with spatial aggregation following a certain
-direction. For example, Figure [[fig:SISdm_hovmoller_lat]]
+direction. For example, Figure [[ref:fig:SISdm_hovmoller_lat]]
 displays with colors the averaged value of the raster for each
 latitude zone (using the default value of the argument =dirXY=) with
 time on the vertical axis.
 
 #+INDEX: hovmoller@\texttt{hovmoller}
 
-#+begin_src R :results output graphics :exports both :file figs/SISdm_hovmoller_lat.pdf
-hovmoller(SISdm, par.settings=BTCTheme())
+#+begin_src R :results output graphics :exports both :file figs/SISdm_hovmoller_lat.png :width 4000 :height 4000 :res 600
+hovmoller(SISdm)
 #+end_src
 
-#+CAPTION: Hovmöller graphic displaying the time evolution of the average solar radiation for each latitude zone.
-#+LABEL: fig:SISdm_hovmoller_lat
+#+CAPTION: Hovmöller graphic displaying the time evolution of the average solar radiation for each latitude zone. label:fig:SISdm_hovmoller_lat
 #+RESULTS:
-[[file:figs/SISdm_hovmoller_lat.pdf]]
+[[file:figs/SISdm_hovmoller_lat.png]]
 
 On the other hand, this 2D matrix can be conceived as a multivariate
-time series with each aggregated zone conforming to a different variable of
-the time series. This approach is followed by the =xyplot= (Figure
-[[fig:SISmm_xyplot]]) and =horizonplot= (Figure [[fig:SISdm_horizonplot]])
-methods, which reproduce the procedures described in Chapter
-ref:cha:timeHorizontalAxis to display multivariate time series.
+time series with each aggregated zone conforming to a different
+variable of the time series. This approach is followed by the =xyplot=
+(Figure ref:fig:SISmm_xyplot) and =horizonplot= (Figure
+ref:fig:SISdm_horizonplot) methods, which reproduce the procedures
+described in Chapter ref:cha:timeHorizontalAxis to display
+multivariate time series.
 
 #+INDEX: xyplot@\texttt{xyplot}
 
@@ -250,8 +245,7 @@ ref:cha:timeHorizontalAxis to display multivariate time series.
 xyplot(SISdm, digits=1, col='black', lwd=0.2, alpha=0.6)
 #+end_src
 
-#+CAPTION: Time graph of the average solar radiation for each latitude zone. Each line represents a latitude band.
-#+LABEL: fig:SISmm_xyplot
+#+CAPTION: Time graph of the average solar radiation for each latitude zone. Each line represents a latitude band. label:fig:SISmm_xyplot
 #+RESULTS:
 [[file:figs/SISmm_xyplot.png]]
 
@@ -263,13 +257,37 @@ horizonplot(SISdm, digits = 1,
             xlab = '', ylab = 'Latitude')
 #+end_src
 
-#+CAPTION: Horizon graph of the average solar radiation for each latitude zone.
-#+LABEL: fig:SISdm_horizonplot
+#+CAPTION: Horizon graph of the average solar radiation for each latitude zone. label:fig:SISdm_horizonplot
 #+RESULTS:
 [[file:figs/SISdm_horizonplot.pdf]]
 
 These three figures highlight the stational behavior of the solar
 radiation, with higher values during the central months. It is
-interesting to note that (Figure [[fig:SISdm_horizonplot]]) the
+interesting to note that (Figure ref:fig:SISdm_horizonplot) the
 radiation values around the equinoxes fluctuate near the yearly
 average value of each latitude region.
+
+** Interactive graphics: cubeView
+label:sec:cubeView
+
+Figure ref:fig:SISdm_hovmoller_lat reduces the 3D raster to a 2D
+matrix with spatial aggregation following a certain direction. The
+=mapview= package provides a function, =cubeView=, able to represent
+this 3D raster without prior aggregation, as an interactive cube.
+
+This cube can be freely rotated so that different Hövmoller views are
+possible. Visible layers can be selected using arrow keys (left-right
+for x-axis, up-down for y-axis), and PageUp-PageDown keys for
+z-axis. Using the mouse, the cube can be rotated with left button,
+moved with the right button, and zoom using the mouse wheel. Figure
+ref:fig:cubeView shows a snapshot of the cube produced with the next
+code.
+
+#+begin_src R
+library(mapview)
+
+cubeView(SISdm)
+#+end_src
+
+#+CAPTION: Snapshot of an interactive cube displaying a 3D raster. label:fig:cubeView
+file:figs/cubeView.png
