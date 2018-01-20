@@ -16,17 +16,19 @@ setwd('~/github/bookvis')
 #+end_src
 
 * Physical Maps
+label:sec:physical
+
 #+begin_src R :exports none
 ##################################################################
 ## Physical maps
 ##################################################################
 #+end_src
+
 Brazil[fn:1], the world's fifth largest country, is one of the
 seventeen megadiverse countries[fn:2], home to diverse wildlife,
 natural environments, and extensive natural resources in a variety of
 protected habitats. Throughout this section we will create a physical
 map of this exceptional country using data from several data services.
-
 
 #+INDEX: Packages!raster@\texttt{raster}  
 #+INDEX: Packages!rasterVis@\texttt{rasterVis}  
@@ -210,12 +212,12 @@ admNames <- sapply(admNames,
 ## Overlaying layers of information
 ##################################################################
 #+end_src
-Therefore, the physical map (Figure [[fig:brazil]]) is composed
+Therefore, the physical map (Figure ref:fig:brazil) is composed
 of four layers: 
 
 1. The sea depth raster displayed with the =levelplot= method of the
    =rasterVis= package. The palette is defined with =brewer.pal=
-   (Figure [[fig:rastersBrazil]]).
+   (Figure [[ref:fig:rastersBrazil]]).
    #+begin_src R
    blueTheme <- rasterTheme(region=brewer.pal(n=9, 'Blues'))
   
@@ -231,7 +233,7 @@ of four layers:
 
 2. The altitude raster layer uses a terrain colors palette, as the one
   produced by the =terrain_hcl= function from the =colorspace= package
-  \cite{Ihaka.Murrell.ea2011} (Figure [[fig:rastersBrazil]]).
+  cite:Ihaka.Murrell.ea2011 (Figure [[ref:fig:rastersBrazil]]).
   #+begin_src R
   terrainTheme <- rasterTheme(region=terrain_hcl(15))
   
@@ -239,12 +241,10 @@ of four layers:
                        maxpixels=1e6, panel=panel.levelplot.raster,
                        margin=FALSE, colorkey=FALSE)
   #+end_src
-
   
 #+INDEX: rasterTheme@\texttt{rasterTheme}
 #+INDEX: terrain_hcl@\texttt{terrain\_hcl}
 
-  
 3. The rivers represented by the =SpatialLinesDataFrame= object. The
    Amazonas River is labeled with =sp.lineLabel= and printed with a
    thicker line. The label is created with the =label= method, a
@@ -290,21 +290,19 @@ of four layers:
       panel.text(xyBrazil[1], xyBrazil[2], labels='B R A Z I L',
                  cex=1.5, fontfamily = 'Palatino', fontface=2)
   })
-   #+end_src
+  #+end_src
 
 #+begin_src R :results output graphics :exports results :file figs/rastersBrazil.png :width 2000 :height 2000 :res 300
 print(seaPlot, split=c(1, 1, 2, 1), more=TRUE)
 print(altPlot, split=c(2, 1, 2, 1))
 #+end_src
 
-#+CAPTION: Sea depth and altitude rasters of Brazil.
-#+NAME: fig:rastersBrazil
+#+CAPTION: Sea depth and altitude rasters of Brazil. label:fig:rastersBrazil
 #+RESULTS[1bea0d3b24faea5c3fc75f37179238faf455f1ef]:
 [[file:figs/rastersBrazil.png]]
 
 
-#+CAPTION: Physical map of Brazil. Main administrative regions and the Amazonas River are labeled.
-#+NAME: fig:brazil
+#+CAPTION: Physical map of Brazil. Main administrative regions and the Amazonas River are labeled. label:fig:brazil
 #+RESULTS[4ec086929d1aacaa7e137ed997a8d07631e2f68f]:
 [[file:figs/brazil.png]]
 
