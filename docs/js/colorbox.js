@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $(".figure a").colorbox({height:"100%"});
+    $(".figure a").colorbox({width:"100%"});
     $(".iframe").colorbox({
 	iframe:true,
 	width:"100%",

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-12-10 dom 19:58 -->
+<!-- 2018-02-16 vie 14:35 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Spatio-temporal data - Displaying time series, spatial and space-time data with R</title>
@@ -194,7 +194,7 @@
 @licstart  The following is the entire license notice for the
 JavaScript code in this tag.
 
-Copyright (C) 2012-2017 Free Software Foundation, Inc.
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
 
 The JavaScript code in this tag is free software: you can
 redistribute it and/or modify it under the terms of the GNU
@@ -243,21 +243,21 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orga442980">Raster data</a>
+<li><a href="#raster">Raster data</a>
 <ul>
-<li><a href="#org025718e">Level plots</a></li>
-<li><a href="#orgd9ad16e">Graphical Exploratory Data Analysis</a></li>
-<li><a href="#org7bd2db0">Space-Time and Time Series Plots</a></li>
-<li><a href="#org95e1420">Animation</a></li>
+<li><a href="#levelplot">Level plots</a></li>
+<li><a href="#eda">Graphical Exploratory Data Analysis</a></li>
+<li><a href="#spacetimeplot">Space-Time and Time Series Plots</a></li>
+<li><a href="#animation_raster">Animation</a></li>
 </ul>
 </li>
-<li><a href="#org1704d26">Spatial point data</a>
+<li><a href="#points">Spatial point data</a>
 <ul>
-<li><a href="#org457653b">Graphics with <code>spacetime</code></a></li>
-<li><a href="#org76a0e07">Animation</a></li>
+<li><a href="#spacetime">Graphics with <code>spacetime</code></a></li>
+<li><a href="#animation_points">Animation</a></li>
 </ul>
 </li>
-<li><a href="#time_st">Code</a>
+<li><a href="#code">Code</a>
 <ul>
 <li><a href="#code_rasterst">Raster data</a></li>
 <li><a href="#code_pointsst">Spatial point data</a></li>
@@ -268,13 +268,14 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orga442980" class="outline-2">
-<h2 id="orga442980">Raster data</h2>
-<div class="outline-text-2" id="text-orga442980">
+<div id="outline-container-org2cc786b" class="outline-2">
+<h2 id="raster"><a id="org2cc786b"></a>Raster data</h2>
+<div class="outline-text-2" id="text-raster">
 </div>
-<div id="outline-container-org025718e" class="outline-3">
-<h3 id="org025718e">Level plots</h3>
-<div class="outline-text-3" id="text-org025718e">
+
+<div id="outline-container-orgaa7f4ec" class="outline-3">
+<h3 id="levelplot"><a id="orgaa7f4ec"></a>Level plots</h3>
+<div class="outline-text-3" id="text-levelplot">
 
 <div class="figure">
 <p><a href="images/SISdm.png"><img src="images/thumbs/SISdm.png" alt="SISdm.png" /></a> 
@@ -283,12 +284,12 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgd9ad16e" class="outline-3">
-<h3 id="orgd9ad16e">Graphical Exploratory Data Analysis</h3>
-<div class="outline-text-3" id="text-orgd9ad16e">
+<div id="outline-container-orgc7b325b" class="outline-3">
+<h3 id="eda"><a id="orgc7b325b"></a>Graphical Exploratory Data Analysis</h3>
+<div class="outline-text-3" id="text-eda">
 
 <div class="figure">
-<p><a href="images/SISdm_splom.png"><img src="images/thumbs/SISdm_splom.png" alt="SISdm_splom.png" /></a>     
+<p><a href="images/SISmm_splom.png"><img src="images/thumbs/SISmm_splom.png" alt="SISmm_splom.png" /></a>     
 </p>
 </div>
 
@@ -299,7 +300,6 @@ for the JavaScript code in this tag.
 </div>
 
 
-
 <div class="figure">
 <p><a href="images/SISdm_histogram.png"><img src="images/thumbs/SISdm_histogram.png" alt="SISdm_histogram.png" /></a> 
 </p>
@@ -307,9 +307,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org7bd2db0" class="outline-3">
-<h3 id="org7bd2db0">Space-Time and Time Series Plots</h3>
-<div class="outline-text-3" id="text-org7bd2db0">
+<div id="outline-container-org31ca80c" class="outline-3">
+<h3 id="spacetimeplot"><a id="org31ca80c"></a>Space-Time and Time Series Plots</h3>
+<div class="outline-text-3" id="text-spacetimeplot">
 
 <div class="figure">
 <p><a href="images/SISdm_hovmoller_lat.png"><img src="images/thumbs/SISdm_hovmoller_lat.png" alt="SISdm_hovmoller_lat.png" /></a> 
@@ -321,29 +321,29 @@ for the JavaScript code in this tag.
 <p><a href="images/SISdm_horizonplot.png"><img src="images/thumbs/SISdm_horizonplot.png" alt="SISdm_horizonplot.png" /></a> 
 </p>
 </div>
+</div>
+</div>
 
+
+<div id="outline-container-orgc351226" class="outline-3">
+<h3 id="animation_raster"><a id="orgc351226"></a>Animation</h3>
+<div class="outline-text-3" id="text-animation_raster">
+</div>
+
+<div id="outline-container-org192fb82" class="outline-4">
+<h4 id="org192fb82">CubeView</h4>
+<div class="outline-text-4" id="text-org192fb82">
 
 <div class="figure">
-<p><a href="images/diffTa_levelplot.png"><img src="images/thumbs/diffTa_levelplot.png" alt="diffTa_levelplot.png" /></a> 
-</p>
-</div>
-
-
-<div class="figure">
-<p><a href="images/diffTa_xyplot.png"><img src="images/thumbs/diffTa_xyplot.png" alt="diffTa_xyplot.png" /></a>   
+<p><a href="images/mapview/cubeview.html" class="iframe"><img src="images/thumbs/cubeView.png" alt="cubeView.png" class="iframe" /></a>
 </p>
 </div>
 </div>
 </div>
 
-
-<div id="outline-container-org95e1420" class="outline-3">
-<h3 id="org95e1420">Animation</h3>
-<div class="outline-text-3" id="text-org95e1420">
-</div>
-<div id="outline-container-org3cfaf3e" class="outline-4">
-<h4 id="org3cfaf3e">WebGL</h4>
-<div class="outline-text-4" id="text-org3cfaf3e">
+<div id="outline-container-org050e9d2" class="outline-4">
+<h4 id="org050e9d2">WebGL</h4>
+<div class="outline-text-4" id="text-org050e9d2">
 <p target="_blank">
 <a href="images/rgl/cft.html" target="_blank">- Forecast of cloud cover</a>
 </p>
@@ -354,9 +354,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org3015861" class="outline-4">
-<h4 id="org3015861">Videos</h4>
-<div class="outline-text-4" id="text-org3015861">
+<div id="outline-container-org276be53" class="outline-4">
+<h4 id="org276be53">Videos</h4>
+<div class="outline-text-4" id="text-org276be53">
 
 <div class="figure">
 <p><a href="http://player.vimeo.com/video/65227780" class="vimeo"><img src="images/thumbs/cftVideo.png" alt="cftVideo.png" class="vimeo" /></a>                
@@ -374,13 +374,14 @@ for the JavaScript code in this tag.
 </div>
 
 
-<div id="outline-container-org1704d26" class="outline-2">
-<h2 id="org1704d26">Spatial point data</h2>
-<div class="outline-text-2" id="text-org1704d26">
+<div id="outline-container-orga922ccb" class="outline-2">
+<h2 id="points"><a id="orga922ccb"></a>Spatial point data</h2>
+<div class="outline-text-2" id="text-points">
 </div>
-<div id="outline-container-org457653b" class="outline-3">
-<h3 id="org457653b">Graphics with <code>spacetime</code></h3>
-<div class="outline-text-3" id="text-org457653b">
+
+<div id="outline-container-orgb10975e" class="outline-3">
+<h3 id="spacetime"><a id="orgb10975e"></a>Graphics with <code>spacetime</code></h3>
+<div class="outline-text-3" id="text-spacetime">
 
 <div class="figure">
 <p><a href="images/NO2STxy.png"><img src="images/thumbs/NO2STxy.png" alt="NO2STxy.png" /></a> 
@@ -395,9 +396,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org76a0e07" class="outline-3">
-<h3 id="org76a0e07">Animation</h3>
-<div class="outline-text-3" id="text-org76a0e07">
+<div id="outline-container-orgfa6b493" class="outline-3">
+<h3 id="animation_points"><a id="orgfa6b493"></a>Animation</h3>
+<div class="outline-text-3" id="text-animation_points">
 
 <div class="figure">
 <p><a href="images/vLine.svg" class="svg"><img src="images/thumbs/vLine.png" alt="vLine.png" class="svg" /></a> 
@@ -413,16 +414,13 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-
-
-
-<div id="outline-container-org9dc0816" class="outline-2">
-<h2 id="time_st"><a id="org9dc0816"></a>Code</h2>
-<div class="outline-text-2" id="text-time_st">
+<div id="outline-container-org7f925cf" class="outline-2">
+<h2 id="code"><a id="org7f925cf"></a>Code</h2>
+<div class="outline-text-2" id="text-code">
 </div>
 
-<div id="outline-container-org9c6007f" class="outline-3">
-<h3 id="code_rasterst"><a id="org9c6007f"></a>Raster data</h3>
+<div id="outline-container-org90f11ab" class="outline-3">
+<h3 id="code_rasterst"><a id="org90f11ab"></a>Raster data</h3>
 <div class="outline-text-3" id="text-code_rasterst">
 <p>
 <a href="R/rasterST.R">Download</a>
@@ -474,20 +472,24 @@ splom(SISmm, xlab=<span class="org-string">''</span>, plot.loess=<span class="or
 <span class="org-comment-delimiter">## </span><span class="org-comment">Space-time and time series plots</span>
 <span class="org-comment-delimiter">##################################################################</span>
 
-hovmoller(SISdm, par.settings=BTCTheme())
+hovmoller(SISdm)
 
 xyplot(SISdm, digits=1, col=<span class="org-string">'black'</span>, lwd=0.2, alpha=0.6)
 
 horizonplot(SISdm, digits = 1,
             col.regions = rev(brewer.pal(n = 6, <span class="org-string">'PuOr'</span>)),
             xlab = <span class="org-string">''</span>, ylab = <span class="org-string">'Latitude'</span>)
+
+<span class="org-constant">library</span>(mapview)
+
+cubeView(SISdm)
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org0467f8c" class="outline-3">
-<h3 id="code_pointsst"><a id="org0467f8c"></a>Spatial point data</h3>
+<div id="outline-container-org139d197" class="outline-3">
+<h3 id="code_pointsst"><a id="org139d197"></a>Spatial point data</h3>
 <div class="outline-text-3" id="text-code_pointsst">
 <p>
 <a href="R/pointsST.R">Download</a>
@@ -579,9 +581,116 @@ stplot(NO2st, mode=<span class="org-string">'xt'</span>,
 stplot(NO2st, mode = <span class="org-string">'ts'</span>, xlab = <span class="org-string">''</span>,
        lwd = 0.1, col = <span class="org-string">'black'</span>, alpha = 0.6,
        auto.key = <span class="org-type">FALSE</span>)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc4f70db" class="outline-3">
+<h3 id="code_animationst"><a id="orgc4f70db"></a>Animation</h3>
+<div class="outline-text-3" id="text-code_animationst">
+<p>
+<a href="R/animation.R">Download</a>
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Initial configuration</span>
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Clone or download the repository and set the working directory</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">with setwd to the folder where the repository is located.</span>
+
+Sys.setlocale(<span class="org-string">"LC_TIME"</span>, <span class="org-string">'C'</span>)
 
 <span class="org-comment-delimiter">##################################################################</span>
-<span class="org-comment-delimiter">## </span><span class="org-comment">Animation</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Data</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(raster)
+<span class="org-constant">library</span>(rasterVis)
+
+cft <span class="org-constant">&lt;-</span> brick(<span class="org-string">'data/cft_20130417_0000.nc'</span>)
+<span class="org-comment-delimiter">## </span><span class="org-comment">set projection</span>
+projLCC2d <span class="org-constant">&lt;-</span> <span class="org-string">"+proj=lcc +lon_0=-14.1 +lat_0=34.823 +lat_1=43 +lat_2=43 +x_0=536402.3 +y_0=-18558.61 +units=km +ellps=WGS84"</span>
+projection(cft) <span class="org-constant">&lt;-</span> projLCC2d
+<span class="org-comment-delimiter">##</span><span class="org-comment">set time index</span>
+timeIndex <span class="org-constant">&lt;-</span> seq(as.POSIXct(<span class="org-string">'2013-04-17 01:00:00'</span>, tz = <span class="org-string">'UTC'</span>), length = 96, by = <span class="org-string">'hour'</span>)
+cft <span class="org-constant">&lt;-</span> setZ(cft, timeIndex)
+names(cft) <span class="org-constant">&lt;-</span> format(timeIndex, <span class="org-string">'D%d_H%H'</span>)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Spatial context: administrative boundaries</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(maptools)
+<span class="org-constant">library</span>(rgdal)
+<span class="org-constant">library</span>(maps)
+<span class="org-constant">library</span>(mapdata)
+
+
+projLL <span class="org-constant">&lt;-</span> CRS(<span class="org-string">'+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0'</span>)
+cftLL <span class="org-constant">&lt;-</span> projectExtent(cft, projLL)
+cftExt <span class="org-constant">&lt;-</span> as.vector(bbox(cftLL))
+boundaries <span class="org-constant">&lt;-</span> map(<span class="org-string">'worldHires'</span>,
+                  xlim = cftExt[c(1,3)], ylim = cftExt[c(2,4)],
+                  plot = <span class="org-type">FALSE</span>)
+boundaries <span class="org-constant">&lt;-</span> map2SpatialLines(boundaries, proj4string = projLL)
+boundaries <span class="org-constant">&lt;-</span> spTransform(boundaries, CRS(projLCC2d))
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Producing frames and movie</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+cloudTheme <span class="org-constant">&lt;-</span> rasterTheme(region = brewer.pal(n = 9, <span class="org-string">'Blues'</span>))
+
+tmp <span class="org-constant">&lt;-</span> tempdir()
+trellis.device(png, file = paste0(tmp, <span class="org-string">'/Rplot%02d.png'</span>),
+               res = 300, width = 1500, height = 1500)
+levelplot(cft, layout = c(1, 1), par.settings = cloudTheme) +
+    layer(sp.lines(boundaries, lwd = 0.6))
+dev.off()
+
+old <span class="org-constant">&lt;-</span> setwd(tmp)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Create a movie with ffmpeg ...  </span>
+system2(<span class="org-string">'ffmpeg'</span>,
+        c(<span class="org-string">'-r 6'</span>, <span class="org-comment-delimiter">## </span><span class="org-comment">with 6 frames per second</span>
+          <span class="org-string">'-i Rplot%02d.png'</span>, <span class="org-comment-delimiter">## </span><span class="org-comment">using the previous files</span>
+          <span class="org-string">'-b:v 300k'</span>, <span class="org-comment-delimiter">## </span><span class="org-comment">with a bitrate of 300kbs</span>
+          <span class="org-string">'output.mp4'</span>)
+        )
+file.remove(dir(pattern = <span class="org-string">'Rplot'</span>))
+file.copy(<span class="org-string">'output.mp4'</span>, paste0(old, <span class="org-string">'/figs/cft.mp4'</span>), overwrite = <span class="org-type">TRUE</span>)
+setwd(old)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Static image</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+levelplot(cft, layers = 25:48, layout = c(6, 4),
+          par.settings = cloudTheme,
+          names.attr = paste0(sprintf(<span class="org-string">'%02d'</span>, 1:24), <span class="org-string">'h'</span>),
+          panel = panel.levelplot.raster) +
+    layer(sp.lines(boundaries, lwd = 0.6))
+
+<span class="org-constant">library</span>(rgl)
+
+clear3d()
+
+pal <span class="org-constant">&lt;-</span> colorRampPalette(brewer.pal(n = 9, <span class="org-string">'Blues'</span>))
+
+N <span class="org-constant">&lt;-</span> nlayers(cft)
+
+ids <span class="org-constant">&lt;-</span> lapply(seq_len(N),
+              FUN = <span class="org-keyword">function</span>(i)
+                  plot3D(cft[[i]],
+                         maxpixels = 1e3, col = pal,
+                         adjust = <span class="org-type">FALSE</span>, zfac = 200))
+
+rglwidget() <span class="org-ess-XopX">%&gt;%</span>
+    playwidget(start = 0, <span class="org-keyword">stop</span> = N, 
+               subsetControl(1, subsets = ids))
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Point space-time data</span>
 <span class="org-comment-delimiter">##################################################################</span>
 
 <span class="org-comment-delimiter">##################################################################</span>
@@ -716,117 +825,6 @@ grid.garnish(<span class="org-string">'timePlot'</span>, grep = <span class="org
              onmouseout = <span class="org-string">'document.rootElement.unpauseAnimations()'</span>)
 
 grid.export(<span class="org-string">'figs/vLine.svg'</span>)
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgd2259c2" class="outline-3">
-<h3 id="code_animationst"><a id="orgd2259c2"></a>Animation</h3>
-<div class="outline-text-3" id="text-code_animationst">
-<p>
-<a href="R/animation.R">Download</a>
-</p>
-<div class="org-src-container">
-<pre class="src src-R"><span class="org-comment-delimiter">##################################################################</span>
-<span class="org-comment-delimiter">## </span><span class="org-comment">Initial configuration</span>
-<span class="org-comment-delimiter">##################################################################</span>
-<span class="org-comment-delimiter">## </span><span class="org-comment">Clone or download the repository and set the working directory</span>
-<span class="org-comment-delimiter">## </span><span class="org-comment">with setwd to the folder where the repository is located.</span>
-
-Sys.setlocale(<span class="org-string">"LC_TIME"</span>, <span class="org-string">'C'</span>)
-
-<span class="org-comment-delimiter">##################################################################</span>
-<span class="org-comment-delimiter">## </span><span class="org-comment">Animation</span>
-<span class="org-comment-delimiter">##################################################################</span>
-
-<span class="org-comment-delimiter">##################################################################</span>
-<span class="org-comment-delimiter">## </span><span class="org-comment">Data</span>
-<span class="org-comment-delimiter">##################################################################</span>
-
-<span class="org-constant">library</span>(raster)
-<span class="org-constant">library</span>(rasterVis)
-
-cft <span class="org-constant">&lt;-</span> brick(<span class="org-string">'data/cft_20130417_0000.nc'</span>)
-<span class="org-comment-delimiter">## </span><span class="org-comment">set projection</span>
-projLCC2d <span class="org-constant">&lt;-</span> <span class="org-string">"+proj=lcc +lon_0=-14.1 +lat_0=34.823 +lat_1=43 +lat_2=43 +x_0=536402.3 +y_0=-18558.61 +units=km +ellps=WGS84"</span>
-projection(cft) <span class="org-constant">&lt;-</span> projLCC2d
-<span class="org-comment-delimiter">##</span><span class="org-comment">set time index</span>
-timeIndex <span class="org-constant">&lt;-</span> seq(as.POSIXct(<span class="org-string">'2013-04-17 01:00:00'</span>, tz = <span class="org-string">'UTC'</span>), length = 96, by = <span class="org-string">'hour'</span>)
-cft <span class="org-constant">&lt;-</span> setZ(cft, timeIndex)
-names(cft) <span class="org-constant">&lt;-</span> format(timeIndex, <span class="org-string">'D%d_H%H'</span>)
-
-<span class="org-comment-delimiter">##################################################################</span>
-<span class="org-comment-delimiter">## </span><span class="org-comment">Spatial context: administrative boundaries</span>
-<span class="org-comment-delimiter">##################################################################</span>
-
-<span class="org-constant">library</span>(maptools)
-<span class="org-constant">library</span>(rgdal)
-<span class="org-constant">library</span>(maps)
-<span class="org-constant">library</span>(mapdata)
-
-
-projLL <span class="org-constant">&lt;-</span> CRS(<span class="org-string">'+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0'</span>)
-cftLL <span class="org-constant">&lt;-</span> projectExtent(cft, projLL)
-cftExt <span class="org-constant">&lt;-</span> as.vector(bbox(cftLL))
-boundaries <span class="org-constant">&lt;-</span> map(<span class="org-string">'worldHires'</span>,
-                  xlim = cftExt[c(1,3)], ylim = cftExt[c(2,4)],
-                  plot = <span class="org-type">FALSE</span>)
-boundaries <span class="org-constant">&lt;-</span> map2SpatialLines(boundaries, proj4string = projLL)
-boundaries <span class="org-constant">&lt;-</span> spTransform(boundaries, CRS(projLCC2d))
-
-<span class="org-comment-delimiter">##################################################################</span>
-<span class="org-comment-delimiter">## </span><span class="org-comment">Producing frames and movie</span>
-<span class="org-comment-delimiter">##################################################################</span>
-
-cloudTheme <span class="org-constant">&lt;-</span> rasterTheme(region = brewer.pal(n = 9, <span class="org-string">'Blues'</span>))
-
-tmp <span class="org-constant">&lt;-</span> tempdir()
-trellis.device(png, file = paste0(tmp, <span class="org-string">'/Rplot%02d.png'</span>),
-               res = 300, width = 1500, height = 1500)
-levelplot(cft, layout = c(1, 1), par.settings = cloudTheme) +
-    layer(sp.lines(boundaries, lwd = 0.6))
-dev.off()
-
-old <span class="org-constant">&lt;-</span> setwd(tmp)
-<span class="org-comment-delimiter">## </span><span class="org-comment">Create a movie with ffmpeg ...  </span>
-system2(<span class="org-string">'ffmpeg'</span>,
-        c(<span class="org-string">'-r 6'</span>, <span class="org-comment-delimiter">## </span><span class="org-comment">with 6 frames per second</span>
-          <span class="org-string">'-i Rplot%02d.png'</span>, <span class="org-comment-delimiter">## </span><span class="org-comment">using the previous files</span>
-          <span class="org-string">'-b:v 300k'</span>, <span class="org-comment-delimiter">## </span><span class="org-comment">with a bitrate of 300kbs</span>
-          <span class="org-string">'output.mp4'</span>)
-        )
-file.remove(dir(pattern = <span class="org-string">'Rplot'</span>))
-file.copy(<span class="org-string">'output.mp4'</span>, paste0(old, <span class="org-string">'/figs/cft.mp4'</span>), overwrite = <span class="org-type">TRUE</span>)
-setwd(old)
-
-<span class="org-comment-delimiter">##################################################################</span>
-<span class="org-comment-delimiter">## </span><span class="org-comment">Static image</span>
-<span class="org-comment-delimiter">##################################################################</span>
-
-levelplot(cft, layers = 25:48, layout = c(6, 4),
-          par.settings = cloudTheme,
-          names.attr = paste0(sprintf(<span class="org-string">'%02d'</span>, 1:24), <span class="org-string">'h'</span>),
-          panel = panel.levelplot.raster) +
-    layer(sp.lines(boundaries, lwd = 0.6))
-
-<span class="org-constant">library</span>(rgl)
-
-clear3d()
-
-pal <span class="org-constant">&lt;-</span> colorRampPalette(brewer.pal(n = 9, <span class="org-string">'Blues'</span>))
-
-N <span class="org-constant">&lt;-</span> nlayers(cft)
-
-ids <span class="org-constant">&lt;-</span> lapply(seq_len(N),
-              FUN = <span class="org-keyword">function</span>(i)
-                  plot3D(cft[[i]],
-                         maxpixels = 1e3, col = pal,
-                         adjust = <span class="org-type">FALSE</span>, zfac = 200))
-
-rglwidget() <span class="org-ess-XopX">%&gt;%</span>
-    playwidget(start = 0, <span class="org-keyword">stop</span> = N, 
-               subsetControl(1, subsets = ids))
 
 <span class="org-constant">library</span>(rgl)
 <span class="org-constant">library</span>(magick) <span class="org-comment-delimiter">## </span><span class="org-comment">needed to import the texture</span>

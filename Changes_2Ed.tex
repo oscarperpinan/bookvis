@@ -1,4 +1,4 @@
-% Created 2017-11-09 jue 07:22
+% Created 2018-01-21 dom 23:56
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -20,7 +20,7 @@
 \usepackage[usenames,svgnames,dvipsnames]{xcolor}
 \hypersetup{colorlinks=true, linkcolor=Blue, urlcolor=Blue}
 \author{Oscar Perpiñán Lamigueiro}
-\date{November 2017}
+\date{January 2018}
 \title{Outline of Changes\\\medskip
 \large Second Edition of ``Displaying Time Series, Spatial, and Space-Time Data with R''}
 \hypersetup{
@@ -28,68 +28,74 @@
  pdftitle={Outline of Changes},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 25.2.2 (Org mode 9.1.2)}, 
+ pdfcreator={Emacs 25.2.2 (Org mode 9.1.6)}, 
  pdflang={English}}
 \begin{document}
 
 \maketitle
 
 
-\section*{Time Series}
-\label{sec:orgbb04cc8}
+\section*{Spatial Data}
+\label{sec:orga00c22c}
 
 \begin{itemize}
 \item Code have been revised, cleaned and improved. Bugs have been fixed.
 
 \item After data creation or transformation, a text frame with the output of \texttt{summary()} has been included.
 
-\item Code using \texttt{base::reshape} has been replaced by \texttt{reshape2::melt} and \texttt{reshape2::dcast}.
+\item Use \texttt{rgdal} instead of \texttt{maptools} for reading and writing data.
+
+\item New package \texttt{sf} and function \texttt{geom\_sf} of \texttt{ggplot2} are used extensively.
+
+\item New interactive graphics and animations using \texttt{mapview} and \texttt{rgl}.
 \end{itemize}
 
-\subsection*{Time on the Horizontal Axis}
-\label{sec:orgc386f10}
+\subsection*{Proportional Symbol Mapping}
+\label{sec:orgae7439a}
+\begin{itemize}
+\item Code includes both \texttt{spplot} and \texttt{geom\_sf} alternatives where possible.
+\item Several interactive graphics using \texttt{mapview} and \texttt{rgl}.
+\end{itemize}
+
+\subsection*{Choropleth Maps}
+\label{sec:org0fdee4e}
+\begin{itemize}
+\item Data updated (2016).
+\item Chapter structure has been reorganised.
+\item Code includes both \texttt{spplot} and \texttt{geom\_sf} alternatives where possible.
+\item New colour palettes.
+\item New section with small multiple maps.
+\item Bivariate maps section rewritten almost from scratch with a completely new approach.
+\item Interactive graphics with \texttt{mapview}.
+\end{itemize}
+
+\subsection*{Raster Maps}
+\label{sec:org91de74a}
 
 \begin{itemize}
-\item Alternative code based on \texttt{ggplot2} for the Figure 3.9 (\emph{Level plot of differences between a daily temperature time \ldots{}}).
+\item New color palettes.
 
-\item New ``Interactive Graphics'' section (Section 3.4):
+\item Bivariate maps section rewritten almost from scratch with a completely new approach.
+
+\item Interactive graphics with \texttt{mapview}.
+\end{itemize}
+
+\subsection*{Vector Data}
+\label{sec:org0eb865f}
 \begin{itemize}
-\item Some figures have an interactive alternative with code based on the packages \texttt{dygraphs}, \texttt{highcharter}, \texttt{plotly}, and \texttt{streamgraph}.
-\item The \texttt{gridSVG} section has been revised and moved here (Section 3.4.4).
-\item This section includes snapshots of the interactive graphics that will be available in the updated webpage.
-\end{itemize}
+\item Arrow plot has been improved.
+\item Small changes in palettes.
 \end{itemize}
 
-\subsection*{Time as a Conditioning or Grouping Variable}
-\label{sec:orgf3b4bac}
-
+\subsection*{Physical and Reference Maps}
+\label{sec:org6cb3009}
 \begin{itemize}
-\item Alternative code based on \texttt{ggplot2} (using package \texttt{GGally}) for the Figure 4.1 (\emph{Scatter plot matrix of the collection\ldots{}}).
+\item \texttt{osmdata} package is used to get data from OpenStreepMap instead of \texttt{osmar}.
 \end{itemize}
-
-\subsection*{Time as a Complementary Variable}
-\label{sec:org4420047}
-
+\subsection*{Data}
+\label{sec:orgea75ec2}
 \begin{itemize}
-\item New ``Interactive Graphics: animation'' section (Section 5.6):
-\begin{itemize}
-\item A new section based on the package \texttt{plotly} has been created (section 5.6.1).
-\item Original sections using \texttt{googleVis} and \texttt{gridSVG} have been revised and moved here.
-\item This section includes snapshots of the interactive graphics that will be available in the updated webpage.
+\item Data has been updated.
+\item URLs have been checked and fixed where needed.
 \end{itemize}
-\end{itemize}
-
-\subsection*{About the Data}
-\label{sec:orgf0f01e5}
-\begin{itemize}
-\item Data URLs have been checked and updated where needed.
-\end{itemize}
-
-\section*{Spatial Data}
-\label{sec:org9a5e11b}
-
-To Do.
-\section*{Space-Time Data}
-\label{sec:org8905af4}
-To Do.
 \end{document}

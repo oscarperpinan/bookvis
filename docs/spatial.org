@@ -6,16 +6,76 @@
 #+SETUPFILE: setup.org
 
 
+* Proportional symbol mapping
+  :PROPERTIES:
+  :CUSTOM_ID: proportional
+  :END:
+
+[[file:images/airMadrid.png][file:images/thumbs/airMadrid.png]]
+
+[[file:images/airMadrid_stamen.png][file:images/thumbs/airMadrid_stamen.png]] 
+
+[[file:images/airMadrid_krige.png][file:images/thumbs/airMadrid_krige.png]]
+
+** Interactive Graphics
+  :PROPERTIES:
+  :CUSTOM_ID: interactive_proportional
+  :END:
+
+*** mapView
+#+ATTR_HTML: :class iframe
+[[file:images/mapview/mapview_simple.html][file:images/thumbs/mapview_simple.png]]
+
+#+ATTR_HTML: :class iframe
+[[file:images/mapview/mapview_popup_images.html][file:images/thumbs/mapview_popup_images.png]]
+
+#+ATTR_HTML: :class iframe
+[[file:images/mapview/mapview_popup_graphs.html][file:images/thumbs/mapview_popup_graphs.png]]
+
+#+ATTR_HTML: :class iframe
+[[file:images/mapview/mapview_sync.html][file:images/thumbs/mapview_sync.png]]
+
+*** GeoJSON
+#+ATTR_HTML: :class vimeo
+[[file:images/geojson.html][file:images/thumbs/geojson.png]]
+
+*** rgl
+#+ATTR_HTML: :class iframe
+[[file:images/rgl/bubbles.html][file:images/thumbs/rgl_bubble.png]]
+
+*** gridSVG
+#+ATTR_HTML: :class svg
+[[file:airMadrid.html][file:images/thumbs/airMadrid.png]]
+
 * Choropleth maps
-The code of this section is available [[file:R/choropleth.R][here]].
+  :PROPERTIES:
+  :CUSTOM_ID: choropleth
+  :END:
+
+[[file:images/pcMax.png][file:images/thumbs/pcMax.png]]  
 
 [[file:images/whichMax.png][file:images/thumbs/whichMax.png]]  
 
 [[file:images/mapLegends.png][file:images/thumbs/mapLegends.png]]
 
+** Interactive Graphics
+  :PROPERTIES:
+  :CUSTOM_ID: interactive_choropleth
+  :END:
+
+#+ATTR_HTML: :class iframe
+[[file:images/mapview/mapview_pcMax.html][file:images/thumbs/mapview_pcMax.png]]
+
+#+ATTR_HTML: :class iframe
+[[file:images/mapview/mapview_whichMax.html][file:images/thumbs/mapview_whichMax.png]]
+
 
 * Raster maps
-The code of this section is available [[file:R/raster.R][here]]. 
+  :PROPERTIES:
+  :CUSTOM_ID: raster
+  :END:
+
+[[file:images/leveplotSISavBoundaries.png][file:images/thumbs/leveplotSISavBoundaries.png]]
 
 [[file:images/hillShading.png][file:images/thumbs/hillShading.png]] 
 
@@ -25,46 +85,96 @@ The code of this section is available [[file:R/raster.R][here]].
 
 [[file:images/populationNASA.png][file:images/thumbs/populationNASA.png]]    
 
+[[file:images/popLandClass.png][file:images/thumbs/popLandClass.png]] 
+
+** Interactive Graphics
+  :PROPERTIES:
+  :CUSTOM_ID: interactive_raster
+  :END:
+
 #+ATTR_HTML: :class iframe
 [[file:images/rgl/DEM.html][file:images/DEM_WebGL.png]]
 
-[[file:images/popLandClass.png][file:images/thumbs/popLandClass.png]] 
-
-
-* Proportional symbol mapping
-The code of this section is available [[file:R/bubble.R][here]].
-
-#+ATTR_HTML: :class svg
-[[file:airMadrid.html][file:images/thumbs/airMadrid.png]]
-
-[[file:images/airMadrid_stamen.png][file:images/thumbs/airMadrid_stamen.png]] 
-
-#+ATTR_HTML: :class vimeo
-[[file:images/geojson.html][file:images/thumbs/geojson.png]]
-
-[[file:images/airMadrid_krige.png][file:images/thumbs/airMadrid_krige.png]]
-
+#+ATTR_HTML: :class iframe
+[[file:images/mapview/mapview_CMSAF_SIAR.html][file:images/thumbs/mapview_CMSAF_SIAR.png]]
 
 * Vector fields
-The code of this section is available [[file:R/vector.R][here]].
+  :PROPERTIES:
+  :CUSTOM_ID: vector
+  :END:
 
 [[file:images/vectorplot.png][file:images/thumbs/vectorplot.png]] 
 
 [[file:images/streamplot.png][file:images/thumbs/streamplot.png]] 
 
-
-* Reference maps
-The code of this section is available [[file:R/osmar.R][here]].
-
-[[file:images/cedeiraOsmar.png][file:images/thumbs/cedeiraOsmar.png]] 
-
 * Physical maps
-The code of this section is available [[file:R/physical.R][here]].
+  :PROPERTIES:
+  :CUSTOM_ID: physical
+  :END:
 
 [[file:images/brazil.png][file:images/thumbs/brazil.png]]  
 
------
 
-* Data
-The code to access the data is available [[file:R/dataSpatial.R][here]].
+* Reference maps
+  :PROPERTIES:
+  :CUSTOM_ID: reference
+  :END:
+
+[[file:images/cedeiraOSM.png][file:images/thumbs/cedeiraOSM.png]] 
+
+* Code
+  :PROPERTIES:
+  :CUSTOM_ID: code
+  :END:
+
+** Choropleth maps
+   :PROPERTIES:
+   :CUSTOM_ID: code_choropleth
+   :END:
+
+[[file:R/choropleth.R][Download]]
+#+INCLUDE: "R/choropleth.R" src R
+
+** Raster maps
+   :PROPERTIES:
+   :CUSTOM_ID: code_raster
+   :END:
+
+[[file:R/raster.R][Download]]
+#+INCLUDE: "R/raster.R" src R
+
+
+** Proportional symbol mapping
+   :PROPERTIES:
+   :CUSTOM_ID: code_proportional
+   :END:
+
+[[file:R/bubble.R][Download]]
+#+INCLUDE: "R/bubble.R" src R
+
+
+** Vector fields
+   :PROPERTIES:
+   :CUSTOM_ID: code_vector
+   :END:
+
+[[file:R/vector.R][Download]]
+#+INCLUDE: "R/vector.R" src R
+
+
+** Physical maps
+   :PROPERTIES:
+   :CUSTOM_ID: code_physical
+   :END:
+
+[[file:R/physical.R][Download]]
+#+INCLUDE: "R/physical.R" src R
+
+** Data
+   :PROPERTIES:
+   :CUSTOM_ID: code_data
+   :END:
+
+[[file:R/dataSpatial.R][Download]]
+#+INCLUDE: "R/dataSpatial.R" src R
 

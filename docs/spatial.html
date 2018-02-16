@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-12-03 dom 08:36 -->
+<!-- 2018-02-16 vie 14:16 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Spatial Data - Displaying time series, spatial and space-time data with R</title>
@@ -194,7 +194,7 @@
 @licstart  The following is the entire license notice for the
 JavaScript code in this tag.
 
-Copyright (C) 2012-2017 Free Software Foundation, Inc.
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
 
 The JavaScript code in this tag is free software: you can
 redistribute it and/or modify it under the terms of the GNU
@@ -243,24 +243,138 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgb1479fa">Choropleth maps</a></li>
-<li><a href="#org0269dc4">Raster maps</a></li>
-<li><a href="#orgf6ab9b4">Proportional symbol mapping</a></li>
-<li><a href="#org84efc62">Vector fields</a></li>
-<li><a href="#org4987e1c">Reference maps</a></li>
-<li><a href="#org96f0333">Physical maps</a></li>
-<li><a href="#orgfae91a2">Data</a></li>
+<li><a href="#proportional">Proportional symbol mapping</a>
+<ul>
+<li><a href="#interactive_proportional">Interactive Graphics</a></li>
+</ul>
+</li>
+<li><a href="#choropleth">Choropleth maps</a>
+<ul>
+<li><a href="#interactive_choropleth">Interactive Graphics</a></li>
+</ul>
+</li>
+<li><a href="#raster">Raster maps</a>
+<ul>
+<li><a href="#interactive_raster">Interactive Graphics</a></li>
+</ul>
+</li>
+<li><a href="#vector">Vector fields</a></li>
+<li><a href="#physical">Physical maps</a></li>
+<li><a href="#reference">Reference maps</a></li>
+<li><a href="#code">Code</a>
+<ul>
+<li><a href="#code_choropleth">Choropleth maps</a></li>
+<li><a href="#code_raster">Raster maps</a></li>
+<li><a href="#code_proportional">Proportional symbol mapping</a></li>
+<li><a href="#code_vector">Vector fields</a></li>
+<li><a href="#code_physical">Physical maps</a></li>
+<li><a href="#code_data">Data</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 
 
-<div id="outline-container-orgb1479fa" class="outline-2">
-<h2 id="orgb1479fa">Choropleth maps</h2>
-<div class="outline-text-2" id="text-orgb1479fa">
-<p>
-The code of this section is available <a href="R/choropleth.R">here</a>.
+<div id="outline-container-org3d872ea" class="outline-2">
+<h2 id="proportional"><a id="org3d872ea"></a>Proportional symbol mapping</h2>
+<div class="outline-text-2" id="text-proportional">
+
+<div class="figure">
+<p><a href="images/airMadrid.png"><img src="images/thumbs/airMadrid.png" alt="airMadrid.png" /></a>
 </p>
+</div>
+
+
+<div class="figure">
+<p><a href="images/airMadrid_stamen.png"><img src="images/thumbs/airMadrid_stamen.png" alt="airMadrid_stamen.png" /></a> 
+</p>
+</div>
+
+
+<div class="figure">
+<p><a href="images/airMadrid_krige.png"><img src="images/thumbs/airMadrid_krige.png" alt="airMadrid_krige.png" /></a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1b366e2" class="outline-3">
+<h3 id="interactive_proportional"><a id="org1b366e2"></a>Interactive Graphics</h3>
+<div class="outline-text-3" id="text-interactive_proportional">
+</div>
+
+<div id="outline-container-orgabd9189" class="outline-4">
+<h4 id="orgabd9189">mapView</h4>
+<div class="outline-text-4" id="text-orgabd9189">
+
+<div class="figure">
+<p><a href="images/mapview/mapview_simple.html" class="iframe"><img src="images/thumbs/mapview_simple.png" alt="mapview_simple.png" class="iframe" /></a>
+</p>
+</div>
+
+
+<div class="figure">
+<p><a href="images/mapview/mapview_popup_images.html" class="iframe"><img src="images/thumbs/mapview_popup_images.png" alt="mapview_popup_images.png" class="iframe" /></a>
+</p>
+</div>
+
+
+<div class="figure">
+<p><a href="images/mapview/mapview_popup_graphs.html" class="iframe"><img src="images/thumbs/mapview_popup_graphs.png" alt="mapview_popup_graphs.png" class="iframe" /></a>
+</p>
+</div>
+
+
+<div class="figure">
+<p><a href="images/mapview/mapview_sync.html" class="iframe"><img src="images/thumbs/mapview_sync.png" alt="mapview_sync.png" class="iframe" /></a>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5bb6c56" class="outline-4">
+<h4 id="org5bb6c56">GeoJSON</h4>
+<div class="outline-text-4" id="text-org5bb6c56">
+
+<div class="figure">
+<p><a href="images/geojson.html" class="vimeo"><img src="images/thumbs/geojson.png" alt="geojson.png" class="vimeo" /></a>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org24b9763" class="outline-4">
+<h4 id="org24b9763">rgl</h4>
+<div class="outline-text-4" id="text-org24b9763">
+
+<div class="figure">
+<p><a href="images/rgl/bubbles.html" class="iframe"><img src="images/thumbs/rgl_bubble.png" alt="rgl_bubble.png" class="iframe" /></a>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org32bac8c" class="outline-4">
+<h4 id="org32bac8c">gridSVG</h4>
+<div class="outline-text-4" id="text-org32bac8c">
+
+<div class="figure">
+<p><a href="airMadrid.html" class="svg"><img src="images/thumbs/airMadrid.png" alt="airMadrid.png" class="svg" /></a>
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0a21af8" class="outline-2">
+<h2 id="choropleth"><a id="org0a21af8"></a>Choropleth maps</h2>
+<div class="outline-text-2" id="text-choropleth">
+
+<div class="figure">
+<p><a href="images/pcMax.png"><img src="images/thumbs/pcMax.png" alt="pcMax.png" /></a>  
+</p>
+</div>
 
 
 <div class="figure">
@@ -274,15 +388,34 @@ The code of this section is available <a href="R/choropleth.R">here</a>.
 </p>
 </div>
 </div>
+
+<div id="outline-container-org719b0bf" class="outline-3">
+<h3 id="interactive_choropleth"><a id="org719b0bf"></a>Interactive Graphics</h3>
+<div class="outline-text-3" id="text-interactive_choropleth">
+
+<div class="figure">
+<p><a href="images/mapview/mapview_pcMax.html" class="iframe"><img src="images/thumbs/mapview_pcMax.png" alt="mapview_pcMax.png" class="iframe" /></a>
+</p>
 </div>
 
 
-<div id="outline-container-org0269dc4" class="outline-2">
-<h2 id="org0269dc4">Raster maps</h2>
-<div class="outline-text-2" id="text-org0269dc4">
-<p>
-The code of this section is available <a href="R/raster.R">here</a>. 
+<div class="figure">
+<p><a href="images/mapview/mapview_whichMax.html" class="iframe"><img src="images/thumbs/mapview_whichMax.png" alt="mapview_whichMax.png" class="iframe" /></a>
 </p>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orga3770e3" class="outline-2">
+<h2 id="raster"><a id="orga3770e3"></a>Raster maps</h2>
+<div class="outline-text-2" id="text-raster">
+
+<div class="figure">
+<p><a href="images/leveplotSISavBoundaries.png"><img src="images/thumbs/leveplotSISavBoundaries.png" alt="leveplotSISavBoundaries.png" /></a>
+</p>
+</div>
 
 
 <div class="figure">
@@ -310,60 +443,32 @@ The code of this section is available <a href="R/raster.R">here</a>.
 
 
 <div class="figure">
+<p><a href="images/popLandClass.png"><img src="images/thumbs/popLandClass.png" alt="popLandClass.png" /></a> 
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga8d25a8" class="outline-3">
+<h3 id="interactive_raster"><a id="orga8d25a8"></a>Interactive Graphics</h3>
+<div class="outline-text-3" id="text-interactive_raster">
+
+<div class="figure">
 <p><a href="images/rgl/DEM.html" class="iframe"><img src="images/DEM_WebGL.png" alt="DEM_WebGL.png" class="iframe" /></a>
 </p>
 </div>
 
 
 <div class="figure">
-<p><a href="images/popLandClass.png"><img src="images/thumbs/popLandClass.png" alt="popLandClass.png" /></a> 
+<p><a href="images/mapview/mapview_CMSAF_SIAR.html" class="iframe"><img src="images/thumbs/mapview_CMSAF_SIAR.png" alt="mapview_CMSAF_SIAR.png" class="iframe" /></a>
 </p>
 </div>
 </div>
 </div>
-
-
-<div id="outline-container-orgf6ab9b4" class="outline-2">
-<h2 id="orgf6ab9b4">Proportional symbol mapping</h2>
-<div class="outline-text-2" id="text-orgf6ab9b4">
-<p>
-The code of this section is available <a href="R/bubble.R">here</a>.
-</p>
-
-
-<div class="figure">
-<p><a href="airMadrid.html" class="svg"><img src="images/thumbs/airMadrid.png" alt="airMadrid.png" class="svg" /></a>
-</p>
 </div>
 
-
-<div class="figure">
-<p><a href="images/airMadrid_stamen.png"><img src="images/thumbs/airMadrid_stamen.png" alt="airMadrid_stamen.png" /></a> 
-</p>
-</div>
-
-
-<div class="figure">
-<p><a href="images/geojson.html" class="vimeo"><img src="images/thumbs/geojson.png" alt="geojson.png" class="vimeo" /></a>
-</p>
-</div>
-
-
-<div class="figure">
-<p><a href="images/airMadrid_krige.png"><img src="images/thumbs/airMadrid_krige.png" alt="airMadrid_krige.png" /></a>
-</p>
-</div>
-</div>
-</div>
-
-
-<div id="outline-container-org84efc62" class="outline-2">
-<h2 id="org84efc62">Vector fields</h2>
-<div class="outline-text-2" id="text-org84efc62">
-<p>
-The code of this section is available <a href="R/vector.R">here</a>.
-</p>
-
+<div id="outline-container-org641fe78" class="outline-2">
+<h2 id="vector"><a id="org641fe78"></a>Vector fields</h2>
+<div class="outline-text-2" id="text-vector">
 
 <div class="figure">
 <p><a href="images/vectorplot.png"><img src="images/thumbs/vectorplot.png" alt="vectorplot.png" /></a> 
@@ -378,45 +483,1606 @@ The code of this section is available <a href="R/vector.R">here</a>.
 </div>
 </div>
 
-
-<div id="outline-container-org4987e1c" class="outline-2">
-<h2 id="org4987e1c">Reference maps</h2>
-<div class="outline-text-2" id="text-org4987e1c">
-<p>
-The code of this section is available <a href="R/osmar.R">here</a>.
-</p>
-
-
-<div class="figure">
-<p><a href="images/cedeiraOsmar.png"><img src="images/thumbs/cedeiraOsmar.png" alt="cedeiraOsmar.png" /></a> 
-</p>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org96f0333" class="outline-2">
-<h2 id="org96f0333">Physical maps</h2>
-<div class="outline-text-2" id="text-org96f0333">
-<p>
-The code of this section is available <a href="R/physical.R">here</a>.
-</p>
-
+<div id="outline-container-orgd1b929b" class="outline-2">
+<h2 id="physical"><a id="orgd1b929b"></a>Physical maps</h2>
+<div class="outline-text-2" id="text-physical">
 
 <div class="figure">
 <p><a href="images/brazil.png"><img src="images/thumbs/brazil.png" alt="brazil.png" /></a>  
 </p>
 </div>
-
-<hr />
 </div>
 </div>
 
-<div id="outline-container-orgfae91a2" class="outline-2">
-<h2 id="orgfae91a2">Data</h2>
-<div class="outline-text-2" id="text-orgfae91a2">
-<p>
-The code to access the data is available <a href="R/dataSpatial.R">here</a>.
+
+<div id="outline-container-orge057537" class="outline-2">
+<h2 id="reference"><a id="orge057537"></a>Reference maps</h2>
+<div class="outline-text-2" id="text-reference">
+
+<div class="figure">
+<p><a href="images/cedeiraOSM.png"><img src="images/thumbs/cedeiraOSM.png" alt="cedeiraOSM.png" /></a> 
 </p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgebfdca4" class="outline-2">
+<h2 id="code"><a id="orgebfdca4"></a>Code</h2>
+<div class="outline-text-2" id="text-code">
+</div>
+
+<div id="outline-container-orgbf45dc4" class="outline-3">
+<h3 id="code_choropleth"><a id="orgbf45dc4"></a>Choropleth maps</h3>
+<div class="outline-text-3" id="text-code_choropleth">
+<p>
+<a href="R/choropleth.R">Download</a>
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Initial configuration</span>
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Clone or download the repository and set the working directory</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">with setwd to the folder where the repository is located.</span>
+  
+<span class="org-constant">library</span>(lattice)
+<span class="org-constant">library</span>(ggplot2)
+<span class="org-constant">library</span>(latticeExtra)
+  
+myTheme <span class="org-constant">&lt;-</span> custom.theme.2(pch = 19, cex = 0.7,
+                          region = rev(brewer.pal(9, <span class="org-string">'YlOrRd'</span>)),
+                          symbol = brewer.pal(n = 8, name = <span class="org-string">"Dark2"</span>))
+myTheme$strip.background$col=<span class="org-string">'transparent'</span>
+myTheme$strip.shingle$col=<span class="org-string">'transparent'</span>
+myTheme$strip.border$col=<span class="org-string">'transparent'</span>
+
+<span class="org-function-name">xscale.components.custom</span> <span class="org-constant">&lt;-</span> <span class="org-keyword">function</span>(...)
+{
+    ans <span class="org-constant">&lt;-</span> xscale.components.default(...)
+    ans$top = <span class="org-type">FALSE</span>
+    ans
+}
+
+<span class="org-function-name">yscale.components.custom</span> <span class="org-constant">&lt;-</span> <span class="org-keyword">function</span>(...)
+{
+    ans <span class="org-constant">&lt;-</span> yscale.components.default(...)
+    ans$right = <span class="org-type">FALSE</span>
+    ans
+}
+
+myArgs <span class="org-constant">&lt;-</span> list(as.table = <span class="org-type">TRUE</span>,
+               between = list(x = 0.5, y = 0.2),
+               xscale.components = xscale.components.custom,
+               yscale.components = yscale.components.custom)
+
+defaultArgs <span class="org-constant">&lt;-</span> lattice.options()$default.args
+
+
+lattice.options(default.theme = myTheme,
+                default.args = modifyList(defaultArgs, myArgs))
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Read data</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">sp approach</span>
+<span class="org-constant">library</span>(sp)
+<span class="org-constant">library</span>(rgdal)
+
+spMapVotes <span class="org-constant">&lt;-</span> readOGR(<span class="org-string">"data/spMapVotes.shp"</span>, 
+                      p4s = <span class="org-string">"+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"</span>)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">sf approach</span>
+<span class="org-constant">library</span>(sf)
+
+sfMapVotes <span class="org-constant">&lt;-</span> st_read(<span class="org-string">"data/spMapVotes.shp"</span>)
+st_crs(sfMapVotes) <span class="org-constant">&lt;-</span> 25830
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Province Boundaries</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">sp</span>
+provinces <span class="org-constant">&lt;-</span> readOGR(<span class="org-string">"data/spain_provinces.shp"</span>,
+                     p4s = <span class="org-string">"+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"</span>)
+
+provinceLines <span class="org-constant">&lt;-</span> list(<span class="org-string">"sp.polygons"</span>, provinces, lwd = 0.1)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">sf</span>
+sfProvs <span class="org-constant">&lt;-</span> st_read(<span class="org-string">"data/spain_provinces.shp"</span>)
+st_crs(sfProvs) <span class="org-constant">&lt;-</span> 25830
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Quantitative variable</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(RColorBrewer)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Number of intervals (colors)</span>
+N <span class="org-constant">&lt;-</span> 6
+<span class="org-comment-delimiter">## </span><span class="org-comment">Sequential palette</span>
+quantPal <span class="org-constant">&lt;-</span> brewer.pal(n = N, <span class="org-string">"Oranges"</span>)
+
+ucN <span class="org-constant">&lt;-</span> 1000
+ucQuantPal <span class="org-constant">&lt;-</span> colorRampPalette(quantPal)(ucN)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">The polygons boundaries are not displayed thanks to col = 'transparent' </span>
+spplot(spMapVotes[<span class="org-string">"pcMax"</span>],
+       col.regions = ucQuantPal,
+       cuts = ucN,
+       col = <span class="org-string">'transparent'</span>,
+       sp.layout = provinceLines)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Data classification</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+ggplot(as.data.frame(spMapVotes),
+       aes(pcMax,
+           fill = whichMax,
+           colour = whichMax)) +
+    geom_density(alpha = 0.1) +
+    theme_bw()
+
+<span class="org-constant">library</span>(classInt)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Compute intervals with the same number of elements</span>
+intQuant <span class="org-constant">&lt;-</span> classIntervals(spMapVotes$pcMax,
+                           n = N, style = <span class="org-string">"quantile"</span>)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Compute intervals with the natural breaks algorithm</span>
+intFisher <span class="org-constant">&lt;-</span> classIntervals(spMapVotes$pcMax,
+                            n = N, style = <span class="org-string">"fisher"</span>)
+
+plot(intQuant, pal = quantPal, main = <span class="org-string">""</span>)
+
+plot(intFisher, pal = quantPal, main = <span class="org-string">""</span>)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">spplot solution</span>
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Add a new categorical variable with cut, using the computed breaks</span>
+spMapVotes$pcMaxInt <span class="org-constant">&lt;-</span> cut(spMapVotes$pcMax,
+                            breaks = intFisher$brks)
+
+spplot(spMapVotes[<span class="org-string">"pcMaxInt"</span>],
+       col = <span class="org-string">'transparent'</span>,
+       col.regions = quantPal,
+       sp.layout = provinceLines)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">sf and geom_sf</span>
+sfMapVotes$pcMaxInt <span class="org-constant">&lt;-</span> cut(sfMapVotes$pcMax,
+                           breaks = intFisher$brks)
+
+ggplot(sfMapVotes) +
+    geom_sf(aes(fill = pcMaxInt),
+            color = <span class="org-string">"transparent"</span>) +
+    scale_fill_brewer(palette = <span class="org-string">"Oranges"</span>) +
+    geom_sf(data = sfProvs,
+            fill = <span class="org-string">'transparent'</span>,
+            show.legend = <span class="org-type">FALSE</span>) +
+    theme_bw()
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Qualitative variable</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+classes <span class="org-constant">&lt;-</span> levels(factor(spMapVotes$whichMax))
+nClasses <span class="org-constant">&lt;-</span> length(classes)
+
+qualPal <span class="org-constant">&lt;-</span> brewer.pal(nClasses, <span class="org-string">"Dark2"</span>)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">spplot solution</span>
+spplot(spMapVotes[<span class="org-string">"whichMax"</span>],
+       col.regions = qualPal,
+       col = <span class="org-string">'transparent'</span>,
+       sp.layout = provinceLines)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">geom_sf solution</span>
+ggplot(sfMapVotes) +
+    geom_sf(aes(fill = whichMax),
+            color = <span class="org-string">"transparent"</span>) +
+    scale_fill_brewer(palette = <span class="org-string">'Dark2'</span>) +
+    geom_sf(data = sfProvs,
+            fill = <span class="org-string">'transparent'</span>,
+            show.legend = <span class="org-type">FALSE</span>) +
+    theme_bw()
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Small multiples</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">spplot version</span>
+spplot(spMapVotes, <span class="org-string">"pcMaxInt"</span>,
+       formula = pcMaxInt ~ xlabelpoint + ylabelpoint | whichMax,
+       col.regions = quantPal,
+       col=<span class="org-string">'transparent'</span>,
+       sp.layout = provinceLines)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">ggplot2 version</span>
+ggplot(sfMapVotes) +
+    geom_sf(aes(fill = pcMaxInt),
+            color = <span class="org-string">"transparent"</span>) +
+    facet_wrap(~whichMax, nrow = 2) +
+    scale_fill_brewer(palette = <span class="org-string">"Oranges"</span>) +
+    geom_sf(data = sfProvs,
+            fill = <span class="org-string">'transparent'</span>,
+            size = 0.1,
+            show.legend = <span class="org-type">FALSE</span>) +
+    theme_bw()
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Bivariate map</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Number of intervals.</span>
+N <span class="org-constant">&lt;-</span> 3
+
+intFisher <span class="org-constant">&lt;-</span> classIntervals(spMapVotes$pcMax,
+                            n = N, style = <span class="org-string">"fisher"</span>)
+
+spMapVotes$pcMaxInt <span class="org-constant">&lt;-</span> cut(spMapVotes$pcMax,
+                            breaks = intFisher$brks)
+
+multiPal <span class="org-constant">&lt;-</span> sapply(1:nClasses, <span class="org-keyword">function</span>(i)
+{
+    colorAlpha <span class="org-constant">&lt;-</span> adjustcolor(qualPal[i], alpha = 0.4)
+    colorRampPalette(c(qualPal[i], colorAlpha), alpha = <span class="org-type">TRUE</span>)(N)
+})
+
+pList <span class="org-constant">&lt;-</span> lapply(1:nClasses, <span class="org-keyword">function</span>(i){
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Only those polygons corresponding to a level are selected</span>
+    mapClass <span class="org-constant">&lt;-</span> subset(spMapVotes,
+                       whichMax == classes[i])
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Palette</span>
+    pal <span class="org-constant">&lt;-</span> multiPal[, i]
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Produce the graphic</span>
+    pClass <span class="org-constant">&lt;-</span> spplot(mapClass, <span class="org-string">"pcMaxInt"</span>,
+                     col.regions = pal,
+                     col=<span class="org-string">'transparent'</span>,
+                     colorkey = <span class="org-type">FALSE</span>)
+})
+names(pList) <span class="org-constant">&lt;-</span> classes
+p <span class="org-constant">&lt;-</span> Reduce(<span class="org-string">'+'</span>, pList)
+
+op <span class="org-constant">&lt;-</span> options(digits = 4)
+tabFisher <span class="org-constant">&lt;-</span> print(intFisher)
+intervals <span class="org-constant">&lt;-</span> names(tabFisher)
+options(op)
+
+<span class="org-constant">library</span>(grid)
+
+legend <span class="org-constant">&lt;-</span> layer(
+{
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Position of the legend</span>
+    x0 <span class="org-constant">&lt;-</span> 1000000
+    y0 <span class="org-constant">&lt;-</span> 4200000
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Width of the legend </span>
+    w <span class="org-constant">&lt;-</span> 120000
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Height of the legend</span>
+    h <span class="org-constant">&lt;-</span> 100000
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Colors</span>
+    grid.raster(multiPal, interpolate = <span class="org-type">FALSE</span>,
+                      x = unit(x0, <span class="org-string">"native"</span>),
+                      y = unit(y0, <span class="org-string">"native"</span>),
+                width = unit(w, <span class="org-string">"native"</span>),
+                height = unit(h, <span class="org-string">"native"</span>))
+    <span class="org-comment-delimiter">## </span><span class="org-comment">x-axis (qualitative variable)</span>
+    grid.text(classes,
+              x = unit(seq(x0 - w * (nClasses -1)/(2*nClasses),
+                           x0 + w * (nClasses -1)/(2*nClasses),
+                           length = nClasses),
+                       <span class="org-string">"native"</span>),
+              y = unit(y0 + h/2, <span class="org-string">"native"</span>),
+              just = <span class="org-string">"bottom"</span>,
+              rot = 10,
+              gp = gpar(fontsize = 4))
+    <span class="org-comment-delimiter">## </span><span class="org-comment">y-axis (quantitative variable)</span>
+    Ni <span class="org-constant">&lt;-</span> length(intervals)
+    grid.text(intervals,
+              x = unit(x0 + w/2, <span class="org-string">"native"</span>),
+              y = unit(seq(y0 - h * (Ni -1)/(2*Ni),
+                           y0 + h * (Ni -1)/(2*Ni),
+                           length = Ni),
+                       <span class="org-string">"native"</span>),
+              just = <span class="org-string">"left"</span>,
+              gp = gpar(fontsize = 6))
+})
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Main plot</span>
+p + legend
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Interactive Graphics</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(mapview)
+
+sfMapVotes0 <span class="org-constant">&lt;-</span> st_read(<span class="org-string">"data/spMapVotes0.shp"</span>)
+st_crs(sfMapVotes0) <span class="org-constant">&lt;-</span> 25830
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Quantitative variable, pcMax</span>
+mapView(sfMapVotes0, zcol = <span class="org-string">"pcMax"</span>,
+        legend = <span class="org-type">TRUE</span>,
+        col.regions = quantPal)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Qualitative variable, whichMax</span>
+mapView(sfMapVotes0, zcol = <span class="org-string">"whichMax"</span>,
+        legend = <span class="org-type">TRUE</span>,
+        col.regions = qualPal)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org390a110" class="outline-3">
+<h3 id="code_raster"><a id="org390a110"></a>Raster maps</h3>
+<div class="outline-text-3" id="text-code_raster">
+<p>
+<a href="R/raster.R">Download</a>
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Initial configuration</span>
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Clone or download the repository and set the working directory</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">with setwd to the folder where the repository is located.</span>
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Quantitative data</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(raster)
+<span class="org-constant">library</span>(rasterVis)
+
+SISav <span class="org-constant">&lt;-</span> raster(<span class="org-string">'data/SISav'</span>)
+
+levelplot(SISav)
+
+<span class="org-constant">library</span>(maps)
+<span class="org-constant">library</span>(mapdata)
+<span class="org-constant">library</span>(maptools)
+
+ext <span class="org-constant">&lt;-</span> as.vector(extent(SISav))
+boundaries <span class="org-constant">&lt;-</span> map(<span class="org-string">'worldHires'</span>,
+                  xlim=ext[1:2], ylim=ext[3:4],
+                  plot=<span class="org-type">FALSE</span>)
+boundaries <span class="org-constant">&lt;-</span> map2SpatialLines(boundaries,
+                               proj4string=CRS(projection(SISav)))
+
+levelplot(SISav) +
+    layer(sp.lines(boundaries,
+                   lwd = 0.5))
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Hill shading</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+old <span class="org-constant">&lt;-</span> setwd(tempdir())
+download.file(<span class="org-string">'http://biogeo.ucdavis.edu/data/diva/msk_alt/ESP_msk_alt.zip'</span>, <span class="org-string">'ESP_msk_alt.zip'</span>)
+unzip(<span class="org-string">'ESP_msk_alt.zip'</span>, exdir=<span class="org-string">'.'</span>)
+
+DEM <span class="org-constant">&lt;-</span> raster(<span class="org-string">'ESP_msk_alt'</span>)
+
+slope <span class="org-constant">&lt;-</span> terrain(DEM, <span class="org-string">'slope'</span>)
+aspect <span class="org-constant">&lt;-</span> terrain(DEM, <span class="org-string">'aspect'</span>)
+hs <span class="org-constant">&lt;-</span> hillShade(slope = slope, aspect = aspect,
+                angle = 20, direction = 30)
+
+setwd(old)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">hillShade theme: gray colors and semitransparency</span>
+hsTheme <span class="org-constant">&lt;-</span> GrTheme(regions = list(alpha = 0.6))
+  
+levelplot(SISav, 
+          margin = <span class="org-type">FALSE</span>, colorkey = <span class="org-type">FALSE</span>) +
+    levelplot(hs, par.settings = hsTheme, maxpixels = 1e6) +
+    layer(sp.lines(boundaries, lwd = 0.5))
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Diverging palettes</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+meanRad <span class="org-constant">&lt;-</span> cellStats(SISav, <span class="org-string">'mean'</span>)
+SISav <span class="org-constant">&lt;-</span> SISav - meanRad
+
+xyplot(layer ~ y, data = SISav,
+       groups = cut(x, 5),
+       par.settings = rasterTheme(symbol = plinrain(n=5, end = 200)),
+       xlab = <span class="org-string">'Latitude'</span>, ylab = <span class="org-string">'Solar radiation (scaled)'</span>,  
+       auto.key = list(space = <span class="org-string">'right'</span>,
+                       title = <span class="org-string">'Longitude'</span>, cex.title = 1.3))
+
+divPal <span class="org-constant">&lt;-</span> brewer.pal(n = 9, <span class="org-string">'PuOr'</span>)
+divPal[5] <span class="org-constant">&lt;-</span> <span class="org-string">"#FFFFFF"</span>
+  
+<span class="org-function-name">showPal</span> <span class="org-constant">&lt;-</span> <span class="org-keyword">function</span>(pal, labs = pal, cex = 0.6, ...){
+    barplot(rep(1, length(pal)), col = pal,
+            names.arg = labs, cex.names = cex,
+            axes=<span class="org-type">FALSE</span>, ...)
+}
+
+showPal(divPal)
+
+divTheme <span class="org-constant">&lt;-</span> rasterTheme(region = divPal)
+
+levelplot(SISav, contour = <span class="org-type">TRUE</span>, par.settings = divTheme)
+
+rng <span class="org-constant">&lt;-</span> range(SISav[])
+<span class="org-comment-delimiter">## </span><span class="org-comment">Number of desired intervals</span>
+nInt <span class="org-constant">&lt;-</span> 15
+<span class="org-comment-delimiter">## </span><span class="org-comment">Increment corresponding to the range and nInt</span>
+inc0 <span class="org-constant">&lt;-</span> diff(rng)/nInt
+<span class="org-comment-delimiter">## </span><span class="org-comment">Number of intervals from the negative extreme to zero</span>
+n0 <span class="org-constant">&lt;-</span> floor(abs(rng[1])/inc0)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Update the increment adding 1/2 to position zero in the center of an interval</span>
+inc <span class="org-constant">&lt;-</span> abs(rng[1])/(n0 + 1/2)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Number of intervals from zero to the positive extreme</span>
+n1 <span class="org-constant">&lt;-</span> ceiling((rng[2]/inc - 1/2) + 1)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Collection of breaks</span>
+breaks <span class="org-constant">&lt;-</span> seq(rng[1], by=inc, length= n0 + 1 + n1)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Midpoints computed with the median of each interval</span>
+idx <span class="org-constant">&lt;-</span> findInterval(SISav[], breaks, rightmost.closed=<span class="org-type">TRUE</span>)
+mids <span class="org-constant">&lt;-</span> tapply(SISav[], idx, median)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Maximum of the absolute value both limits</span>
+mx <span class="org-constant">&lt;-</span> max(abs(breaks))
+
+<span class="org-function-name">break2pal</span> <span class="org-constant">&lt;-</span> <span class="org-keyword">function</span>(x, mx, pal){
+    <span class="org-comment-delimiter">## </span><span class="org-comment">x = mx gives y = 1</span>
+    <span class="org-comment-delimiter">## </span><span class="org-comment">x = 0 gives y = 0.5</span>
+    y <span class="org-constant">&lt;-</span> 1/2*(x/mx + 1)
+    rgb(pal(y), maxColorValue = 255)
+}
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Interpolating function that maps colors with [0, 1]</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">rgb(divRamp(0.5), maxColorValue=255) gives "#FFFFFF" (white)</span>
+divRamp <span class="org-constant">&lt;-</span> colorRamp(divPal)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Diverging palette where white is associated with the interval</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">containing the zero</span>
+pal <span class="org-constant">&lt;-</span> break2pal(mids, mx, divRamp)
+showPal(pal, round(mids, 1))
+
+levelplot(SISav,
+          par.settings = rasterTheme(region = pal),
+          at = breaks, contour = <span class="org-type">TRUE</span>)
+
+divTheme <span class="org-constant">&lt;-</span> rasterTheme(regions = list(col = pal))
+
+levelplot(SISav,
+          par.settings = divTheme,
+          at = breaks,
+          contour = <span class="org-type">TRUE</span>)
+
+<span class="org-constant">library</span>(classInt)
+
+cl <span class="org-constant">&lt;-</span> classIntervals(SISav[], style=<span class="org-string">'kmeans'</span>)
+breaks <span class="org-constant">&lt;-</span> cl$brks
+
+idx <span class="org-constant">&lt;-</span> findInterval(SISav[], breaks, rightmost.closed = <span class="org-type">TRUE</span>)
+mids <span class="org-constant">&lt;-</span> tapply(SISav[], idx, median)
+
+mx <span class="org-constant">&lt;-</span> max(abs(breaks))
+pal <span class="org-constant">&lt;-</span> break2pal(mids, mx, divRamp)
+divTheme$regions$col <span class="org-constant">&lt;-</span> pal
+
+levelplot(SISav,
+          par.settings = divTheme,
+          at=breaks,
+          contour=<span class="org-type">TRUE</span>)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Categorical data</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">China and India  </span>
+ext <span class="org-constant">&lt;-</span> extent(65, 135, 5, 55)
+
+pop <span class="org-constant">&lt;-</span> raster(<span class="org-string">'data/875430rgb-167772161.0.FLOAT.TIFF'</span>)
+pop <span class="org-constant">&lt;-</span> crop(pop, ext)
+pop[pop==99999] <span class="org-constant">&lt;-</span> <span class="org-type">NA</span>
+
+landClass <span class="org-constant">&lt;-</span> raster(<span class="org-string">'data/241243rgb-167772161.0.TIFF'</span>)
+landClass <span class="org-constant">&lt;-</span> crop(landClass, ext)
+
+landClass[landClass <span class="org-ess-XopX">%in%</span> c(0, 254)] <span class="org-constant">&lt;-</span> <span class="org-type">NA</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Only four groups are needed:</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Forests: 1:5</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Shrublands, etc: 6:11</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Agricultural/Urban: 12:14</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Snow: 15:16</span>
+landClass <span class="org-constant">&lt;-</span> cut(landClass, c(0, 5, 11, 14, 16))
+<span class="org-comment-delimiter">## </span><span class="org-comment">Add a Raster Attribute Table and define the raster as categorical data</span>
+landClass <span class="org-constant">&lt;-</span> ratify(landClass)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Configure the RAT: first create a RAT data.frame using the</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">levels method; second, set the values for each class (to be</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">used by levelplot); third, assign this RAT to the raster</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">using again levels</span>
+rat <span class="org-constant">&lt;-</span> levels(landClass)[[1]]
+rat$classes <span class="org-constant">&lt;-</span> c(<span class="org-string">'Forest'</span>, <span class="org-string">'Land'</span>, <span class="org-string">'Urban'</span>, <span class="org-string">'Snow'</span>)
+levels(landClass) <span class="org-constant">&lt;-</span> rat
+
+qualPal <span class="org-constant">&lt;-</span> c(<span class="org-string">'palegreen4'</span>, <span class="org-comment-delimiter"># </span><span class="org-comment">Forest</span>
+         <span class="org-string">'lightgoldenrod'</span>, <span class="org-comment-delimiter"># </span><span class="org-comment">Land</span>
+         <span class="org-string">'indianred4'</span>, <span class="org-comment-delimiter"># </span><span class="org-comment">Urban</span>
+         <span class="org-string">'snow3'</span>)      <span class="org-comment-delimiter"># </span><span class="org-comment">Snow</span>
+
+qualTheme <span class="org-constant">&lt;-</span> rasterTheme(region = qualPal,
+                        panel.background = list(col=<span class="org-string">'lightskyblue1'</span>)
+                        )
+
+levelplot(landClass, maxpixels = 3.5e5,
+          par.settings = qualTheme)
+
+pPop <span class="org-constant">&lt;-</span> levelplot(pop, zscaleLog = 10,
+                  par.settings = BTCTheme,
+                  maxpixels = 3.5e5)
+pPop
+
+s <span class="org-constant">&lt;-</span> stack(pop, landClass)
+names(s) <span class="org-constant">&lt;-</span> c(<span class="org-string">'pop'</span>, <span class="org-string">'landClass'</span>)
+histogram(~log10(pop) | landClass, data = s,
+          scales = list(relation = <span class="org-string">'free'</span>))
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Bivariate legend</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+classes <span class="org-constant">&lt;-</span> rat$classes
+nClasses <span class="org-constant">&lt;-</span> length(classes)
+
+logPopAt <span class="org-constant">&lt;-</span> c(0, 0.5, 1.85, 4)
+
+nIntervals <span class="org-constant">&lt;-</span> length(logPopAt) - 1
+
+multiPal <span class="org-constant">&lt;-</span> sapply(1:nClasses, <span class="org-keyword">function</span>(i)
+{
+    colorAlpha <span class="org-constant">&lt;-</span> adjustcolor(qualPal[i], alpha = 0.4)
+    colorRampPalette(c(qualPal[i],
+                       colorAlpha),
+                     alpha = <span class="org-type">TRUE</span>)(nIntervals)
+})
+
+pList <span class="org-constant">&lt;-</span> lapply(1:nClasses, <span class="org-keyword">function</span>(i){
+    landSub <span class="org-constant">&lt;-</span> landClass
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Those cells from a different land class are set to NA...</span>
+    landSub[!(landClass==i)] <span class="org-constant">&lt;-</span> <span class="org-type">NA</span>
+    <span class="org-comment-delimiter">## </span><span class="org-comment">... and the resulting raster masks the population raster</span>
+    popSub <span class="org-constant">&lt;-</span> mask(pop, landSub)
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Palette</span>
+    pal <span class="org-constant">&lt;-</span> multiPal[, i]
+
+    pClass <span class="org-constant">&lt;-</span> levelplot(log10(popSub),
+                        at = logPopAt,
+                        maxpixels = 3.5e5,
+                        col.regions = pal,
+                        colorkey = <span class="org-type">FALSE</span>,
+                        margin=<span class="org-type">FALSE</span>)
+})
+
+p <span class="org-constant">&lt;-</span> Reduce(<span class="org-string">'+'</span>, pList)
+
+<span class="org-constant">library</span>(grid)
+
+legend <span class="org-constant">&lt;-</span> layer(
+{
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Center of the legend (rectangle)</span>
+    x0 <span class="org-constant">&lt;-</span> 125
+    y0 <span class="org-constant">&lt;-</span> 22
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Width and height of the legend</span>
+    w <span class="org-constant">&lt;-</span> 10
+    h <span class="org-constant">&lt;-</span> w / nClasses * nIntervals
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Legend</span>
+    grid.raster(multiPal, interpolate = <span class="org-type">FALSE</span>,
+                      x = unit(x0, <span class="org-string">"native"</span>),
+                      y = unit(y0, <span class="org-string">"native"</span>),
+                width = unit(w, <span class="org-string">"native"</span>))
+    <span class="org-comment-delimiter">## </span><span class="org-comment">x-axis of the legend</span>
+    <span class="org-comment-delimiter">## </span><span class="org-comment">x-axis (qualitative variable)</span>
+    grid.text(classes,
+              x = unit(seq(x0 - w * (nClasses -1)/(2*nClasses),
+                           x0 + w * (nClasses -1)/(2*nClasses),
+                           length = nClasses),
+                       <span class="org-string">"native"</span>),
+              y = unit(y0 + h/2, <span class="org-string">"native"</span>),
+              just = <span class="org-string">"bottom"</span>,
+              rot = 10,
+              gp = gpar(fontsize = 6))
+    <span class="org-comment-delimiter">## </span><span class="org-comment">y-axis (quantitative variable)</span>
+    yLabs <span class="org-constant">&lt;-</span> paste0(<span class="org-string">"["</span>,
+                    paste(logPopAt[-nIntervals],
+                          logPopAt[-1], sep = <span class="org-string">","</span>),
+                    <span class="org-string">"]"</span>)
+    grid.text(yLabs,
+              x = unit(x0 + w/2, <span class="org-string">"native"</span>),
+              y = unit(seq(y0 - h * (nIntervals -1)/(2*nIntervals),
+                           y0 + h * (nIntervals -1)/(2*nIntervals),
+                           length = nIntervals),
+                       <span class="org-string">"native"</span>),
+              just = <span class="org-string">"left"</span>,
+              gp = gpar(fontsize = 6))
+
+})
+
+p + legend
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">3D visualization</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+plot3D(DEM, maxpixels = 5e4)
+
+par3d(viewport = c(0, 30, 250, 250))
+
+writeWebGL(filename = <span class="org-string">'docs/images/rgl/DEM.html'</span>,
+           width = 800)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">mapview</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(mapview)
+
+mvSIS <span class="org-constant">&lt;-</span> mapview(SISav, legend = <span class="org-type">TRUE</span>)
+
+SIAR <span class="org-constant">&lt;-</span> read.csv(<span class="org-string">"data/SIAR.csv"</span>)
+
+spSIAR <span class="org-constant">&lt;-</span> SpatialPointsDataFrame(SIAR[, c(6, 7)],
+                                 SIAR[, -c(6, 7)],
+                                 proj4str = CRS(projection(SISav)))
+
+mvSIAR <span class="org-constant">&lt;-</span> mapview(spSIAR,
+                  label = spSIAR$Estacion)
+
+mvSIS + mvSIAR
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org40ba677" class="outline-3">
+<h3 id="code_proportional"><a id="org40ba677"></a>Proportional symbol mapping</h3>
+<div class="outline-text-3" id="text-code_proportional">
+<p>
+<a href="R/bubble.R">Download</a>
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Initial configuration</span>
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Clone or download the repository and set the working directory</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">with setwd to the folder where the repository is located.</span>
+
+<span class="org-constant">library</span>(lattice)
+<span class="org-constant">library</span>(ggplot2)
+<span class="org-constant">library</span>(latticeExtra)
+
+myTheme <span class="org-constant">&lt;-</span> custom.theme.2(pch=19, cex=0.7,
+                          region=rev(brewer.pal(9, <span class="org-string">'YlOrRd'</span>)),
+                          symbol = brewer.pal(n=8, name = <span class="org-string">"Dark2"</span>))
+myTheme$strip.background$col=<span class="org-string">'transparent'</span>
+myTheme$strip.shingle$col=<span class="org-string">'transparent'</span>
+myTheme$strip.border$col=<span class="org-string">'transparent'</span>
+
+<span class="org-function-name">xscale.components.custom</span> <span class="org-constant">&lt;-</span> <span class="org-keyword">function</span>(...)
+{
+    ans <span class="org-constant">&lt;-</span> xscale.components.default(...)
+    ans$top=<span class="org-type">FALSE</span>
+    ans
+}
+<span class="org-function-name">yscale.components.custom</span> <span class="org-constant">&lt;-</span> <span class="org-keyword">function</span>(...)
+{
+    ans <span class="org-constant">&lt;-</span> yscale.components.default(...)
+    ans$right=<span class="org-type">FALSE</span>
+    ans
+}
+myArgs <span class="org-constant">&lt;-</span> list(as.table=<span class="org-type">TRUE</span>,
+               between=list(x=0.5, y=0.2),
+               xscale.components = xscale.components.custom,
+               yscale.components = yscale.components.custom)
+defaultArgs <span class="org-constant">&lt;-</span> lattice.options()$default.args
+
+lattice.options(default.theme = myTheme,
+                default.args = modifyList(defaultArgs, myArgs))
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Proportional symbol with spplot</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(sp)
+<span class="org-constant">library</span>(rgdal)
+
+NO2sp <span class="org-constant">&lt;-</span> readOGR(dsn = <span class="org-string">'data/'</span>, layer = <span class="org-string">'NO2sp'</span>)
+
+airPal <span class="org-constant">&lt;-</span> colorRampPalette(c(<span class="org-string">'springgreen1'</span>, <span class="org-string">'sienna3'</span>, <span class="org-string">'gray5'</span>))(5)
+  
+spplot(NO2sp[<span class="org-string">"mean"</span>],
+       col.regions = airPal, <span class="org-comment-delimiter">## </span><span class="org-comment">Palette</span>
+       cex = sqrt(1:5), <span class="org-comment-delimiter">## </span><span class="org-comment">Size of circles</span>
+       edge.col = <span class="org-string">'black'</span>, <span class="org-comment-delimiter">## </span><span class="org-comment">Color of border</span>
+       scales = list(draw = <span class="org-type">TRUE</span>), <span class="org-comment-delimiter">## </span><span class="org-comment">Draw scales</span>
+       key.space = <span class="org-string">'right'</span>) <span class="org-comment-delimiter">## </span><span class="org-comment">Put legend on the right</span>
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Proportional symbol with ggplot</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(sf)
+
+NO2sf <span class="org-constant">&lt;-</span> st_read(dsn = <span class="org-string">'data'</span>, layer = <span class="org-string">'NO2sp'</span>)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Create a categorical variable</span>
+NO2sf$Mean <span class="org-constant">&lt;-</span> cut(NO2sf$mean, 5)
+
+ggplot(data = NO2sf) + 
+    geom_sf(aes(size = Mean, fill = Mean),
+            pch = 21, col = <span class="org-string">'black'</span>) +
+    scale_fill_manual(values = airPal) +
+    theme_bw()
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Optimal classification and sizes to improve discrimination</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(classInt)
+<span class="org-comment-delimiter">## </span><span class="org-comment">The number of classes is chosen between the Sturges and the</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Scott rules.</span>
+nClasses <span class="org-constant">&lt;-</span> 5
+intervals <span class="org-constant">&lt;-</span> classIntervals(NO2sp$mean, n = nClasses, style = <span class="org-string">'fisher'</span>)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Number of classes is not always the same as the proposed number</span>
+nClasses <span class="org-constant">&lt;-</span> length(intervals$brks) - 1
+
+op <span class="org-constant">&lt;-</span> options(digits = 4)
+tab <span class="org-constant">&lt;-</span> print(intervals)
+options(op)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Complete Dent set of circle radii (mm)</span>
+dent <span class="org-constant">&lt;-</span> c(0.64, 1.14, 1.65, 2.79, 4.32, 6.22, 9.65, 12.95, 15.11)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Subset for our dataset</span>
+dentAQ <span class="org-constant">&lt;-</span> dent[seq_len(nClasses)]
+<span class="org-comment-delimiter">## </span><span class="org-comment">Link Size and Class: findCols returns the class number of each</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">point; cex is the vector of sizes for each data point</span>
+idx <span class="org-constant">&lt;-</span> findCols(intervals)
+cexNO2 <span class="org-constant">&lt;-</span> dentAQ[idx]
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">spplot version</span>
+NO2sp$classNO2 <span class="org-constant">&lt;-</span> factor(names(tab)[idx])  
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Definition of an improved key with title and background</span>
+NO2key <span class="org-constant">&lt;-</span> list(x = 0.98, y = 0.02, corner = c(1, 0),
+               title = expression(NO[2]~~(paste(mu, plain(g))/m^3)),
+               cex.title = .75, cex = 0.7,
+               background = <span class="org-string">'gray92'</span>)
+
+pNO2 <span class="org-constant">&lt;-</span> spplot(NO2sp[<span class="org-string">"classNO2"</span>],
+               col.regions = airPal,
+               cex = dentAQ,
+               edge.col = <span class="org-string">'black'</span>,
+               scales = list(draw = <span class="org-type">TRUE</span>),
+               key.space = NO2key)
+pNO2
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">ggplot2 version</span>
+NO2sf$classNO2 <span class="org-constant">&lt;-</span> factor(names(tab)[idx])  
+
+ggplot(data = NO2sf) +
+    geom_sf(aes(size = classNO2, fill = classNO2),
+            pch = 21, col = <span class="org-string">'black'</span>) +
+    scale_fill_manual(values = airPal) +
+    scale_size_manual(values = dentAQ * 2)  +
+    xlab(<span class="org-string">""</span>) + ylab(<span class="org-string">""</span>) + theme_bw()
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Spatial context with underlying layers and labels</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Static image</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Bounding box of data</span>
+madridBox <span class="org-constant">&lt;-</span> bbox(NO2sp)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Extend the limits to get a slightly larger map</span>
+madridBox <span class="org-constant">&lt;-</span> t(apply(madridBox, 1,
+                   extendrange, f = 0.05))
+
+<span class="org-constant">library</span>(ggmap)
+
+madridGG <span class="org-constant">&lt;-</span> get_map(c(madridBox),
+                    maptype = <span class="org-string">'watercolor'</span>,
+                    <span class="org-constant">source</span> = <span class="org-string">'stamen'</span>)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">ggmap with ggplot</span>
+NO2df <span class="org-constant">&lt;-</span> as.data.frame(NO2sp)
+
+ggmap(madridGG) +
+    geom_point(data = NO2df,
+                aes(coords.x1, coords.x2, 
+                    size = classNO2,
+                    fill = classNO2),
+               pch = 21, col = <span class="org-string">'black'</span>) +
+    scale_fill_manual(values = airPal) +
+    scale_size_manual(values = dentAQ*2)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">ggmap with spplot</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Project the data into the web mercator projection</span>
+NO2merc <span class="org-constant">&lt;-</span> spTransform(NO2sp, CRS(<span class="org-string">"+init=epsg:3857"</span>))
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">sp.layout definition</span>
+stamen <span class="org-constant">&lt;-</span> list(panel.ggmap, madridGG, first = <span class="org-type">TRUE</span>)
+
+spplot(NO2merc[<span class="org-string">"classNO2"</span>],
+       col.regions = airPal,
+       cex = dentAQ,
+       edge.col = <span class="org-string">'black'</span>,
+       sp.layout = stamen,
+       scales = list(draw = <span class="org-type">TRUE</span>),
+       key.space = NO2key)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Vector data</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">rgdal and spplot</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(rgdal)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">nomecalles http://www.madrid.org/nomecalles/Callejero_madrid.icm</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Form at http://www.madrid.org/nomecalles/DescargaBDTCorte.icm</span>
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Madrid districts</span>
+unzip(<span class="org-string">'Distritos de Madrid.zip'</span>)
+distritosMadrid <span class="org-constant">&lt;-</span> readOGR(<span class="org-string">'Distritos de Madrid/200001331.shp'</span>,
+                           p4s = <span class="org-string">'+proj=utm +zone=30'</span>)
+distritosMadrid <span class="org-constant">&lt;-</span> spTransform(distritosMadrid,
+                               CRS = CRS(<span class="org-string">"+proj=longlat +ellps=WGS84"</span>))
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Madrid streets</span>
+unzip(<span class="org-string">'Callejero_ Ejes de viales.zip'</span>)
+streets <span class="org-constant">&lt;-</span> readOGR(<span class="org-string">'Callejero_ Ejes de viales/call2011.shp'</span>,
+                   p4s = <span class="org-string">'+proj=utm +zone=30'</span>)
+streetsMadrid <span class="org-constant">&lt;-</span> streets[streets$CMUN==<span class="org-string">'079'</span>,]
+streetsMadrid <span class="org-constant">&lt;-</span> spTransform(streetsMadrid,
+                             CRS = CRS(<span class="org-string">"+proj=longlat +ellps=WGS84"</span>))
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">spplot with sp.layout version</span>
+spDistricts <span class="org-constant">&lt;-</span> list(<span class="org-string">'sp.polygons'</span>, distritosMadrid,
+                    fill = <span class="org-string">'gray97'</span>, lwd = 0.3)
+spStreets <span class="org-constant">&lt;-</span> list(<span class="org-string">'sp.lines'</span>, streetsMadrid,
+                  lwd = 0.05)
+spNames <span class="org-constant">&lt;-</span> list(sp.pointLabel, NO2sp,
+                labels = substring(NO2sp$codEst, 7),
+                cex = 0.6, fontfamily = <span class="org-string">'Palatino'</span>)
+
+spplot(NO2sp[<span class="org-string">"classNO2"</span>],
+       col.regions = airPal, cex = dentAQ,
+       edge.col = <span class="org-string">'black'</span>, alpha = 0.8,
+       sp.layout = list(spDistricts, spStreets, spNames),
+       scales = list(draw = <span class="org-type">TRUE</span>),
+       key.space = NO2key)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">lattice with layer version</span>
+pNO2 +
+    layer(sp.pointLabel(NO2sp,
+                        labels = substring(NO2sp$codEst, 7),
+                        cex = 0.8, fontfamily = <span class="org-string">'Palatino'</span>)
+          ) +
+    layer_(
+    {
+        sp.polygons(distritosMadrid, fill = <span class="org-string">'gray97'</span>, lwd = 0.3)
+        sp.lines(streetsMadrid, lwd = 0.05)
+    })
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">sf and ggplot</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(sf)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Madrid districts</span>
+distritosMadridSF <span class="org-constant">&lt;-</span> st_read(dsn = <span class="org-string">'Distritos de Madrid/'</span>,
+                           layer = <span class="org-string">'200001331'</span>)
+distritosMadridSF <span class="org-constant">&lt;-</span> st_transform(distritosMadridSF,
+                               crs = <span class="org-string">"+proj=longlat +ellps=WGS84"</span>)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Madrid streets</span>
+streetsSF <span class="org-constant">&lt;-</span> st_read(dsn = <span class="org-string">'Callejero_ Ejes de viales/'</span>,
+                           layer = <span class="org-string">'call2011'</span>,
+                           crs = <span class="org-string">'+proj=longlat +ellps=WGS84'</span>)
+
+streetsMadridSF <span class="org-constant">&lt;-</span> streetsSF[streetsSF$CMUN==<span class="org-string">'079'</span>,]
+streetsMadridSF <span class="org-constant">&lt;-</span> st_transform(streetsMadridSF,
+                              crs = <span class="org-string">"+proj=longlat +ellps=WGS84"</span>)
+
+ggplot()+
+    geom_sf(data = streetsMadridSF,
+            size = 0.05,
+            color = <span class="org-string">'lightgray'</span>) +
+    geom_sf(data = distritosMadridSF,
+            fill = <span class="org-string">'lightgray'</span>, alpha = 0.2,
+            size = 0.3,
+            color = <span class="org-string">'black'</span>) +
+    geom_sf(data = NO2sf,
+            aes(size = classNO2,
+                fill = classNO2),
+            pch = 21, col = <span class="org-string">'black'</span>) + 
+    scale_fill_manual(values = airPal) +
+    scale_size_manual(values = dentAQ * 2) +
+    theme_bw()
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Spatial interpolation</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(gstat)
+
+airGrid <span class="org-constant">&lt;-</span> spsample(NO2sp, type=<span class="org-string">'regular'</span>, n=1e5)
+gridded(airGrid) <span class="org-constant">&lt;-</span> <span class="org-type">TRUE</span>
+airKrige <span class="org-constant">&lt;-</span> krige(mean ~ 1, NO2sp, airGrid)
+
+spplot(airKrige[<span class="org-string">"var1.pred"</span>],
+       col.regions = colorRampPalette(airPal)) +
+    layer({
+        sp.polygons(distritosMadrid, fill=<span class="org-string">'transparent'</span>, lwd = 0.3)
+        sp.lines(streetsMadrid, lwd=0.07)
+        sp.points(NO2sp, pch = 21, alpha = 0.8, fill = <span class="org-string">'gray50'</span>, col = <span class="org-string">'black'</span>)
+    })
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Interactive graphics</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">mapView</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(mapview)
+
+pal <span class="org-constant">&lt;-</span> colorRampPalette(c(<span class="org-string">'springgreen1'</span>, <span class="org-string">'sienna3'</span>, <span class="org-string">'gray5'</span>))(100)
+
+mapview(NO2sp, zcol = <span class="org-string">"mean"</span>, cex = <span class="org-string">"mean"</span>,
+        col.regions = pal, legend = <span class="org-type">TRUE</span>,
+        label = NO2sp$Nombre)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Tooltips with images and graphs</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+img <span class="org-constant">&lt;-</span> paste(<span class="org-string">'images/'</span>, NO2sp$codEst, <span class="org-string">'.jpg'</span>, sep=<span class="org-string">''</span>)
+
+mapview(NO2sp, zcol = <span class="org-string">"mean"</span>, cex = <span class="org-string">"mean"</span>,
+        col.regions = pal, legend = <span class="org-type">TRUE</span>,
+        map.type = <span class="org-string">"Esri.WorldImagery"</span>,
+        label = NO2sp$Nombre,
+        popup = popupImage(img, src = <span class="org-string">"local"</span>))
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Read the time series</span>
+airQuality <span class="org-constant">&lt;-</span> read.csv2(<span class="org-string">'data/airQuality.csv'</span>)
+<span class="org-comment-delimiter">## </span><span class="org-comment">We need only NO2 data (codParam 8)</span>
+NO2 <span class="org-constant">&lt;-</span> subset(airQuality, codParam == 8)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Time index in a new column</span>
+NO2$tt <span class="org-constant">&lt;-</span> with(NO2,
+               as.Date(paste(year, month, day, sep = <span class="org-string">'-'</span>)))
+<span class="org-comment-delimiter">## </span><span class="org-comment">Stations code</span>
+stations <span class="org-constant">&lt;-</span> unique(NO2$codEst)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Loop to create a scatterplot for each station.</span>
+pList <span class="org-constant">&lt;-</span> lapply(stations, <span class="org-keyword">function</span>(i)
+    xyplot(dat ~ tt, data = NO2,
+           subset = (codEst == i),
+           type = <span class="org-string">'l'</span>,
+           xlab = <span class="org-string">''</span>, ylab = <span class="org-string">''</span>)
+    )
+
+mapview(NO2sp, zcol = <span class="org-string">"mean"</span>, cex = <span class="org-string">"mean"</span>,
+        col.regions = pal, legend = <span class="org-type">TRUE</span>,
+        map.type = <span class="org-string">"Esri.WorldImagery"</span>,
+        label = NO2sp$Nombre,
+        popup = popupGraph(pList))
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Synchronise multiple graphics  </span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Map of the average value</span>
+mapMean <span class="org-constant">&lt;-</span> mapview(NO2sp, zcol = <span class="org-string">"mean"</span>, cex = <span class="org-string">"mean"</span>,
+                   col.regions = pal, legend = <span class="org-type">TRUE</span>,
+                   map.types = <span class="org-string">"OpenStreetMap.Mapnik"</span>,
+                   label = NO2sp$Nombre)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Map of the median</span>
+mapMedian <span class="org-constant">&lt;-</span> mapview(NO2sp, zcol = <span class="org-string">"median"</span>, cex = <span class="org-string">"median"</span>,
+                     col.regions = pal, legend = <span class="org-type">TRUE</span>,
+                     map.type = <span class="org-string">"Stamen.Watercolor"</span>,
+                     label = NO2sp$Nombre)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Map of the standard deviation</span>
+mapSD <span class="org-constant">&lt;-</span> mapview(NO2sp, zcol = <span class="org-string">"sd"</span>, cex = <span class="org-string">"sd"</span>,
+                 col.regions = pal, legend = <span class="org-type">TRUE</span>,
+                 map.type = <span class="org-string">"Esri.WorldImagery"</span>,
+                 label = NO2sp$Nombre)
+<span class="org-comment-delimiter">## </span><span class="org-comment">All together</span>
+sync(mapMean, mapMedian, mapSD, ncol = 3)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">GeoJSON and OpenStreepMap</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(rgdal)
+writeOGR(NO2sp, <span class="org-string">'data/NO2.geojson'</span>, <span class="org-string">'NO2sp'</span>, driver=<span class="org-string">'GeoJSON'</span>)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Keyhole Markup Language</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(rgdal)
+writeOGR(NO2sp, dsn=<span class="org-string">'NO2_mean.kml'</span>, layer=<span class="org-string">'mean'</span>, driver=<span class="org-string">'KML'</span>)
+
+<span class="org-constant">library</span>(plotKML)
+plotKML(NO2sp[<span class="org-string">"mean"</span>], points_names=NO2sp$codEst)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">3D visualization</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(rgl)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">rgl does not understand Spatial* objects</span>
+NO2df <span class="org-constant">&lt;-</span> as.data.frame(NO2sp)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Color of each point according to its class</span>
+airPal <span class="org-constant">&lt;-</span> colorRampPalette(c(<span class="org-string">'springgreen1'</span>, <span class="org-string">'sienna3'</span>, <span class="org-string">'gray5'</span>))(5)
+colorClasses <span class="org-constant">&lt;-</span> airPal[NO2df$classNO2]
+
+plot3d(x = NO2df$coords.x1, 
+       y = NO2df$coords.x2,
+       z = NO2df$alt, 
+       xlab = <span class="org-string">'Longitude'</span>, 
+       ylab = <span class="org-string">'Latitude'</span>, 
+       zlab = <span class="org-string">'Altitude'</span>, 
+       type = <span class="org-string">'s'</span>, 
+       col = colorClasses,
+       radius = NO2df$mean/10)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">gridSVG</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(gridSVG)
+
+print(pNO2 +
+      layer_(sp.polygons(distritosMadrid,
+                         fill = <span class="org-string">'gray97'</span>,
+                         lwd = 0.3)))
+
+NO2df <span class="org-constant">&lt;-</span> as.data.frame(NO2sp)
+
+tooltips <span class="org-constant">&lt;-</span> sapply(seq_len(nrow(NO2df)), <span class="org-keyword">function</span>(i)
+{
+    codEst <span class="org-constant">&lt;-</span> NO2df[i, <span class="org-string">"codEst"</span>]
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Information to be attached to each line</span>
+    stats <span class="org-constant">&lt;-</span> paste(c(<span class="org-string">'Mean'</span>, <span class="org-string">'Median'</span>, <span class="org-string">'SD'</span>),
+                   signif(NO2df[i, c(<span class="org-string">'mean'</span>, <span class="org-string">'median'</span>, <span class="org-string">'sd'</span>)], 4),
+                   sep=<span class="org-string">' = '</span>, collapse=<span class="org-string">'&lt;br /&gt;'</span>)
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Station photograph </span>
+    imageURL <span class="org-constant">&lt;-</span> paste(<span class="org-string">'images/'</span>, codEst, <span class="org-string">'.jpg'</span>, sep=<span class="org-string">''</span>)
+    imageInfo <span class="org-constant">&lt;-</span> paste(<span class="org-string">"&lt;img src="</span>, imageURL,
+                       <span class="org-string">" width='100' height='100' /&gt;"</span>, sep=<span class="org-string">''</span>)
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Text to be included in the tooltip</span>
+    nameStation <span class="org-constant">&lt;-</span> paste(<span class="org-string">'&lt;b&gt;'</span>, 
+                         as.character(NO2df[i, <span class="org-string">"Nombre"</span>]),
+                         <span class="org-string">'&lt;/b&gt;'</span>, sep=<span class="org-string">''</span>)
+    info <span class="org-constant">&lt;-</span> paste(nameStation, stats, sep=<span class="org-string">'&lt;br /&gt;'</span>)
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Tooltip includes the image and the text</span>
+    paste(imageInfo, info, sep=<span class="org-string">'&lt;br /&gt;'</span>)
+})
+grid.garnish(<span class="org-string">'points.panel'</span>,
+             title = tooltips,
+             grep = <span class="org-type">TRUE</span>,
+             group = <span class="org-type">FALSE</span>)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Webpage of each station</span>
+rootURL <span class="org-constant">&lt;-</span> <span class="org-string">'http://www.mambiente.munimadrid.es'</span>
+urlList <span class="org-constant">&lt;-</span> sapply(seq_len(nrow(NO2df)), <span class="org-keyword">function</span>(i){
+    codEst <span class="org-constant">&lt;-</span> NO2df[i, <span class="org-string">"codEst"</span>]
+    codURL <span class="org-constant">&lt;-</span> as.numeric(substr(codEst, 7, 8))
+    stationURL <span class="org-constant">&lt;-</span> paste(rootURL,
+                        <span class="org-string">'/opencms/opencms/calaire/contenidos/estaciones/estacion'</span>,
+                        codURL, <span class="org-string">'.html'</span>, sep=<span class="org-string">''</span>)
+})
+
+grid.hyperlink(<span class="org-string">'points.panel'</span>, urlList, grep=<span class="org-type">TRUE</span>, group=<span class="org-type">FALSE</span>)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Add jQuery and jQuery UI scripts</span>
+grid.script(file=<span class="org-string">'http://code.jquery.com/jquery-1.8.3.js'</span>)
+grid.script(file=<span class="org-string">'http://code.jquery.com/ui/1.9.2/jquery-ui.js'</span>)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Simple JavaScript code to initialize the tooltip</span>
+grid.script(file=<span class="org-string">'js/myTooltip.js'</span>)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Produce the SVG graphic: the results of grid.garnish,</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">grid.hyperlink and grid.script are converted to SVG code</span>
+grid.export(<span class="org-string">'figs/airMadrid.svg'</span>)
+
+htmlBegin <span class="org-constant">&lt;-</span> <span class="org-string">'&lt;!DOCTYPE html&gt;</span>
+<span class="org-string">&lt;html&gt;</span>
+<span class="org-string">&lt;head&gt;</span>
+<span class="org-string">&lt;title&gt;Tooltips with jQuery and gridSVG&lt;/title&gt;</span>
+<span class="org-string">&lt;link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.2/themes/smoothness/jquery-ui.css" /&gt;</span>
+<span class="org-string">&lt;meta charset="utf-8"&gt;</span>
+<span class="org-string">&lt;/head&gt;</span>
+<span class="org-string">&lt;body&gt;'</span>
+
+htmlEnd <span class="org-constant">&lt;-</span> <span class="org-string">'&lt;/body&gt; &lt;/html&gt;'</span>
+
+svgText <span class="org-constant">&lt;-</span> paste(readLines(<span class="org-string">'figs/airMadrid.svg'</span>), collapse=<span class="org-string">'\n'</span>)
+
+writeLines(paste(htmlBegin, svgText, htmlEnd, sep=<span class="org-string">'\n'</span>),
+           <span class="org-string">'airMadrid.html'</span>)
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org4995b49" class="outline-3">
+<h3 id="code_vector"><a id="org4995b49"></a>Vector fields</h3>
+<div class="outline-text-3" id="text-code_vector">
+<p>
+<a href="R/vector.R">Download</a>
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Initial configuration</span>
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Clone or download the repository and set the working directory</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">with setwd to the folder where the repository is located.</span>
+
+<span class="org-constant">library</span>(raster)
+<span class="org-constant">library</span>(rasterVis)
+
+wDir <span class="org-constant">&lt;-</span> raster(<span class="org-string">'data/wDir'</span>)/180*pi
+wSpeed <span class="org-constant">&lt;-</span> raster(<span class="org-string">'data/wSpeed'</span>)
+windField <span class="org-constant">&lt;-</span> stack(wSpeed, wDir)
+names(windField) <span class="org-constant">&lt;-</span> c(<span class="org-string">'magnitude'</span>, <span class="org-string">'direction'</span>)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Arrow plot</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+vectorTheme <span class="org-constant">&lt;-</span> BTCTheme(regions = list(alpha = 0.7))
+
+vectorplot(windField, isField = <span class="org-type">TRUE</span>,
+           aspX = 5, aspY = 5,
+           scaleSlope = <span class="org-type">FALSE</span>, 
+           par.settings = vectorTheme,
+           colorkey = <span class="org-type">FALSE</span>,
+           scales = list(draw = <span class="org-type">FALSE</span>))
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Streamlines</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+myTheme <span class="org-constant">&lt;-</span> streamTheme(region = rev(brewer.pal(n = 4, name = <span class="org-string">'Greys'</span>)),
+                       symbol = rev(brewer.pal(n = 9, <span class="org-string">"Blues"</span>)))
+
+streamplot(windField, isField = <span class="org-type">TRUE</span>,
+           par.settings = myTheme,
+           droplet = list(pc = 12),
+           streamlet = list(L = 5, h = 5),
+           scales = list(draw = <span class="org-type">FALSE</span>),
+           panel = panel.levelplot.raster)
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org6c217ce" class="outline-3">
+<h3 id="code_physical"><a id="org6c217ce"></a>Physical maps</h3>
+<div class="outline-text-3" id="text-code_physical">
+<p>
+<a href="R/physical.R">Download</a>
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Initial configuration</span>
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Clone or download the repository and set the working directory</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">with setwd to the folder where the repository is located.</span>
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Physical maps</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(raster)
+<span class="org-constant">library</span>(rasterVis)
+<span class="org-constant">library</span>(rgdal)
+<span class="org-constant">library</span>(rgeos)
+<span class="org-constant">library</span>(latticeExtra)
+<span class="org-constant">library</span>(colorspace)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Retrieving data from DIVA-GIS, GADM and Natural Earth Data</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+     old <span class="org-constant">&lt;-</span> setwd(tempdir())
+
+     download.file(<span class="org-string">'http://biogeo.ucdavis.edu/data/gadm2.8/shp/BRA_adm_shp.zip'</span>,
+                   <span class="org-string">'BRA_adm.zip'</span>)
+     unzip(<span class="org-string">'BRA_adm.zip'</span>)
+     brazilAdm <span class="org-constant">&lt;-</span> readOGR(dsn = <span class="org-string">'.'</span>, layer = <span class="org-string">'BRA_adm1'</span>)
+     Encoding(levels(brazilAdm$NAME_1)) <span class="org-constant">&lt;-</span> <span class="org-string">'latin1'</span>
+
+     download.file(<span class="org-string">'http://biogeo.ucdavis.edu/data/diva/alt/BRA_alt.zip'</span>,
+                   <span class="org-string">'BRA_alt.zip'</span>)
+     unzip(<span class="org-string">'BRA_alt.zip'</span>)
+     brazilDEM <span class="org-constant">&lt;-</span> raster(<span class="org-string">'BRA_alt'</span>)
+
+     <span class="org-comment-delimiter">## </span><span class="org-comment">World Water lines (Natural Earth)</span>
+     download.file(<span class="org-string">'http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/physical/ne_10m_rivers_lake_centerlines.zip'</span>,
+                   <span class="org-string">'neRivers.zip'</span>)
+     unzip(<span class="org-string">'neRivers.zip'</span>)
+     worldlRiv <span class="org-constant">&lt;-</span> readOGR(dsn = <span class="org-string">'.'</span>, layer = <span class="org-string">'ne_10m_rivers_lake_centerlines'</span>)
+
+     download.file(<span class="org-string">'http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/raster/OB_LR.zip'</span>,
+                   <span class="org-string">'neSea.zip'</span>)
+     unzip(<span class="org-string">'neSea.zip'</span>)
+     worldSea <span class="org-constant">&lt;-</span> raster(<span class="org-string">'OB_LR.tif'</span>)
+     brazilSea <span class="org-constant">&lt;-</span> crop(worldSea, brazilDEM)
+     setwd(old)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Intersection of shapefiles and elevation model</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">only those features labeled as "River" are needed</span>
+worldRiv<span class="org-constant">&lt;-</span> worldRiv[worldRiv$featurecla==<span class="org-string">'River'</span>,]
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Define the extent of Brazil as a SpatialPolygons</span>
+extBrazil <span class="org-constant">&lt;-</span> as(extent(brazilDEM), <span class="org-string">'SpatialPolygons'</span>)
+proj4string(extBrazil) <span class="org-constant">&lt;-</span> proj4string(worldRiv)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">and intersect it with worldRiv to extract brazilian rivers</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">from the world database</span>
+brazilRiv <span class="org-constant">&lt;-</span> gIntersection(worldRiv, extBrazil, byid=<span class="org-type">TRUE</span>)
+<span class="org-comment-delimiter">## </span><span class="org-comment">and especially the famous Amazonas River</span>
+amazonas <span class="org-constant">&lt;-</span> worldRiv[worldRiv$name==<span class="org-string">'Amazonas'</span>,]
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Labels</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Locations of labels of each polygon</span>
+centroids <span class="org-constant">&lt;-</span> coordinates(brazilAdm)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Location of the "Brazil" label (average of the set of polygons centroids)</span>
+xyBrazil <span class="org-constant">&lt;-</span> apply(centroids, 2, mean)
+
+admNames <span class="org-constant">&lt;-</span> strsplit(as.character(brazilAdm$NAME_1), <span class="org-string">' '</span>)
+  
+admNames <span class="org-constant">&lt;-</span> sapply(admNames,
+                   FUN=<span class="org-keyword">function</span>(s){
+                       sep=<span class="org-keyword">if</span> (length(s)&gt;2) <span class="org-string">'\n'</span> <span class="org-keyword">else</span>  <span class="org-string">' '</span>
+                       paste(s, collapse=sep)
+                   })
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Overlaying layers of information</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+   blueTheme <span class="org-constant">&lt;-</span> rasterTheme(region=brewer.pal(n=9, <span class="org-string">'Blues'</span>))
+  
+   seaPlot <span class="org-constant">&lt;-</span> levelplot(brazilSea, par.settings=blueTheme,
+                        maxpixels=1e6, panel=panel.levelplot.raster,
+                        margin=<span class="org-type">FALSE</span>, colorkey=<span class="org-type">FALSE</span>)
+
+  terrainTheme <span class="org-constant">&lt;-</span> rasterTheme(region=terrain_hcl(15))
+  
+  altPlot <span class="org-constant">&lt;-</span> levelplot(brazilDEM, par.settings=terrainTheme,
+                       maxpixels=1e6, panel=panel.levelplot.raster,
+                       margin=<span class="org-type">FALSE</span>, colorkey=<span class="org-type">FALSE</span>)
+
+   amazonasLab <span class="org-constant">&lt;-</span> label(amazonas, <span class="org-string">'Amazonas'</span>)
+
+  seaPlot + altPlot + layer({
+      <span class="org-comment-delimiter">## </span><span class="org-comment">Rivers</span>
+      sp.lines(brazilRiv, col=<span class="org-string">'darkblue'</span>, lwd=0.2)
+      <span class="org-comment-delimiter">## </span><span class="org-comment">Amazonas</span>
+      sp.lineLabel(amazonas, amazonasLab, 
+                   lwd=1, col=<span class="org-string">'darkblue'</span>, col.line=<span class="org-string">'darkblue'</span>,
+                   cex=0.5, fontfamily=<span class="org-string">'Palatino'</span>)
+      <span class="org-comment-delimiter">## </span><span class="org-comment">Administrative boundaries</span>
+      sp.polygons(brazilAdm, col=<span class="org-string">'black'</span>, lwd=0.2)
+      <span class="org-comment-delimiter">## </span><span class="org-comment">Centroids of administrative boundaries ...</span>
+      panel.points(centroids, col=<span class="org-string">'black'</span>)
+      <span class="org-comment-delimiter">## </span><span class="org-comment">... with their labels</span>
+      panel.pointLabel(centroids, labels=admNames,
+                       cex=0.7, fontfamily=<span class="org-string">'Palatino'</span>, lineheight=.8)
+      <span class="org-comment-delimiter">## </span><span class="org-comment">Country name</span>
+      panel.text(xyBrazil[1], xyBrazil[2], labels=<span class="org-string">'B R A Z I L'</span>,
+                 cex=1.5, fontfamily = <span class="org-string">'Palatino'</span>, fontface=2)
+  })
+
+print(seaPlot, split=c(1, 1, 2, 1), more=<span class="org-type">TRUE</span>)
+print(altPlot, split=c(2, 1, 2, 1))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org291092e" class="outline-3">
+<h3 id="code_data"><a id="org291092e"></a>Data</h3>
+<div class="outline-text-3" id="text-code_data">
+<p>
+<a href="R/dataSpatial.R">Download</a>
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Initial configuration</span>
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Clone or download the repository and set the working directory</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">with setwd to the folder where the repository is located.</span>
+
+  <span class="org-comment-delimiter">##################################################################</span>
+  <span class="org-comment-delimiter">## </span><span class="org-comment">Air Quality in Madrid</span>
+  <span class="org-comment-delimiter">##################################################################</span>
+
+  <span class="org-comment-delimiter">## </span><span class="org-comment">codeStations.csv is extracted from the document</span>
+  <span class="org-comment-delimiter">## </span><span class="org-comment">http://www.mambiente.munimadrid.es/opencms/export/sites/default/calaire/Anexos/INTPHORA-DIA.pdf,</span>
+  <span class="org-comment-delimiter">## </span><span class="org-comment">table of page 3.</span>
+  
+  codEstaciones <span class="org-constant">&lt;-</span> read.csv2(<span class="org-string">'data/codeStations.csv'</span>)
+  codURL <span class="org-constant">&lt;-</span> as.numeric(substr(codEstaciones$Codigo, 7, 8))
+  
+  <span class="org-comment-delimiter">## </span><span class="org-comment">The information of each measuring station is available at its own webpage, defined by codURL</span>
+  URLs <span class="org-constant">&lt;-</span> paste(<span class="org-string">'http://www.mambiente.munimadrid.es/opencms/opencms/calaire/contenidos/estaciones/estacion'</span>, codURL, <span class="org-string">'.html'</span>, sep=<span class="org-string">''</span>)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Data arrangement</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+  <span class="org-constant">library</span>(XML)
+  <span class="org-constant">library</span>(sp)
+  
+  <span class="org-comment-delimiter">## </span><span class="org-comment">Access each webpage, retrieve tables and extract long/lat data</span>
+  coords <span class="org-constant">&lt;-</span> lapply(URLs, <span class="org-keyword">function</span>(est){
+    tables <span class="org-constant">&lt;-</span> readHTMLTable(est)
+    location <span class="org-constant">&lt;-</span> tables[[2]]
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Clean the table content and convert to dms format</span>
+    <span class="org-function-name">ub2dms</span> <span class="org-constant">&lt;-</span> <span class="org-keyword">function</span>(x){
+      ch <span class="org-constant">&lt;-</span> as.character(x)
+      ch <span class="org-constant">&lt;-</span> sub(<span class="org-string">','</span>, <span class="org-string">'.'</span>, ch) 
+      ch <span class="org-constant">&lt;-</span> sub(<span class="org-string">'O'</span>, <span class="org-string">'W'</span>, ch) <span class="org-comment-delimiter">## </span><span class="org-comment">Some stations use "O" instead of "W"</span>
+      as.numeric(char2dms(ch, <span class="org-string">"&#186;"</span>, <span class="org-string">"'"</span>, <span class="org-string">"'' "</span>))
+    }
+    long <span class="org-constant">&lt;-</span> ub2dms(location[2,1])
+    lat <span class="org-constant">&lt;-</span> ub2dms(location[2,2])
+    alt <span class="org-constant">&lt;-</span> as.numeric(sub(<span class="org-string">' m.'</span>, <span class="org-string">''</span>, location[2, 3]))
+  
+    coords <span class="org-constant">&lt;-</span> data.frame(long=long, lat=lat, alt=alt)
+  
+    coords
+  })
+  
+  airStations <span class="org-constant">&lt;-</span> cbind(codEstaciones, do.call(rbind, coords))
+  
+  <span class="org-comment-delimiter">## </span><span class="org-comment">The longitude of "El Pardo" station is wrong (positive instead of negative)</span>
+  airStations$long[22] <span class="org-constant">&lt;-</span> -airStations$long[22]
+  
+  write.csv2(airStations, file=<span class="org-string">'data/airStations.csv'</span>)
+
+rawData <span class="org-constant">&lt;-</span> readLines(<span class="org-string">'data/Datos11.txt'</span>)
+<span class="org-comment-delimiter">## </span><span class="org-comment">This loop reads each line and extracts fields as defined by the</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">INTPHORA file:</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">http://www.mambiente.munimadrid.es/opencms/export/sites/default/calaire/Anexos/INTPHORA-DIA.pdf</span>
+datos11 <span class="org-constant">&lt;-</span> lapply(rawData, <span class="org-keyword">function</span>(x){
+    codEst <span class="org-constant">&lt;-</span> substr(x, 1, 8)
+    codParam <span class="org-constant">&lt;-</span> substr(x, 9, 10)
+    codTec <span class="org-constant">&lt;-</span> substr(x, 11, 12)
+    codPeriod <span class="org-constant">&lt;-</span> substr(x, 13, 14)
+    month <span class="org-constant">&lt;-</span> substr(x, 17, 18)
+    dat <span class="org-constant">&lt;-</span> substr(x, 19, nchar(x))
+    <span class="org-comment-delimiter">## </span><span class="org-comment">"N" used for impossible days (31st April)</span>
+    idxN <span class="org-constant">&lt;-</span> gregexpr(<span class="org-string">'N'</span>, dat)[[1]]
+    <span class="org-keyword">if</span> (idxN==-1) idxN <span class="org-constant">&lt;-</span> numeric(0)
+    nZeroDays <span class="org-constant">&lt;-</span> length(idxN)
+    day <span class="org-constant">&lt;-</span> seq(1, 31-nZeroDays)
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Substitute V and N with ";" to split data from different days</span>
+    dat <span class="org-constant">&lt;-</span> gsub(<span class="org-string">'[VN]+'</span>, <span class="org-string">';'</span>, dat)
+    dat <span class="org-constant">&lt;-</span> as.numeric(strsplit(dat, <span class="org-string">';'</span>)[[1]])
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Only data from valid days</span>
+    dat <span class="org-constant">&lt;-</span> dat[day]
+    res <span class="org-constant">&lt;-</span> data.frame(codEst, codParam, <span class="org-comment-delimiter">##</span><span class="org-comment">codTec, codPeriod,</span>
+                      month, day, year = 2016,
+                      dat)
+})
+datos11 <span class="org-constant">&lt;-</span> do.call(rbind, datos11)
+
+write.csv2(datos11, <span class="org-string">'data/airQuality.csv'</span>)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Combine data and spatial locations</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+  <span class="org-constant">library</span>(sp)
+  
+  <span class="org-comment-delimiter">## </span><span class="org-comment">Spatial location of stations</span>
+  airStations <span class="org-constant">&lt;-</span> read.csv2(<span class="org-string">'data/airStations.csv'</span>)
+  coordinates(airStations) <span class="org-constant">&lt;-</span> ~ long + lat
+  <span class="org-comment-delimiter">## </span><span class="org-comment">Geographical projection</span>
+  proj4string(airStations) <span class="org-constant">&lt;-</span> CRS(<span class="org-string">"+proj=longlat +ellps=WGS84 +datum=WGS84"</span>)
+
+  <span class="org-comment-delimiter">## </span><span class="org-comment">Measurements data</span>
+  airQuality <span class="org-constant">&lt;-</span> read.csv2(<span class="org-string">'data/airQuality.csv'</span>)
+  <span class="org-comment-delimiter">## </span><span class="org-comment">Only interested in NO2 </span>
+  NO2 <span class="org-constant">&lt;-</span> airQuality[airQuality$codParam==8, ]
+
+  NO2agg <span class="org-constant">&lt;-</span> aggregate(dat ~ codEst, data=NO2,
+                      FUN = <span class="org-keyword">function</span>(x) {
+                          c(mean=signif(mean(x), 3),
+                            median=median(x),
+                            sd=signif(sd(x), 3))
+                          })
+  NO2agg <span class="org-constant">&lt;-</span> do.call(cbind, NO2agg)
+  NO2agg <span class="org-constant">&lt;-</span> as.data.frame(NO2agg)
+
+<span class="org-constant">library</span>(rgdal)
+<span class="org-constant">library</span>(maptools)
+<span class="org-comment-delimiter">## </span><span class="org-comment">Link aggregated data with stations to obtain a SpatialPointsDataFrame.</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Codigo and codEst are the stations codes</span>
+idxNO2 <span class="org-constant">&lt;-</span> match(airStations$Codigo, NO2agg$codEst)
+NO2sp <span class="org-constant">&lt;-</span> spCbind(airStations[, c(<span class="org-string">'Nombre'</span>, <span class="org-string">'alt'</span>)], NO2agg[idxNO2, ])
+<span class="org-comment-delimiter">## </span><span class="org-comment">Save the result</span>
+writeOGR(NO2sp, dsn = <span class="org-string">'data/'</span>, layer = <span class="org-string">'NO2sp'</span>,
+         driver = <span class="org-string">'ESRI Shapefile'</span>)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Photographs of the stations</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(XML)
+
+old <span class="org-constant">&lt;-</span> setwd(<span class="org-string">'images'</span>)
+<span class="org-keyword">for</span> (i <span class="org-keyword">in</span> 1:nrow(NO2df))
+{
+    codEst <span class="org-constant">&lt;-</span> NO2df[i, <span class="org-string">"codEst"</span>]
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Webpage of each station</span>
+    codURL <span class="org-constant">&lt;-</span> as.numeric(substr(codEst, 7, 8))
+    rootURL <span class="org-constant">&lt;-</span> <span class="org-string">'http://www.mambiente.munimadrid.es'</span>
+    stationURL <span class="org-constant">&lt;-</span> paste(rootURL,
+                        <span class="org-string">'/opencms/opencms/calaire/contenidos/estaciones/estacion'</span>,
+                        codURL, <span class="org-string">'.html'</span>, sep=<span class="org-string">''</span>)
+    content <span class="org-constant">&lt;-</span> htmlParse(stationURL, encoding=<span class="org-string">'utf8'</span>)
+    <span class="org-comment-delimiter">## </span><span class="org-comment">Extracted with http://www.selectorgadget.com/</span>
+    xPath <span class="org-constant">&lt;-</span> <span class="org-string">'//*[contains(concat( " ", @class, " " ), concat( " ", "imagen_1", " " ))]'</span>
+    imageStation <span class="org-constant">&lt;-</span> getNodeSet(content, xPath)[[1]]
+    imageURL <span class="org-constant">&lt;-</span> xmlAttrs(imageStation)[1]
+    imageURL <span class="org-constant">&lt;-</span> paste(rootURL, imageURL, sep=<span class="org-string">''</span>)
+    download.file(imageURL, destfile=paste(codEst, <span class="org-string">'.jpg'</span>, sep=<span class="org-string">''</span>))
+}
+setwd(old)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Spanish General Elections</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+dat2016 <span class="org-constant">&lt;-</span> read.csv(<span class="org-string">'data/GeneralSpanishElections2016.csv'</span>)
+
+census <span class="org-constant">&lt;-</span> dat2016$Total.censo.electoral
+validVotes <span class="org-constant">&lt;-</span> dat2016$Votos.v&#225;lidos
+<span class="org-comment-delimiter">## </span><span class="org-comment">Election results per political party and municipality</span>
+votesData <span class="org-constant">&lt;-</span> dat2016[, -(1:13)]
+<span class="org-comment-delimiter">## </span><span class="org-comment">Abstention as an additional party</span>
+votesData$ABS <span class="org-constant">&lt;-</span> census - validVotes
+<span class="org-comment-delimiter">## </span><span class="org-comment">UP is a coalition of several parties</span>
+UPcols <span class="org-constant">&lt;-</span> grep(<span class="org-string">"PODEMOS|ECP"</span>, names(votesData))
+votesData$UP <span class="org-constant">&lt;-</span> rowSums(votesData[, UPcols])
+votesData[, UPcols] <span class="org-constant">&lt;-</span> <span class="org-type">NULL</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Winner party at each municipality</span>
+whichMax <span class="org-constant">&lt;-</span> apply(votesData,  1, <span class="org-keyword">function</span>(x)names(votesData)[which.max(x)])
+<span class="org-comment-delimiter">## </span><span class="org-comment">Results of the winner party at each municipality</span>
+Max <span class="org-constant">&lt;-</span> apply(votesData, 1, max)
+<span class="org-comment-delimiter">## </span><span class="org-comment">OTH for everything but PP, PSOE, UP, Cs, and ABS</span>
+whichMax[!(whichMax <span class="org-ess-XopX">%in%</span> c(<span class="org-string">'PP'</span>, <span class="org-string">'PSOE'</span>, <span class="org-string">'UP'</span>, <span class="org-string">'C.s'</span>, <span class="org-string">'ABS'</span>))] <span class="org-constant">&lt;-</span> <span class="org-string">'OTH'</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Percentage of votes with the electoral census</span>
+pcMax <span class="org-constant">&lt;-</span> Max/census * 100
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Province-Municipality code. sprintf formats a number with leading zeros.</span>
+PROVMUN <span class="org-constant">&lt;-</span> with(dat2016, paste(sprintf(<span class="org-string">'%02d'</span>, C&#243;digo.de.Provincia),
+                               sprintf(<span class="org-string">'%03d'</span>, C&#243;digo.de.Municipio),
+                               sep=<span class="org-string">""</span>))
+
+votes2016 <span class="org-constant">&lt;-</span> data.frame(PROVMUN, whichMax, Max, pcMax)
+write.csv(votes2016, <span class="org-string">'data/votes2016.csv'</span>, row.names=<span class="org-type">FALSE</span>)
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">Administrative boundaries</span>
+<span class="org-comment-delimiter">##################################################################</span>
+
+<span class="org-constant">library</span>(sp)
+<span class="org-constant">library</span>(rgdal)
+
+old <span class="org-constant">&lt;-</span> setwd(tempdir())
+
+download.file(<span class="org-string">'ftp://www.ine.es/pcaxis/mapas_completo_municipal.rar'</span>,
+              <span class="org-string">'mapas_completo_municipal.rar'</span>)
+system2(<span class="org-string">'unrar'</span>, c(<span class="org-string">'e'</span>, <span class="org-string">'mapas_completo_municipal.rar'</span>))
+
+spMap <span class="org-constant">&lt;-</span> readOGR(<span class="org-string">"esp_muni_0109.shp"</span>,
+                 p4s = <span class="org-string">"+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"</span>)
+Encoding(levels(spMap$NOMBRE)) <span class="org-constant">&lt;-</span> <span class="org-string">"latin1"</span>
+
+setwd(old)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">dissolve repeated polygons</span>
+spPols <span class="org-constant">&lt;-</span> unionSpatialPolygons(spMap, spMap$PROVMUN)
+
+votes2016 <span class="org-constant">&lt;-</span> read.csv(<span class="org-string">'data/votes2016.csv'</span>,
+                        colClasses=c(<span class="org-string">'factor'</span>, <span class="org-string">'factor'</span>, <span class="org-string">'numeric'</span>, <span class="org-string">'numeric'</span>))
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Match polygons and data using ID slot and PROVMUN column</span>
+IDs <span class="org-constant">&lt;-</span> sapply(spPols@polygons, <span class="org-keyword">function</span>(x)x@ID)
+idx <span class="org-constant">&lt;-</span> match(IDs, votes2016$PROVMUN)
+  
+<span class="org-comment-delimiter">##</span><span class="org-comment">Places without information</span>
+idxNA <span class="org-constant">&lt;-</span> which(is.na(idx))
+
+<span class="org-comment-delimiter">##</span><span class="org-comment">Information to be added to the SpatialPolygons object</span>
+dat2add <span class="org-constant">&lt;-</span> votes2016[idx, ]
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">SpatialPolygonsDataFrame uses row names to match polygons with data</span>
+row.names(dat2add) <span class="org-constant">&lt;-</span> IDs
+spMapVotes <span class="org-constant">&lt;-</span> SpatialPolygonsDataFrame(spPols, dat2add)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Drop those places without information</span>
+spMapVotes0 <span class="org-constant">&lt;-</span> spMapVotes[-idxNA, ]
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Save the result</span>
+writeOGR(spMapVotes0, dsn = <span class="org-string">'data/'</span>, layer = <span class="org-string">'spMapVotes0'</span>,
+         drive = <span class="org-string">'ESRI Shapefile'</span>)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Extract Canarias islands from the SpatialPolygons object</span>
+canarias <span class="org-constant">&lt;-</span>  sapply(spMapVotes0@polygons, <span class="org-keyword">function</span>(x)substr(x@ID, 1, 2) <span class="org-ess-XopX">%in%</span> c(<span class="org-string">"35"</span>,  <span class="org-string">"38"</span>))
+peninsula <span class="org-constant">&lt;-</span> spMapVotes0[!canarias,]
+island <span class="org-constant">&lt;-</span> spMapVotes0[canarias,]
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Shift the island extent box to position them at the bottom right corner</span>
+dy <span class="org-constant">&lt;-</span> bbox(peninsula)[2,1] - bbox(island)[2,1]
+dx <span class="org-constant">&lt;-</span> bbox(peninsula)[1,2] - bbox(island)[1,2]
+island2 <span class="org-constant">&lt;-</span> elide(island, shift = c(dx, dy))
+bbIslands <span class="org-constant">&lt;-</span> bbox(island2)
+proj4string(island2) <span class="org-constant">&lt;-</span> proj4string(peninsula)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Bind Peninsula (without islands) with shifted islands</span>
+spMapVotes <span class="org-constant">&lt;-</span> rbind(peninsula, island2)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">Save the result</span>
+writeOGR(spMapVotes, dsn = <span class="org-string">'data/'</span>, layer = <span class="org-string">'spMapVotes'</span>,
+         drive = <span class="org-string">'ESRI Shapefile'</span>)
+
+  <span class="org-comment-delimiter">##################################################################</span>
+  <span class="org-comment-delimiter">## </span><span class="org-comment">CM SAF</span>
+  <span class="org-comment-delimiter">##################################################################</span>
+
+  <span class="org-constant">library</span>(raster)
+  
+  tmp <span class="org-constant">&lt;-</span> tempdir()
+  unzip(<span class="org-string">'data/SISmm2008_CMSAF.zip'</span>, exdir=tmp)
+  filesCMSAF <span class="org-constant">&lt;-</span> dir(tmp, pattern=<span class="org-string">'SISmm'</span>)
+  SISmm <span class="org-constant">&lt;-</span> stack(paste(tmp, filesCMSAF, sep=<span class="org-string">'/'</span>))
+  <span class="org-comment-delimiter">## </span><span class="org-comment">CM-SAF data is average daily irradiance (W/m2). Multiply by 24</span>
+  <span class="org-comment-delimiter">## </span><span class="org-comment">hours to obtain daily irradiation (Wh/m2)</span>
+  SISmm <span class="org-constant">&lt;-</span> SISmm * 24
+
+  <span class="org-comment-delimiter">## </span><span class="org-comment">Monthly irradiation: each month by the corresponding number of days</span>
+  daysMonth <span class="org-constant">&lt;-</span> c(31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+  SISm <span class="org-constant">&lt;-</span> SISmm * daysMonth / 1000 <span class="org-comment-delimiter">## </span><span class="org-comment">kWh/m2</span>
+  <span class="org-comment-delimiter">## </span><span class="org-comment">Annual average</span>
+  SISav <span class="org-constant">&lt;-</span> sum(SISm)/sum(daysMonth)
+  writeRaster(SISav, file=<span class="org-string">'SISav'</span>)
+
+ <span class="org-constant">library</span>(raster)
+ <span class="org-comment-delimiter">## </span><span class="org-comment">http://neo.sci.gsfc.nasa.gov/Search.html?group=64</span>
+ pop <span class="org-constant">&lt;-</span> raster(<span class="org-string">'875430rgb-167772161.0.FLOAT.TIFF'</span>)
+ <span class="org-comment-delimiter">## </span><span class="org-comment">http://neo.sci.gsfc.nasa.gov/Search.html?group=20</span>
+ landClass <span class="org-constant">&lt;-</span> raster(<span class="org-string">'241243rgb-167772161.0.TIFF'</span>)
+</pre>
+</div>
+</div>
 </div>
 </div>
 </div>

@@ -2,7 +2,6 @@
 #+EMAIL:     oscar.perpinan@gmail.com
 #+TITLE:     Time Series - Displaying time series, spatial and space-time data with R
 #+LANGUAGE:  en
-#+OPTIONS:   H:3 num:nil toc:2 \n:nil @:t ::t |:t ^:t -:t f:t *:t TeX:t LaTeX:nil skip:nil d:t tags:not-in-toc
 
 #+SETUPFILE: setup.org
 

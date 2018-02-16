@@ -1,14 +1,14 @@
 #+TITLE: Outline of Changes 
 #+SUBTITLE: Second Edition of "Displaying Time Series, Spatial, and Space-Time Data with R"
 #+AUTHOR: Oscar Perpiñán Lamigueiro
-#+DATE: November 2017
+#+DATE: January 2018
 #+OPTIONS: toc:nil num:nil
 #+LATEX_HEADER: \usepackage{mathpazo}
 #+LATEX_HEADER: \usepackage[usenames,svgnames,dvipsnames]{xcolor}
 #+LATEX_HEADER: \hypersetup{colorlinks=true, linkcolor=Blue, urlcolor=Blue}
 
 
-* Time Series
+* COMMENT Time Series
 
 - Code have been revised, cleaned and improved. Bugs have been fixed. 
 
@@ -41,6 +41,47 @@
  
 * Spatial Data
 
-To Do.
-* Space-Time Data
+- Code have been revised, cleaned and improved. Bugs have been fixed. 
+
+- After data creation or transformation, a text frame with the output of =summary()= has been included.
+
+- Use =rgdal= instead of =maptools= for reading and writing data.
+
+- New package =sf= and function =geom_sf= of =ggplot2= are used extensively. 
+
+- New interactive graphics and animations using =mapview= and =rgl=.
+
+** Proportional Symbol Mapping
+- Code includes both =spplot= and =geom_sf= alternatives where possible.
+- Several interactive graphics using =mapview= and =rgl=.
+
+** Choropleth Maps
+- Data updated (2016).
+- Chapter structure has been reorganised.
+- Code includes both =spplot= and =geom_sf= alternatives where possible.
+- New colour palettes.
+- New section with small multiple maps.
+- Bivariate maps section rewritten almost from scratch with a completely new approach.
+- Interactive graphics with =mapview=.
+
+** Raster Maps
+
+- New color palettes.
+
+- Bivariate maps section rewritten almost from scratch with a completely new approach.
+
+- Interactive graphics with =mapview=.
+
+** Vector Data
+- Arrow plot has been improved.
+- Small changes in palettes.
+
+** Physical and Reference Maps
+- =osmdata= package is used to get data from OpenStreepMap instead of =osmar=.
+** Data
+- Data has been updated.
+- URLs have been checked and fixed where needed.
+
+
+* COMMENT Space-Time Data
 To Do.
