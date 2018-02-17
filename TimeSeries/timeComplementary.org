@@ -337,45 +337,14 @@ memorize its color, search for it in the legend, and read the country
 name.
 
 A better approach is to label each line using nearby text with the
-same color encoding. A suitable method is to place the labels
-close to the end of each line (Figure
-ref:fig:CO2-GNI-glayer). Labels are placed with the
-=panel.pointLabel= function from the =maptools= package. This
-function uses optimization routines to find locations without
-overlaps.
-
-#+INDEX: group.value@\texttt{group.value}
-#+INDEX: group.number@\texttt{group.number}
-
-#+begin_src R :results output graphics :exports both :file "figs/CO2_capita.pdf" 
-library(maptools)  
-## group.value provides the country name; group.number is the index
-## of each country to choose the color from the palette.
-pCO2.capita +
-    glayer(panel.pointLabel(mean(x), mean(y),
-                            labels = group.value,
-                            col = palOrdered[group.number],
-                            cex = .8,
-                            fontface = 2,
-                            fontfamily = 'Palatino'))
-#+end_src
-
-#+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita. Labels are placed with =panel.pointLabel=. label:fig:CO2-GNI-glayer
-#+RESULTS:
-[[file:figs/CO2_capita.pdf]]
-
-# #+begin_src R 
-#   gCO2.capita + geom_text(aes(label=Country.Name), hjust=0, vjust=0, size=4)
-# #+end_src
-
-However, this solution does not solve the overlapping between labels
-and lines. The package =directlabels= cite:Hocking2013 includes a
-wide repertory of positioning methods to cope with this problem. The
-main function, =direct.label=, is able to determine a suitable method
-for each plot, although the user can choose a different method from
-the collection or even define a custom method. For the =pCO2.capita=
-object, the best results are obtained with =extreme.grid= (Figure
-ref:fig:CO2-GNI-DL).
+same color encoding. A suitable method is to place the labels avoiding
+the overlapping between labels and lines. The package =directlabels=
+cite:Hocking2013 includes a wide repertory of positioning methods to
+cope with overlapping. The main function, =direct.label=, is able to
+determine a suitable method for each plot, although the user can
+choose a different method from the collection or even define a custom
+method. For the =pCO2.capita= object, the best results are obtained
+with =extreme.grid= (Figure ref:fig:CO2-GNI-DL).
 
 #+INDEX: Packages!directlabels@\texttt{directlabels}
 #+INDEX: direct.label@\texttt{direct.label}
@@ -394,7 +363,7 @@ direct.label(pCO2.capita,
 
 #+begin_src R 
 ## ggplot2 version
-direct.label(gCO2.capita, method='extreme.grid')
+direct.label(gCO2.capita, method = 'extreme.grid')
 #+end_src
 
 * A Panel for Each Year
