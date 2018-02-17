@@ -94,17 +94,20 @@ regions that fulfill certain conditions. The package =latticeExtra=
 provides a nice solution for =xyplot= with =panel.xblocks=. The result
 is displayed in Figure ref:fig:aranjuezEnhanced:
  
+- The alternating of years is displayed with blocks of gray and white
+  color using the =panel.xblocks= function from =latticeExtra= (line
+  [[(xblockYear)]]). The year is extracted (as character) from the time
+  index of the =zoo= object with =format.POSIXlt= (line
+  [[(yearFunction)]]).
+- Those values below the mean of each variable are highlighted with
+  short red color blocks at the bottom of each panel, again with the
+  =panel.xblocks= function (line [[(xblockUnder)]]).
 - The label of each time series is displayed with text inside each
-  panel instead of using the strips mechanism. The =panel.text=
-  prints the name of each variable with the aid of =panel.number=.
-- The alternating of years is displayed with blocks of gray and
-  white color using the =panel.xblocks= function from
-  =latticeExtra=. The year is extracted (as character) from the
-  time index of the =zoo= object with =format.POSIXlt=.
-- Those values below the mean of each variable are highlighted
-  with short red color blocks at the bottom of each panel, again
-  with the =panel.xblocks= function.
-- The maxima and minima are highlighted with small blue triangles.
+  panel instead of using the strips mechanism. The =panel.text= prints
+  the name of each variable with the aid of =panel.number= (line
+  [[(text)]]).
+- The maxima and minima are highlighted with small blue triangles
+  (lines [[(maxTriangles)]] and [[(minTriangles)]] respectively).
 
 Because the functions included in the panel function are executed
 consecutively, their order determines the superposition of graphical
@@ -121,36 +124,35 @@ layers.
 ## lattice version
 #+end_src
 
-#+begin_src R :results output graphics :exports both :file figs/aranjuezXblocks.pdf
-library(grid)
-library(latticeExtra)
-  
+#+begin_src R -n -r :results output graphics :exports both :file figs/aranjuezXblocks.pdf
 ## Auxiliary function to extract the year value of a POSIXct time
 ## index
-Year <- function(x)format(x, "%Y")
+Year <- function(x)format(x, "%Y")                           (ref:yearFunction)
   
-xyplot(aranjuez, layout = c(1, ncol(aranjuez)), strip = FALSE,
+xyplot(aranjuez,
+       layout = c(1, ncol(aranjuez)),
+       strip = FALSE,
        scales = list(y = list(cex = 0.6, rot = 0)),
        panel = function(x, y, ...){
            ## Alternation of years
-           panel.xblocks(x, Year,
+           panel.xblocks(x, Year,                              (ref:xblockYear)
                          col = c("lightgray", "white"),
                          border = "darkgray")
            ## Values under the average highlighted with red regions
-           panel.xblocks(x, y<mean(y, na.rm = TRUE),
+           panel.xblocks(x, y < mean(y, na.rm = TRUE),        (ref:xblockUnder)
                          col = "indianred1",
                          height = unit(0.1, 'npc'))
            ## Time series
            panel.lines(x, y, col = 'royalblue4', lwd = 0.5, ...)
            ## Label of each time series
-           panel.text(x[1], min(y, na.rm = TRUE),
+           panel.text(x[1], min(y, na.rm = TRUE),                    (ref:text)
                       names(aranjuez)[panel.number()],
                       cex = 0.6, adj = c(0, 0), srt = 90, ...)
-           ## Triangles to point the maxima and minima 
-           idxMax <- which.max(y)
+           ## Triangles to point the maxima and minima          
+           idxMax <- which.max(y)                              (ref:maxTriangles)
            panel.points(x[idxMax], y[idxMax],
                         col = 'black', fill = 'lightblue', pch = 24)
-           idxMin <- which.min(y)
+           idxMin <- which.min(y)                            (ref:minTriangles)
            panel.points(x[idxMin], y[idxMin],
                         col = 'black', fill = 'lightblue', pch = 25)
        })
@@ -648,12 +650,12 @@ the overall unemployment results is clearly evident.
 #+begin_src R :exports none
 panel.flow <- function(x, y, groups, origin, ...)
 {
-    dat <- data.frame(x = x, y = y, groups = groups)
+    dat <- data.frame(x = x, y = y, groups = groups)            (ref:dataframe)
     nVars <- nlevels(groups)
     groupLevels <- levels(groups)
     
     ## From long to wide
-    yWide <- unstack(dat, y~groups)
+    yWide <- unstack(dat, y~groups)                               (ref:yunstack)
     ## Where are the maxima of each variable located? We will use
     ## them to position labels.
     idxMaxes <- apply(yWide, 2, which.max)
@@ -663,28 +665,28 @@ panel.flow <- function(x, y, groups, origin, ...)
     else origin = 0 
     yWide <- cbind(origin = origin, yWide)
     ## Cumulative sums to define the polygon
-    yCumSum <- t(apply(yWide, 1, cumsum))
-    Y <- as.data.frame(sapply(seq_len(nVars),
+    yCumSum <- t(apply(yWide, 1, cumsum))                         (ref:ycumsum)
+    Y <- as.data.frame(sapply(seq_len(nVars),                    (ref:yPolygon)
                               function(iCol)c(yCumSum[,iCol+1],
                                               rev(yCumSum[,iCol]))))
     names(Y) <- levels(groups)
     ## Back to long format, since xyplot works that way
-    y <- stack(Y)$values
+    y <- stack(Y)$values                                           (ref:yStack)
     
     ## Similar but easier for x
-    xWide <- unstack(dat, x~groups)
-    x <- rep(c(xWide[,1], rev(xWide[,1])), nVars)
+    xWide <- unstack(dat, x~groups)                              (ref:xunstack)
+    x <- rep(c(xWide[,1], rev(xWide[,1])), nVars)                (ref:xPolygon)
     ## Groups repeated twice (upper and lower limits of the polygon)
-    groups <- rep(groups, each = 2)
+    groups <- rep(groups, each = 2)                                (ref:groups)
     
     ## Graphical parameters
-    superpose.polygon <- trellis.par.get("superpose.polygon")
+    superpose.polygon <- trellis.par.get("superpose.polygon")        (ref:gpar)
     col = superpose.polygon$col
     border = superpose.polygon$border 
     lwd = superpose.polygon$lwd 
     
     ## Draw polygons
-    for (i in seq_len(nVars)){
+    for (i in seq_len(nVars)){                                    (ref:forVars)
         xi <- x[groups==groupLevels[i]]
         yi <- y[groups==groupLevels[i]]
         panel.polygon(xi, yi, border = border,
@@ -703,7 +705,7 @@ panel.flow <- function(x, y, groups, origin, ...)
         hChar <- convertHeight(h, 'char', TRUE)
         ## If there is enough space and we are not at the first or
         ## last variable, then the label is printed inside the polygon.
-        if((hChar >= 1) && !(i %in% c(1, nVars))){
+        if((hChar >= 1) && !(i %in% c(1, nVars))){                  (ref:hChar)
             grid.text(groupLevels[i],
                       xi[idxMaxes[i]],
                       (yi[idxMaxes[i]] +
@@ -737,9 +739,9 @@ prepanel.flow <- function(x, y, groups, origin,...)
     yWide <- cbind(origin = origin, yWide)
     yCumSum <- t(apply(yWide, 1, cumsum))
     
-    list(xlim = range(x),
-         ylim = c(min(yCumSum[,1]), max(yCumSum[,nVars+1])),
-         dx = diff(x),
+    list(xlim = range(x),                                            (ref:xlim)
+         ylim = c(min(yCumSum[,1]), max(yCumSum[,nVars+1])),         (ref:ylim)
+         dx = diff(x),                                                 (ref:dx)
          dy = diff(c(yCumSum[,-1])))
 }
 #+end_src
@@ -795,56 +797,59 @@ course, it includes the =...= argument to provide additional
 arguments.
 
 The first step is to create a =data.frame= with coordinates and with
-the =groups= factor. The value and number of the levels will be used
-in the main step of this =panel= function. With this =data.frame= we
-have to calculate the =y= and =x= coordinates for each group to get a
-stacked set of polygons.
+the =groups= factor (line [[(dataframe)]]). The value and number of the
+levels will be used in the main step of this =panel= function. With
+this =data.frame= we have to calculate the =y= and =x= coordinates for
+each group to get a stacked set of polygons.
 
 This =data.frame= is in the /long/ format, with a row for each
 observation, and where the =group= column identifies the
 variable. Thus, it must be transformed to the /wide/ format, with a
 column for each variable. With the =unstack= function, a new
 =data.frame= is produced whose columns are defined according to the
-formula =y ~ groups= and with a row for each time position. The stack
-of polygons is the result of the cumulative sum of each row
-(=apply(yWide, 1, cumsum)=). The origin of this sum is defined with
+formula =y ~ groups= and with a row for each time position (line
+[[(yunstack)]]). The stack of polygons is the result of the cumulative sum
+of each row (line [[(ycumsum)]]). The origin of this sum is defined with
 the corresponding =origin= argument: with =themeRiver=, the polygons
 are arranged in a symmetric way.
 
 Each column of this matrix of cumulative sums defines the =y=
 coordinate of each variable (where =origin= is now the first
 variable). The polygon of each variable is between this curve
-(=iCol+1=) and the one of the previous variable (=iCol=). In order to
-get a closed polygon, the coordinates of the inferior limit are in
-reverse order. This new =data.frame= (=Y=) is in the /wide/ format,
-but =xyplot= requires the information in the /long/ format: the =y=
-coordinates of the polygons are extracted from the =values= column of
-the /long/ version of this =data.frame=.
+(=iCol+1=) and the one of the previous variable (=iCol=) (line
+[[(yPolygon)]]). In order to get a closed polygon, the coordinates of the
+inferior limit are in reverse order. This new =data.frame= (=Y=) is in
+the /wide/ format, but =xyplot= requires the information in the /long/
+format: the =y= coordinates of the polygons are extracted from the
+=values= column of the /long/ version of this =data.frame= (line
+[[(yStack)]]).
 
 The =x= coordinates are produced in an easier way. Again, =unstack=
-produces a =data.frame= with a column for each variable and a row
-for each time position, but now, because the =x= coordinates are the same
-for the set of polygons, the corresponding vector is constructed
-directly using a combination of concatenation and repetition.
+produces a =data.frame= with a column for each variable and a row for
+each time position (line [[(xunstack)]]), but now, because the =x=
+coordinates are the same for the set of polygons, the corresponding
+vector is constructed directly using a combination of concatenation
+and repetition (line [[(xPolygon)]]).
 
 Finally, the =groups= vector is produced, repeating each element of
 the columns of the original =data.frame= (=dat$groups=) twice to
 account for the forward and reverse curves of the corresponding
-polygon.
+polygon (line [[(groups)]]).
 
 The final step before displaying the polygons is to acquire the
 graphical settings. The information retrieved with
 =trellis.par.get= is transferred to the corresponding arguments of
-=panel.polygon=.
+=panel.polygon= (line [[(gpar)]]).
 
-Everything is ready for constructing the polygons. With a =for= loop,
-the coordinates of the corresponding group are extracted from the =x=
-and =y= vectors, and a polygon is displayed with =panel.polygon=. The
-labels of each polygon (the =levels= of the original =groups=
-variable, =groupLevels=) are printed inside the polygon if there is
-enough room for the text (=hChar>1=) or at the right if the polygon is
-too small, or if it is the first or last variable of the set. Both the
-polygons and the labels share the same color (=col[i]=).
+Everything is ready for constructing the polygons. With a =for= loop
+(line [[(forVars)]]), the coordinates of the corresponding group are
+extracted from the =x= and =y= vectors, and a polygon is displayed
+with =panel.polygon=. The labels of each polygon (the =levels= of the
+original =groups= variable, =groupLevels=) are printed inside the
+polygon if there is enough room for the text (=hChar>1=) or at the
+right if the polygon is too small, or if it is the first or last
+variable of the set (line [[(hChar)]]). Both the polygons and the labels
+share the same color (=col[i]=).
 
 #+INDEX: Panel function
 #+INDEX: superpose.polygon@\texttt{superpose.polygon}
@@ -855,7 +860,7 @@ polygons and the labels share the same color (=col[i]=).
 #+INDEX: panel.text@\texttt{panel.text}
 #+INDEX: panel.polygon@\texttt{panel.polygon}
 
-#+begin_src R :noweb yes :tangle no
+#+begin_src R -n -r :noweb yes :tangle no
 <<panelFlow>>
 #+end_src
 
@@ -883,16 +888,16 @@ is to define a new =prepanel.flow= function.
 
 The input arguments and first lines are the same as in
 =panel.flow=. The output is a list whose elements are the limits for
-each axis (=xlim= and =ylim=), and the sequence of differences (=dx=
-and =dy=) that can be used for the aspect and banking
-calculations. 
+each axis (=xlim= and =ylim=, line [[(xlim)]]), and the sequence of
+differences (=dx= and =dy=, line [[(dx)]]) that can be used for the aspect
+and banking calculations.
 
 The limits of the x-axis are defined with the range of the time index,
 while the limits of the y-axis are calculated with the minimum of the
 first column of =yCumSum= (the origin line) and with the maximum of
-its last column (the upper line of the cumulative sum).
+its last column (the upper line of the cumulative sum) (line [[(ylim)]]).
 
-#+begin_src R :noweb yes :tangle no
+#+begin_src R -n -r :noweb yes :tangle no
 <<prepanelFlow>>
 #+end_src
 
