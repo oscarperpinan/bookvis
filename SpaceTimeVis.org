@@ -160,7 +160,8 @@ ggplot(mtcars, aes(mpg, wt)) +
  label:sec:comparison
 
 Which package to choose is, for a wide range of datasets, a question of personal preferences. You may be interested in a comparison between them published in a series of blog posts[fn:1].  Consequently, where possible most of the code contains alternatives defined both with =lattice= and with =ggplot2=. 
-  
+
+It is important to note that both =latticeExtra= and =ggplot2= defined a function named =layer=. The =ggplot2::layer= function is rarely called by the user, because the wrapper functions =geom_*= and =stats_= are preferred. On the other hand, the =latticeExtra::layer= function is designed to be directly called by the user, and therefore its masking must be prevented. Consequently, when the =latticeExtra= and =ggplot2= packages are to be working together in the same session, the =latticeExtra= package must be loaded after =ggplot2=. 
 **** Interactive graphics
 
 Both =lattice= and =ggplot2= (and every package based on =grid=) generate static graphics. However, interactive web graphics produced with \textsf{R} have experienced a boost in recent years, mainly thanks to the package =htmlwidgets= cite:Vaidyanathan2017. This package provides a framework for creating \textsf{R} bindings to JavaScript libraries. This package is the base for important visualization packages such as =dygraphs=, =highcharter=, =plotly=, =leaflet= and =mapview=. They will be covered along the chapters of the book. 
