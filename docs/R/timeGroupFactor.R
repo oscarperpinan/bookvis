@@ -120,13 +120,13 @@ ggplot(data = aranjuezRshp,
 ##################################################################
 
 ggplot(data = aranjuezRshp, aes(Radiation, Temperature)) +
-    facet_grid(Statistic ~ month) +
+    facet_grid(Statistic ~ Month) +
     geom_point(col = 'skyblue4', pch = 19, cex = 0.5, alpha = 0.3) +
     geom_rug() +
     stat_smooth(se = FALSE, method = 'loess', col = 'indianred1', lwd = 1.2) +
     theme_bw()
 
-useOuterStrips(xyplot(Temperature ~ Radiation | month * Statistic,
+useOuterStrips(xyplot(Temperature ~ Radiation | Month * Statistic,
                       data = aranjuezRshp,
                       between = list(x = 0),
                       col = 'skyblue4', pch = 19,

@@ -24,10 +24,8 @@ names(aranjuez) <- c('TempAvg', 'TempMax', 'TempMin',
 summary(aranjuez)
 
 aranjuezClean <- within(as.data.frame(aranjuez),{
-    TempMin[TempMin>40] <- NA
-    HumidMax[HumidMax>100] <- NA
-    WindAvg[WindAvg>10] <- NA
-    WindMax[WindMax>10] <- NA
+    TempMin[TempMin > 40] <- NA
+    HumidMax[HumidMax > 100] <- NA
 })
 
 aranjuez <- zoo(aranjuezClean, index(aranjuez))
@@ -67,8 +65,7 @@ Sys.setlocale("LC_TIME", 'C')
 idx <- as.yearmon(row.names(unemployUSA), format='%b.%Y')
 unemployUSA <- zoo(unemployUSA, idx)
 
-isNA <- apply(is.na(unemployUSA), 1, any)
-unemployUSA <- unemployUSA[!isNA,]
+unemployUSA <- unemployUSA[complete.cases(unemployUSA), ]
 
 summary(unemployUSA)
 
@@ -82,9 +79,11 @@ library(WDI)
     
 CO2data <- WDI(indicator=c('EN.ATM.CO2E.PC', 'EN.ATM.CO2E.PP.GD',
                            'NY.GNP.MKTP.PP.CD', 'NY.GNP.PCAP.PP.CD'),
-               start=2000, end=2011,
-               country=c('BR', 'CN', 'DE', 'ES',
-                         'FI', 'FR', 'GR', 'IN', 'NO', 'US'))
+               start = 2000, end = 2014,
+               country=c('BR', 'CN', 'DE',
+                         'ES', 'FI', 'FR',
+                         'GR', 'IN', 'NO',
+                         'US'))
 
 names(CO2data) <- c('iso2c', 'Country.Name', 'Year',
                     'CO2.capita', 'CO2.PPP',
@@ -92,8 +91,7 @@ names(CO2data) <- c('iso2c', 'Country.Name', 'Year',
 
 summary(CO2data)
 
-isNA <- apply(is.na(CO2data), 1, any)
-CO2data <- CO2data[!isNA, ]
+CO2data <- CO2data[complete.cases(CO2data), ]
 
 CO2data$Country.Name <- factor(CO2data$Country.Name)
 

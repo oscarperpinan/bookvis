@@ -80,7 +80,7 @@ As exposed in chapter ref:cha:bubble, two alternatives are available:
    and display the information with the =ggplot2= package and the
    =geom_sf= function.
 
-** Read data
+** Read Data
 
 #+begin_src R :exports none  
 ##################################################################
@@ -195,7 +195,7 @@ st_crs(sfProvs) <- 25830
 
 #+RESULTS:
 
-* Quantitative variable
+* Quantitative Variable
 label:sec:quantitative_choropleth
 
 #+begin_src R :exports none  
@@ -257,7 +257,7 @@ spplot(spMapVotes["pcMax"],
 #+RESULTS:
 [[file:figs/pcMaxUC.pdf]]
 
-** Data classification
+** Data Classification
 #+begin_src R :exports none  
 ##################################################################
 ## Data classification
@@ -374,7 +374,7 @@ ggplot(sfMapVotes) +
 #+end_src
 
 
-* Qualitative variable
+* Qualitative Variable
 #+begin_src R :exports none  
 ##################################################################
 ## Qualitative variable
@@ -429,7 +429,7 @@ ggplot(sfMapVotes) +
     theme_bw()
 #+end_src
 
-* Small multiples with Choropleth Maps
+* Small Multiples with Choropleth Maps
 #+begin_src R :exports none  
 ##################################################################
 ## Small multiples
@@ -469,7 +469,7 @@ ggplot(sfMapVotes) +
     theme_bw()
 #+end_src
 
-* Bivariate map
+* Bivariate Map
 label:sec:multiChoropleth
 #+begin_src R :exports none
 ##################################################################

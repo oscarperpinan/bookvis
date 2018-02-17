@@ -142,8 +142,8 @@ ggpairs(aranjuezDF,
 
 Let's explore Figure ref:fig:aranjuezSplom. For example,
 - The highest values of ambient temperature (average, maximum, and
-  minimum), solar radiation, and evotranspiration can be found during
-  the summer.
+  minimum), solar radiation, and evapotranspiration can be found
+  during the summer.
 - These variables are almost linearly related. The relation between
   radiation and temperature is different during both halves of the
   year (red and blue regions can be easily distinguished).
@@ -184,9 +184,9 @@ attempt with =splom= can be improved with several modifications
   limits (calculated with =current.panel.limits=). The kernel
   density is plotted with =panel.lines= and the =diag.panel.splom=
   function completes the content of each diagonal panel.
-- The point density is encoded with the palette =BTC= (ligther
-  colors for high density values and darker colors for almost
-  empty regions, with a gradient of blue hues for intermediate values).
+- The point density is encoded with the default palette, =LinGray=,
+  (darker colors for high density values and lighter colors for almost
+  empty regions, with a gradient of grays for intermediate values).
 
 
 #+INDEX: Packages!hexbin@\texttt{hexbin}
@@ -202,7 +202,6 @@ library(hexbin)
   
 splom(~as.data.frame(aranjuez),
       panel = panel.hexbinplot,
-      colramp = BTC,
       diag.panel = function(x, ...){
           yrng <- current.panel.limits()$ylim
           d <- density(x, na.rm = TRUE)
@@ -292,8 +291,7 @@ different panels encode the same value.
 #+begin_src R :results output graphics :exports both :file figs/aranjuezHexbinplot.pdf
 hexbinplot(Radiation ~ Temperature | Statistic,
            data = aranjuezRshp,
-           layout = c(1, 3),
-           colramp = BTC) +
+           layout = c(1, 3)) +
     layer(panel.loess(..., col = 'red'))
 #+end_src
 
@@ -332,7 +330,7 @@ segments (=geom_rug=) to display points density on both variables, and
 a smooth line in each panel.
 #+begin_src R :results output graphics :exports both  :width 2000 :height 2000 :res 300 :file figs/aranjuezFacetGrid.png
 ggplot(data = aranjuezRshp, aes(Radiation, Temperature)) +
-    facet_grid(Statistic ~ month) +
+    facet_grid(Statistic ~ Month) +
     geom_point(col = 'skyblue4', pch = 19, cex = 0.5, alpha = 0.3) +
     geom_rug() +
     stat_smooth(se = FALSE, method = 'loess', col = 'indianred1', lwd = 1.2) +
@@ -354,7 +352,7 @@ variables on the top and left outer margins (Figure
 #+INDEX: Packages!latticeExtra@\texttt{latticeExtra}
 
 #+begin_src R :results output graphics :exports both :file figs/aranjuezOuterStrips.pdf
-useOuterStrips(xyplot(Temperature ~ Radiation | month * Statistic,
+useOuterStrips(xyplot(Temperature ~ Radiation | Month * Statistic,
                       data = aranjuezRshp,
                       between = list(x = 0),
                       col = 'skyblue4', pch = 19,

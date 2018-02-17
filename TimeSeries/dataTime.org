@@ -113,14 +113,12 @@ summary(aranjuez)
 
 #+INDEX: zoo@\texttt{zoo}
 
-From the summary it is clear that parts of these time series include erroneous outliers that can be
-safely removed:
+From the summary it is clear that parts of these time series include
+erroneous outliers that can be safely removed:
 #+begin_src R :results output :exports both
 aranjuezClean <- within(as.data.frame(aranjuez),{
-    TempMin[TempMin>40] <- NA
-    HumidMax[HumidMax>100] <- NA
-    WindAvg[WindAvg>10] <- NA
-    WindMax[WindMax>10] <- NA
+    TempMin[TempMin > 40] <- NA
+    HumidMax[HumidMax > 100] <- NA
 })
 
 aranjuez <- zoo(aranjuezClean, index(aranjuez))
@@ -140,12 +138,12 @@ summary(aranjuez)
                                        NA's   :3       NA's   :7        
     HumidAvg        HumidMax         WindAvg         WindMax      
  Min.   :19.89   Min.   : 35.88   Min.   :0.250   Min.   : 1.550  
- 1st Qu.:47.04   1st Qu.: 81.60   1st Qu.:0.670   1st Qu.: 3.785  
- Median :62.49   Median : 90.90   Median :0.920   Median : 5.030  
- Mean   :62.11   Mean   : 87.20   Mean   :1.166   Mean   : 5.216  
- 3rd Qu.:77.30   3rd Qu.: 94.90   3rd Qu.:1.430   3rd Qu.: 6.540  
- Max.   :99.50   Max.   :100.00   Max.   :6.450   Max.   :10.000  
- NA's   :2       NA's   :11                       NA's   :115     
+ 1st Qu.:47.04   1st Qu.: 81.60   1st Qu.:0.670   1st Qu.: 3.840  
+ Median :62.49   Median : 90.90   Median :0.920   Median : 5.150  
+ Mean   :62.11   Mean   : 87.20   Mean   :1.166   Mean   : 5.467  
+ 3rd Qu.:77.30   3rd Qu.: 94.90   3rd Qu.:1.430   3rd Qu.: 6.760  
+ Max.   :99.50   Max.   :100.00   Max.   :6.450   Max.   :18.060  
+ NA's   :2       NA's   :11                                       
    Radiation          Rain              ET       
  Min.   : 0.28   Min.   : 0.000   Min.   :0.000  
  1st Qu.: 9.37   1st Qu.: 0.000   1st Qu.:1.160  
@@ -160,6 +158,8 @@ summary(aranjuez)
 #+begin_src R :exports none
 save(aranjuez, file='data/aranjuez.RData')
 #+end_src
+
+#+RESULTS:
 
 ** Solar Radiation Measurements from Different Locations
 #+begin_src R :exports none
@@ -182,7 +182,7 @@ dependent on the location (mainly latitude, and also longitude and
 altitude) and on time (day of the year), have been analyzed and
 modeled in a huge collection of papers and reports. In this section
 we will focus our attention on the time evolution of the solar
-radiation. The spatial distribution and the spatio-time behavior will
+radiation. The spatial distribution and the spatio-temporal behavior will
 be the subject of later sections.
 
 The stations of the SIAR network include first-class pyranometers
@@ -345,7 +345,6 @@ vector is the time index of a new =zoo= object.
 
 #+INDEX: Packages!zoo@\texttt{zoo}
 #+INDEX: as.yearmon@\texttt{as.yearmon}
-#+INDEX: apply@\texttt{apply}
 #+INDEX: zoo@\texttt{zoo}
 
 #+begin_src R 
@@ -359,9 +358,10 @@ unemployUSA <- zoo(unemployUSA, idx)
 
 Finally, those rows with =NA= values are removed.
 
+#+INDEX: complete.cases@\texttt{complete.cases}
+
 #+begin_src R :results output :exports both
-isNA <- apply(is.na(unemployUSA), 1, any)
-unemployUSA <- unemployUSA[!isNA,]
+unemployUSA <- unemployUSA[complete.cases(unemployUSA), ]
 
 summary(unemployUSA)
 #+end_src
@@ -412,8 +412,9 @@ save(unemployUSA, file='data/unemployUSA.RData')
 The catalog data of the World Bank Open Data initiative includes the
 World Development Indicators (WDI)[fn:3]. Among them we will analyze
 the evolution of the relationship between Gross National Income (GNI)
-and $CO_2$ emissions for a set of countries. The package =WDI= is able
-to search and download these data series.
+and $CO_2$ emissions for a set of countries from 2000 to
+2014[fn:5]. The package =WDI= is able to search and download these
+data series.
 
 #+INDEX: Data!World Bank
 #+INDEX: Data!CO2@$CO_2$
@@ -425,9 +426,11 @@ library(WDI)
     
 CO2data <- WDI(indicator=c('EN.ATM.CO2E.PC', 'EN.ATM.CO2E.PP.GD',
                            'NY.GNP.MKTP.PP.CD', 'NY.GNP.PCAP.PP.CD'),
-               start=2000, end=2011,
-               country=c('BR', 'CN', 'DE', 'ES',
-                         'FI', 'FR', 'GR', 'IN', 'NO', 'US'))
+               start = 2000, end = 2014,
+               country=c('BR', 'CN', 'DE',
+                         'ES', 'FI', 'FR',
+                         'GR', 'IN', 'NO',
+                         'US'))
 
 names(CO2data) <- c('iso2c', 'Country.Name', 'Year',
                     'CO2.capita', 'CO2.PPP',
@@ -439,30 +442,32 @@ summary(CO2data)
 #+RESULTS:
 #+begin_example
     iso2c           Country.Name            Year        CO2.capita     
- Length:120         Length:120         Min.   :2000   Min.   : 0.9674  
- Class :character   Class :character   1st Qu.:2003   1st Qu.: 4.8660  
- Mode  :character   Mode  :character   Median :2006   Median : 7.9145  
-                                       Mean   :2006   Mean   : 7.9130  
-                                       3rd Qu.:2008   3rd Qu.: 9.9587  
-                                       Max.   :2011   Max.   :20.1788  
+ Length:150         Length:150         Min.   :2000   Min.   : 0.9674  
+ Class :character   Class :character   1st Qu.:2003   1st Qu.: 4.9937  
+ Mode  :character   Mode  :character   Median :2007   Median : 7.6012  
+                                       Mean   :2007   Mean   : 7.7890  
+                                       3rd Qu.:2011   3rd Qu.: 9.9045  
+                                       Max.   :2014   Max.   :20.1788  
     CO2.PPP          GNI.PPP            GNI.capita   
- Min.   :0.1356   Min.   :1.375e+11   Min.   : 1960  
- 1st Qu.:0.2120   1st Qu.:3.036e+11   1st Qu.:10978  
- Median :0.3037   Median :2.014e+12   Median :28730  
- Mean   :0.3440   Mean   :3.349e+12   Mean   :26753  
- 3rd Qu.:0.3963   3rd Qu.:3.540e+12   3rd Qu.:37872  
- Max.   :0.9194   Max.   :1.580e+13   Max.   :62640
+ Min.   :0.1140   Min.   :1.376e+11   Min.   : 1960  
+ 1st Qu.:0.2010   1st Qu.:3.089e+11   1st Qu.:12600  
+ Median :0.2880   Median :2.162e+12   Median :29280  
+ Mean   :0.3252   Mean   :3.729e+12   Mean   :28212  
+ 3rd Qu.:0.3756   3rd Qu.:3.849e+12   3rd Qu.:38542  
+ Max.   :0.9194   Max.   :1.832e+13   Max.   :68310
 #+end_example
 
 
-Only two minor modifications are needed: Remove the missing values and
-convert the =Country.Name= column into a =factor=. This first
-modification will save problems when displaying the time series, and
-the =factor= conversion will be useful for grouping.
+Only two minor modifications are needed: Remove rows with missing
+values (using =complete.cases=), and convert the =Country.Name= column
+into a =factor=. This first modification will save problems when
+displaying the time series, and the =factor= conversion will be useful
+for grouping.
+
+#+INDEX: complete.cases@\texttt{complete.cases}
 
 #+begin_src R :results output :exports both
-isNA <- apply(is.na(CO2data), 1, any)
-CO2data <- CO2data[!isNA, ]
+CO2data <- CO2data[complete.cases(CO2data), ]
 
 CO2data$Country.Name <- factor(CO2data$Country.Name)
 
@@ -472,27 +477,31 @@ summary(CO2data)
 #+RESULTS:
 #+begin_example
     iso2c            Country.Name      Year        CO2.capita     
- Length:120         Brazil :12    Min.   :2000   Min.   : 0.9674  
- Class :character   China  :12    1st Qu.:2003   1st Qu.: 4.8660  
- Mode  :character   Finland:12    Median :2006   Median : 7.9145  
-                    France :12    Mean   :2006   Mean   : 7.9130  
-                    Germany:12    3rd Qu.:2008   3rd Qu.: 9.9587  
-                    Greece :12    Max.   :2011   Max.   :20.1788  
-                    (Other):48                                    
+ Length:150         Brazil :15    Min.   :2000   Min.   : 0.9674  
+ Class :character   China  :15    1st Qu.:2003   1st Qu.: 4.9937  
+ Mode  :character   Finland:15    Median :2007   Median : 7.6012  
+                    France :15    Mean   :2007   Mean   : 7.7890  
+                    Germany:15    3rd Qu.:2011   3rd Qu.: 9.9045  
+                    Greece :15    Max.   :2014   Max.   :20.1788  
+                    (Other):60                                    
     CO2.PPP          GNI.PPP            GNI.capita   
- Min.   :0.1356   Min.   :1.375e+11   Min.   : 1960  
- 1st Qu.:0.2120   1st Qu.:3.036e+11   1st Qu.:10978  
- Median :0.3037   Median :2.014e+12   Median :28730  
- Mean   :0.3440   Mean   :3.349e+12   Mean   :26753  
- 3rd Qu.:0.3963   3rd Qu.:3.540e+12   3rd Qu.:37872  
- Max.   :0.9194   Max.   :1.580e+13   Max.   :62640
+ Min.   :0.1140   Min.   :1.376e+11   Min.   : 1960  
+ 1st Qu.:0.2010   1st Qu.:3.089e+11   1st Qu.:12600  
+ Median :0.2880   Median :2.162e+12   Median :29280  
+ Mean   :0.3252   Mean   :3.729e+12   Mean   :28212  
+ 3rd Qu.:0.3756   3rd Qu.:3.849e+12   3rd Qu.:38542  
+ Max.   :0.9194   Max.   :1.832e+13   Max.   :68310
 #+end_example
 
 #+begin_src R :exports none
 save(CO2data, file='data/CO2.RData')
 #+end_src
 
+#+RESULTS:
+
 * Footnotes
+
+[fn:5] The analysis is restricted until 2014 because the database has several gaps in the range from 2015 to 2017. 
 
 [fn:1] The name and location data of these stations are available at the [[https://github.com/oscarperpinan/CMSAF-SIAR/blob/master/data/SIAR.csv][GitHub repository]] of the paper cite:Antonanzas-Torres.Canizares.ea2013.
 

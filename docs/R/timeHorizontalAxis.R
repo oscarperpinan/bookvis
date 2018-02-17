@@ -102,7 +102,8 @@ summary(aranjuezLong)
 scaled <- fortify(scale(aranjuez, scale = FALSE), melt = TRUE)
 ## The 'scaled' column is the result of the centering.
 ## The new 'Value' column store the original values.
-scaled <- transform(scaled, scaled = Value, Value = long$Value)
+scaled <- transform(scaled, scaled = Value,
+                    Value = aranjuezLong$Value)
 underIdx <- which(scaled$scaled <= 0)
 ## 'under' is the subset of values below the average
 under <- scaled[underIdx,]
@@ -178,9 +179,11 @@ xyplot(navarra - avRad,
 
 library(latticeExtra)
   
-horizonplot(navarra-avRad,
+horizonplot(navarra - avRad,
             layout = c(1, ncol(navarra)),
-            origin = 0, colorkey = TRUE)
+            origin = 0, ## Deviations in each panel are calculated
+                        ## from this value
+            colorkey = TRUE)
 
 ##################################################################
 ## Time graph of the differences between a time series and a reference
@@ -394,11 +397,11 @@ library(xts)
 aranjuezXTS <- as.xts(aranjuez)
 
 highchart() %>%
-    hc_add_series_xts(name = 'TempMax',
+    hc_add_series(name = 'TempMax',
                       aranjuezXTS[, "TempMax"]) %>%
-    hc_add_series_xts(name = 'TempMin',
+    hc_add_series(name = 'TempMin',
                       aranjuezXTS[, "TempMin"]) %>%
-    hc_add_series_xts(name = 'TempAvg',
+    hc_add_series(name = 'TempAvg',
                       aranjuezXTS[, "TempAvg"])
 
 aranjuezDF <- fortify(aranjuez[,

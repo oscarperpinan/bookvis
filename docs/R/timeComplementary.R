@@ -294,6 +294,7 @@ pgvis <- gvisMotionChart(CO2data,
 print(pgvis, 'html', file='figs/googleVis.html')
 
 library(gridSVG)
+library(grid)
 
 xyplot(GNI.capita ~ CO2.capita,
        data = CO2data,

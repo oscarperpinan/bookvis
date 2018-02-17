@@ -213,12 +213,12 @@ summary(aranjuezLong)
 #+RESULTS:
 :      Index                 Series          Value       
 :  Min.   :2004-01-01   TempAvg : 2898   Min.   :-12.98  
-:  1st Qu.:2005-12-29   TempMax : 2898   1st Qu.:  1.99  
-:  Median :2008-01-09   TempMin : 2898   Median :  8.52  
-:  Mean   :2008-01-03   HumidAvg: 2898   Mean   : 22.09  
-:  3rd Qu.:2010-01-03   HumidMax: 2898   3rd Qu.: 27.71  
+:  1st Qu.:2005-12-29   TempMax : 2898   1st Qu.:  2.01  
+:  Median :2008-01-09   TempMin : 2898   Median :  8.62  
+:  Mean   :2008-01-03   HumidAvg: 2898   Mean   : 22.05  
+:  3rd Qu.:2010-01-03   HumidMax: 2898   3rd Qu.: 27.62  
 :  Max.   :2011-12-31   WindAvg : 2898   Max.   :100.00  
-:                       (Other) :11592   NA's   :152
+:                       (Other) :11592   NA's   :37
 
 - The bands of values below the average can be easily extracted with
   =scale= because these regions are negative when the =data.frame= is
@@ -232,11 +232,14 @@ summary(aranjuezLong)
 scaled <- fortify(scale(aranjuez, scale = FALSE), melt = TRUE)
 ## The 'scaled' column is the result of the centering.
 ## The new 'Value' column store the original values.
-scaled <- transform(scaled, scaled = Value, Value = long$Value)
+scaled <- transform(scaled, scaled = Value,
+                    Value = aranjuezLong$Value)
 underIdx <- which(scaled$scaled <= 0)
 ## 'under' is the subset of values below the average
 under <- scaled[underIdx,]
 #+end_src
+
+#+RESULTS:
 
 - The years bands are defined with the function =endpoints= from the
   =xts= package:
@@ -253,6 +256,7 @@ N <- length(ep)
 tep <- timeIdx[ep[seq(1, N, 2)] + 1]
 tsp <- timeIdx[ep[seq(2, N, 2)]]
 #+end_src
+
 - The minima and maxima points of each variable are extracted with
   =apply=:
 #+begin_src R
@@ -329,7 +333,7 @@ The first attempt to display this multivariate time series makes use
 of the =xyplot.zoo= method. The objective of this graphic is to
 display the behavior of the collection as a whole: the series are
 superposed in the same panel (=superpose=TRUE=) without legend
-(=auto.key=TRUE=), using thin lines and partial
+(=auto.key=FALSE=), using thin lines and partial
 transparency[fn:3]. Transparency softens overplotting problems and reveals
 density clusters because regions with more overlapping lines are
 darker. Figure ref:fig:navarraNaive displays the variations
@@ -364,25 +368,25 @@ method, and the horizon graph with =horizonplot=.
 ##################################################################
 #+end_src
 
-When a graphic is intended to inform about the rate of change,
-special attention must be paid to the aspect ratio of the graph,
-defined as the ratio of the height to the width of the graphical
+When a graphic is intended to inform about the rate of change, special
+attention must be paid to the aspect ratio of the graph, defined as
+the ratio of the height to the width of the graphical
 window. Cleveland analyzed the importance of the aspect ratio for
-judging rate of change. He concluded that we visually decode the
-information about the relative local rate of change of one
-variable with another by comparing the orientations of the local
-line segments that compose the polylines. The recommendation is to
-choose the aspect ratio so that the absolute values of the
-orientations of the segments are centered on $\SI{45}{\degree}$ (banking
-to $\SI{45}{\degree}$). 
+judging rate of change cite:Cleveland.McGill1984. He concluded that we
+visually decode the information about the relative local rate of
+change of one variable with another by comparing the orientations of
+the local line segments that compose the polylines. The recommendation
+is to choose the aspect ratio so that the absolute values of the
+orientations of the segments are centered on $\SI{45}{\degree}$
+(banking to $\SI{45}{\degree}$).
 
 The problem with banking to $\SI{45}{\degree}$ is that the resulting
 aspect ratio is frequently too small. A suitable solution to
 minimize wasted space is the cut-and-stack method. The =xyplot.ts=
-method implement this solution with the combination of the
+method implements this solution with the combination of the
 arguments =aspect= and =cut=. The version of Figure
 ref:fig:navarraNaive using banking to $\SI{45}{\degree}$ and the
-cut-and-stack method is produced with
+cut-and-stack method is produced with (Figure ref:fig:navarraBanking):
 #+begin_src R :results output graphics :exports both :file figs/navarraBanking.pdf
 xyplot(navarra - avRad,
        aspect = 'xy', cut = list(n = 3, overlap = 0.1),
@@ -405,7 +409,7 @@ xyplot(navarra - avRad,
 #+INDEX: Horizon graph
 The horizon graph is useful in examining how a large number of series
 changes over time, and does so in a way that allows both comparisons
-between the individual time series and and independent analysis of
+between the individual time series and independent analysis of
 each series. Moreover, extraordinary behaviors and predominant
 patterns are easily distinguished cite:Heer.Kong.ea2009,Few2008.
 
@@ -418,7 +422,7 @@ to free vertical space:
 - Differences in magnitude are displayed as differences in color
   intensity (darker colors for greater differences).
 - The color bands share the same baseline and are superposed, with
-  darker bands in front of the ligther ones.
+  darker bands in front of the lighter ones.
 
 Because the panels share the same design structure, once this
 technique is understood, it is easy to establish comparisons or spot
@@ -426,9 +430,14 @@ extraordinary events.  This method is what Tufte described as small
 multiples cite:Tufte1990.
 #+INDEX: Small multiples
 
-Figure ref:fig:navarraHorizonplot displays the variations of
-solar radiation around the time average with an horizon graph
-using a row for each time series.
+Figure ref:fig:navarraHorizonplot displays the variations of solar
+radiation around the time average with an horizon graph using a row
+for each time series. In the code we choose =origin=0= and leave the
+argument =horizonscale= undefined (default). With this combination
+each panel has different scales and the colors in each panel represent
+deviations from the origin. This is depicted in the color key with the
+$\Delta_i$ symbol, where the subscript =i= denotes the existence of
+multiple panels with different scales.
 
 #+INDEX: Packages!latticeExtra@\texttt{latticeExtra}
 #+INDEX: horizonplot@\texttt{horizonplot}
@@ -436,12 +445,14 @@ using a row for each time series.
 #+begin_src R :results output graphics :exports both :file figs/navarraHorizonplot.pdf
 library(latticeExtra)
   
-horizonplot(navarra-avRad,
+horizonplot(navarra - avRad,
             layout = c(1, ncol(navarra)),
-            origin = 0, colorkey = TRUE)
+            origin = 0, ## Deviations in each panel are calculated
+                        ## from this value
+            colorkey = TRUE)
 #+end_src
 
-#+CAPTION: Horizon plot of variations around time average of solar radiation measurements from the meteorological stations of Navarra. label:fig:navarraHorizonplot
+#+CAPTION: Horizon plot of variations around time average of solar radiation measurements from the meteorological stations of Navarra. The $\Delta_i$ symbol in the color key represents the deviation in each panel from the origin value. label:fig:navarraHorizonplot
 #+RESULTS:
 [[file:figs/navarraHorizonplot.pdf]]
 
@@ -622,13 +633,12 @@ xyplot(unemployUSA,
 #+RESULTS:
 [[file:figs/unemployUSAxyplot.pdf]]
 
-This graphical output is not very useful: the legend is confusing,
-with too many items; the vertical scale is dominated by the largest
+This graphical output is not very useful: the legend includes too many items; the vertical scale is dominated by the largest
 series, with several series buried in the lower part of the scale; the
 trend, variations and structure of the total and individual
 contributions cannot be deduced from this graph.
 
-A suitable improvement is to display the multivariate time series as a
+A partial improvement is to display the multivariate time series as a
 set of stacked colored polygons to follow the macro/micro principle
 proposed by Tufte cite:Tufte1990: Show a collection of individual
 time series and also display their sum. A traditional stacked graph is
@@ -913,7 +923,7 @@ its last column (the upper line of the cumulative sum).
 #+end_src
 
 
-* Interactive graphics label:sec:interactive_horizontal
+* Interactive Graphics label:sec:interactive_horizontal
 This section describes the interactive alternatives of the static
 figures included in the previous sections with several packages:
 =dygraphs=, =highcharter=, =plotly=, =streamgraph=, and =gridSVG=.
@@ -993,13 +1003,12 @@ library(xts)
 aranjuezXTS <- as.xts(aranjuez)
 
 highchart() %>%
-    hc_add_series_xts(name = 'TempMax',
+    hc_add_series(name = 'TempMax',
                       aranjuezXTS[, "TempMax"]) %>%
-    hc_add_series_xts(name = 'TempMin',
+    hc_add_series(name = 'TempMin',
                       aranjuezXTS[, "TempMin"]) %>%
-    hc_add_series_xts(name = 'TempAvg',
+    hc_add_series(name = 'TempAvg',
                       aranjuezXTS[, "TempAvg"])
-
 #+end_src
 
 #+CAPTION: Snapshot of an interactive graphic produced with \texttt{highcharter}. label:fig:highcharter
