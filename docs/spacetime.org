@@ -93,6 +93,8 @@
   :CUSTOM_ID: code
   :END:
 
+[[file:R/configLattice.R][configLattice.R]]
+
 ** Raster data
    :PROPERTIES:
    :CUSTOM_ID: code_rasterst

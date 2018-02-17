@@ -127,6 +127,8 @@
   :CUSTOM_ID: code
   :END:
 
+[[file:R/configLattice.R][configLattice.R]]
+
 ** Choropleth maps
    :PROPERTIES:
    :CUSTOM_ID: code_choropleth

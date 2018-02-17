@@ -130,6 +130,9 @@
   :PROPERTIES:
   :CUSTOM_ID: code_time
   :END:
+
+[[file:R/configLattice.R][configLattice.R]]
+
 ** Time on the horizontal axis 
   :PROPERTIES:
   :CUSTOM_ID: code_horizontal
