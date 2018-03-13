@@ -71,11 +71,14 @@ xyplot(layer ~ y, data = SISav,
 
 divPal <- brewer.pal(n = 9, 'PuOr')
 divPal[5] <- "#FFFFFF"
-  
-showPal <- function(pal, labs = pal, cex = 0.6, ...){
-    barplot(rep(1, length(pal)), col = pal,
-            names.arg = labs, cex.names = cex,
-            axes=FALSE, ...)
+
+showPal <- function(pal)
+{
+    N <- length(pal)
+    image(1:N, 1, as.matrix(1:N), col = pal,
+          xlab = '', ylab = '',
+          xaxt = "n", yaxt = "n",
+          bty = "n")
 }
 
 showPal(divPal)
@@ -117,7 +120,7 @@ divRamp <- colorRamp(divPal)
 ## Diverging palette where white is associated with the interval
 ## containing the zero
 pal <- break2pal(mids, mx, divRamp)
-showPal(pal, round(mids, 1))
+showPal(pal)
 
 levelplot(SISav,
           par.settings = rasterTheme(region = pal),
