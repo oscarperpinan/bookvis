@@ -566,18 +566,17 @@ pPop
 Both rasters can be joined together with the =stack= method to
 create a new =RasterStack= object. Figure
 ref:fig:histogramLandClass displays the distribution of the
-logarithm of the population density associated to each land class.
-
+logarithm of the population density associated to each land class. 
 
 #+INDEX: stack@\texttt{stack}
 #+INDEX: histogram@\texttt{histogram}
 
-
 #+begin_src R :results output graphics :exports both :file figs/histogramLandClass.pdf
 s <- stack(pop, landClass)
 names(s) <- c('pop', 'landClass')
-histogram(~log10(pop) | landClass, data = s,
-          scales = list(relation = 'free'))
+densityplot(~log10(pop), groups = landClass, data = s,
+            plot.points = FALSE)
+
 #+end_src
 
 #+CAPTION: Distribution of the logarithm of the population density associated to each land class. label:fig:histogramLandClass

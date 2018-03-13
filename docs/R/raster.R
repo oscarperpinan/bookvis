@@ -197,8 +197,8 @@ pPop
 
 s <- stack(pop, landClass)
 names(s) <- c('pop', 'landClass')
-histogram(~log10(pop) | landClass, data = s,
-          scales = list(relation = 'free'))
+densityplot(~log10(pop), groups = landClass, data = s,
+            plot.points = FALSE)
 
 ##################################################################
 ## Bivariate legend
