@@ -46,7 +46,7 @@ splom(SISmm, xlab='', plot.loess=TRUE)
 
 hovmoller(SISdm)
 
-xyplot(SISdm, digits=1, col='black', lwd=0.2, alpha=0.6)
+xyplot(SISdm, digits = 1, col = 'black', lwd = 0.2, alpha = 0.4)
 
 horizonplot(SISdm, digits = 1,
             col.regions = rev(brewer.pal(n = 6, 'PuOr')),

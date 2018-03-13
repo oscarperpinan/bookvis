@@ -198,7 +198,7 @@ and the shape of the probability distribution contrast sharply with
 the winter.
 
 The matrix of scatterplots displays a quasilinear relationship
-between the central months due to the predominance of clear sky
+between the summer months due to the predominance of clear sky
 conditions. However, the relationships involving winter months become
 strongly nonlinear due to the presence of clouds.
 
@@ -210,9 +210,8 @@ strongly nonlinear due to the presence of clouds.
 #+end_src
 
 The level plots of Figures [[ref:fig:SISdm]] and [[ref:fig:SISmm]]
-display the full 3D space-time with a grid of panels where each layer
-is printed. In other words, the raster is sliced, and the collection of
-pieces is shown in a table. In the section ref:sec:animationST_var, this
+display the full 3D space-time data using a grid of panels where each layer
+is depicted in a separate panel. In the section ref:sec:animationST_var, this
 collection of layers will be displayed sequentially like frames of a
 movie to build an animation. In this section, the 3D raster is reduced
 to a 2D matrix with spatial aggregation following a certain
@@ -242,7 +241,7 @@ multivariate time series.
 #+INDEX: xyplot@\texttt{xyplot}
 
 #+begin_src R :results output graphics :exports both :file figs/SISmm_xyplot.png :width 2000 :height 2000 :res 300
-xyplot(SISdm, digits=1, col='black', lwd=0.2, alpha=0.6)
+xyplot(SISdm, digits = 1, col = 'black', lwd = 0.2, alpha = 0.4)
 #+end_src
 
 #+CAPTION: Time graph of the average solar radiation for each latitude zone. Each line represents a latitude band. label:fig:SISmm_xyplot
@@ -262,7 +261,7 @@ horizonplot(SISdm, digits = 1,
 [[file:figs/SISdm_horizonplot.pdf]]
 
 These three figures highlight the stational behavior of the solar
-radiation, with higher values during the central months. It is
+radiation, with higher values during the summer. It is
 interesting to note that (Figure ref:fig:SISdm_horizonplot) the
 radiation values around the equinoxes fluctuate near the yearly
 average value of each latitude region.

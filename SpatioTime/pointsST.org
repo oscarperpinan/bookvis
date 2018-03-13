@@ -16,6 +16,8 @@ setwd('~/github/bookvis')
 library(lattice)
 library(latticeExtra)
 
+Sys.setlocale("LC_TIME", 'C')
+
 source('configLattice.R')
 #+end_src
 
@@ -68,7 +70,7 @@ airQuality <- read.csv2('data/airQuality.csv')
 NO2 <- airQuality[airQuality$codParam == 8, ]
 #+end_src
 
-Each row of this =data.frame= corresponds to a measurement at one
+Each row of the =NO2= =data.frame= corresponds to a measurement at one
 of the stations during a day of the year (long format, following
 the schema proposed in cite:Pebesma2012).
 
@@ -76,10 +78,10 @@ The =spacetime= package defines several classes for spatiotemporal
 data inheriting the classes defined by the =sp= and =xts= packages.
 In particular, the =STFDF=, a class for spatiotemporal data with full
 space-time grids with =n= spatial locations and =m= times, requires a
-=data.frame= with =n·m= rows, (spatial index moving fastest).  Thus,
-we need to transform this structure to build a multivariate time
-series where each station is a different variable (space-wide under
-the schema of cite:Pebesma2012). The procedure is
+=data.frame= with =n·m= rows, (spatial index moving faster than
+temporal index).  Thus, we need to transform this structure to build a
+multivariate time series where each station is a different variable
+(space-wide under the schema of cite:Pebesma2012). The procedure is
 
 - Add a column with the =POSIXct= time index.
 - Reshape the =data.frame= from long to wide format with
@@ -185,11 +187,11 @@ while others fluctuate notably during this same period (for example,
 Barajas-28079027 and Urb. Embajada-28079055, the two nearby stations
 at the right). On the other hand, Figure [[fig:NO2hovmoller]] loses the
 spatial information but gives a more comprehensive view of the
-evolution of the network. The station El Pardo-28079058 is
+evolution of the network of stations. The station El Pardo-28079058 is
 significantly below the rest of the stations during the whole year,
 with the station Pza. Fdez Ladreda-28079056 being the opposite. In
 between, the stations could be divided into two or three groups
-according to their levels. Regardless, the group of stations reaches
+according to their levels. Regardless, the network of stations reaches
 maximum values during the first days of autumn and at the end of
 winter. These maxima are clearly displayed in Figure [[fig:NO2zoo]].
 

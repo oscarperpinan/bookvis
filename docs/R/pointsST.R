@@ -7,6 +7,8 @@
 library(lattice)
 library(latticeExtra)
 
+Sys.setlocale("LC_TIME", 'C')
+
 source('configLattice.R')
 
 ##################################################################
