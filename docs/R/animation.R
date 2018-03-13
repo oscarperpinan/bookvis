@@ -31,14 +31,18 @@ library(rgdal)
 library(maps)
 library(mapdata)
 
-
+## Project the extent of the cft raster to longitude-latitude, because
+## the map package works with it.
 projLL <- CRS('+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0')
 cftLL <- projectExtent(cft, projLL)
 cftExt <- as.vector(bbox(cftLL))
+## Extract the lines from the map package using this extent
 boundaries <- map('worldHires',
-                  xlim = cftExt[c(1,3)], ylim = cftExt[c(2,4)],
+                  xlim = cftExt[c(1, 3)], ylim = cftExt[c(2, 4)],
                   plot = FALSE)
+## Convert the result to a SpatialLines object
 boundaries <- map2SpatialLines(boundaries, proj4string = projLL)
+## Project to the projection of the cft object
 boundaries <- spTransform(boundaries, CRS(projLCC2d))
 
 ##################################################################
@@ -70,7 +74,9 @@ setwd(old)
 ## Static image
 ##################################################################
 
-levelplot(cft, layers = 25:48, layout = c(6, 4),
+levelplot(cft,
+          layers = 25:48, ## Layers to display (second day)
+          layout = c(6, 4), ## Layout of 6 columns and 4 rows
           par.settings = cloudTheme,
           names.attr = paste0(sprintf('%02d', 1:24), 'h'),
           panel = panel.levelplot.raster) +
@@ -87,8 +93,10 @@ N <- nlayers(cft)
 ids <- lapply(seq_len(N),
               FUN = function(i)
                   plot3D(cft[[i]],
-                         maxpixels = 1e3, col = pal,
-                         adjust = FALSE, zfac = 200))
+                         maxpixels = 1e3,
+                         col = pal,
+                         adjust = FALSE, ## Disable automatic scaling of xy axes.
+                         zfac = 200)) ## Common z scale for all graphics
 
 rglwidget() %>%
     playwidget(start = 0, stop = N, 
@@ -242,9 +250,9 @@ bg3d('black')
 lat <- seq(-90, 90, len = 100) * pi/180
 long <- seq(-180, 180, len = 100) * pi/180
 r <- 6378.1 # radius of Earth in km
-x <- outer(long, lat, FUN=function(x, y) r * cos(y) * cos(x))
-y <- outer(long, lat, FUN=function(x, y) r * cos(y) * sin(x))
-z <- outer(long, lat, FUN=function(x, y) r * sin(y))
+x <- outer(long, lat, FUN = function(x, y) r * cos(y) * cos(x))
+y <- outer(long, lat, FUN = function(x, y) r * cos(y) * sin(x))
+z <- outer(long, lat, FUN = function(x, y) r * sin(y))
 
 ## Read, scale, and convert the image
 nightLightsJPG <- image_read("https://eoimages.gsfc.nasa.gov/images/imagerecords/79000/79765/dnb_land_ocean_ice.2012.13500x6750.jpg")
@@ -274,12 +282,17 @@ geocode <- function(x){
                      'city=', city,
                      '&country=', country,
                      '&format=xml')
-  xmlOSM <- xmlParse(urlOSM)
-  cityOSM <- getNodeSet(xmlOSM, '//place')[[1]] ## use only the first result
-  lon <- xmlGetAttr(cityOSM, 'lon')
-  lat <- xmlGetAttr(cityOSM, 'lat')
-  as.numeric(c(lon, lat))
-  }
+    ## Parse the webpage
+    xmlOSM <- xmlParse(urlOSM)
+    ## Use only the first result
+    cityOSM <- getNodeSet(xmlOSM, '//place')[[1]]
+    ## Extract attributes: longitude...
+    lon <- xmlGetAttr(cityOSM, 'lon')
+    ## and latitude
+    lat <- xmlGetAttr(cityOSM, 'lat')
+    ## Return them as a vector
+    as.numeric(c(lon, lat))
+}
 
 points <- apply(cities, 1, geocode)
 points <- t(points)

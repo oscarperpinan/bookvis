@@ -32,7 +32,7 @@ aranjuez <- zoo(aranjuezClean, index(aranjuez))
 
 summary(aranjuez)
 
-save(aranjuez, file='data/aranjuez.RData')
+save(aranjuez, file = 'data/aranjuez.RData')
 
 ##################################################################
 ## Solar radiation measurements from different locations
@@ -62,14 +62,14 @@ summary(unemployUSA)
 library(zoo)
   
 Sys.setlocale("LC_TIME", 'C')
-idx <- as.yearmon(row.names(unemployUSA), format='%b.%Y')
+idx <- as.yearmon(row.names(unemployUSA), format = '%b.%Y')
 unemployUSA <- zoo(unemployUSA, idx)
 
 unemployUSA <- unemployUSA[complete.cases(unemployUSA), ]
 
 summary(unemployUSA)
 
-save(unemployUSA, file='data/unemployUSA.RData')
+save(unemployUSA, file = 'data/unemployUSA.RData')
 
 ##################################################################
 ## Gross National Income and $CO_2$ emissions
@@ -77,10 +77,10 @@ save(unemployUSA, file='data/unemployUSA.RData')
 
 library(WDI)
     
-CO2data <- WDI(indicator=c('EN.ATM.CO2E.PC', 'EN.ATM.CO2E.PP.GD',
+CO2data <- WDI(indicator = c('EN.ATM.CO2E.PC', 'EN.ATM.CO2E.PP.GD',
                            'NY.GNP.MKTP.PP.CD', 'NY.GNP.PCAP.PP.CD'),
                start = 2000, end = 2014,
-               country=c('BR', 'CN', 'DE',
+               country = c('BR', 'CN', 'DE',
                          'ES', 'FI', 'FR',
                          'GR', 'IN', 'NO',
                          'US'))
@@ -97,4 +97,4 @@ CO2data$Country.Name <- factor(CO2data$Country.Name)
 
 summary(CO2data)
 
-save(CO2data, file='data/CO2.RData')
+save(CO2data, file = 'data/CO2.RData')

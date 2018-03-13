@@ -46,7 +46,7 @@ from its own webpage defined by its station code.
   codURL <- as.numeric(substr(codEstaciones$Codigo, 7, 8))
   
   ## The information of each measuring station is available at its own webpage, defined by codURL
-  URLs <- paste('http://www.mambiente.munimadrid.es/opencms/opencms/calaire/contenidos/estaciones/estacion', codURL, '.html', sep='')
+  URLs <- paste('http://www.mambiente.munimadrid.es/opencms/opencms/calaire/contenidos/estaciones/estacion', codURL, '.html', sep = '')
 #+end_src
 
 ** \floweroneleft Data Arrangement
@@ -90,7 +90,7 @@ seconds.
     lat <- ub2dms(location[2,2])
     alt <- as.numeric(sub(' m.', '', location[2, 3]))
   
-    coords <- data.frame(long=long, lat=lat, alt=alt)
+    coords <- data.frame(long = long, lat = lat, alt = alt)
   
     coords
   })
@@ -100,7 +100,7 @@ seconds.
   ## The longitude of "El Pardo" station is wrong (positive instead of negative)
   airStations$long[22] <- -airStations$long[22]
   
-  write.csv2(airStations, file='data/airStations.csv')
+  write.csv2(airStations, file = 'data/airStations.csv')
 #+end_src
 
 The 2011 air pollution data are available from the Madrid City Council
@@ -202,11 +202,11 @@ and standard deviation) computed with =aggregate=:
 
 
 #+begin_src R 
-  NO2agg <- aggregate(dat ~ codEst, data=NO2,
+  NO2agg <- aggregate(dat ~ codEst, data = NO2,
                       FUN = function(x) {
-                          c(mean=signif(mean(x), 3),
-                            median=median(x),
-                            sd=signif(sd(x), 3))
+                          c(mean = signif(mean(x), 3),
+                            median = median(x),
+                            sd = signif(sd(x), 3))
                           })
   NO2agg <- do.call(cbind, NO2agg)
   NO2agg <- as.data.frame(NO2agg)
@@ -274,14 +274,14 @@ for (i in 1:nrow(NO2df))
     rootURL <- 'http://www.mambiente.munimadrid.es'
     stationURL <- paste(rootURL,
                         '/opencms/opencms/calaire/contenidos/estaciones/estacion',
-                        codURL, '.html', sep='')
-    content <- htmlParse(stationURL, encoding='utf8')
+                        codURL, '.html', sep = '')
+    content <- htmlParse(stationURL, encoding = 'utf8')
     ## Extracted with http://www.selectorgadget.com/
     xPath <- '//*[contains(concat( " ", @class, " " ), concat( " ", "imagen_1", " " ))]'
     imageStation <- getNodeSet(content, xPath)[[1]]
     imageURL <- xmlAttrs(imageStation)[1]
-    imageURL <- paste(rootURL, imageURL, sep='')
-    download.file(imageURL, destfile=paste(codEst, '.jpg', sep=''))
+    imageURL <- paste(rootURL, imageURL, sep = '')
+    download.file(imageURL, destfile = paste(codEst, '.jpg', sep = ''))
 }
 setwd(old)
 #+end_src
@@ -337,12 +337,12 @@ PROVMUN <- with(dat2016, paste(sprintf('%02d', Código.de.Provincia),
                                sep=""))
 
 votes2016 <- data.frame(PROVMUN, whichMax, Max, pcMax)
-write.csv(votes2016, 'data/votes2016.csv', row.names=FALSE)
+write.csv(votes2016, 'data/votes2016.csv', row.names = FALSE)
 #+end_src
 
 #+begin_src R :results output :exports results :tangle no
 votes2016 <- read.csv('data/votes2016.csv',
-                        colClasses=c('factor', 'factor', 'numeric', 'numeric'))
+                        colClasses = c('factor', 'factor', 'numeric', 'numeric'))
 
 summary(votes2016)
 #+end_src
@@ -421,7 +421,7 @@ each polygon is the key to find the correspondent registry in the
 =votes2016= dataset.
 #+begin_src R
 votes2016 <- read.csv('data/votes2016.csv',
-                        colClasses=c('factor', 'factor', 'numeric', 'numeric'))
+                        colClasses = c('factor', 'factor', 'numeric', 'numeric'))
 
 ## Match polygons and data using ID slot and PROVMUN column
 IDs <- sapply(spPols@polygons, function(x)x@ID)
@@ -526,9 +526,9 @@ produce a =RasterStack= with twelve layers.
   library(raster)
   
   tmp <- tempdir()
-  unzip('data/SISmm2008_CMSAF.zip', exdir=tmp)
-  filesCMSAF <- dir(tmp, pattern='SISmm')
-  SISmm <- stack(paste(tmp, filesCMSAF, sep='/'))
+  unzip('data/SISmm2008_CMSAF.zip', exdir = tmp)
+  filesCMSAF <- dir(tmp, pattern = 'SISmm')
+  SISmm <- stack(paste(tmp, filesCMSAF, sep = '/'))
   ## CM-SAF data is average daily irradiance (W/m2). Multiply by 24
   ## hours to obtain daily irradiation (Wh/m2)
   SISmm <- SISmm * 24
@@ -543,7 +543,7 @@ package.
   SISm <- SISmm * daysMonth / 1000 ## kWh/m2
   ## Annual average
   SISav <- sum(SISm)/sum(daysMonth)
-  writeRaster(SISav, file='SISav')
+  writeRaster(SISav, file = 'SISav')
 #+end_src
 
 

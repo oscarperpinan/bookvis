@@ -136,7 +136,10 @@ ggmap(madridGG) +
 NO2merc <- spTransform(NO2sp, CRS("+init=epsg:3857"))
 
 ## sp.layout definition
-stamen <- list(panel.ggmap, madridGG, first = TRUE)
+stamen <- list(panel.ggmap, ## Function that displays the object
+               madridGG, ## Object to be displayed
+               first = TRUE) ## This layout item will be drawn before
+                             ## the object displayed by spplot
 
 spplot(NO2merc["classNO2"],
        col.regions = airPal,
@@ -174,7 +177,8 @@ streetsMadrid <- streets[streets$CMUN=='079',]
 streetsMadrid <- spTransform(streetsMadrid,
                              CRS = CRS("+proj=longlat +ellps=WGS84"))
 
-## spplot with sp.layout version
+## Lists using the structure accepted by sp.layout, with the polygons,
+## lines, and points, and their graphical parameters
 spDistricts <- list('sp.polygons', distritosMadrid,
                     fill = 'gray97', lwd = 0.3)
 spStreets <- list('sp.lines', streetsMadrid,
@@ -183,23 +187,32 @@ spNames <- list(sp.pointLabel, NO2sp,
                 labels = substring(NO2sp$codEst, 7),
                 cex = 0.6, fontfamily = 'Palatino')
 
+## spplot with sp.layout version
 spplot(NO2sp["classNO2"],
-       col.regions = airPal, cex = dentAQ,
-       edge.col = 'black', alpha = 0.8,
+       col.regions = airPal,
+       cex = dentAQ,
+       edge.col = 'black',
+       alpha = 0.8,
+       ## Boundaries and labels overlaid
        sp.layout = list(spDistricts, spStreets, spNames),
        scales = list(draw = TRUE),
        key.space = NO2key)
 
 ## lattice with layer version
 pNO2 +
+    ## Labels *over* the original figure
     layer(sp.pointLabel(NO2sp,
                         labels = substring(NO2sp$codEst, 7),
                         cex = 0.8, fontfamily = 'Palatino')
           ) +
+    ## Polygons and lines *below* (layer_) the figure
     layer_(
     {
-        sp.polygons(distritosMadrid, fill = 'gray97', lwd = 0.3)
-        sp.lines(streetsMadrid, lwd = 0.05)
+        sp.polygons(distritosMadrid,
+                    fill = 'gray97',
+                    lwd = 0.3)
+        sp.lines(streetsMadrid,
+                 lwd = 0.05)
     })
 
 ##################################################################
@@ -224,11 +237,14 @@ streetsMadridSF <- st_transform(streetsMadridSF,
                               crs = "+proj=longlat +ellps=WGS84")
 
 ggplot()+
+    ## Layers are drawn sequentially, so the NO2sf layer must be in
+    ## the last place to be on top
     geom_sf(data = streetsMadridSF,
             size = 0.05,
             color = 'lightgray') +
     geom_sf(data = distritosMadridSF,
-            fill = 'lightgray', alpha = 0.2,
+            fill = 'lightgray',
+            alpha = 0.2,
             size = 0.3,
             color = 'black') +
     geom_sf(data = NO2sf,
@@ -245,15 +261,19 @@ ggplot()+
 
 library(gstat)
 
-airGrid <- spsample(NO2sp, type='regular', n=1e5)
+## Sample 10^5 points locations within the bounding box of NO2sp using
+## regular sampling
+airGrid <- spsample(NO2sp, type = 'regular', n = 1e5)
+## Convert the SpatialPoints object into a SpatialGrid object
 gridded(airGrid) <- TRUE
+## Compute the IDW interpolation
 airKrige <- krige(mean ~ 1, NO2sp, airGrid)
 
-spplot(airKrige["var1.pred"],
+spplot(airKrige["var1.pred"], ## Variable interpolated
        col.regions = colorRampPalette(airPal)) +
-    layer({
-        sp.polygons(distritosMadrid, fill='transparent', lwd = 0.3)
-        sp.lines(streetsMadrid, lwd=0.07)
+    layer({ ## Overlay boundaries and points
+        sp.polygons(distritosMadrid, fill = 'transparent', lwd = 0.3)
+        sp.lines(streetsMadrid, lwd = 0.07)
         sp.points(NO2sp, pch = 21, alpha = 0.8, fill = 'gray50', col = 'black')
     })
 
@@ -269,21 +289,27 @@ library(mapview)
 
 pal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(100)
 
-mapview(NO2sp, zcol = "mean", cex = "mean",
-        col.regions = pal, legend = TRUE,
-        label = NO2sp$Nombre)
+mapview(NO2sp,
+        zcol = "mean", ## Variable to display
+        cex = "mean", ## Use this variable for the circle sizes
+        col.regions = pal,
+        label = NO2sp$Nombre,
+        legend = TRUE)
 
 ##################################################################
 ## Tooltips with images and graphs
 ##################################################################
 
-img <- paste('images/', NO2sp$codEst, '.jpg', sep='')
+img <- paste('images/', NO2sp$codEst, '.jpg', sep = '')
 
-mapview(NO2sp, zcol = "mean", cex = "mean",
-        col.regions = pal, legend = TRUE,
-        map.type = "Esri.WorldImagery",
+mapview(NO2sp,
+        zcol = "mean",
+        cex = "mean",
+        col.regions = pal, 
         label = NO2sp$Nombre,
-        popup = popupImage(img, src = "local"))
+        popup = popupImage(img, src = "local"),
+        map.type = "Esri.WorldImagery",
+        legend = TRUE)
 
 ## Read the time series
 airQuality <- read.csv2('data/airQuality.csv')
@@ -302,11 +328,14 @@ pList <- lapply(stations, function(i)
            xlab = '', ylab = '')
     )
 
-mapview(NO2sp, zcol = "mean", cex = "mean",
-        col.regions = pal, legend = TRUE,
-        map.type = "Esri.WorldImagery",
+mapview(NO2sp,
+        zcol = "mean",
+        cex = "mean",
+        col.regions = pal, 
         label = NO2sp$Nombre,
-        popup = popupGraph(pList))
+        popup = popupGraph(pList),
+        map.type = "Esri.WorldImagery",
+        legend = TRUE)
 
 ##################################################################
 ## Synchronise multiple graphics  
@@ -335,17 +364,17 @@ sync(mapMean, mapMedian, mapSD, ncol = 3)
 ##################################################################
 
 library(rgdal)
-writeOGR(NO2sp, 'data/NO2.geojson', 'NO2sp', driver='GeoJSON')
+writeOGR(NO2sp, 'data/NO2.geojson', 'NO2sp', driver = 'GeoJSON')
 
 ##################################################################
 ## Keyhole Markup Language
 ##################################################################
 
 library(rgdal)
-writeOGR(NO2sp, dsn='NO2_mean.kml', layer='mean', driver='KML')
+writeOGR(NO2sp, dsn = 'NO2_mean.kml', layer = 'mean', driver = 'KML')
 
 library(plotKML)
-plotKML(NO2sp["mean"], points_names=NO2sp$codEst)
+plotKML(NO2sp["mean"], points_names = NO2sp$codEst)
 
 ##################################################################
 ## 3D visualization
@@ -389,18 +418,18 @@ tooltips <- sapply(seq_len(nrow(NO2df)), function(i)
     ## Information to be attached to each line
     stats <- paste(c('Mean', 'Median', 'SD'),
                    signif(NO2df[i, c('mean', 'median', 'sd')], 4),
-                   sep=' = ', collapse='<br />')
+                   sep = ' = ', collapse = '<br />')
     ## Station photograph 
-    imageURL <- paste('images/', codEst, '.jpg', sep='')
+    imageURL <- paste('images/', codEst, '.jpg', sep = '')
     imageInfo <- paste("<img src=", imageURL,
-                       " width='100' height='100' />", sep='')
+                       " width = '100' height = '100' />", sep = '')
     ## Text to be included in the tooltip
     nameStation <- paste('<b>', 
                          as.character(NO2df[i, "Nombre"]),
-                         '</b>', sep='')
-    info <- paste(nameStation, stats, sep='<br />')
+                         '</b>', sep = '')
+    info <- paste(nameStation, stats, sep = '<br />')
     ## Tooltip includes the image and the text
-    paste(imageInfo, info, sep='<br />')
+    paste(imageInfo, info, sep = '<br />')
 })
 grid.garnish('points.panel',
              title = tooltips,
@@ -414,16 +443,16 @@ urlList <- sapply(seq_len(nrow(NO2df)), function(i){
     codURL <- as.numeric(substr(codEst, 7, 8))
     stationURL <- paste(rootURL,
                         '/opencms/opencms/calaire/contenidos/estaciones/estacion',
-                        codURL, '.html', sep='')
+                        codURL, '.html', sep = '')
 })
 
-grid.hyperlink('points.panel', urlList, grep=TRUE, group=FALSE)
+grid.hyperlink('points.panel', urlList, grep = TRUE, group = FALSE)
 
 ## Add jQuery and jQuery UI scripts
-grid.script(file='http://code.jquery.com/jquery-1.8.3.js')
-grid.script(file='http://code.jquery.com/ui/1.9.2/jquery-ui.js')
+grid.script(file = 'http://code.jquery.com/jquery-1.8.3.js')
+grid.script(file = 'http://code.jquery.com/ui/1.9.2/jquery-ui.js')
 ## Simple JavaScript code to initialize the tooltip
-grid.script(file='js/myTooltip.js')
+grid.script(file = 'js/myTooltip.js')
 ## Produce the SVG graphic: the results of grid.garnish,
 ## grid.hyperlink and grid.script are converted to SVG code
 grid.export('figs/airMadrid.svg')
@@ -439,7 +468,7 @@ htmlBegin <- '<!DOCTYPE html>
 
 htmlEnd <- '</body> </html>'
 
-svgText <- paste(readLines('figs/airMadrid.svg'), collapse='\n')
+svgText <- paste(readLines('figs/airMadrid.svg'), collapse = '\n')
 
-writeLines(paste(htmlBegin, svgText, htmlEnd, sep='\n'),
+writeLines(paste(htmlBegin, svgText, htmlEnd, sep = '\n'),
            'airMadrid.html')

@@ -91,7 +91,7 @@ days of the sequence (Figure ref:fig:SISdm).
 #+INDEX: levelplot@\texttt{levelplot}
 
 #+begin_src R :results output graphics :exports both :file figs/SISdm.pdf
-levelplot(SISdm, layers=1:12, panel=panel.levelplot.raster)
+levelplot(SISdm, layers = 1:12, panel = panel.levelplot.raster)
 #+end_src
 
 #+CAPTION: Level plot of daily averages of solar radiation. label:fig:SISdm
@@ -109,7 +109,7 @@ the aggregation procedure.
 #+INDEX: zApply@\texttt{zApply}
 
 #+begin_src R 
-SISmm <- zApply(SISdm, by=as.yearmon, fun='mean')
+SISmm <- zApply(SISdm, by = as.yearmon, fun = 'mean')
 #+end_src
 
 #+RESULTS:
@@ -133,7 +133,7 @@ max values  :  74.62326, 123.82005, 167.88226, 249.85596, 313.51773, 340.51255, 
 #+end_example
 
 #+begin_src R :results output graphics :exports both :file figs/SISmm.pdf
-levelplot(SISmm, panel=panel.levelplot.raster)
+levelplot(SISmm, panel = panel.levelplot.raster)
 #+end_src
 
 #+CAPTION: Level plot of monthly averages of solar radiation. label:fig:SISmm
@@ -160,7 +160,7 @@ the violin plot (a combination of a boxplot and a kernel density plot)
 #+INDEX: histogram@\texttt{histogram}
 
 #+begin_src R :results output graphics :exports both :file figs/SISdm_histogram.pdf
-histogram(SISdm, FUN=as.yearmon)
+histogram(SISdm, FUN = as.yearmon)
 #+end_src
 
 #+CAPTION: Histogram of monthly distribution of solar radiation. label:fig:SISdm_hist
@@ -171,7 +171,7 @@ histogram(SISdm, FUN=as.yearmon)
 #+INDEX: bwplot@\texttt{bwplot}
 
 #+begin_src R :results output graphics :exports both :file figs/SISdm_boxplot.pdf
-bwplot(SISdm, FUN=as.yearmon)
+bwplot(SISdm, FUN = as.yearmon)
 #+end_src
 
 #+CAPTION: Violin plot of monthly distribution of solar radiation. label:fig:SISdm_boxplot
@@ -181,7 +181,7 @@ bwplot(SISdm, FUN=as.yearmon)
 #+INDEX: splom@\texttt{splom}
 
 #+begin_src R :results output graphics :exports both :file figs/SISmm_splom.png :width 4000 :height 4000 :res 600
-splom(SISmm, xlab='', plot.loess=TRUE)
+splom(SISmm, xlab = '', plot.loess = TRUE)
 #+end_src
 
 #+CAPTION: Scatterplot matrix of monthly averages together with their kernel density estimations in the diagonal frames. label:fig:SISmm_splom

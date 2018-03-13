@@ -139,7 +139,7 @@ proj4string(extBrazil) <- proj4string(worldRiv)
 
 ## and intersect it with worldRiv to extract brazilian rivers
 ## from the world database
-brazilRiv <- gIntersection(worldRiv, extBrazil, byid=TRUE)
+brazilRiv <- gIntersection(worldRiv, extBrazil, byid = TRUE)
 ## and especially the famous Amazonas River
 amazonas <- worldRiv[worldRiv$name=='Amazonas',]
 #+end_src
@@ -159,7 +159,7 @@ worldRiv<- worldRiv[worldRiv$featurecla=='River',]
 extBrazil <- as(extent(brazilDEM), 'SpatialPolygons')
 proj4string(extBrazil) <- proj4string(worldRiv)
 
-brazilRiv <- gIntersection(worldRiv, extBrazil, byid=TRUE)
+brazilRiv <- gIntersection(worldRiv, extBrazil, byid = TRUE)
 
 amazonas <- worldRiv[worldRiv$name=='Amazonas',]
 #+end_src
@@ -200,9 +200,9 @@ words.
 admNames <- strsplit(as.character(brazilAdm$NAME_1), ' ')
   
 admNames <- sapply(admNames,
-                   FUN=function(s){
-                       sep=if (length(s)>2) '\n' else  ' '
-                       paste(s, collapse=sep)
+                   FUN = function(s){
+                       sep = if (length(s)>2) '\n' else  ' '
+                       paste(s, collapse = sep)
                    })
 #+end_src
 
@@ -219,11 +219,11 @@ of four layers:
    =rasterVis= package. The palette is defined with =brewer.pal=
    (Figure [[ref:fig:rastersBrazil]]).
    #+begin_src R
-   blueTheme <- rasterTheme(region=brewer.pal(n=9, 'Blues'))
+   blueTheme <- rasterTheme(region = brewer.pal(n = 9, 'Blues'))
   
-   seaPlot <- levelplot(brazilSea, par.settings=blueTheme,
-                        maxpixels=1e6, panel=panel.levelplot.raster,
-                        margin=FALSE, colorkey=FALSE)
+   seaPlot <- levelplot(brazilSea, par.settings = blueTheme,
+                        maxpixels = 1e6, panel = panel.levelplot.raster,
+                        margin = FALSE, colorkey = FALSE)
    #+end_src
 
    
@@ -235,11 +235,11 @@ of four layers:
   produced by the =terrain_hcl= function from the =colorspace= package
   cite:Ihaka.Murrell.ea2011 (Figure [[ref:fig:rastersBrazil]]).
   #+begin_src R
-  terrainTheme <- rasterTheme(region=terrain_hcl(15))
+  terrainTheme <- rasterTheme(region = terrain_hcl(15))
   
-  altPlot <- levelplot(brazilDEM, par.settings=terrainTheme,
-                       maxpixels=1e6, panel=panel.levelplot.raster,
-                       margin=FALSE, colorkey=FALSE)
+  altPlot <- levelplot(brazilDEM, par.settings = terrainTheme,
+                       maxpixels = 1e6, panel = panel.levelplot.raster,
+                       margin = FALSE, colorkey = FALSE)
   #+end_src
   
 #+INDEX: rasterTheme@\texttt{rasterTheme}
@@ -274,27 +274,27 @@ of four layers:
   #+begin_src R :results output graphics :exports both :file figs/brazil.png :width 2000 :height 2000 :res 300
   seaPlot + altPlot + layer({
       ## Rivers
-      sp.lines(brazilRiv, col='darkblue', lwd=0.2)
+      sp.lines(brazilRiv, col = 'darkblue', lwd = 0.2)
       ## Amazonas
       sp.lineLabel(amazonas, amazonasLab, 
-                   lwd=1, col='darkblue', col.line='darkblue',
-                   cex=0.5, fontfamily='Palatino')
+                   lwd = 1, col = 'darkblue', col.line = 'darkblue',
+                   cex = 0.5, fontfamily = 'Palatino')
       ## Administrative boundaries
-      sp.polygons(brazilAdm, col='black', lwd=0.2)
+      sp.polygons(brazilAdm, col = 'black', lwd = 0.2)
       ## Centroids of administrative boundaries ...
-      panel.points(centroids, col='black')
+      panel.points(centroids, col = 'black')
       ## ... with their labels
-      panel.pointLabel(centroids, labels=admNames,
-                       cex=0.7, fontfamily='Palatino', lineheight=.8)
+      panel.pointLabel(centroids, labels = admNames,
+                       cex = 0.7, fontfamily = 'Palatino', lineheight=.8)
       ## Country name
-      panel.text(xyBrazil[1], xyBrazil[2], labels='B R A Z I L',
-                 cex=1.5, fontfamily = 'Palatino', fontface=2)
+      panel.text(xyBrazil[1], xyBrazil[2], labels = 'B R A Z I L',
+                 cex = 1.5, fontfamily = 'Palatino', fontface = 2)
   })
   #+end_src
 
 #+begin_src R :results output graphics :exports results :file figs/rastersBrazil.png :width 2000 :height 2000 :res 300
-print(seaPlot, split=c(1, 1, 2, 1), more=TRUE)
-print(altPlot, split=c(2, 1, 2, 1))
+print(seaPlot, split = c(1, 1, 2, 1), more = TRUE)
+print(altPlot, split = c(2, 1, 2, 1))
 #+end_src
 
 #+CAPTION: Sea depth and altitude rasters of Brazil. label:fig:rastersBrazil

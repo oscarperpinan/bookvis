@@ -24,7 +24,7 @@ aranjuezDF <- as.data.frame(aranjuez)
 aranjuezDF$Month <- format(index(aranjuez), '%m')
 
 ## Red-Blue palette with black added (12 colors)
-colors <- c(brewer.pal(n=11, 'RdBu'), '#000000')
+colors <- c(brewer.pal(n = 11, 'RdBu'), '#000000')
 ## Rearrange according to months (darkest for summer)
 colors <- colors[c(6:1, 12:7)]
 
@@ -38,7 +38,7 @@ splom(~ aranjuezDF,
       cex = 0.3, alpha = 0.1)
 
 trellis.focus('panel', 1, 1)
-idx <- panel.link.splom(pch=13, cex=0.6, col='green')
+idx <- panel.link.splom(pch = 13, cex = 0.6, col = 'green')
 aranjuez[idx,]
 
 library(GGally)

@@ -60,12 +60,13 @@ projCedeira <- projection(city)
 
 demCedeira <- raster('data/demCedeira')
 projection(demCedeira) <- projCedeira
+## Discard values below sea level
 demCedeira[demCedeira <= 0] <- NA
 
 slope <- terrain(demCedeira, 'slope')
 aspect <- terrain(demCedeira, 'aspect')
-hsCedeira <- hillShade(slope=slope, aspect=aspect,
-                       angle=20, direction=30)
+hsCedeira <- hillShade(slope = slope, aspect = aspect,
+                       angle = 20, direction = 30)
 
 ##################################################################
 ## Overlaying layers of information
@@ -77,12 +78,12 @@ hsTheme <- GrTheme(panel.background = list(col = 'skyblue3'))
 library(colorspace)
 ## DEM with terrain colors and semitransparency
 terrainTheme <- rasterTheme(region = terrain_hcl(n = 15), 
-                            regions = list(alpha=0.6))
+                            regions = list(alpha = 0.6))
 
 ##Auxiliary function to display the roads. A thicker black line in
 ##the background and a thinner one with an appropiate color.
 sp.road <- function(line, lwd = 5, blwd = 7,
-                    col='indianred1', bcol = 'black'){
+                    col = 'indianred1', bcol = 'black'){
     sp.lines(line, lwd = blwd, col = bcol)
     sp.lines(line, lwd = lwd, col = col)
 }

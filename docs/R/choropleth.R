@@ -55,14 +55,18 @@ N <- 6
 ## Sequential palette
 quantPal <- brewer.pal(n = N, "Oranges")
 
+## Number of cuts
 ucN <- 1000
+## Palette created with interpolation
 ucQuantPal <- colorRampPalette(quantPal)(ucN)
 
 ## The polygons boundaries are not displayed thanks to col = 'transparent' 
 spplot(spMapVotes["pcMax"],
        col.regions = ucQuantPal,
        cuts = ucN,
+       ## Do not draw municipality boundaries
        col = 'transparent',
+       ## Overlay province boundaries
        sp.layout = provinceLines)
 
 ##################################################################
@@ -105,11 +109,15 @@ sfMapVotes$pcMaxInt <- cut(sfMapVotes$pcMax,
                            breaks = intFisher$brks)
 
 ggplot(sfMapVotes) +
+    ## Display the pcMaxInt variable...
     geom_sf(aes(fill = pcMaxInt),
+            ## without drawing municipality boundaries
             color = "transparent") +
     scale_fill_brewer(palette = "Oranges") +
+    ## And overlay provinces boundaries
     geom_sf(data = sfProvs,
             fill = 'transparent',
+            ## but do not include them in the legend
             show.legend = FALSE) +
     theme_bw()
 
@@ -144,15 +152,18 @@ ggplot(sfMapVotes) +
 
 ## spplot version
 spplot(spMapVotes, "pcMaxInt",
+       ## Formula to define the faceting: a panel for each level of
+       ## whichMax
        formula = pcMaxInt ~ xlabelpoint + ylabelpoint | whichMax,
        col.regions = quantPal,
-       col='transparent',
+       col = 'transparent',
        sp.layout = provinceLines)
 
 ## ggplot2 version
 ggplot(sfMapVotes) +
     geom_sf(aes(fill = pcMaxInt),
             color = "transparent") +
+    ## Define the faceting using two rows
     facet_wrap(~whichMax, nrow = 2) +
     scale_fill_brewer(palette = "Oranges") +
     geom_sf(data = sfProvs,
@@ -167,18 +178,19 @@ ggplot(sfMapVotes) +
 
 ## Number of intervals.
 N <- 3
-
-intFisher <- classIntervals(spMapVotes$pcMax,
-                            n = N, style = "fisher")
-
-spMapVotes$pcMaxInt <- cut(spMapVotes$pcMax,
-                            breaks = intFisher$brks)
-
+## Loop to create a bidimensional palette
 multiPal <- sapply(1:nClasses, function(i)
 {
     colorAlpha <- adjustcolor(qualPal[i], alpha = 0.4)
     colorRampPalette(c(qualPal[i], colorAlpha), alpha = TRUE)(N)
 })
+
+## Define the intervals
+intFisher <- classIntervals(spMapVotes$pcMax,
+                            n = N, style = "fisher")
+## ... and create a categorical variable with them
+spMapVotes$pcMaxInt <- cut(spMapVotes$pcMax,
+                            breaks = intFisher$brks)
 
 pList <- lapply(1:nClasses, function(i){
     ## Only those polygons corresponding to a level are selected
@@ -189,7 +201,7 @@ pList <- lapply(1:nClasses, function(i){
     ## Produce the graphic
     pClass <- spplot(mapClass, "pcMaxInt",
                      col.regions = pal,
-                     col='transparent',
+                     col = 'transparent',
 		     colorkey = FALSE)
 })
 names(pList) <- classes
@@ -252,11 +264,13 @@ sfMapVotes0 <- st_read("data/spMapVotes0.shp")
 st_crs(sfMapVotes0) <- 25830
 
 ## Quantitative variable, pcMax
-mapView(sfMapVotes0, zcol = "pcMax",
+mapView(sfMapVotes0,
+        zcol = "pcMax", ## Choose the variable to display
         legend = TRUE,
         col.regions = quantPal)
 
 ## Qualitative variable, whichMax
-mapView(sfMapVotes0, zcol = "whichMax",
+mapView(sfMapVotes0,
+        zcol = "whichMax",
         legend = TRUE,
         col.regions = qualPal)

@@ -41,7 +41,7 @@ ggplot(data = CO2data, aes(x = CO2.capita, y = GNI.capita,
 library(RColorBrewer)
 
 nCountries <- nlevels(CO2data$Country.Name)
-pal <- brewer.pal(n=5, 'Set1')
+pal <- brewer.pal(n = 5, 'Set1')
 pal <- rep(pal, length = nCountries)
 
 ## Rank of average values of CO2 per capita
@@ -60,9 +60,9 @@ summary(CO2capita)
 
 hCO2 <- hclust(dist(CO2capita[, -1]))
 
-oldpar <- par(mar=c(0, 2, 0, 0) + .1)
-plot(hCO2, labels=CO2capita$Country.Name,
-     xlab='', ylab='', sub='', main='')
+oldpar <- par(mar = c(0, 2, 0, 0) + .1)
+plot(hCO2, labels = CO2capita$Country.Name,
+     xlab = '', ylab = '', sub = '', main = '')
 par(oldpar)
 
 idx <- match(levels(CO2data$Country.Name), 
@@ -71,7 +71,7 @@ palOrdered <- pal[idx]
 
 ## lattice version
 ## simpleTheme encapsulates the palette in a new theme for xyplot
-myTheme <- simpleTheme(pch=19, cex=0.6, col=palOrdered)
+myTheme <- simpleTheme(pch = 19, cex = 0.6, col = palOrdered)
 
 pCO2.capita <- xyplot(GNI.capita  ~ CO2.capita,
                       data = CO2data,
@@ -79,7 +79,7 @@ pCO2.capita <- xyplot(GNI.capita  ~ CO2.capita,
                       ylab = "GNI per capita, PPP (current international $)",
                       groups = Country.Name,
                       par.settings = myTheme,
-                      type='b')
+                      type = 'b')
 
 ## ggplot2 version
 gCO2.capita <- ggplot(data = CO2data,
@@ -87,7 +87,7 @@ gCO2.capita <- ggplot(data = CO2data,
                           y = GNI.capita,
                           color = Country.Name)) +
     geom_point() + geom_path() +
-    scale_color_manual(values=palOrdered, guide=FALSE) +
+    scale_color_manual(values = palOrdered, guide = FALSE) +
     xlab('CO2 emissions (metric tons per capita)') +
     ylab('GNI per capita, PPP (current international $)') +
     theme_bw()
@@ -102,7 +102,7 @@ xyplot(GNI.capita  ~ CO2.capita,
        ylab = "GNI per capita, PPP (current international $)",
        groups = Country.Name,
        par.settings = myTheme,
-       type='b',
+       type = 'b',
        panel = function(x, y, ..., subscripts, groups){
            panel.text(x, y, ...,
                       labels = CO2data$Year[subscripts],
@@ -259,7 +259,7 @@ pgvis <- gvisMotionChart(CO2data,
                          idvar = 'Country.Name',
                          timevar = 'Year')
 
-print(pgvis, 'html', file='figs/googleVis.html')
+print(pgvis, 'html', file = 'figs/googleVis.html')
 
 library(gridSVG)
 library(grid)

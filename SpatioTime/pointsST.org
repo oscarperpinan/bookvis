@@ -83,12 +83,14 @@ temporal index).  Thus, we need to transform this structure to build a
 multivariate time series where each station is a different variable
 (space-wide under the schema of cite:Pebesma2012). The procedure is
 
-- Add a column with the =POSIXct= time index.
+- Add a column with the =POSIXct= time index (line [[(timeIndex)]])
 - Reshape the =data.frame= from long to wide format with
-  =reshape=.
+  =dcast= (line [[(long2wide)]]).
 - Define a multivariate time series with =zoo= (Figure
-  [[fig:NO2zoo]]).
-- Coerce this time series to a vector with =n·m= rows.
+  [[fig:NO2zoo]], line [[(zoo)]]
+- Coerce this time series to a vector with =n·m= rows (line [[(vector)]]).
+- Finally, create the =STFDF= object with the previous components
+  (line [[(stfdf)]]).
 
 
 #+INDEX: reshape@\texttt{reshape}
@@ -96,20 +98,23 @@ multivariate time series where each station is a different variable
 #+INDEX: Packages!spacetime@\texttt{spacetime}
 #+INDEX: STFDF@\texttt{STFDF}
 
-#+begin_src R 
+#+begin_src R -n -r
 library(zoo)
 library(reshape2)
 library(spacetime)
   
-NO2$time <- as.Date(with(NO2,
+NO2$time <- as.Date(with(NO2,                                   (ref:timeIndex)
                          ISOdate(year, month, day)))
-NO2wide <- dcast(NO2[, c('codEst', 'dat', 'time')],
+
+NO2wide <- dcast(NO2[, c('codEst', 'dat', 'time')],             (ref:long2wide)
                  time ~ codEst,
                  value.var = "dat")
-NO2zoo <- zoo(NO2wide[,-1], NO2wide$time)
 
-dats <- data.frame(vals = as.vector(t(NO2zoo)))
-NO2st <- STFDF(sp = airStations,
+NO2zoo <- zoo(NO2wide[,-1], NO2wide$time)                             (ref:zoo)
+
+dats <- data.frame(vals = as.vector(t(NO2zoo)))                    (ref:vector)
+
+NO2st <- STFDF(sp = airStations,                                    (ref:stfdf)
                time = index(NO2zoo),
                data = dats)
 #+end_src
@@ -153,10 +158,10 @@ With the mode =xt=, a space-time plot with space on the x-axis and
 time on the y-axis is plotted (Figure [[fig:NO2hovmoller]]).
 
 #+begin_src R :results output graphics :exports both :file figs/NO2hovmoller.pdf
-stplot(NO2st, mode='xt',
+stplot(NO2st, mode = 'xt',
        col.regions = colorRampPalette(airPal)(15),
        scales = list(x = list(rot = 45)),
-       ylab='', xlab='', main = '')
+       ylab = '', xlab = '', main = '')
 #+end_src
 
 #+CAPTION: Space-time graphic of the NO_2 time series. Each column represents a different station (denoted with the last two digits of the code).
@@ -168,7 +173,8 @@ Finally, with the mode =ts=, data are coerced to a multivariate time series
 that is displayed in a single plot (Figure [[fig:NO2zoo]]).
 
 #+begin_src R :results output graphics :exports both :file figs/NO2zoo.png :width 2000 :height 2000 :res 300
-stplot(NO2st, mode = 'ts', xlab = '',
+stplot(NO2st, mode = 'ts',
+       xlab = '',
        lwd = 0.1, col = 'black', alpha = 0.6,
        auto.key = FALSE)
 #+end_src

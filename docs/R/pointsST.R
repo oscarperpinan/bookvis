@@ -32,15 +32,18 @@ library(zoo)
 library(reshape2)
 library(spacetime)
   
-NO2$time <- as.Date(with(NO2,
+NO2$time <- as.Date(with(NO2,                                   
                          ISOdate(year, month, day)))
-NO2wide <- dcast(NO2[, c('codEst', 'dat', 'time')],
+
+NO2wide <- dcast(NO2[, c('codEst', 'dat', 'time')],             
                  time ~ codEst,
                  value.var = "dat")
-NO2zoo <- zoo(NO2wide[,-1], NO2wide$time)
 
-dats <- data.frame(vals = as.vector(t(NO2zoo)))
-NO2st <- STFDF(sp = airStations,
+NO2zoo <- zoo(NO2wide[,-1], NO2wide$time)                             
+
+dats <- data.frame(vals = as.vector(t(NO2zoo)))                    
+
+NO2st <- STFDF(sp = airStations,                                    
                time = index(NO2zoo),
                data = dats)
 
@@ -56,11 +59,12 @@ stplot(NO2st[, 1:12],
        main = '',
        edge.col = 'black')
 
-stplot(NO2st, mode='xt',
+stplot(NO2st, mode = 'xt',
        col.regions = colorRampPalette(airPal)(15),
        scales = list(x = list(rot = 45)),
-       ylab='', xlab='', main = '')
+       ylab = '', xlab = '', main = '')
 
-stplot(NO2st, mode = 'ts', xlab = '',
+stplot(NO2st, mode = 'ts',
+       xlab = '',
        lwd = 0.1, col = 'black', alpha = 0.6,
        auto.key = FALSE)

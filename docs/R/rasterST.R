@@ -24,21 +24,21 @@ names(SISdm) <- format(timeIndex, '%a_%Y%m%d')
 ## Levelplot
 ##################################################################
 
-levelplot(SISdm, layers=1:12, panel=panel.levelplot.raster)
+levelplot(SISdm, layers = 1:12, panel = panel.levelplot.raster)
 
-SISmm <- zApply(SISdm, by=as.yearmon, fun='mean')
+SISmm <- zApply(SISdm, by = as.yearmon, fun = 'mean')
 
-levelplot(SISmm, panel=panel.levelplot.raster)
+levelplot(SISmm, panel = panel.levelplot.raster)
 
 ##################################################################
 ## Exploratory graphics
 ##################################################################
 
-histogram(SISdm, FUN=as.yearmon)
+histogram(SISdm, FUN = as.yearmon)
 
-bwplot(SISdm, FUN=as.yearmon)
+bwplot(SISdm, FUN = as.yearmon)
 
-splom(SISmm, xlab='', plot.loess=TRUE)
+splom(SISmm, xlab = '', plot.loess = TRUE)
 
 ##################################################################
 ## Space-time and time series plots

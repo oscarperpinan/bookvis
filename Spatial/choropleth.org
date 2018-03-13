@@ -104,7 +104,7 @@ Data attributes:
  (Other):8104
 #+end_example
 
-The =sf= approach reads the files with =st_read=, and sets the coordinate reference system with =st_crs=, using directly the EPSG code.
+The =sf= approach reads the files with =st_read=, and sets the coordinate reference system with =st_crs=, using directly the EPSG code[fn:6].
 
 #+begin_src R
 ## sf approach
@@ -213,7 +213,9 @@ Figure ref:fig:pcMaxUC is an unclassed choropleth depicting the
 #+INDEX: colorRampPalette\texttt{colorRampPalette}
 
 #+begin_src R
+## Number of cuts
 ucN <- 1000
+## Palette created with interpolation
 ucQuantPal <- colorRampPalette(quantPal)(ucN)
 #+end_src
 
@@ -222,7 +224,9 @@ ucQuantPal <- colorRampPalette(quantPal)(ucN)
 spplot(spMapVotes["pcMax"],
        col.regions = ucQuantPal,
        cuts = ucN,
+       ## Do not draw municipality boundaries
        col = 'transparent',
+       ## Overlay province boundaries
        sp.layout = provinceLines)    
 #+end_src
 
@@ -337,11 +341,15 @@ sfMapVotes$pcMaxInt <- cut(sfMapVotes$pcMax,
                            breaks = intFisher$brks)
 
 ggplot(sfMapVotes) +
+    ## Display the pcMaxInt variable...
     geom_sf(aes(fill = pcMaxInt),
+            ## without drawing municipality boundaries
             color = "transparent") +
     scale_fill_brewer(palette = "Oranges") +
+    ## And overlay provinces boundaries
     geom_sf(data = sfProvs,
             fill = 'transparent',
+            ## but do not include them in the legend
             show.legend = FALSE) +
     theme_bw()
 #+end_src
@@ -421,9 +429,11 @@ solution uses the =facet_wrap= function to define the faceting.
 #+begin_src R
 ## spplot version
 spplot(spMapVotes, "pcMaxInt",
+       ## Formula to define the faceting: a panel for each level of
+       ## whichMax
        formula = pcMaxInt ~ xlabelpoint + ylabelpoint | whichMax,
        col.regions = quantPal,
-       col='transparent',
+       col = 'transparent',
        sp.layout = provinceLines)
 
 #+end_src
@@ -433,6 +443,7 @@ spplot(spMapVotes, "pcMaxInt",
 ggplot(sfMapVotes) +
     geom_sf(aes(fill = pcMaxInt),
             color = "transparent") +
+    ## Define the faceting using two rows
     facet_wrap(~whichMax, nrow = 2) +
     scale_fill_brewer(palette = "Oranges") +
     geom_sf(data = sfProvs,
@@ -456,34 +467,37 @@ produce a bivariate map: the hue of each polygon will be determined
 by the name of the predominant option (=whichMax=) but the
 transparency will vary according to the percentage of votes (=pcMax=).
 
-Next code creates a bidimensional palette with a loop that produces a
-color ramp for each member of the qualitative palette. Each ramp
-begins in the original color of the palette, and ends in a lighter
-color with its transparency fixed to 40%. 
-
 In previous sections, we use 6 intervals to represent the quantitative
 variable =pcMax=. However, in this case we must reduce this number: in
 order to improve the map legibility, each ramp has only three
 steps. Thus, the bivariate legend will be composed of 18 colors.
 
+Next code creates a bidimensional palette with a loop that produces a
+color ramp for each member of the qualitative palette. Each ramp
+begins in the original color of the palette, and ends in a lighter
+color with its transparency fixed to 40%. 
+
 #+begin_src R
 ## Number of intervals.
 N <- 3
-
-intFisher <- classIntervals(spMapVotes$pcMax,
-                            n = N, style = "fisher")
-
-spMapVotes$pcMaxInt <- cut(spMapVotes$pcMax,
-                            breaks = intFisher$brks)
-#+end_src
-
-#+begin_src R
+## Loop to create a bidimensional palette
 multiPal <- sapply(1:nClasses, function(i)
 {
     colorAlpha <- adjustcolor(qualPal[i], alpha = 0.4)
     colorRampPalette(c(qualPal[i], colorAlpha), alpha = TRUE)(N)
 })
 #+end_src
+
+
+#+begin_src R
+## Define the intervals
+intFisher <- classIntervals(spMapVotes$pcMax,
+                            n = N, style = "fisher")
+## ... and create a categorical variable with them
+spMapVotes$pcMaxInt <- cut(spMapVotes$pcMax,
+                            breaks = intFisher$brks)
+#+end_src
+
 
 With this multivariate palette we can produce a list of maps
 extracting the polygons according to each class of the qualitative
@@ -505,7 +519,7 @@ pList <- lapply(1:nClasses, function(i){
     ## Produce the graphic
     pClass <- spplot(mapClass, "pcMaxInt",
                      col.regions = pal,
-                     col='transparent',
+                     col = 'transparent',
 		     colorkey = FALSE)
 })
 names(pList) <- classes
@@ -604,7 +618,8 @@ Figures ref:fig:mapview_pcMax and ref:fig:mapview_whichMax show the snapshots of
 
 #+begin_src R
 ## Quantitative variable, pcMax
-mapView(sfMapVotes0, zcol = "pcMax",
+mapView(sfMapVotes0,
+        zcol = "pcMax", ## Choose the variable to display
         legend = TRUE,
         col.regions = quantPal)
 #+end_src
@@ -614,7 +629,8 @@ file:figs/mapview_pcMax.png
 
 #+begin_src R
 ## Qualitative variable, whichMax
-mapView(sfMapVotes0, zcol = "whichMax",
+mapView(sfMapVotes0,
+        zcol = "whichMax",
         legend = TRUE,
         col.regions = qualPal)
 #+end_src
@@ -623,6 +639,8 @@ mapView(sfMapVotes0, zcol = "whichMax",
 file:figs/mapview_whichMax.png
 
 * Footnotes
+
+[fn:6] http://spatialreference.org/ref/epsg/etrs89-utm-zone-30n/
 
 [fn:5] In previous sections the spatial object included a modification to the original shapefile in order to display the Canarian islands in the right bottom corner of the maps. This modification is not needed with =mapview=, so =st_read= imports the shapefile =spMapVotes0= (Section ref:sec:dataChoropleth).
 

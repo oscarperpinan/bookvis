@@ -156,7 +156,7 @@ summary(aranjuez)
 
 
 #+begin_src R :exports none
-save(aranjuez, file='data/aranjuez.RData')
+save(aranjuez, file = 'data/aranjuez.RData')
 #+end_src
 
 #+RESULTS:
@@ -351,7 +351,7 @@ vector is the time index of a new =zoo= object.
 library(zoo)
   
 Sys.setlocale("LC_TIME", 'C')
-idx <- as.yearmon(row.names(unemployUSA), format='%b.%Y')
+idx <- as.yearmon(row.names(unemployUSA), format = '%b.%Y')
 unemployUSA <- zoo(unemployUSA, idx)
 #+end_src
 
@@ -399,7 +399,7 @@ summary(unemployUSA)
 #+end_example
 
 #+begin_src R :exports none
-save(unemployUSA, file='data/unemployUSA.RData')
+save(unemployUSA, file = 'data/unemployUSA.RData')
 #+end_src
 
 * Gross National Income and CO_2 Emissions
@@ -424,10 +424,10 @@ data series.
 #+begin_src R :results output :exports both
 library(WDI)
     
-CO2data <- WDI(indicator=c('EN.ATM.CO2E.PC', 'EN.ATM.CO2E.PP.GD',
+CO2data <- WDI(indicator = c('EN.ATM.CO2E.PC', 'EN.ATM.CO2E.PP.GD',
                            'NY.GNP.MKTP.PP.CD', 'NY.GNP.PCAP.PP.CD'),
                start = 2000, end = 2014,
-               country=c('BR', 'CN', 'DE',
+               country = c('BR', 'CN', 'DE',
                          'ES', 'FI', 'FR',
                          'GR', 'IN', 'NO',
                          'US'))
@@ -494,7 +494,7 @@ summary(CO2data)
 #+end_example
 
 #+begin_src R :exports none
-save(CO2data, file='data/CO2.RData')
+save(CO2data, file = 'data/CO2.RData')
 #+end_src
 
 #+RESULTS:

@@ -16,7 +16,7 @@
   codURL <- as.numeric(substr(codEstaciones$Codigo, 7, 8))
   
   ## The information of each measuring station is available at its own webpage, defined by codURL
-  URLs <- paste('http://www.mambiente.munimadrid.es/opencms/opencms/calaire/contenidos/estaciones/estacion', codURL, '.html', sep='')
+  URLs <- paste('http://www.mambiente.munimadrid.es/opencms/opencms/calaire/contenidos/estaciones/estacion', codURL, '.html', sep = '')
 
 ##################################################################
 ## Data arrangement
@@ -40,7 +40,7 @@
     lat <- ub2dms(location[2,2])
     alt <- as.numeric(sub(' m.', '', location[2, 3]))
   
-    coords <- data.frame(long=long, lat=lat, alt=alt)
+    coords <- data.frame(long = long, lat = lat, alt = alt)
   
     coords
   })
@@ -50,7 +50,7 @@
   ## The longitude of "El Pardo" station is wrong (positive instead of negative)
   airStations$long[22] <- -airStations$long[22]
   
-  write.csv2(airStations, file='data/airStations.csv')
+  write.csv2(airStations, file = 'data/airStations.csv')
 
 rawData <- readLines('data/Datos11.txt')
 ## This loop reads each line and extracts fields as defined by the
@@ -98,11 +98,11 @@ write.csv2(datos11, 'data/airQuality.csv')
   ## Only interested in NO2 
   NO2 <- airQuality[airQuality$codParam==8, ]
 
-  NO2agg <- aggregate(dat ~ codEst, data=NO2,
+  NO2agg <- aggregate(dat ~ codEst, data = NO2,
                       FUN = function(x) {
-                          c(mean=signif(mean(x), 3),
-                            median=median(x),
-                            sd=signif(sd(x), 3))
+                          c(mean = signif(mean(x), 3),
+                            median = median(x),
+                            sd = signif(sd(x), 3))
                           })
   NO2agg <- do.call(cbind, NO2agg)
   NO2agg <- as.data.frame(NO2agg)
@@ -132,14 +132,14 @@ for (i in 1:nrow(NO2df))
     rootURL <- 'http://www.mambiente.munimadrid.es'
     stationURL <- paste(rootURL,
                         '/opencms/opencms/calaire/contenidos/estaciones/estacion',
-                        codURL, '.html', sep='')
-    content <- htmlParse(stationURL, encoding='utf8')
+                        codURL, '.html', sep = '')
+    content <- htmlParse(stationURL, encoding = 'utf8')
     ## Extracted with http://www.selectorgadget.com/
     xPath <- '//*[contains(concat( " ", @class, " " ), concat( " ", "imagen_1", " " ))]'
     imageStation <- getNodeSet(content, xPath)[[1]]
     imageURL <- xmlAttrs(imageStation)[1]
-    imageURL <- paste(rootURL, imageURL, sep='')
-    download.file(imageURL, destfile=paste(codEst, '.jpg', sep=''))
+    imageURL <- paste(rootURL, imageURL, sep = '')
+    download.file(imageURL, destfile = paste(codEst, '.jpg', sep = ''))
 }
 setwd(old)
 
@@ -174,7 +174,7 @@ PROVMUN <- with(dat2016, paste(sprintf('%02d', Código.de.Provincia),
                                sep=""))
 
 votes2016 <- data.frame(PROVMUN, whichMax, Max, pcMax)
-write.csv(votes2016, 'data/votes2016.csv', row.names=FALSE)
+write.csv(votes2016, 'data/votes2016.csv', row.names = FALSE)
 
 ##################################################################
 ## Administrative boundaries
@@ -199,7 +199,7 @@ setwd(old)
 spPols <- unionSpatialPolygons(spMap, spMap$PROVMUN)
 
 votes2016 <- read.csv('data/votes2016.csv',
-                        colClasses=c('factor', 'factor', 'numeric', 'numeric'))
+                        colClasses = c('factor', 'factor', 'numeric', 'numeric'))
 
 ## Match polygons and data using ID slot and PROVMUN column
 IDs <- sapply(spPols@polygons, function(x)x@ID)
@@ -248,9 +248,9 @@ writeOGR(spMapVotes, dsn = 'data/', layer = 'spMapVotes',
   library(raster)
   
   tmp <- tempdir()
-  unzip('data/SISmm2008_CMSAF.zip', exdir=tmp)
-  filesCMSAF <- dir(tmp, pattern='SISmm')
-  SISmm <- stack(paste(tmp, filesCMSAF, sep='/'))
+  unzip('data/SISmm2008_CMSAF.zip', exdir = tmp)
+  filesCMSAF <- dir(tmp, pattern = 'SISmm')
+  SISmm <- stack(paste(tmp, filesCMSAF, sep = '/'))
   ## CM-SAF data is average daily irradiance (W/m2). Multiply by 24
   ## hours to obtain daily irradiation (Wh/m2)
   SISmm <- SISmm * 24
@@ -260,7 +260,7 @@ writeOGR(spMapVotes, dsn = 'data/', layer = 'spMapVotes',
   SISm <- SISmm * daysMonth / 1000 ## kWh/m2
   ## Annual average
   SISav <- sum(SISm)/sum(daysMonth)
-  writeRaster(SISav, file='SISav')
+  writeRaster(SISav, file = 'SISav')
 
  library(raster)
  ## http://neo.sci.gsfc.nasa.gov/Search.html?group=64

@@ -18,15 +18,20 @@ levelplot(SISav)
 library(maps)
 library(mapdata)
 library(maptools)
-
+## Extent of the Raster object
 ext <- as.vector(extent(SISav))
+## Retrieve the boundaries restricted to this extent
 boundaries <- map('worldHires',
-                  xlim=ext[1:2], ylim=ext[3:4],
-                  plot=FALSE)
+                  xlim = ext[1:2], ylim = ext[3:4],
+                  plot = FALSE)
+## Convert the result to a SpatialLines object with the projection of
+## the Raster object
 boundaries <- map2SpatialLines(boundaries,
-                               proj4string=CRS(projection(SISav)))
+                               proj4string = CRS(projection(SISav)))
 
+## Display the Raster object ...
 levelplot(SISav) +
+    ## ... and overlay the SpatialLines object
     layer(sp.lines(boundaries,
                    lwd = 0.5))
 
@@ -36,7 +41,7 @@ levelplot(SISav) +
 
 old <- setwd(tempdir())
 download.file('http://biogeo.ucdavis.edu/data/diva/msk_alt/ESP_msk_alt.zip', 'ESP_msk_alt.zip')
-unzip('ESP_msk_alt.zip', exdir='.')
+unzip('ESP_msk_alt.zip', exdir = '.')
 
 DEM <- raster('ESP_msk_alt')
 
@@ -52,7 +57,9 @@ hsTheme <- GrTheme(regions = list(alpha = 0.6))
   
 levelplot(SISav, 
           margin = FALSE, colorkey = FALSE) +
+    ## Overlay the hill shade raster
     levelplot(hs, par.settings = hsTheme, maxpixels = 1e6) +
+    ## and the countries boundaries
     layer(sp.lines(boundaries, lwd = 0.5))
 
 ##################################################################
@@ -64,7 +71,7 @@ SISav <- SISav - meanRad
 
 xyplot(layer ~ y, data = SISav,
        groups = cut(x, 5),
-       par.settings = rasterTheme(symbol = plinrain(n=5, end = 200)),
+       par.settings = rasterTheme(symbol = plinrain(n = 5, end = 200)),
        xlab = 'Latitude', ylab = 'Solar radiation (scaled)',  
        auto.key = list(space = 'right',
                        title = 'Longitude', cex.title = 1.3))
@@ -99,10 +106,10 @@ inc <- abs(rng[1])/(n0 + 1/2)
 ## Number of intervals from zero to the positive extreme
 n1 <- ceiling((rng[2]/inc - 1/2) + 1)
 ## Collection of breaks
-breaks <- seq(rng[1], by=inc, length= n0 + 1 + n1)
+breaks <- seq(rng[1], by = inc, length= n0 + 1 + n1)
 
 ## Midpoints computed with the median of each interval
-idx <- findInterval(SISav[], breaks, rightmost.closed=TRUE)
+idx <- findInterval(SISav[], breaks, rightmost.closed = TRUE)
 mids <- tapply(SISav[], idx, median)
 ## Maximum of the absolute value both limits
 mx <- max(abs(breaks))
@@ -135,20 +142,24 @@ levelplot(SISav,
 
 library(classInt)
 
-cl <- classIntervals(SISav[], style='kmeans')
+cl <- classIntervals(SISav[], style = 'kmeans')
 breaks <- cl$brks
 
+## Repeat the procedure previously exposed, using the 'breaks' vector
+## computed with classIntervals
 idx <- findInterval(SISav[], breaks, rightmost.closed = TRUE)
 mids <- tapply(SISav[], idx, median)
 
 mx <- max(abs(breaks))
 pal <- break2pal(mids, mx, divRamp)
+
+## Modify the vector of colors in the 'divTheme' object
 divTheme$regions$col <- pal
 
 levelplot(SISav,
           par.settings = divTheme,
-          at=breaks,
-          contour=TRUE)
+          at = breaks,
+          contour = TRUE)
 
 ##################################################################
 ## Categorical data
@@ -187,7 +198,7 @@ qualPal <- c('palegreen4', # Forest
          'snow3')      # Snow
 
 qualTheme <- rasterTheme(region = qualPal,
-                        panel.background = list(col='lightskyblue1')
+                        panel.background = list(col = 'lightskyblue1')
                         )
 
 levelplot(landClass, maxpixels = 3.5e5,
@@ -198,9 +209,14 @@ pPop <- levelplot(pop, zscaleLog = 10,
                   maxpixels = 3.5e5)
 pPop
 
+## Join the RasterLayer objects to create a RasterStack object.
 s <- stack(pop, landClass)
 names(s) <- c('pop', 'landClass')
-densityplot(~log10(pop), groups = landClass, data = s,
+
+densityplot(~log10(pop), ## Represent the population
+            groups = landClass, ## grouping by land classes
+            data = s,
+            ## Do not plot points below the curves
             plot.points = FALSE)
 
 ##################################################################
@@ -236,7 +252,7 @@ pList <- lapply(1:nClasses, function(i){
                         maxpixels = 3.5e5,
                         col.regions = pal,
                         colorkey = FALSE,
-                        margin=FALSE)
+                        margin = FALSE)
 })
 
 p <- Reduce('+', pList)
@@ -256,7 +272,7 @@ legend <- layer(
                       x = unit(x0, "native"),
                       y = unit(y0, "native"),
                 width = unit(w, "native"))
-    ## x-axis of the legend
+    ## Axes of the legend
     ## x-axis (qualitative variable)
     grid.text(classes,
               x = unit(seq(x0 - w * (nClasses -1)/(2*nClasses),
@@ -291,7 +307,9 @@ p + legend
 
 plot3D(DEM, maxpixels = 5e4)
 
-par3d(viewport = c(0, 30, 250, 250))
+## Dimensions of the window in pixels
+par3d(viewport = c(0, 30, ## Coordinates of the lower left corner
+                   250, 250)) ## Width and height
 
 writeWebGL(filename = 'docs/images/rgl/DEM.html',
            width = 800)
@@ -306,8 +324,8 @@ mvSIS <- mapview(SISav, legend = TRUE)
 
 SIAR <- read.csv("data/SIAR.csv")
 
-spSIAR <- SpatialPointsDataFrame(SIAR[, c(6, 7)],
-                                 SIAR[, -c(6, 7)],
+spSIAR <- SpatialPointsDataFrame(coords = SIAR[, c("lon", "lat")], 
+                                 data = SIAR,
                                  proj4str = CRS(projection(SISav)))
 
 mvSIAR <- mapview(spSIAR,
