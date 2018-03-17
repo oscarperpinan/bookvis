@@ -530,7 +530,7 @@ label:cha:raster
 
 #+INCLUDE: "Spatial/raster.org"
 
-** Vector Data
+** Vector Fields
 label:cha:vector
 
 #+INCLUDE: "Spatial/vector.org"
@@ -557,7 +557,7 @@ label:part:SpaceTime
 ** Displaying Spatiotemporal Data: Introduction
  label:cha:introductionST
 
- Space-time datasets are indexed both in space and in time. The data may consist of a spatial vector object (for example, points or polygons) or raster data at different times. The first case is representative of data from fixed sensors providing measurements abundant in time but sparse in space. The second case is the typical format of satellite imagery, which produces high spatial resolution data sparse in time cite:Pebesma2012.
+ Space-time datasets are indexed in both space and time. The data may consist of a spatial vector object (for example, points or polygons) or raster data at different times. The first case is representative of data from fixed sensors providing measurements abundant in time but sparse in space. The second case is the typical format of satellite imagery, which produces high spatial resolution data sparse in time cite:Pebesma2012.
 
  There are several visualization approaches of space-time data trying to cope with the four dimensions of the data cite:Cressie.Wikle2011.
 

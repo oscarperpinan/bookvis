@@ -60,7 +60,7 @@ Two alternative are available to import and display the data:
    and display the information with the =ggplot2= package and the
    =geom_sf= function.
 
-* Proportional Symbol with =spplot=
+* Proportional Symbol Mapping with =spplot=
 #+begin_src R :exports none
 ##################################################################
 ## Proportional symbol with spplot
@@ -104,7 +104,7 @@ spplot(NO2sp["mean"],
 #+RESULTS[979e89aa398f2ccf2f32fe340b31dd3124320fe1]:
 [[file:figs/airMadrid_spplot.pdf]]
 
-* Proportional Symbol with =ggplot=
+* Proportional Symbol Mapping with =ggplot=
 #+begin_src R :exports none
 ##################################################################
 ## Proportional symbol with ggplot
