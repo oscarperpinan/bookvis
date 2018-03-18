@@ -131,5 +131,6 @@ sympy-plots-for-*.tex/
 .Rhistory
 *.tex
 !preamble.tex
+!myR.tex
 SpaceTimeVis.pdf
 

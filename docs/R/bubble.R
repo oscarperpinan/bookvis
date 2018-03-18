@@ -272,9 +272,16 @@ airKrige <- krige(mean ~ 1, NO2sp, airGrid)
 spplot(airKrige["var1.pred"], ## Variable interpolated
        col.regions = colorRampPalette(airPal)) +
     layer({ ## Overlay boundaries and points
-        sp.polygons(distritosMadrid, fill = 'transparent', lwd = 0.3)
-        sp.lines(streetsMadrid, lwd = 0.07)
-        sp.points(NO2sp, pch = 21, alpha = 0.8, fill = 'gray50', col = 'black')
+        sp.polygons(distritosMadrid,
+                    fill = 'transparent',
+                    lwd = 0.3)
+        sp.lines(streetsMadrid,
+                 lwd = 0.07)
+        sp.points(NO2sp,
+                  pch = 21,
+                  alpha = 0.8,
+                  fill = 'gray50',
+                  col = 'black')
     })
 
 ##################################################################
@@ -371,7 +378,10 @@ writeOGR(NO2sp, 'data/NO2.geojson', 'NO2sp', driver = 'GeoJSON')
 ##################################################################
 
 library(rgdal)
-writeOGR(NO2sp, dsn = 'NO2_mean.kml', layer = 'mean', driver = 'KML')
+writeOGR(NO2sp,
+         dsn = 'NO2_mean.kml',
+         layer = 'mean',
+         driver = 'KML')
 
 library(plotKML)
 plotKML(NO2sp["mean"], points_names = NO2sp$codEst)

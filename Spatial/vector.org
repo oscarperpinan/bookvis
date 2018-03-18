@@ -100,8 +100,9 @@ positions, and color degradation encode the local vector direction
 #+INDEX: brewer.pal@\texttt{brewer.pal}
 
 #+begin_src R :results output graphics :exports both :file figs/streamplot.pdf
-myTheme <- streamTheme(region = rev(brewer.pal(n = 4, name = 'Greys')),
-                       symbol = rev(brewer.pal(n = 9, "Blues")))
+myTheme <- streamTheme(
+    region = rev(brewer.pal(n = 4, "Greys")),
+    symbol = rev(brewer.pal(n = 9, "Blues")))
 
 streamplot(windField, isField = TRUE,
            par.settings = myTheme,

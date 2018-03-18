@@ -71,10 +71,12 @@ SISav <- SISav - meanRad
 
 xyplot(layer ~ y, data = SISav,
        groups = cut(x, 5),
-       par.settings = rasterTheme(symbol = plinrain(n = 5, end = 200)),
+       par.settings = rasterTheme(symbol = plinrain(n = 5,
+                                                    end = 200)),
        xlab = 'Latitude', ylab = 'Solar radiation (scaled)',  
        auto.key = list(space = 'right',
-                       title = 'Longitude', cex.title = 1.3))
+                       title = 'Longitude',
+                       cex.title = 1.3))
 
 divPal <- brewer.pal(n = 9, 'PuOr')
 divPal[5] <- "#FFFFFF"

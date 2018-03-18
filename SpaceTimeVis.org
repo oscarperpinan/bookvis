@@ -748,3 +748,9 @@ inspired by the =grid= package.
    http://learnr.files.wordpress.com/2009/08/latbook.pdf
 
 [fn:1] http://learnr.wordpress.com/2009/06/28/ggplot2-version-of-figures-in-lattice-multivariate-data-visualization-with-r-part-1/
+
+* COMMENT Local Variables
+# local variables:
+# eval: (add-to-list 'org-latex-listings-langs '(R "myR"))
+# end:
+

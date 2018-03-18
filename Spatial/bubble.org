@@ -611,9 +611,16 @@ station points (Figure ref:fig:airMadrid_krige).
 spplot(airKrige["var1.pred"], ## Variable interpolated
        col.regions = colorRampPalette(airPal)) +
     layer({ ## Overlay boundaries and points
-        sp.polygons(distritosMadrid, fill = 'transparent', lwd = 0.3)
-        sp.lines(streetsMadrid, lwd = 0.07)
-        sp.points(NO2sp, pch = 21, alpha = 0.8, fill = 'gray50', col = 'black')
+        sp.polygons(distritosMadrid,
+                    fill = 'transparent',
+                    lwd = 0.3)
+        sp.lines(streetsMadrid,
+                 lwd = 0.07)
+        sp.points(NO2sp,
+                  pch = 21,
+                  alpha = 0.8,
+                  fill = 'gray50',
+                  col = 'black')
     })
 #+end_src
 
@@ -862,7 +869,10 @@ files:
 
 #+begin_src R :eval no-export
 library(rgdal)
-writeOGR(NO2sp, dsn = 'NO2_mean.kml', layer = 'mean', driver = 'KML')
+writeOGR(NO2sp,
+         dsn = 'NO2_mean.kml',
+         layer = 'mean',
+         driver = 'KML')
 #+end_src
 
 However, the =plotKML= package provides a simpler interface and

@@ -29,8 +29,9 @@ vectorplot(windField, isField = TRUE,
 ## Streamlines
 ##################################################################
 
-myTheme <- streamTheme(region = rev(brewer.pal(n = 4, name = 'Greys')),
-                       symbol = rev(brewer.pal(n = 9, "Blues")))
+myTheme <- streamTheme(
+    region = rev(brewer.pal(n = 4, "Greys")),
+    symbol = rev(brewer.pal(n = 9, "Blues")))
 
 streamplot(windField, isField = TRUE,
            par.settings = myTheme,
