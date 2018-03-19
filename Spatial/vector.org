@@ -32,8 +32,8 @@ details).
 
 #+INDEX: Packages!rasterVis@\texttt{rasterVis}
 #+INDEX: Packages!raster@\texttt{raster}
-#+INDEX: Data!Wind Speed
-
+#+INDEX: Data!Wind speed
+#+INDEX: Data!MeteoGalicia
 
 #+begin_src R 
 library(raster)

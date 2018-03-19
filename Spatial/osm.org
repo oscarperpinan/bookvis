@@ -172,8 +172,6 @@ function, and the hill shade layer is derived with these layers for a
 fixed sun position. 
 
 
-#+INDEX: Subjects!Hill shading
-
 #+begin_src R 
 slope <- terrain(demCedeira, 'slope')
 aspect <- terrain(demCedeira, 'aspect')

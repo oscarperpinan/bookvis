@@ -73,6 +73,7 @@ from the =lattice= package, is able to display
 
 #+INDEX: Packages!rgdal@\texttt{rgdal}
 #+INDEX: Packages!sp@\texttt{sp}
+#+INDEX: Data!Air quality in Madrid
 
 #+begin_src R
 library(sp)
@@ -387,7 +388,7 @@ The =SpatialPolygonsDataFrame= and =SpatialLinesDataFrame= objects
 produced by the =readOGR= function can be displayed with the
 =sp.polygons= and =sp.lines= functions provided by the =sp= package.
 
-#+INDEX: Data!nomecalles
+#+INDEX: Data!Nomenclator Madrid
 #+INDEX: Packages!rgdal@\texttt{rgdal}
 #+INDEX: Packages!sp@\texttt{sp}
 

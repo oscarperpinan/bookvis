@@ -44,6 +44,9 @@ indexed with =setZ=.
 #+INDEX: Packages!zoo@\texttt{zoo}
 #+INDEX: Packages!rasterVis@\texttt{rasterVis}
 
+#+INDEX: Data!CM SAF
+#+INDEX: Data!Solar radiation
+
 #+begin_src R 
 library(raster)
 library(zoo)

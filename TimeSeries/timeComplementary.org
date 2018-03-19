@@ -31,6 +31,9 @@ source('configLattice.R')
 #+end_src
 
 #+INDEX: Packages!zoo@\texttt{zoo}
+#+INDEX: Data!CO2@$CO_2$
+#+INDEX: Data!World Bank Open Data
+#+INDEX: Data!Gross National Income
 
 #+begin_src R
 library(zoo)
@@ -38,8 +41,6 @@ library(zoo)
 load('data/CO2.RData')
 #+end_src
 
-#+INDEX: Data!CO2@$CO_2$
-#+INDEX: Data!World Bank
 
 Our first approach is to display the entire data in a panel with a
 scatterplot using country names as the grouping factor. Points of each

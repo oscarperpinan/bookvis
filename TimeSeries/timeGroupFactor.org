@@ -54,6 +54,8 @@ half of the year with red and blue, respectively (Figure
 ref:fig:aranjuezSplom).
 
 #+INDEX: Packages!zoo@\texttt{zoo}
+#+INDEX: Data!SIAR
+#+INDEX: Data!Meteorological variables
 
 #+begin_src R
 library(zoo)

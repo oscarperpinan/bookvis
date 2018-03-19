@@ -281,6 +281,8 @@ groups are considered: the four main parties (=PP=, =PSOE=, =UP=,
 =Cs=), the abstention results (=ABS=), and the remaining parties
 (=OTH=). Each region will be identified by the =PROVMUN= code.
 
+#+INDEX: Data!INE
+#+INDEX: Data!Spanish General Elections
 
 #+begin_src R 
 dat2016 <- read.csv('data/GeneralSpanishElections2016.csv')
@@ -485,6 +487,8 @@ and create a =RasterStack= object, where each layer stores the content
 of a file. Therefore, the twelve raster files of monthly averages
 produce a =RasterStack= with twelve layers.
 
+#+INDEX: Data!CM SAF
+#+INDEX: Data!Solar radiation
 
 #+INDEX: Packages!raster@\texttt{raster}
 
@@ -523,6 +527,10 @@ package.
   use the population density and land cover classification
   rasters. Both rasters must be downloaded from their respective
   webpages as Geo-TIFF files.
+
+#+INDEX: Data!NASA EOS
+#+INDEX: Data!Population density
+#+INDEX: Data!Land cover
 
   #+begin_src R
  library(raster)

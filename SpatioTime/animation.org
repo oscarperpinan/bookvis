@@ -83,6 +83,9 @@ resolution of 12 kilometers.
 #+INDEX: Packages!raster@\texttt{raster}
 #+INDEX: Packages!rasterVis@\texttt{rasterVis}
 
+#+INDEX: Data!Cloud cover
+#+INDEX: Data!MeteoGalicia
+
 #+begin_src R
 library(raster)
 library(rasterVis)
@@ -517,6 +520,8 @@ Firstly, a basic 3D Earth at night is created with the =surface3d= function, usi
 
 #+INDEX: Packages!rgl@\texttt{rgl}
 #+INDEX: Packages!magick@\texttt{magick}
+#+INDEX: Data!NASA images
+#+INDEX: Data!Night lights
 
 #+begin_src R
 library(rgl)
@@ -576,6 +581,7 @@ through the Nominatim service of OpenStreetMap. An auxiliary function,
 =geocode=, obtains this information using the =XML= package.
 
 #+INDEX: Packages!XML@\texttt{XML}
+#+INDEX: Data!OpenStreetMap
 
 #+begin_src R
 library(XML)

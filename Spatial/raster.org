@@ -33,6 +33,9 @@ label:sec:quantitative_raster
 ##################################################################
 #+end_src
 
+#+INDEX: Data!CM SAF
+#+INDEX: Data!Solar radiation
+
 #+INDEX: Packages!raster@\texttt{raster}
 #+INDEX: Packages!rasterVis@\texttt{rasterVis}
 
@@ -445,6 +448,9 @@ package. Both files are read, their geographical extent reduced to the
 area of India and China, and cleaned (=99999= cells are replaced with
 =NA=).
 
+#+INDEX: Data!NASA EOS
+#+INDEX: Data!Population density
+#+INDEX: Data!Land cover
 
 #+INDEX: Packages!raster@\texttt{raster}
 
@@ -744,6 +750,9 @@ mvSIS <- mapview(SISav, legend = TRUE)
 #+end_src
 
 This map can be improved with another layer of information, the name and location of the meteorological stations of the SIAR network. This information is stored in the file =SIAR.csv=. Next code reads this file and produces a =SpatialPointsDataFrame= object. 
+
+#+INDEX: Data!SIAR
+
 #+begin_src R
 SIAR <- read.csv("data/SIAR.csv")
 

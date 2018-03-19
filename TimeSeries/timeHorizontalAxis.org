@@ -47,6 +47,8 @@ multivariate time series can be displayed with the =xyplot= method of
 [[ref:fig:aranjuezNaive]]).
 
 #+INDEX: Packages!zoo@\texttt{zoo}
+#+INDEX: Data!SIAR
+#+INDEX: Data!Meteorological variables
 
 #+begin_src R
 library(zoo)
@@ -305,6 +307,9 @@ transparency[fn:3]. Transparency softens overplotting problems and reveals
 density clusters because regions with more overlapping lines are
 darker. Figure ref:fig:navarraNaive displays the variations
 around the time average (=avRad=).
+
+#+INDEX: Data!Meteorological variables
+#+INDEX: Data!Solar radiation
 
 #+begin_src R
 load('data/navarra.RData')
@@ -577,6 +582,8 @@ with stacked graphs. For example, the information on unemployment in
 the United States provides data of unemployed persons by industry and
 class of workers, and can be summed to give a total unemployment time
 series.
+
+#+INDEX: Data!Unemployment in USA
 
 #+begin_src R
 load('data/unemployUSA.RData')

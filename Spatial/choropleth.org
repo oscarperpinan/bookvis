@@ -66,6 +66,9 @@ The =sp= approach reads the files with =readOGR= to produce
 system[fn:4] is not stored in the files, it must be set with the =p4s=
 argument.
 
+#+INDEX: Data!INE
+#+INDEX: Data!Spanish General Elections
+
 #+begin_src R 
 ## sp approach
 library(sp)

@@ -281,7 +281,7 @@ are columns with the annual summaries (=annualCols=). We rearrange
 this =data.frame=, dropping the =Series.ID= and the annual columns,
 and transpose the data.
 
-#+INDEX: Data!Unemployment
+#+INDEX: Data!Unemployment in USA
 
 #+begin_src R :results output :exports both
 unemployUSA <- read.csv('data/unemployUSA.csv')
@@ -394,7 +394,7 @@ summary(unemployUSA)
 save(unemployUSA, file = 'data/unemployUSA.RData')
 #+end_src
 
-* Gross National Income and CO_2 Emissions
+* Gross National Income and $CO_2$ Emissions
 #+begin_src R :exports none
 ##################################################################
 ## Gross National Income and $CO_2$ emissions
@@ -408,9 +408,9 @@ and $CO_2$ emissions for a set of countries from 2000 to
 2014[fn:5]. The package =WDI= is able to search and download these
 data series.
 
-#+INDEX: Data!World Bank
+#+INDEX: Data!World Bank Open Data
 #+INDEX: Data!CO2@$CO_2$
-#+INDEX: Data!GNI
+#+INDEX: Data!Gross National Income
 #+INDEX: Packages!WDI@\texttt{WDI}
 
 #+begin_src R :results output :exports both
