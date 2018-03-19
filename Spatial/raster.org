@@ -110,7 +110,7 @@ levelplot(SISav) +
 
 
 ** Hill Shading
-label:sec:hill-shading
+label:sec:hill-shading-raster
 #+begin_src R :exports none
 ##################################################################
 ## Hill shading
@@ -120,7 +120,12 @@ A frequent method to improve the display of meteorological rasters is
 the hill shading or shaded relief technique, a method of representing
 relief on a map by depicting the shadows that would be cast by high
 ground if light comes from a certain sun position (Figure
-ref:fig:hillShading).
+ref:fig:hillShading). The hill shade layer can be computed from the
+slope and aspect layers derived from a Digital Elevation Model
+(DEM). This layer will underlay the DEM raster, which will be printed
+using semitransparency.
+
+#+INDEX: Subjects!Hill shading
 
 The procedure is as follows:
 

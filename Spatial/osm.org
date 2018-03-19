@@ -128,6 +128,7 @@ places$name <- sapply(nms, function(x) x[1])
 #+end_src  
 
 ** Hill Shading
+label:sec:hill-shading-osm
 #+begin_src R :exports none
 ##################################################################
 ## Hill Shading
@@ -137,23 +138,18 @@ places$name <- sapply(nms, function(x) x[1])
 #+INDEX: Subjects!Hill shading
 
 The second step is to produce layers to display the topography. A
-suitable method is shaded relief or hill shading. This technique
-simulates the cast shadow thrown from a light source upon a raised
-relief map. The hill shade layer can be computed from the slope and
-aspect layers derived from a Digital Elevation Model (DEM). This layer
-will underlay the DEM raster, which will be printed using
-semitransparency.
+suitable method is shaded relief or hill shading, previously exposed in section ref:sec:hill-shading-raster.
 
-The DEM of Galicia is available at the Geonetwork service of the Xunta
-de Galicia[fn:1]. I have extracted the data corresponding to the
-region of interest using =crop=, and the corresponding files are
-available at the =data= folder of the book repository.
-
+The hill shade layer is computed from the slope and aspect layers
+derived from a Digital Elevation Model. The DEM of Galicia is
+available at the Geonetwork service of the Xunta de Galicia[fn:1]. I
+have extracted the data corresponding to the region of interest using
+=crop=, and the corresponding files are available at the =data= folder
+of the book repository.
 
 #+INDEX: Packages!raster@\texttt{raster}
 #+INDEX: Packages!rasterVis@\texttt{rasterVis}
 #+INDEX: Data!Geonetwork
-
 
 #+begin_src R
 library(raster)

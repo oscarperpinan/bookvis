@@ -169,7 +169,6 @@ centroid of each polygon, easily computed with the =coordinates=
 method. In addition, a larger label with the name of the country will be
 placed in the average centroid.
 
-
 #+begin_src R
 ## Locations of labels of each polygon
 centroids <- coordinates(brazilAdm)
