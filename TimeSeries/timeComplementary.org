@@ -184,7 +184,7 @@ par(oldpar)
  #+end_src
 
  #+CAPTION: Hierarchical clustering of the time evolution of $\mathrm{CO_2}$ per capita values. label:fig:hclustCO2
- #+ATTR_LATEX: :height 0.2\textheight
+ #+ATTR_LATEX: :height 0.3\textheight
  #+RESULTS:
  [[file:figs/hclust.pdf]]
 

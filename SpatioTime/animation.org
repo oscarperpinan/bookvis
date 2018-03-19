@@ -542,7 +542,8 @@ z <- outer(long, lat, FUN = function(x, y) r * sin(y))
 ## Read, scale, and convert the image
 nightLightsJPG <- image_read("https://eoimages.gsfc.nasa.gov/images/imagerecords/79000/79765/dnb_land_ocean_ice.2012.13500x6750.jpg")
 nightLightsJPG <- image_scale(nightLightsJPG, "8192") ## surface3d reads files up to 8192x8192
-nightLights <- image_write(nightLightsJPG, tempfile(), format = 'png') ## Only the png format is supported
+nightLights <- image_write(nightLightsJPG, tempfile(),
+                           format = 'png') ## Only the png format is supported
 ## Display the sphere with the image superimposed
 surface3d(-x, -z, y,
           texture = nightLights,
