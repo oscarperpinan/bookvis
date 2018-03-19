@@ -36,7 +36,6 @@ map of this exceptional country using data from several data services.
 #+INDEX: Packages!maptools@\texttt{maptools}  
 #+INDEX: Packages!rgeos@\texttt{rgeos}  
 #+INDEX: Packages!colorspace@\texttt{colorspace}  
-#+INDEX: CRS@\texttt{CRS}
 
 #+begin_src R 
 library(raster)
@@ -57,10 +56,6 @@ Four types of information are needed: administrative boundaries,
 terrain elevation, rivers and lakes, and sea depth.
 
 
-#+INDEX: download.file@\texttt{download.file}
-#+INDEX: readOGR@\texttt{readOGR}
-#+INDEX: Encoding@\texttt{Encoding}
-#+INDEX: raster@\texttt{raster}
 #+INDEX: Data!GADM
 #+INDEX: Data!DIVA-GIS
 #+INDEX: Data!Natural Earth Data
@@ -126,9 +121,6 @@ converted to =SpatialPolygons=. The intersection is a new
 =SpatialLines= object, =brazilRiv=.
 
 
-#+INDEX: gIntersection@\texttt{gIntersection}
-#+INDEX: extent@\texttt{extent}
-
 #+begin_src R :eval no-export
 ## only those features labeled as "River" are needed
 worldRiv<- worldRiv[worldRiv$featurecla=='River',]
@@ -178,9 +170,6 @@ method. In addition, a larger label with the name of the country will be
 placed in the average centroid.
 
 
-#+INDEX: coordinates@\texttt{coordinates}
-#+INDEX: apply@\texttt{apply}
-
 #+begin_src R
 ## Locations of labels of each polygon
 centroids <- coordinates(brazilAdm)
@@ -191,10 +180,6 @@ xyBrazil <- apply(centroids, 2, mean)
 Some region names are too long to be displayed in one line. Thus, a
 previous step is to split the string if it comprises more than two
 words.
-
-
-#+INDEX: sapply@\texttt{sapply}
-#+INDEX: strsplit@\texttt{strsplit}
 
 #+begin_src R 
 admNames <- strsplit(as.character(brazilAdm$NAME_1), ' ')
@@ -227,10 +212,6 @@ of four layers:
    #+end_src
 
    
-#+INDEX: rasterTheme@\texttt{rasterTheme}
-#+INDEX: brewer.pal@\texttt{brewer.pal}
- 
-
 2. The altitude raster layer uses a terrain colors palette, as the one
   produced by the =terrain_hcl= function from the =colorspace= package
   cite:Ihaka.Murrell.ea2011 (Figure [[ref:fig:rastersBrazil]]).
@@ -242,9 +223,6 @@ of four layers:
                        margin = FALSE, colorkey = FALSE)
   #+end_src
   
-#+INDEX: rasterTheme@\texttt{rasterTheme}
-#+INDEX: terrain_hcl@\texttt{terrain\_hcl}
-
 3. The rivers represented by the =SpatialLinesDataFrame= object. The
    Amazonas River is labeled with =sp.lineLabel= and printed with a
    thicker line. The label is created with the =label= method, a
@@ -262,15 +240,6 @@ of four layers:
    routines to find good locations for point labels without overlaps.
 
   
-#+INDEX: levelplot@\texttt{levelplot}
-#+INDEX: sp.lines@\texttt{sp.lines}
-#+INDEX: sp.lineLabel@\texttt{sp.lineLabel}
-#+INDEX: sp.polygons@\texttt{sp.polygons}
-#+INDEX: panel.text@\texttt{panel.text}
-#+INDEX: layer@\texttt{layer}
-#+INDEX: brewer.pal@\texttt{brewer.pal}
-
-
   #+begin_src R :results output graphics :exports both :file figs/brazil.png :width 2000 :height 2000 :res 300
   seaPlot + altPlot + layer({
       ## Rivers

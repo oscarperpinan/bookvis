@@ -103,13 +103,16 @@
 \renewcommand{\textfloatsep}{10pt}%Espacio entre el flotante y el texto
 
 \usepackage{listings}
-
+\newcommand\indexfunctions[1]{\index{Functions!#1@\texttt{#1}}}
 \lstset{
   numberstyle=\tiny\color{Blue},
   keywordstyle=\color{Blue},
+  emphstyle=\color{Blue},
   commentstyle=\color{YellowGreen},
   stringstyle=\color{YellowOrange},
   basicstyle=\ttfamily\small,
+  index=[1][emph],
+  indexstyle=[1]\indexfunctions,
   columns=fullflexible,
   breaklines=true,
   linewidth=\textwidth,

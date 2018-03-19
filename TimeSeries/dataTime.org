@@ -62,7 +62,6 @@ function. The =index.column= is the number of the column with the
 time index, and =format= defines the date format of this index.
 
 #+INDEX: Packages!zoo@\texttt{zoo}
-#+INDEX: read.zoo@\texttt{read.zoo}
 
 #+begin_src R :results output :exports both
 library(zoo)
@@ -110,8 +109,6 @@ summary(aranjuez)
  Max.   :32.74   Max.   :49.730   Max.   :8.560  
                                   NA's   :14
 #+end_example
-
-#+INDEX: zoo@\texttt{zoo}
 
 From the summary it is clear that parts of these time series include
 erroneous outliers that can be safely removed:
@@ -344,8 +341,6 @@ of the =zoo= package converts the character vector of names into a
 vector is the time index of a new =zoo= object. 
 
 #+INDEX: Packages!zoo@\texttt{zoo}
-#+INDEX: as.yearmon@\texttt{as.yearmon}
-#+INDEX: zoo@\texttt{zoo}
 
 #+begin_src R 
 library(zoo)
@@ -355,10 +350,7 @@ idx <- as.yearmon(row.names(unemployUSA), format = '%b.%Y')
 unemployUSA <- zoo(unemployUSA, idx)
 #+end_src
 
-
 Finally, those rows with =NA= values are removed.
-
-#+INDEX: complete.cases@\texttt{complete.cases}
 
 #+begin_src R :results output :exports both
 unemployUSA <- unemployUSA[complete.cases(unemployUSA), ]
@@ -463,8 +455,6 @@ values (using =complete.cases=), and convert the =Country.Name= column
 into a =factor=. This first modification will save problems when
 displaying the time series, and the =factor= conversion will be useful
 for grouping.
-
-#+INDEX: complete.cases@\texttt{complete.cases}
 
 #+begin_src R :results output :exports both
 CO2data <- CO2data[complete.cases(CO2data), ]

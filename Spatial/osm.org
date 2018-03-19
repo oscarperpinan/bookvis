@@ -41,7 +41,6 @@ specifying the bounding box with the function =opq=:
 
 #+INDEX: Data!OpenStreetMap
 #+INDEX: Packages!osmdata@\texttt{osmdata}
-#+INDEX: opq@\texttt{opq}
 
 #+begin_src R
 library('osmdata')
@@ -135,7 +134,7 @@ places$name <- sapply(nms, function(x) x[1])
 ##################################################################
 #+end_src
 
-#+INDEX: Hill shading
+#+INDEX: Subjects!Hill shading
 
 The second step is to produce layers to display the topography. A
 suitable method is shaded relief or hill shading. This technique
@@ -173,10 +172,7 @@ function, and the hill shade layer is derived with these layers for a
 fixed sun position. 
 
 
-#+INDEX: terrain@\texttt{terrain}
-#+INDEX: hillShade@\texttt{hillShade}
-#+INDEX: Hill shading
-
+#+INDEX: Subjects!Hill shading
 
 #+begin_src R 
 slope <- terrain(demCedeira, 'slope')
@@ -241,9 +237,6 @@ library(maptools)
 #+INDEX: Packages!sp@\texttt{sp}  
 #+INDEX: Packages!latticeExtra@\texttt{latticeExtra}  
 #+INDEX: Packages!colorspace@\texttt{colorspace}  
-#+INDEX: sp.lines@\texttt{sp.lines}
-#+INDEX: sp.lines@\texttt{sp.points}
-#+INDEX: sp.lines@\texttt{sp.pointLabel}
 
 #+begin_src R :results output graphics :exports both :file figs/cedeiraOsmar.pdf
 ## Hill shade and DEM overlaid

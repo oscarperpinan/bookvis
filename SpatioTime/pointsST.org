@@ -53,7 +53,6 @@ with the =coordinates= method.
 
 #+INDEX: Data!Air quality in Madrid
 #+INDEX: Packages!sp@\texttt{sp}
-#+INDEX: read.csv2@\texttt{read.csv2}
 
 #+begin_src R 
 library(sp)
@@ -93,10 +92,9 @@ multivariate time series where each station is a different variable
   (line [[(stfdf)]]).
 
 
-#+INDEX: reshape@\texttt{reshape}
 #+INDEX: Packages!zoo@\texttt{zoo}
+#+INDEX: Packages!reshape2@\texttt{reshape2}
 #+INDEX: Packages!spacetime@\texttt{spacetime}
-#+INDEX: STFDF@\texttt{STFDF}
 
 #+begin_src R -n -r
 library(zoo)
@@ -135,9 +133,6 @@ panel with the spatial data for each element of the time index (Figure
 number of panels can be correctly displayed on one page. In this
 example, we print the first 12 days of the sequence.
 
-
-#+INDEX: stplot@\texttt{stplot}
-#+INDEX: colorRampPalette@\texttt{colorRampPalette}
 
 #+begin_src R :results output graphics :exports both :file figs/NO2STxy.pdf
 airPal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(5)

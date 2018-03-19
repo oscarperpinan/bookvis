@@ -73,7 +73,6 @@ from the =lattice= package, is able to display
 
 #+INDEX: Packages!rgdal@\texttt{rgdal}
 #+INDEX: Packages!sp@\texttt{sp}
-#+INDEX: readOGR\texttt{readOGR}
 
 #+begin_src R
 library(sp)
@@ -117,7 +116,6 @@ defined by the =sf= package, that provides the function
 =st_read= to read the data:
 
 #+INDEX: Packages!sf@\texttt{sf}
-#+INDEX: geom_sf@\texttt{geom\_sf}
 
 #+begin_src R :eval no-export
 library(sf)
@@ -158,9 +156,6 @@ ref:fig:airMadrid_spplot:
   and maximize the variance between classes.
 
 #+INDEX: Packages!classInt@\texttt{classInt}
-#+INDEX: classIntervals@\texttt{classIntervals}
-#+INDEX: findCols@\texttt{findCols}
-#+INDEX: findColours@\texttt{findColours}
 
 #+begin_src R 
 library(classInt)
@@ -393,16 +388,8 @@ produced by the =readOGR= function can be displayed with the
 =sp.polygons= and =sp.lines= functions provided by the =sp= package.
 
 #+INDEX: Data!nomecalles
-#+INDEX: spTransform@\texttt{spTransform}
 #+INDEX: Packages!rgdal@\texttt{rgdal}
 #+INDEX: Packages!sp@\texttt{sp}
-#+INDEX: readOGR\texttt{readOGR}
-#+INDEX: layer@\texttt{layer}
-#+INDEX: +.trellis@\texttt{+.trellis}
-#+INDEX: sp.polygons@\texttt{sp.polygons}
-#+INDEX: sp.pointLabel@\texttt{sp.pointLabel}
-#+INDEX: sp.lines@\texttt{sp.lines}
-
 
 #+begin_src R :eval no-export
 library(rgdal)
@@ -445,7 +432,6 @@ from the =maptools= package. Figure ref:fig:airMadrid displays the
 final result.
 
 #+INDEX: Packages!maptools@\texttt{maptools}
-#+INDEX: sp.pointLabel@\texttt{sp.pointLabel}
 
 #+begin_src R
 ## Lists using the structure accepted by sp.layout, with the polygons,
@@ -509,8 +495,6 @@ uses =geom_sf=. The shapefiles must be read with the =st_read=
 function of the =sf= package.
 
 #+INDEX: Packages!sf@\texttt{sf}
-#+INDEX: st_read@\texttt{st\_read}
-#+INDEX: st_transform@\texttt{st\_transform}
 
 #+begin_src R :eval no-export
 library(sf)
@@ -580,8 +564,6 @@ the =gstat= package cite:Pebesma2004 /only/ for illustration
 purposes.
  
 #+INDEX: Packages!gstat@\texttt{gstat}
-#+INDEX: Packages!krige@\texttt{krige}
-
 
 #+begin_src R
 library(gstat)
@@ -598,13 +580,6 @@ airKrige <- krige(mean ~ 1, NO2sp, airGrid)
 The result is a =SpatialPixelsDataFrame= that can be displayed with
 =spplot= and combined with the previous layers and the measurement
 station points (Figure ref:fig:airMadrid_krige).
-
-
-#+INDEX: spplot@\texttt{spplot}
-#+INDEX: layer@\texttt{layer}
-#+INDEX: sp.polygons@\texttt{sp.polygons}
-#+INDEX: sp.lines@\texttt{sp.lines}
-#+INDEX: sp.points@\texttt{sp.points}
 
 
 #+begin_src R :results output graphics :exports both :file figs/airMadrid_krige.png :width 4000 :height 4000 :res 600
@@ -636,7 +611,7 @@ label:sec:interactive_bubble
 ##################################################################
 #+end_src
 
-#+INDEX: Interactive visualization
+#+INDEX: Subjects!Interactive visualization
 
 Now, let's suppose you need to know the median and standard deviation
 of the time series of a certain station. Moreover, you would like to
@@ -660,6 +635,7 @@ label:sec:mapview_bubble
 The syntax of =mapview=[fn:12] resembles the syntax of =spplot=. Its first argument is the spatial object with the information and the variable to be depicted is selected with the argument =zcol=. Moreover, the size of the points can be linked to another variable with the argument =cex=, and their labels extracted from another variable with the argument =label=. 
 
 The next code produces an HTML page with an interactive graphic inserted in it (Figure ref:fig:mapview_bubble_simple). When the mouse is hovered over a point its label is displayed, and if the point is selected a tooltip with the whole information is deployed.
+
 #+begin_src R
 library(mapview)
 
@@ -825,9 +801,7 @@ underlying map data. Our =SpatialPointsDataFrame= can be converted to
 a GeoJSON file with =writeOGR= from the =rgdal= package.
 
 #+INDEX: Packages!rgdal@\texttt{rgdal}
-#+INDEX: writeOGR@\texttt{writeOGR}
-#+INDEX: GeoJSON
-
+#+INDEX: Subjects!GeoJSON
 
 #+begin_src R :eval no-export
 library(rgdal)
@@ -860,8 +834,7 @@ also offers KML support.
 
 #+INDEX: Packages!rgdal@\texttt{rgdal}
 #+INDEX: Packages!plotKML@\texttt{plotKML}
-#+INDEX: KML
-
+#+INDEX: Subjects!KML
 
 There are several packages able to generate KML files. For example,
 the =writeOGR= function from the =rgdal= package can also write KML
@@ -894,8 +867,8 @@ Earth or Marble.
 #+end_src
 
 #+INDEX: Packages!rgl@\texttt{rgl}
-#+INDEX: 3D visualization
-#+INDEX: WebGL
+#+INDEX: Subjects!3D visualization
+#+INDEX: Subjects!WebGL
 
 An alternative method is 3D visualization where the user can
 rotate or zoom the figure. This solution is available thanks to the
@@ -944,7 +917,7 @@ plot3d(x = NO2df$coords.x1,
 #+end_src
 
 #+INDEX: Packages!gridSVG@\texttt{gridSVG}
-#+INDEX: JavaScript
+#+INDEX: Subjects!JavaScript
 
 The =gridSVG= package is able to create an SVG graphic, where each
 component owns a =title= attribute; the content of this attribute is
@@ -957,8 +930,6 @@ The tooltips will display the photography of the station (Section
 ref:sec:photographs_stations), the name of the station, and the
 statistics previously calculated with =aggregate= in the first step of
 this chapter. 
-
-#+INDEX: grid.garnish@\texttt{grid.garnish}
 
 #+begin_src R 
 library(gridSVG)
@@ -1000,8 +971,6 @@ grid.garnish('points.panel',
 Next, we attach the hyperlink and the SVG information to
 each circle.
 
-#+INDEX: grid.hyperlink@\texttt{grid.hyperlink}
-
 #+begin_src R 
 ## Webpage of each station
 rootURL <- 'http://www.mambiente.munimadrid.es'
@@ -1025,9 +994,7 @@ containing links to these plug-ins. And =grid.export= uses these
 objects to produce an SVG document with script elements.
 
 
-#+INDEX: jQuery
-#+INDEX: jQuery UI
-#+INDEX: grid.export@\texttt{grid.export}
+#+INDEX: Subjects!jQuery
 
 #+begin_src R
 ## Add jQuery and jQuery UI scripts

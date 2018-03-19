@@ -106,6 +106,8 @@ Data attributes:
 
 The =sf= approach reads the files with =st_read=, and sets the coordinate reference system with =st_crs=, using directly the EPSG code[fn:6].
 
+#+INDEX: Packages!sf@\texttt{sf}
+
 #+begin_src R
 ## sf approach
 library(sf)
@@ -150,8 +152,6 @@ function to display the layer, the second element is the object to be
 represented, and the rest of elements are arguments to the function
 defined in the first element.
 
-#+INDEX: sp.layout\texttt{sp.layout}
-
 #+begin_src R
 ## sp
 provinces <- readOGR("data/spain_provinces.shp",
@@ -185,8 +185,7 @@ values. The well-known service ColorBrewer[fn:1] provides several
 choices, available in =R= via the =RColorBrewer= package
 cite:Neuwirth2011.
 
-#+INDEX: Packages!RColorBrewer\texttt{RColorBrewer}
-#+INDEX: brewer.pal\texttt{brewer.pal}
+#+INDEX: Packages!RColorBrewer@\texttt{RColorBrewer}
 
 #+begin_src R
 library(RColorBrewer)
@@ -210,8 +209,6 @@ Figure ref:fig:pcMaxUC is an unclassed choropleth depicting the
 =pcMax= variable. It uses a palette created by interpolation with the
 =colorRampPalette= function.
  
-#+INDEX: colorRampPalette\texttt{colorRampPalette}
-
 #+begin_src R
 ## Number of cuts
 ucN <- 1000
@@ -246,9 +243,6 @@ concentrated in the 0.2-0.4 range. Figure ref:fig:densityChoropleth
 displays the density estimation of this variable grouping by the
 political option. This result suggests to use data classification.
 
-#+INDEX: ggplot@\texttt{ggplot}
-#+INDEX: geom_density@\texttt{geom\_density}
-
 #+begin_src R :results output graphics :exports both :file figs/densityChoropleth.pdf
 ggplot(as.data.frame(spMapVotes),
        aes(pcMax,
@@ -280,7 +274,6 @@ this example, because with the quantile method very different values
 will be assigned to the same class.
 
 #+INDEX: Packages!classInt@\texttt{classInt}
-#+INDEX: classIntervals@\texttt{classIntervals}
 
 #+begin_src R
 library(classInt)
@@ -376,8 +369,7 @@ summary(spMapVotes$whichMax)
 
 Figure ref:fig:whichMax encodes these levels with a qualitative palette from ColorBrewer.
 
-#+INDEX: Packages!RColorBrewer\texttt{RColorBrewer}
-#+INDEX: brewer.pal\texttt{brewer.pal}
+#+INDEX: Packages!RColorBrewer@\texttt{RColorBrewer}
 
 #+begin_src R 
 classes <- levels(factor(spMapVotes$whichMax))
@@ -488,6 +480,7 @@ multiPal <- sapply(1:nClasses, function(i)
 })
 #+end_src
 
+#+INDEX: Packages!classInt@\texttt{classInt}
 
 #+begin_src R
 ## Define the intervals
@@ -505,9 +498,6 @@ variable, and filling with the appropiate color from this palette. The
 resulting list of =trellis= objects can be combined with =Reduce= and
 the =+.trellis= function of the =latticeExtra= and produce a =trellis=
 object.
-
-#+INDEX: Reduce@\texttt{Reduce} 
-#+INDEX: spplot@\texttt{spplot}
 
 #+begin_src R 
 pList <- lapply(1:nClasses, function(i){
@@ -537,6 +527,8 @@ The bidimensional legend of this graphic is produced with
 =grid.raster=, a function of the =grid= package, able to display a
 color matrix. The axis of the color matrix are created with
 =grid.text=.
+
+#+INDEX: Packages!grid@\texttt{grid}
 
 #+begin_src R
 library(grid)
@@ -600,8 +592,13 @@ label:sec:interactive_choropleth
 ##################################################################
 #+end_src
 
+
+#+INDEX: Subjects!Interactive graphics
+
 The package =mapview= was used in section ref:sec:mapview_bubble to
 produce interactive proportional symbol maps. In this section this package creates interactive choropleth maps. 
+
+#+INDEX: Packages!mapview@\texttt{mapview}
 
 #+begin_src R
 library(mapview)

@@ -95,7 +95,7 @@ git clone https://github.com/oscarperpinan/spacetime-vis.git
 *** =R= Graphics
  label:sec:r-graphics
 
-#+INDEX: Packages!grid@=grid
+#+INDEX: Packages!grid@\texttt{grid}
  There are two distinct graphics systems built into =R=, referred to as traditional and grid graphics. Grid graphics are produced with the =grid= package cite:Murrell2011, a flexible low-level graphics toolbox. Compared with the traditional graphics model, it provides more flexibility to modify or add content to an existent graphical output, better support for combining different outputs easily, and more possibilities for interaction. All the graphics in this book have been produced with the grid graphics model.
 
  Other packages are constructed over it to provide high-level functions, most notably the =lattice= and =ggplot2= packages.
@@ -103,7 +103,7 @@ git clone https://github.com/oscarperpinan/spacetime-vis.git
 **** lattice
  label:sec:lattice
 
-#+INDEX: Packages!lattice@=lattice
+#+INDEX: Packages!lattice@\texttt{lattice}
 
  The =lattice= package cite:Sarkar2010 is an independent implementation of Trellis graphics, which were mostly influenced by /The Elements of Graphing Data/ cite:Cleveland1994. Trellis graphics often consist of a rectangular array of panels. The =lattice= package uses a /formula/ interface to define the structure of the array of panels with the specification of the variables involved in the plot. The result of a =lattice=
  high-level function is a =trellis= object.
@@ -125,7 +125,7 @@ xyplot(wt ~ mpg | am, data = mtcars, groups = cyl)
 
  =lattice= is a member of the recommended packages list so it is commonly distributed with \textsf{R} itself. There are more than 250 packages depending on it, and the most important packages for our purposes (=zoo=, =sp=, and =raster=) define methods to display their classes using =lattice=.
 
-#+INDEX: Packages!latticeExtra@=latticeExtra
+#+INDEX: Packages!latticeExtra@\texttt{latticeExtra}
 
  On the other hand, the =latticeExtra= package cite:Sarkar.Andrews2016 provides additional flexibility for the somewhat rigid structure of the Trellis framework implemented in =lattice=. This package complements the =lattice= with the implementation of layers via the =layer= function, and
  superposition of =trellis= objects and layers with the =+.trellis= function. Using both packages, you can define a graphic with the formula interface (under the =lattice= model) and overlay additional content as layers (following the =ggplot2= model).
@@ -133,7 +133,7 @@ xyplot(wt ~ mpg | am, data = mtcars, groups = cyl)
 **** ggplot2
  label:sec:ggplot2
 
-#+INDEX: Packages!ggplot2@=ggplot2
+#+INDEX: Packages!ggplot2@\texttt{ggplot2}
 
  The =ggplot2= package cite:Wickham2016 is an implementation of the system proposed in /The Grammar of Graphics/ cite:Wilkinson2005, a general scheme for data visualization that breaks up graphs into semantic components such as scales and layers. Under this framework, the definition of the graphic with =ggplot2= is done with a combination of several functions that provides the components, instead of the formula interface of
  =lattice=.
@@ -250,9 +250,6 @@ label:part:Time
 
 #+INDEX: Packages!zoo@\texttt{zoo}
  The =zoo= package cite:Zeileis.Grothendieck2005 provides an =S3= class with methods for indexed totally ordered observations. Its key design goals are independence of a particular index class and consistency with base =R= and the =ts= class for regular time series.
-
-#+INDEX: yearmon@\texttt{yearmon}
-#+INDEX: yearqtr@\texttt{yearqtr}
 
  Objects of class =zoo= are created by the function =zoo= from a numeric vector, matrix, or a factor that is totally ordered by some index vector. This index is usually a measure of time but every other numeric, character, or even more abstract vector that provides a total ordering of the observations is also suitable. It must be noted that this package defines two new index classes, =yearmon= and =yearqtr=, for representing monthly and quarterly data, respectively.
 
@@ -627,6 +624,9 @@ label:part:SpaceTime
  On the other hand, the =histogram=, =densityplot=, and =bwplot= methods accept a =FUN= argument to be applied to the =z= slot of =Raster*= object (defined by =setZ=). The result of this function is used as the grouping variable of the plot to create different panels.
 
 **** rgl
+
+#+INDEX: Packages!rgl@\texttt{rgl}
+
 =rgl= is a package that produces real-time interactive 3D plots. It
 allows to interactively rotate, zoom the graphics and select
 regions. This package uses the OpenGL[fn:34] library as the rendering

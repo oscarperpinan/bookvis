@@ -43,7 +43,6 @@ indexed with =setZ=.
 #+INDEX: Packages!raster@\texttt{raster}
 #+INDEX: Packages!zoo@\texttt{zoo}
 #+INDEX: Packages!rasterVis@\texttt{rasterVis}
-#+INDEX: setZ@\texttt{setZ}
 
 #+begin_src R 
 library(raster)
@@ -88,8 +87,6 @@ approach is that only a limited number of panels can be correctly
 displayed on one page. In this example, we print the first 12
 days of the sequence (Figure ref:fig:SISdm).
 
-#+INDEX: levelplot@\texttt{levelplot}
-
 #+begin_src R :results output graphics :exports both :file figs/SISdm.pdf
 levelplot(SISdm, layers = 1:12, panel = panel.levelplot.raster)
 #+end_src
@@ -105,8 +102,6 @@ the monthly averages using =zApply= and =as.yearmon=. This raster
 can be completely displayed on one page (Figure ref:fig:SISmm),
 although part of the information of the original data is lost in
 the aggregation procedure.
-
-#+INDEX: zApply@\texttt{zApply}
 
 #+begin_src R 
 SISmm <- zApply(SISdm, by = as.yearmon, fun = 'mean')
@@ -157,8 +152,6 @@ the violin plot (a combination of a boxplot and a kernel density plot)
 (Figure ref:fig:SISdm_boxplot), and the matrix of scatterplots
 (section ref:SEC:groupVariable, Figure ref:fig:SISmm_splom).
 
-#+INDEX: histogram@\texttt{histogram}
-
 #+begin_src R :results output graphics :exports both :file figs/SISdm_histogram.pdf
 histogram(SISdm, FUN = as.yearmon)
 #+end_src
@@ -168,8 +161,6 @@ histogram(SISdm, FUN = as.yearmon)
 [[file:figs/SISdm_histogram.pdf]]
 
 
-#+INDEX: bwplot@\texttt{bwplot}
-
 #+begin_src R :results output graphics :exports both :file figs/SISdm_boxplot.pdf
 bwplot(SISdm, FUN = as.yearmon)
 #+end_src
@@ -177,8 +168,6 @@ bwplot(SISdm, FUN = as.yearmon)
 #+CAPTION: Violin plot of monthly distribution of solar radiation. label:fig:SISdm_boxplot
 #+RESULTS:
 [[file:figs/SISdm_boxplot.pdf]]
-
-#+INDEX: splom@\texttt{splom}
 
 #+begin_src R :results output graphics :exports both :file figs/SISmm_splom.png :width 4000 :height 4000 :res 600
 splom(SISmm, xlab = '', plot.loess = TRUE)
@@ -220,8 +209,6 @@ displays with colors the averaged value of the raster for each
 latitude zone (using the default value of the argument =dirXY=) with
 time on the vertical axis.
 
-#+INDEX: hovmoller@\texttt{hovmoller}
-
 #+begin_src R :results output graphics :exports both :file figs/SISdm_hovmoller_lat.png :width 4000 :height 4000 :res 600
 hovmoller(SISdm)
 #+end_src
@@ -238,8 +225,6 @@ ref:fig:SISdm_horizonplot) methods, which reproduce the procedures
 described in Chapter ref:cha:timeHorizontalAxis to display
 multivariate time series.
 
-#+INDEX: xyplot@\texttt{xyplot}
-
 #+begin_src R :results output graphics :exports both :file figs/SISmm_xyplot.png :width 2000 :height 2000 :res 300
 xyplot(SISdm, digits = 1, col = 'black', lwd = 0.2, alpha = 0.4)
 #+end_src
@@ -247,8 +232,6 @@ xyplot(SISdm, digits = 1, col = 'black', lwd = 0.2, alpha = 0.4)
 #+CAPTION: Time graph of the average solar radiation for each latitude zone. Each line represents a latitude band. label:fig:SISmm_xyplot
 #+RESULTS:
 [[file:figs/SISmm_xyplot.png]]
-
-#+INDEX: horizonplot@\texttt{horizonplot}
 
 #+begin_src R :results output graphics :exports both :file figs/SISdm_horizonplot.pdf
 horizonplot(SISdm, digits = 1,
@@ -269,6 +252,8 @@ average value of each latitude region.
 ** Interactive graphics: cubeView
 label:sec:cubeView
 
+#+INDEX: Subjects!Interactive graphics
+
 Figure ref:fig:SISdm_hovmoller_lat reduces the 3D raster to a 2D
 matrix with spatial aggregation following a certain direction. The
 =mapview= package provides a function, =cubeView=, able to represent
@@ -281,6 +266,8 @@ z-axis. Using the mouse, the cube can be rotated with left button,
 moved with the right button, and zoom using the mouse wheel. Figure
 ref:fig:cubeView shows a snapshot of the cube produced with the next
 code.
+
+#+INDEX: Packages!mapview@\texttt{mapview}
 
 #+begin_src R
 library(mapview)

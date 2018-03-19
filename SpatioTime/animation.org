@@ -80,6 +80,9 @@ use the forecast of hourly cloud cover at low and mid levels. This
 space-time raster has a time horizon of 96 hours and a spatial
 resolution of 12 kilometers.
 
+#+INDEX: Packages!raster@\texttt{raster}
+#+INDEX: Packages!rasterVis@\texttt{rasterVis}
+
 #+begin_src R
 library(raster)
 library(rasterVis)
@@ -124,8 +127,6 @@ and =mapdata= packages.
 #+INDEX: Packages!mapdata@\texttt{mapdata}
 #+INDEX: Packages!maps@\texttt{maps}
 #+INDEX: Packages!rgdal@\texttt{rgdal}
-#+INDEX: map2SpatialLines@\texttt{map2SpatialLines}
-#+INDEX: spTransform@\texttt{spTransform}
 
 #+begin_src R 
 library(maptools)
@@ -162,14 +163,10 @@ function. This function provides the argument =layout= to control the
 arrangement of a multipanel display. If it is set to =c(1,1)=, a
 different page is created for each layer.
 
-#+INDEX: brewer.pal@\texttt{brewer.pal}
-#+INDEX: rasterTheme@\texttt{rasterTheme}
 
 #+begin_src R 
 cloudTheme <- rasterTheme(region = brewer.pal(n = 9, 'Blues'))
 #+end_src
-
-#+INDEX: levelplot@\texttt{levelplot}
 
 #+begin_src R :eval no-export
 tmp <- tempdir()
@@ -184,8 +181,6 @@ A suitable tool to concatenate these frames and create the movie is
 =ffmpeg=, a free cross-platform software to record, convert, and stream
 audio and video[fn:4]. The resulting movie is available from the book
 website.
-
-#+INDEX: ffmpeg@\texttt{ffmpeg}
 
 #+begin_src R :eval no-export
 old <- setwd(tmp)
@@ -251,7 +246,6 @@ next code this package generates a 3D animation depicting the cloud
 evolution over time.
 
 #+INDEX: Packages!rgl@\texttt{rgl}
-#+INDEX: plot3D@\texttt{plot3D}
 
 #+begin_src R
 library(rgl)
@@ -271,9 +265,6 @@ ids <- lapply(seq_len(N),
                          zfac = 200)) ## Common z scale for all graphics
 
 #+end_src
-
-#+INDEX: rglwidget@\texttt{rglwidget}
-#+INDEX: playwidget@\texttt{playwidget}
 
 #+begin_src R
 rglwidget() %>%
@@ -330,8 +321,6 @@ The subsequent frames of the animation will modify the colors and
 sizes of the circles according to the =NO2st= object.
 
 #+INDEX: Packages!grid@\texttt{grid}
-#+INDEX: grid.circle@\texttt{grid.circle}
-#+INDEX: spplot@\texttt{spplot}
 
 #+begin_src R 
 library(grid)
@@ -364,10 +353,6 @@ will be encoded with the radius of each circle, and the color of the
 circles will distinguish between weekdays and weekend.  The use of
 =rep=TRUE= ensures that the animation will be repeated indefinitely.
 
-
-#+INDEX: animValue@\texttt{animValue}
-#+INDEX: animUnit@\texttt{animUnit}
-#+INDEX: grid.animate@\texttt{grid.animate}
 
 #+begin_src R 
 ## Color to distinguish between weekdays ('green') and weekend
@@ -408,12 +393,6 @@ two events, =onmouseover= and =onmouseout=, included with the
 =grid.garnish= function.
 
 
-#+INDEX: grid.rect@\texttt{grid.rect}
-#+INDEX: grid.text@\texttt{grid.text}
-#+INDEX: grid.animate@\texttt{grid.animate}
-#+INDEX: grid.segments@\texttt{grid.segments}
-#+INDEX: grid.garnish@\texttt{grid.garnish}
-
 #+begin_src R 
 ## Progress bar
 prettyDays <- pretty(days, 12)
@@ -446,8 +425,6 @@ grid.garnish('bgbar',
 
 The SVG file is finally produced with =gridToSVG= (Figure ref:fig:NO2pb)
 
-
-#+INDEX: grid.export@\texttt{grid.export}
 
 #+begin_src R 
 grid.export('figs/NO2pb.svg')
@@ -538,7 +515,6 @@ In this section the =rgl= package is used to generate a fly-by animation over th
 
 Firstly, a basic 3D Earth at night is created with the =surface3d= function, using the night lights images published by the NASA[fn:3].
 
-#+INDEX: surface3d@\texttt{surface3d}
 #+INDEX: Packages!rgl@\texttt{rgl}
 #+INDEX: Packages!magick@\texttt{magick}
 
@@ -571,8 +547,6 @@ surface3d(-x, -z, y,
 This OpenGL object can be exported to different formats. For example,
 Figure ref:fig:WebGL shows a snapshot of the WebGL figure created with
 =writeWebGL=:
-
-#+INDEX: writeWebGL@\texttt{writeWebGL}
 
 #+begin_src R
 writeWebGL('nightLights', width = 1000)
@@ -646,7 +620,6 @@ locations. The =geosphere= package provides the =gcIntermediate=
 function for this task:
 
 #+INDEX: Packages!geosphere@\texttt{geosphere}
-#+INDEX: gcIntermediate@\texttt{gcIntermediate}
 
 #+begin_src R
 library(geosphere)
@@ -735,8 +708,6 @@ wraps this function to automate the process with the =movie3d=
 function. Figure ref:fig:travel_example shows examples of frames
 produced with this function.
 
-#+INDEX: rgl.viewpoint@\texttt{rgl.viewpoint}
-
 #+begin_src R
 ## Function to move the viewpoint in the RGL scene according to the
 ## information included in the route (position and zoom).
@@ -767,8 +738,6 @@ rgl.snapshot('images/travel2.png')
 The =movie3d= accepts a function, =travel= in our code, to modify the
 RGL scene. It creates an snapshot at each step, and paste these
 snapshots as frames of a movie.
-
-#+INDEX: movie3d@\texttt{movie3d}
 
 #+begin_src R
 movie3d(travel,

@@ -46,6 +46,8 @@ multivariate time series can be displayed with the =xyplot= method of
 =lattice= for =zoo= objects with a panel for each variable (Figure
 [[ref:fig:aranjuezNaive]]).
 
+#+INDEX: Packages!zoo@\texttt{zoo}
+
 #+begin_src R
 library(zoo)
 load('data/aranjuez.RData')
@@ -113,12 +115,7 @@ Because the functions included in the panel function are executed
 consecutively, their order determines the superposition of graphical
 layers.
 
-#+INDEX: Panel function
-#+INDEX: panel.xblocks@\texttt{panel.xblocks}
-#+INDEX: panel.text@\texttt{panel.text}
-#+INDEX: panel.number@\texttt{panel.number}
-#+INDEX: panel.points@\texttt{panel.points}
-
+#+INDEX: Subjects!Panel function
 
 #+begin_src R :exports none
 ## lattice version
@@ -175,9 +172,6 @@ the corresponding bands (years and regions below the average values):
   =data.frame= with three columns: the time =Index=, a factor
   indicating the =Series=, and the corresponding =Value=.
 
-#+INDEX: fortify@\texttt{fortify}
-#+INDEX: melt@\texttt{melt}
-
 #+begin_src R :results output :exports both
 timeIdx <- index(aranjuez)
   
@@ -200,9 +194,6 @@ summary(aranjuezLong)
   =scale= because these regions are negative when the =data.frame= is
   centered.
 
-#+INDEX: fortify@\texttt{fortify}
-#+INDEX: melt@\texttt{melt}
-
 #+begin_src R
 ## Values below mean are negative after being centered
 scaled <- fortify(scale(aranjuez, scale = FALSE), melt = TRUE)
@@ -220,7 +211,7 @@ under <- scaled[underIdx,]
 - The years bands are defined with the function =endpoints= from the
   =xts= package:
 
-#+INDEX: Package!xts@\texttt{xts}
+#+INDEX: Packages!xts@\texttt{xts}
 
 #+begin_src R
 library(xts)
@@ -319,9 +310,6 @@ around the time average (=avRad=).
 load('data/navarra.RData')
 #+end_src
 
-#+INDEX: zoo@\texttt{zoo}
-#+INDEX: xyplot.zoo@\texttt{xyplot.zoo}
-
 #+begin_src R :results output graphics :exports both :file figs/navarra.pdf
 avRad <- zoo(rowMeans(navarra, na.rm = 1), index(navarra))
 pNavarra <- xyplot(navarra - avRad,
@@ -382,7 +370,7 @@ xyplot(navarra - avRad,
 ##################################################################
 #+end_src
 
-#+INDEX: Horizon graph
+#+INDEX: Subjects!Horizon graph
 The horizon graph is useful in examining how a large number of series
 changes over time, and does so in a way that allows both comparisons
 between the individual time series and independent analysis of
@@ -404,7 +392,7 @@ Because the panels share the same design structure, once this
 technique is understood, it is easy to establish comparisons or spot
 extraordinary events.  This method is what Tufte described as small
 multiples cite:Tufte1990.
-#+INDEX: Small multiples
+#+INDEX: Subjects!Small multiples
 
 Figure ref:fig:navarraHorizonplot displays the variations of solar
 radiation around the time average with an horizon graph using a row
@@ -416,7 +404,6 @@ $\Delta_i$ symbol, where the subscript =i= denotes the existence of
 multiple panels with different scales.
 
 #+INDEX: Packages!latticeExtra@\texttt{latticeExtra}
-#+INDEX: horizonplot@\texttt{horizonplot}
 
 #+begin_src R :results output graphics :exports both :file figs/navarraHorizonplot.pdf
 library(latticeExtra)
@@ -851,14 +838,7 @@ right if the polygon is too small, or if it is the first or last
 variable of the set (line [[(hChar)]]). Both the polygons and the labels
 share the same color (=col[i]=).
 
-#+INDEX: Panel function
-#+INDEX: superpose.polygon@\texttt{superpose.polygon}
-#+INDEX: trellis.par.get@\texttt{trellis.par.get}
-#+INDEX: apply@\texttt{apply}
-#+INDEX: sapply@\texttt{sapply}
-#+INDEX: unstack@\texttt{unstack}
-#+INDEX: panel.text@\texttt{panel.text}
-#+INDEX: panel.polygon@\texttt{panel.polygon}
+#+INDEX: Subjects!Panel function
 
 #+begin_src R -n -r :noweb yes :tangle no
 <<panelFlow>>
@@ -903,6 +883,9 @@ its last column (the upper line of the cumulative sum) (line [[(ylim)]]).
 
 
 * Interactive Graphics label:sec:interactive_horizontal
+
+#+INDEX: Subjects!Interactive graphics
+
 This section describes the interactive alternatives of the static
 figures included in the previous sections with several packages:
 =dygraphs=, =highcharter=, =plotly=, =streamgraph=, and =gridSVG=.
@@ -974,6 +957,7 @@ ref:fig:highcharter_zoom is an snapshot of this same graph with
 zoom.
 
 #+INDEX: Packages!highcharter@\texttt{highcharter}
+#+INDEX: Packages!xts@\texttt{xts}
 
 #+begin_src R
 library(highcharter)
@@ -1012,9 +996,6 @@ for values, and a column for variable names) only one call to
 =add_lines= is required. The next code follows this approach using the
 combination of =fortify=, to convert the =zoo= object into a
 =data.frame=, and =melt=, to transform from wide to long format.
-
-#+INDEX: fortify@\texttt{fortify}
-#+INDEX: melt@\texttt{melt}
 
 #+begin_src R :results output :exports both
 aranjuezDF <- fortify(aranjuez[,
@@ -1080,7 +1061,6 @@ output: only the lines will be connected with the JavaScript
 code. 
 
 #+INDEX: Packages!gridSVG@\texttt{gridSVG}
-#+INDEX: grid.ls@\texttt{grid.ls}
 
 #+begin_src R
 library(gridSVG)
@@ -1108,8 +1088,6 @@ been already visited. In addition, because the browsers display the
 content of the title attribute with a default tooltip, =grid.garnish=
 sets this attribute to =info=.
 
-#+INDEX: grid.garnish@\texttt{grid.garnish}
-
 #+begin_src R
 for (id in unique(IDs))
 {
@@ -1134,15 +1112,13 @@ These JavaScript functions are included in a script file named
 =highlight.js= (available at the website of the book). It can be
 added as an additional object with =grid.script=.
 
-#+INDEX: grid.script@\texttt{grid.script}
-
 #+begin_src R 
 grid.script(filename="highlight.js")
 #+end_src
 
 This script is easy to understand, even without previous
 JavaScript knowledge:
-#+INDEX: JavaScript
+#+INDEX: Subjects!JavaScript
 #+begin_example
 highlight = function(evt){',
       evt.target.setAttribute('opacity', '1');
@@ -1159,7 +1135,6 @@ hide = function(evt){
 
 Finally, =gridToSVG= exports the whole scene to SVG. 
 
-#+INDEX: grid.export@\texttt{grid.export}
 
 #+begin_src R
 grid.export('figs/navarraRadiation.svg')
@@ -1183,9 +1158,6 @@ function, =streamgraph=, requires a =data.frame= as the first
 argument. Besides, its three next arguments, =key=, =value=, and
 =date=, makes this function a good candidate to work together with
 =fortify= and =melt=.
-
-#+INDEX: fortify@\texttt{fortify}
-#+INDEX: melt@\texttt{melt}
 
 #+begin_src R :results output :exports both
 unemployDF <- fortify(unemployUSA, melt = TRUE)

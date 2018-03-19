@@ -30,6 +30,8 @@ source('configLattice.R')
 ##################################################################
 #+end_src
 
+#+INDEX: Packages!zoo@\texttt{zoo}
+
 #+begin_src R
 library(zoo)
 
@@ -88,7 +90,6 @@ Three improvements can be added to this graphical result:
  same color will be displayed at enough distance.
 
  #+INDEX: Packages!RColorBrewer@\texttt{RColorBrewer}
- #+INDEX: brewer.pal@\texttt{brewer.pal}
 
  #+begin_src R 
 library(RColorBrewer)
@@ -109,7 +110,6 @@ pal <- rep(pal, length = nCountries)
  extract colors from the palette according to the order of this
  value.  
 
- #+INDEX: aggregate@\texttt{aggregate}
 
  #+begin_src R 
 ## Rank of average values of CO2 per capita
@@ -124,7 +124,6 @@ palOrdered <- pal[rank(CO2mean$CO2.capita)]
  values (Figure ref:fig:hclustCO2). The data is extracted from the
  original $\mathrm{CO_2}$ =data.frame=.  
  #+INDEX: Packages!reshape2@\texttt{reshape2}
- #+INDEX: dcast@\texttt{dcast}
 
  #+begin_src R :results output :exports both
 library(reshape2)
@@ -173,7 +172,6 @@ Using CO2.capita as value column: use value.var to override.
  Max.   :16.972   Max.   :16.304   Max.   :16.316   Max.   :16.494
  #+end_example
 
- #+INDEX: hclust@\texttt{hclust}
 
  #+begin_src R :results output graphics :exports both :file "figs/hclust.pdf" 
 hCO2 <- hclust(dist(CO2capita[, -1]))
@@ -206,7 +204,6 @@ palOrdered <- pal[idx]
  produces a curve for each country using different colors to
  distinguish them.
 
- #+INDEX: simpleTheme@\texttt{simpleTheme}
 
  #+begin_src R 
 ## lattice version
@@ -250,11 +247,7 @@ gCO2.capita <- ggplot(data = CO2data,
  the integer indices representing the rows of the =data.frame= to be
  displayed in the panel.
 
- #+INDEX: panel.text@\texttt{panel.text}
- #+INDEX: subscripts@\texttt{subscripts}
- #+INDEX: Panel function
- #+INDEX: panel.superpose@\texttt{panel.superpose}
-
+ #+INDEX: Subjects!Panel function
 
  #+begin_src R :eval no-export
 xyplot(GNI.capita  ~ CO2.capita,
@@ -277,8 +270,6 @@ xyplot(GNI.capita  ~ CO2.capita,
  =glayer=, we ensure that the labels are printed below the lines.
 
  #+INDEX: Packages!latticeExtra@\texttt{latticeExtra}
- #+INDEX: glayer@\texttt{glayer}
- #+INDEX: +.trellis@\texttt{+.trellis}
 
  #+begin_src R
 ## lattice version
@@ -325,7 +316,6 @@ gCO2.capita <- gCO2.capita + geom_text(aes(label = Year),
  with =extreme.grid= (Figure ref:fig:CO2-GNI-DL).
 
  #+INDEX: Packages!directlabels@\texttt{directlabels}
- #+INDEX: direct.label@\texttt{direct.label}
 
  #+begin_src R :results output graphics :exports both :file "figs/CO2_capitaDL.pdf"
 library(directlabels)
@@ -419,7 +409,6 @@ Product with purchasing power parity (PPP) estimations.
 To use this numeric variable as an additional grouping factor, its range must be divided into different classes. The typical solution is to use =cut= to coerce the numeric variable into a =factor= whose levels correspond to uniform intervals, which could be unrelated to the data distribution. The =classInt= package cite:Bivand2013 provides several methods to partition data into classes based on natural groups in the data distribution.
 
 #+INDEX: Packages!classInt@\texttt{classInt}
-#+INDEX: classIntervals@\texttt{classIntervals}
 
 #+begin_src R 
 library(classInt)
@@ -459,9 +448,6 @@ ggplot(data = CO2data,
 
 The =auto.key= mechanism of the =lattice= version is not able to cope with two grouping variables. Therefore, the legend, whose main componens are the labels (=intervals=) and the point sizes (=cex.key=), should be defined manually (Figure ref:fig:CO2points). 
 
-#+INDEX: panel.text@\texttt{panel.text}
-#+INDEX: panel.groups@\texttt{panel.groups}
-#+INDEX: panel.superpose@\texttt{panel.superpose}
 
 #+begin_src R :results output graphics :exports both :file "figs/CO2points.pdf" 
 op <- options(digits = 2)
@@ -511,6 +497,7 @@ Countries, 200 Years, 4 Minutes"[fn:4].
 
 Three packages are used here: =googleVis=, =plotly=, and =gridSVG=.
 
+#+INDEX: Subjects!Animation
 
 ** plotly label:sec:plotly_animation
 The =plotly= package has already been used in Section
@@ -519,7 +506,7 @@ representing time in the x-axis. In this section this package produces
 an animation piping the result of the =plot_ly= and =add_markers=
 functions through the =animation_slider= function.
 
-#+INDEX: Packages!plotlyG@\texttt{plotly}
+#+INDEX: Packages!plotly@\texttt{plotly}
 
 Variables =CO2.capita= and =GNI.capita= are represented in the x-axis
 and y-axis, respectively.
@@ -577,6 +564,7 @@ function it is easy to produce a Motion Chart that can be displayed
 using a browser with Flash enabled (Figure ref:fig:googleVis).
 
 #+INDEX: Packages!googleVis@\texttt{googleVis}
+
 #+begin_src R :eval no-export
 library(googleVis)
 
@@ -672,9 +660,6 @@ object. Thus, the bubbles will travel across the values defined by
 The use of =rep=TRUE= ensures that the animation will be repeated
 indefinitely.
 
-#+INDEX: animUnit@\texttt{animUnit}
-#+INDEX: grid.animate@\texttt{grid.animate}
-
 #+begin_src R  
 ## Duration in seconds of the animation
 duration <- 20
@@ -715,8 +700,6 @@ A bit of interactivity can be added with the =grid.hyperlink=
 function. For example, the following code adds the corresponding
 Wikipedia link to a mouse click on each bubble.
 
-#+INDEX: grid.hyperlink@\texttt{grid.hyperlink}
-
 #+begin_src R
 countries <- unique(CO2data$Country.Name)
 URL <- paste('http://en.wikipedia.org/wiki/', countries, sep = '')
@@ -745,8 +728,6 @@ The SVG file produced with =grid.export= is available at the website
 of the book (Figure ref:fig:bubblesSVG). Because this animation does
 not trace the paths, Figure ref:fig:CO2-GNI-DL provides this
 information as a static complement.
-
-#+INDEX: grid.export@\texttt{grid.export}
 
 #+begin_src R
 grid.export("figs/bubbles.svg")
