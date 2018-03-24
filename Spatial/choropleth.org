@@ -458,7 +458,7 @@ label:sec:multiChoropleth
 
 Following the inspiring example of the infographic from the /New York
 Times/, we will combine the choropleth maps of both variables to
-produce a bivariate map: the hue of each polygon will be determined
+produce a bivariate map[fn:7]: the hue of each polygon will be determined
 by the name of the predominant option (=whichMax=) but the
 transparency will vary according to the percentage of votes (=pcMax=).
 
@@ -639,6 +639,8 @@ mapView(sfMapVotes0,
 file:figs/mapview_whichMax.png
 
 * Footnotes
+
+[fn:7] Although bivariate maps are generally used to display the relationship between two variables, it can also be used to display one variable and its uncertainty. More information about visualizing uncertainty with maps can be found in cite:Lucchesi.Wikle2017 and the package =VizU= (https://github.com/pkuhnert/VizU).
 
 [fn:6] http://spatialreference.org/ref/epsg/etrs89-utm-zone-30n/
 
