@@ -317,7 +317,7 @@ label:part:Time
 ** Time as a Conditioning or Grouping Variable
 label:cha:timeGroupFactor
 
-In Section ref:sec:differentVariables we learned to display the time evolution of multiple time series with different scales. But, what if instead of displaying the time evolution we want to confront the variables between them? Section ref:SEC:groupVariable proposes the scatterplot matrix solution with time as a grouping variable. Section ref:SEC:conditionVariable uses an enhanced scatterplot with time as a conditioning variable. Section ref:SEC:hexbin includes a digression about the hexagonal binning for large datasets.
+In Section ref:sec:differentVariables we learned to display the time evolution of multiple time series with different scales. But, what if instead of displaying the time evolution we want to represent the relation between the variables? Section ref:SEC:groupVariable proposes the scatterplot matrix solution using groups defined according to the time as a grouping variable. Section ref:SEC:conditionVariable uses an enhanced scatterplot with time as a conditioning variable. Section ref:SEC:hexbin includes a discussion about the hexagonal binning for large datasets.
 
 #+INCLUDE: "TimeSeries/timeGroupFactor.org"
 
