@@ -76,14 +76,14 @@ cexNO2 <- dentAQ[idx]
 NO2sp$classNO2 <- factor(names(tab)[idx])  
 
 ## Definition of an improved key with title and background
-NO2key <- list(x = 0.98, y = 0.02, corner = c(1, 0),
+NO2key <- list(x = 0.99, y = 0.01, corner = c(1, 0),
                title = expression(NO[2]~~(paste(mu, plain(g))/m^3)),
-               cex.title = .75, cex = 0.7,
+               cex.title = 0.8, cex = 1,
                background = 'gray92')
 
 pNO2 <- spplot(NO2sp["classNO2"],
                col.regions = airPal,
-               cex = dentAQ,
+               cex = dentAQ * 0.8,
                edge.col = 'black',
                scales = list(draw = TRUE),
                key.space = NO2key)
@@ -143,7 +143,7 @@ stamen <- list(panel.ggmap, ## Function that displays the object
 
 spplot(NO2merc["classNO2"],
        col.regions = airPal,
-       cex = dentAQ,
+       cex = dentAQ * 0.8,
        edge.col = 'black',
        sp.layout = stamen,
        scales = list(draw = TRUE),
@@ -177,6 +177,7 @@ streetsMadrid <- streets[streets$CMUN=='079',]
 streetsMadrid <- spTransform(streetsMadrid,
                              CRS = CRS("+proj=longlat +ellps=WGS84"))
 
+library(maptools)
 ## Lists using the structure accepted by sp.layout, with the polygons,
 ## lines, and points, and their graphical parameters
 spDistricts <- list('sp.polygons', distritosMadrid,
