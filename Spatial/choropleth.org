@@ -416,25 +416,14 @@ Both the quantitative and qualitative variables can be combined using
 the small multiples technique (Sections ref:SEC:sameScale and
 ref:SEC:groupVariable) cite:Tufte1990: multiple maps displayed all at
 once to compare the differences between them. The next code produce a
-matrix of maps, with a map for each political option (categorical
-variable =whichMax=). The =spplot= solution uses the =formula=
-argument with the =|= operator to define the panels. The =ggplot=
-solution uses the =facet_wrap= function to define the faceting.
+matrix of maps, with a map for each political option defined by the
+categorical variable =whichMax=. The =spplot= function
+provides a =formula= argument to divide the data into panels. However,
+its usage is not well documented and cannot be recommended. Instead,
+the =ggplot= approach is easy to use thanks to the =facet_wrap=
+function. The result is displayed in Figure ref:fig:pcMax_panels.
 
-#+begin_src R
-## spplot version
-spplot(spMapVotes, "pcMaxInt",
-       ## Formula to define the faceting: a panel for each level of
-       ## whichMax
-       formula = pcMaxInt ~ xlabelpoint + ylabelpoint | whichMax,
-       col.regions = quantPal,
-       col = 'transparent',
-       sp.layout = provinceLines)
-
-#+end_src
-
-#+begin_src R
-## ggplot2 version
+#+begin_src R :results output graphics :exports both :file figs/pcMax_panels.pdf
 ggplot(sfMapVotes) +
     geom_sf(aes(fill = pcMaxInt),
             color = "transparent") +
@@ -447,6 +436,10 @@ ggplot(sfMapVotes) +
             show.legend = FALSE) +
     theme_bw()
 #+end_src
+
+#+CAPTION: Small multiple choropleth maps of the Spanish general elections results. Each map shows the results of a political option in each municipality. label:fig:pcMax_panels
+#+RESULTS:
+[[file:figs/pcMax_panels.pdf]]
 
 * Bivariate Map
 label:sec:multiChoropleth
