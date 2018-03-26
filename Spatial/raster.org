@@ -153,7 +153,7 @@ DEM <- raster('/home/datos/ESP_msk_alt/ESP_msk_alt')
 slope <- terrain(DEM, 'slope')
 aspect <- terrain(DEM, 'aspect')
 hs <- hillShade(slope = slope, aspect = aspect,
-                angle = 20, direction = 30)
+                angle = 60, direction = 45)
 #+end_src
 
 #+RESULTS:
@@ -166,9 +166,10 @@ setwd(old)
 
 #+begin_src R :results output graphics :exports both :width 2000 :height 2000 :res 300 :file figs/hillShading.png
 ## hillShade theme: gray colors and semitransparency
-hsTheme <- GrTheme(regions = list(alpha = 0.6))
-  
-levelplot(SISav, 
+hsTheme <- GrTheme(regions = list(alpha = 0.5))
+
+levelplot(SISav,
+          par.settings = YlOrRdTheme,
           margin = FALSE, colorkey = FALSE) +
     ## Overlay the hill shade raster
     levelplot(hs, par.settings = hsTheme, maxpixels = 1e6) +
