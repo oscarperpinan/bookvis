@@ -11,10 +11,10 @@
 library('osmdata')
 
 ## Bounding box
-ymax <- 43.7031
-ymin <- 43.6181
-xmax <- -8.0224
-xmin <- -8.0808
+ymax <- 43.7
+ymin <- 43.62
+xmax <- -8
+xmin <- -8.1
 ## Overpass query
 cedeira <- opq(c(xmin, ymin, xmax, ymax))
 
@@ -60,6 +60,12 @@ projCedeira <- projection(city)
 
 demCedeira <- raster('data/demCedeira')
 projection(demCedeira) <- projCedeira
+
+## Crop the DEM using the bounding box of the OSM data
+OSMextent <- extent(extendrange(c(xmin, xmax)),
+                    extendrange(c(ymin, ymax)))
+demCedeira <- crop(demCedeira, OSMextent)
+
 ## Discard values below sea level
 demCedeira[demCedeira <= 0] <- NA
 
@@ -80,36 +86,38 @@ library(colorspace)
 terrainTheme <- rasterTheme(region = terrain_hcl(n = 15), 
                             regions = list(alpha = 0.6))
 
+library(maptools)
+
 ##Auxiliary function to display the roads. A thicker black line in
 ##the background and a thinner one with an appropiate color.
-sp.road <- function(line, lwd = 5, blwd = 7,
+sp.road <- function(line, lwd = 6, blwd = 7,
                     col = 'indianred1', bcol = 'black'){
     sp.lines(line, lwd = blwd, col = bcol)
     sp.lines(line, lwd = lwd, col = col)
 }
 
-library(maptools)
-
 ## Hill shade and DEM overlaid
 levelplot(hsCedeira, maxpixels = ncell(hsCedeira),
-          par.settings = hsTheme, margin = FALSE, colorkey = FALSE) +
+          par.settings = hsTheme,
+          margin = FALSE, colorkey = FALSE,
+          xlab = '', ylab = '') +
     levelplot(demCedeira, maxpixels = ncell(demCedeira),
               par.settings = terrainTheme) +
     ## Roads and places
     layer({
         ## Street and roads
-        sp.road(streets, lwd = 1, blwd = 2, col = 'white')
+        sp.road(streets, lwd = 1, blwd = 1, col = 'white')
         sp.road(unclassified, lwd = 2, blwd = 2, col = 'white')
         sp.road(footway, lwd = 2, blwd = 2, col = 'white')
         sp.road(steps, lwd = 2, blwd = 2, col = 'white')
-        sp.road(tertiary, lwd = 3, blwd = 4, col = 'palegreen')
-        sp.road(secondary, lwd = 4, blwd = 6, col = 'midnightblue')
-        sp.road(primary, col = 'indianred1')
+        sp.road(tertiary, lwd = 4, blwd = 4, col = 'palegreen')
+        sp.road(secondary, lwd = 6, blwd = 6, col = 'midnightblue')
+        sp.road(primary, lwd = 7, blwd = 8, col = 'indianred1')
         ## Places except Cedeira town
         sp.points(places, pch = 19, col = 'black', cex = 0.4, alpha = 0.8)
         sp.pointLabel(places, labels = places$name,
                       fontfamily = 'Palatino', 
-                      cex = 0.6, col = 'black')
+                      cex = 0.7, col = 'black')
         ## Cedeira town
         sp.points(city, pch = 18, col = 'black', cex = 1)
         sp.pointLabel(city, labels = 'Cedeira',
