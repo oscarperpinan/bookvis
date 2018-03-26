@@ -213,7 +213,7 @@ of four layers:
    
 2. The altitude raster layer uses a terrain colors palette, as the one
   produced by the =terrain_hcl= function from the =colorspace= package
-  cite:Ihaka.Murrell.ea2011 (Figure [[ref:fig:rastersBrazil]]).
+  cite:Ihaka.Murrell.ea2016 (Figure [[ref:fig:rastersBrazil]]).
   #+begin_src R
   terrainTheme <- rasterTheme(region = terrain_hcl(15))
   

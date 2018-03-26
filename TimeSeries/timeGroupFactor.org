@@ -145,7 +145,7 @@ transparency. An improved scheme encodes density as the size of
 hexagon symbols inscribed within hexagonal binning regions
 cite:Carr.Littlefield.ea1987.
 
-The =hexbin= package cite:Carr.Lewin-Koh.ea2013 includes several
+The =hexbin= package cite:Carr.Lewin-Koh.ea2018 includes several
 functions for hexagonal binning.  The =panel.hexbinplot= is a good
 substitute for the default panel function. In addition, our first
 attempt with =splom= can be improved with several modifications

@@ -56,7 +56,7 @@ label:sec:introduction
 
  - *Finally, this book is not a handbook of data analysis, geostatistics, point pattern analysis, or time series theory*.
 
-   Instead, this book is focused on the exploration of data with visual methods, so it may be framed in the Exploratory Data Analysis approach. Therefore, this book may be a useful complement for superb bibliographic references where you will find plenty of information about those subjects. For example, cite:Chatfield2003, cite:Cressie.Wikle2011, cite:Slocum.McMaster.ea2005 and cite:Bivand.Pebesma.ea2013.
+   Instead, this book is focused on the exploration of data with visual methods, so it may be framed in the Exploratory Data Analysis approach. Therefore, this book may be a useful complement for superb bibliographic references where you will find plenty of information about those subjects. For example, cite:Chatfield2016, cite:Cressie.Wikle2011, cite:Slocum.McMaster.ea2005 and cite:Bivand.Pebesma.ea2013.
 
 *** How to Read This Book
  label:sec:how-read
@@ -184,7 +184,7 @@ highlighted here:
 
  - =sp= cite:Pebesma2012 and =sf= cite:Pebesma2018 provide a coherent set of classes and methods for the major spatial data types: points, lines, polygons, and grids (Sections ref:sec:sp and ref:sec:sf). =spacetime= cite:Pebesma2012 defines classes and methods for spatiotemporal  data, and methods for plotting data as map sequences or multiple time series (Section ref:sec:spacetime).
 
- - =raster= cite:Hijmans2013 is a major extension of gridded spatial data classes. It provides a unified access method to different raster formats, permitting large objects to be analyzed with the definition of basic and high-level processing functions (Sections ref:sec:raster and ref:sec:rasterST). =rasterVis= cite:Perpinan.Hijmans2017 provides enhanced visualization of raster data with methods for spatiotemporal rasters (Sections ref:sec:rasterVis and ref:sec:rastervisST).
+ - =raster= cite:Hijmans2017 is a major extension of gridded spatial data classes. It provides a unified access method to different raster formats, permitting large objects to be analyzed with the definition of basic and high-level processing functions (Sections ref:sec:raster and ref:sec:rasterST). =rasterVis= cite:Perpinan.Hijmans2017 provides enhanced visualization of raster data with methods for spatiotemporal rasters (Sections ref:sec:rasterVis and ref:sec:rastervisST).
 
 *** Software Used to Write This Book
  label:sec:software-book
@@ -417,7 +417,7 @@ The =sf= package implements =plot= methods for displaying data using =base= grap
 
 #+INDEX: Packages!raster@\texttt{raster}
 
- The =raster= package cite:Hijmans2013 has functions for creating, reading, manipulating, and writing raster data. The package provides general raster data manipulation functions. The package also implements raster algebra and most functions for raster data manipulation that are common in Geographic Information Systems (GIS).
+ The =raster= package cite:Hijmans2017 has functions for creating, reading, manipulating, and writing raster data. The package provides general raster data manipulation functions. The package also implements raster algebra and most functions for raster data manipulation that are common in Geographic Information Systems (GIS).
 
  The raster package can work with raster datasets stored on disk if they are too large to be loaded into memory. The package can work with large files because the objects it creates from these files only contain information about the structure of the data, such as the number of rows and columns, the spatial extent, and the filename, but it does not attempt to read all the cell values in memory. In computations with these objects, the data are processed in chunks.
 
@@ -469,7 +469,7 @@ The =sf= package implements =plot= methods for displaying data using =base= grap
  label:sec:rgdal
 #+INDEX: Packages!rgdal@\texttt{rgdal}
 
- The =rgdal= package cite:Bivand.Keitt.ea2013 provides bindings to the Geospatial Data Abstraction Library (GDAL) [fn:21]. With =readOGR= and =readGDAL=, both GDAL raster and OGR vector map data can be imported into =R=, and GDAL raster data and OGR vector data can be exported with =writeGDAL= and =writeOGR=.
+ The =rgdal= package cite:Bivand.Keitt.ea2017 provides bindings to the Geospatial Data Abstraction Library (GDAL) [fn:21]. With =readOGR= and =readGDAL=, both GDAL raster and OGR vector map data can be imported into =R=, and GDAL raster data and OGR vector data can be exported with =writeGDAL= and =writeOGR=.
 
  In addition, this package provides access to projection and transformation operations from the PROJ.4 library [fn:22]. This package implements several =spTransform= methods providing transformation between datums and conversion between projections using PROJ.4 projection arguments.
 
@@ -477,7 +477,7 @@ The =sf= package implements =plot= methods for displaying data using =base= grap
  label:sec:maptools
 #+INDEX: Packages!maptools@\texttt{maptools}
 
- The =maptools= package cite:Bivand.Lewin-Koh2013 provides a set of tools for manipulating geographic data. The package also provides interface wrappers for exchanging spatial objects with packages such as PBSmapping, spatstat, maps, RArcInfo, Stata tmap, WinBUGS, Mondrian, and others. The main functions in the context of this book are:
+ The =maptools= package cite:Bivand.Lewin-Koh2017 provides a set of tools for manipulating geographic data. The package also provides interface wrappers for exchanging spatial objects with packages such as PBSmapping, spatstat, maps, RArcInfo, Stata tmap, WinBUGS, Mondrian, and others. The main functions in the context of this book are:
 
  -  =map2SpatialPolygons= and =map2SpatialLines= may be used to convert map objects returned by the =map= function in the =maps= package to the classes defined in the =sp= package.
 
@@ -503,7 +503,7 @@ The =sf= package implements =plot= methods for displaying data using =base= grap
 #+INDEX: Packages!mapproj@\texttt{mapproj}
 #+INDEX: Packages!mapdata@\texttt{mapdata}
 
- The =maps= cite:Becker.Wilks.ea2013, =mapdata= cite:Becker.Wilks.ea2013b, and =mapproj= cite:McIlroy.Brownrigg.ea2013 packages are useful to draw or create geographical maps. =mapdata= contains higher resolution databases, and =mapproj= converts latitude/longitude coordinates into projected coordinates.
+ The =maps= cite:Becker.Wilks.ea2017, =mapdata= cite:Becker.Wilks.ea2017b, and =mapproj= cite:McIlroy.Brownrigg.ea2017 packages are useful to draw or create geographical maps. =mapdata= contains higher resolution databases, and =mapproj= converts latitude/longitude coordinates into projected coordinates.
 
 *** Further Reading
  label:cha:further-reading-spatial
@@ -564,7 +564,7 @@ label:part:SpaceTime
 
  Space-time datasets are indexed in both space and time. The data may consist of a spatial vector object (for example, points or polygons) or raster data at different times. The first case is representative of data from fixed sensors providing measurements abundant in time but sparse in space. The second case is the typical format of satellite imagery, which produces high spatial resolution data sparse in time cite:Pebesma2012.
 
- There are several visualization approaches of space-time data trying to cope with the four dimensions of the data cite:Cressie.Wikle2011.
+ There are several visualization approaches of space-time data trying to cope with the four dimensions of the data cite:Cressie.Wikle2015.
 
  On the one hand, the data can be conceived as a collection of snapshots at different times. These snapshots can be displayed as a sequence of frames to produce an animation, or can be printed on one page with different panels for each snapshot using the small-multiple technique described repeatedly in previous chapters.
 
@@ -613,7 +613,7 @@ label:part:SpaceTime
  label:sec:rasterST
 #+INDEX: Packages!raster@\texttt{raster}
 
- The =raster= package cite:Hijmans2013 is able to add time information associated with layers of a =RasterStack= or =RasterBrick= object with the =setZ= function. This information can be extracted with =getZ=.
+ The =raster= package cite:Hijmans2017 is able to add time information associated with layers of a =RasterStack= or =RasterBrick= object with the =setZ= function. This information can be extracted with =getZ=.
 
  If a =Raster*= object includes this information, the =zApply= function can be used to apply a function over a time series of layers of the object.
 
@@ -646,7 +646,7 @@ inspired by the =grid= package.
 *** Further Reading
  label:cha:further-reading-spatiotime
 
- -  cite:Cressie.Wikle2011 is a systematic approach to key quantitative techniques on statistics for spatiotemporal data. The book begins with separate treatments of temporal data and spatial data, and later combines these concepts to discuss spatiotemporal statistical methods. There is a chapter devoted to exploratory methods, including visualization techniques.
+ -  cite:Cressie.Wikle2015 is a systematic approach to key quantitative techniques on statistics for spatiotemporal data. The book begins with separate treatments of temporal data and spatial data, and later combines these concepts to discuss spatiotemporal statistical methods. There is a chapter devoted to exploratory methods, including visualization techniques.
 
  -  cite:Pebesma2012 presents the =spacetime= package, which implements a set of classes for spatiotemporal data. This paper includes examples that illustrate how to import, subset, coerce, and export spatiotemporal data, proposes several visualization methods, and discusses spatiotemporal geostatistical interpolation.
 

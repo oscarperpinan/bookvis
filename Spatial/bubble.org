@@ -561,7 +561,7 @@ underlying process. It is quite common to approximate the spatial
 distribution of the measured variable with the interpolation between
 measurement locations. Selection of the optimal interpolation method
 is outside the scope of this book. The interested reader is referred
-to cite:Cressie.Wikle2011 and cite:Bivand.Pebesma.ea2008.
+to cite:Cressie.Wikle2015 and cite:Bivand.Pebesma.ea2008.
 
 The following code illustrates an easy solution using inverse distance
 weighted (IDW) interpolation with the =gstat= package cite:Pebesma2004

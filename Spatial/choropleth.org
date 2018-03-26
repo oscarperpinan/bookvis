@@ -186,7 +186,7 @@ palettes, that communicate the progression from low to high with light
 colors associated to low values, and dark colors linked to high
 values. The well-known service ColorBrewer[fn:1] provides several
 choices, available in =R= via the =RColorBrewer= package
-cite:Neuwirth2011.
+cite:Neuwirth2014.
 
 #+INDEX: Packages!RColorBrewer@\texttt{RColorBrewer}
 

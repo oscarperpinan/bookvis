@@ -469,7 +469,7 @@ near-real-time to develop variability studies in diurnal and seasonal
 time scales. However, climate data are long-term data series to assess
 inter-annual variability \cite{Posselt.Mueller.ea2012}.
 
-\nomenclature{CM SAF}{Satellite Application Facility on Climate Monitoring}
+\nomenclature{CM-SAF}{Satellite Application Facility on Climate Monitoring}
 \nomenclature{SIS}{Shortwave incoming solar radiation}
 
 In this chapter we will display the annual average of the shortwave
@@ -530,12 +530,7 @@ a repository of global data imagery. We use the population density and
 land cover classification rasters. Both rasters must be downloaded
 from their respective webpages as Geo-TIFF files.
 
-\nomenclature{NEO NASA}{NASA Earth Observations, part of the NASA’s
-Earth Observing System (EOS), a coordinated series of polar-orbiting
-and low inclination satellites for long-term global observations of
-the land surface, biosphere, solid Earth, atmosphere, and oceans}
-
-#+INDEX: Data!NASA EOS
+\nomenclature{NEO-NASA}{NASA Earth Observations, part of the NASA’s Earth Observing System (EOS)}
 #+INDEX: Data!Population density
 #+INDEX: Data!Land cover
 

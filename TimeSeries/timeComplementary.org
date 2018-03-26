@@ -83,7 +83,7 @@ Three improvements can be added to this graphical result:
  The =Country.Name= categorical variable will be encoded with a
  qualitative palette, namely the first five colors of =Set1=
  palette[fn:2] from the =RColorBrewer= package
- cite:Neuwirth2011. Because there are more countries than colors, we
+ cite:Neuwirth2014. Because there are more countries than colors, we
  have to repeat some colors to complete the number of levels of the
  variable =Country.Name=. The result is a palette with non-unique
  colors, and thus some countries will share the same color. This is not
@@ -309,7 +309,7 @@ gCO2.capita <- gCO2.capita + geom_text(aes(label = Year),
  A better approach is to label each line using nearby text with the
  same color encoding. A suitable method is to place the labels avoiding
  the overlapping between labels and lines. The package =directlabels=
- cite:Hocking2013 includes a wide repertory of positioning methods to
+ cite:Hocking2017 includes a wide repertory of positioning methods to
  cope with overlapping. The main function, =direct.label=, is able to
  determine a suitable method for each plot, although the user can
  choose a different method from the collection or even define a custom
@@ -407,7 +407,7 @@ different radius to encode a new variable. This new variable is
 =CO2.PPP=, the ratio of $\mathrm{CO_2}$ emissions to the Gross Domestic
 Product with purchasing power parity (PPP) estimations.
 
-To use this numeric variable as an additional grouping factor, its range must be divided into different classes. The typical solution is to use =cut= to coerce the numeric variable into a =factor= whose levels correspond to uniform intervals, which could be unrelated to the data distribution. The =classInt= package cite:Bivand2013 provides several methods to partition data into classes based on natural groups in the data distribution.
+To use this numeric variable as an additional grouping factor, its range must be divided into different classes. The typical solution is to use =cut= to coerce the numeric variable into a =factor= whose levels correspond to uniform intervals, which could be unrelated to the data distribution. The =classInt= package cite:Bivand2017 provides several methods to partition data into classes based on natural groups in the data distribution.
 
 #+INDEX: Packages!classInt@\texttt{classInt}
 
