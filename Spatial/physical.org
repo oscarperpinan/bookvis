@@ -123,7 +123,7 @@ converted to =SpatialPolygons=. The intersection is a new
 
 #+begin_src R :eval no-export
 ## only those features labeled as "River" are needed
-worldRiv<- worldRiv[worldRiv$featurecla=='River',]
+worldRiv <- worldRiv[worldRiv$featurecla=='River',]
 
 ## Define the extent of Brazil as a SpatialPolygons
 extBrazil <- as(extent(brazilDEM), 'SpatialPolygons')

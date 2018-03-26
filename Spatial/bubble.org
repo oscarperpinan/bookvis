@@ -559,10 +559,12 @@ The measurements at discrete points give limited information about the
 underlying process. It is quite common to approximate the spatial
 distribution of the measured variable with the interpolation between
 measurement locations. Selection of the optimal interpolation method
-is outside the scope of this book. The following code illustrates an
-easy solution using inverse distance weighted (IDW) interpolation with
-the =gstat= package cite:Pebesma2004 /only/ for illustration
-purposes.
+is outside the scope of this book. The interested reader is referred
+to cite:Cressie.Wikle2011 and cite:Bivand.Pebesma.ea2008.
+
+The following code illustrates an easy solution using inverse distance
+weighted (IDW) interpolation with the =gstat= package cite:Pebesma2004
+/only/ for illustration purposes.
  
 #+INDEX: Packages!gstat@\texttt{gstat}
 
@@ -616,11 +618,17 @@ label:sec:interactive_bubble
 
 Now, let's suppose you need to know the median and standard deviation
 of the time series of a certain station. Moreover, you would like to
-watch the photography of that station; or even better, you wish to
+view the photography of that station; or even better, you wish to
 visit its webpage for additional information. A frequent solution is
 to produce interactive graphics with tooltips and hyperlinks.
 
-In this section we visit several approaches to create these products.
+In this section we visit several approaches to create these products:
+the =mapview= package based on the =htmlwidgets= package; export to
+GeoJSON and KML formats; 3D visualization with the =rgl= package; and
+=SVG= graphics with the =gridSVG= package.
+
+\nomenclature{GeoJSON}{Format for encoding a variety of geographic data structures}
+\nomenclature{KML}{Keyhole Markup Language, an XML notation for expressing geographic annotation and visualization within Internet-based, two-dimensional maps and three-dimensional Earth browsers}
 
 ** mapview 
 label:sec:mapview_bubble
@@ -784,8 +792,8 @@ sync(mapMean, mapMedian, mapSD, ncol = 3)
 
 A different approach is to use an external data viewer, due to its
 features or its large community of users. Two tools deserve to be
-mentioned: GeoJSON rendered within GitHub repositories, and KML files
-imported in Google Earth\texttrademark.
+mentioned: GeoJSON rendered within GitHub repositories, and Keyhole
+Markup Language (KML) files imported in Google Earth\texttrademark.
 
 *** GeoJSON and OpenStreetMap
 #+begin_src R :exports none

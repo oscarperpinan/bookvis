@@ -27,10 +27,16 @@ point.
 
 This chapter illustrates two visualization techniques, arrow plots and
 stream lines, with the help of the wind direction and speed forecast
-published by MeteoGalicia (see Section ref:sec:animationST_var for
-details). This vector field is encoded in a =RasterStack= object with
-two layers: wind speed or vector magnitude, and wind direction or
-vector direction.
+published in the THREDSS server[fn:1] of Meteogalicia[fn:2]. This
+server provides access through different protocols to the output of a
+Weather Research and Forecasting (WRF) model, a mesoscale numerical
+weather prediction system.
+
+\nomenclature{WRF}{Weather Research and Forecasting model}
+
+This vector field is encoded in a =RasterStack= object with two
+layers: wind speed or vector magnitude, and wind direction or vector
+direction.
 
 #+INDEX: Packages!rasterVis@\texttt{rasterVis}
 #+INDEX: Packages!raster@\texttt{raster}
@@ -66,7 +72,7 @@ if the variations in magnitude are too big, the images tend to be
 visually confusing.
 
 The =rasterVis= package includes the function =vectorplot=, based on
-=lattice=[fn:1]. This function is able to display vector fields computed
+=lattice=[fn:3]. This function is able to display vector fields computed
 from a =Raster= object. Moreover, as the next example illustrates,
 this function displays =RasterStack= and =RasterBrick= objects with
 two layers encoding a vector field, slope (local vector magnitude) and
@@ -127,18 +133,24 @@ streamplot(windField, isField = TRUE,
 #+RESULTS:
 [[file:figs/streamplot.pdf]]
 
-The magic of Figure ref:fig:streamplot is that it is able to show the
-underlying physical structure of the spatial region only displaying
-wind speed and direction. It is easy to recognize the Iberian
-Peninsula surrounded by strong winds along the eastern and northern
-coasts. Another feature easily distinguishable is the Strait of
-Gibraltar, a channel that connects the Atlantic Ocean to the
+The magic of Figures ref:fig:vectorplot and ref:fig:streamplot is that
+they show the underlying physical structure of the spatial region only
+displaying wind speed and direction. It is easy to recognize the
+Iberian Peninsula surrounded by strong winds along the eastern and
+northern coasts. Another feature easily distinguishable is the Strait
+of Gibraltar, a channel that connects the Atlantic Ocean to the
 Mediterranean Sea between the south of Spain and the north of
 Morocco. Also apparent are the Pyrenees mountains and some of the
 river valleys.
 
 * Footnotes
 
-[fn:1] A =ggplot2= solution is available in the =ggquiver= package (https://github.com/mitchelloharawild/ggquiver), although it does not understand =Raster= objects.
+[fn:3] A =ggplot2= solution is available in the =ggquiver= package (https://github.com/mitchelloharawild/ggquiver), although it does not understand =Raster= objects.
+
+
+[fn:1] http://mandeo.meteogalicia.es/thredds/catalogos/WRF_2D/catalog.html
+
+[fn:2] http://www.meteogalicia.es
+
 
 

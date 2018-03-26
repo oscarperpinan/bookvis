@@ -166,7 +166,9 @@ It is important to note that both =latticeExtra= and =ggplot2= defined a functio
 
 Both =lattice= and =ggplot2= (and every package based on =grid=) generate static graphics. However, interactive web graphics produced with \textsf{R} have experienced a boost in recent years, mainly thanks to the package =htmlwidgets= cite:Vaidyanathan2017. This package provides a framework for creating \textsf{R} bindings to JavaScript libraries. This package is the base for important visualization packages such as =dygraphs=, =highcharter=, =plotly=, =leaflet= and =mapview=. They will be covered along the chapters of the book. 
 
-On the other hand, the package =gridSVG= cite:Murrell.Potter2017 converts any grid scene to an \textsf{SVG} document. The =grid.hyperlink= function allows a hyperlink to be associated with any component of the scene, the =grid.animate= function can be used to animate any component of a scene, and the =grid.garnish= function can be used to add \textsf{SVG} attributes to the components of a scene. By setting event handler attributes on a component, plus possibly using the =grid.script= function to add \textsf{JavaScript} to the scene, it is possible to make the component respond to user input such as mouse clicks.
+On the other hand, the package =gridSVG= cite:Murrell.Potter2017 converts any grid scene to a Scalable Vector Graphics (\textsf{SVG}) document. The =grid.hyperlink= function allows a hyperlink to be associated with any component of the scene, the =grid.animate= function can be used to animate any component of a scene, and the =grid.garnish= function can be used to add \textsf{SVG} attributes to the components of a scene. By setting event handler attributes on a component, plus possibly using the =grid.script= function to add \textsf{JavaScript} to the scene, it is possible to make the component respond to user input such as mouse clicks.
+
+\nomenclature{SVG}{Scalable Vector Graphics}
 
 *** Packages
  label:sec:introduction-packages
@@ -346,9 +348,11 @@ label:part:Spatial
 
  Spatial data (also known as geospatial data) are directly or indirectly referenced to a location on the surface of the Earth. Their spatial reference is composed of coordinate values and a system of reference for these coordinates. Spatial data are often accessed, manipulated, or analyzed through Geographic Information Systems (GIS).
 
+\nomenclature{GIS}{Geographic Information Systems}
+
  Real objects represented by GIS data can be divided into two abstractions: discrete objects (e.g., a road or a river) represented with vector data (points, lines, and polygons), and continuous fields (such as elevation or solar radiation) represented with raster data. The =sp= and =sf= packages are the preferred option to use vector data in =R=, and the =raster= package is the choice for raster data [fn:18].
 
- This part exposes several examples where vector and raster data are displayed to show geographic location of features and physical landscape features of a place (reference and physical maps, Chapter ref:cha:refer-phys-maps) or a specific variable in the context of a geographic reference (thematic maps, Chapters ref:cha:bubble, ref:cha:choropleth, and ref:cha:raster). These examples make use of several datasets (available at the book website) described in Chapter ref:cha:dataSpatial.
+ This part exposes several examples where vector and raster data are displayed. These examples show geographic location of features (reference maps, Chapter ref:cha:refer-phys-maps), physical landscape features of a place (physical maps, Chapter ref:cha:refer-phys-maps), or a specific variable in the context of a geographic reference (thematic maps, Chapters ref:cha:bubble, ref:cha:choropleth, and ref:cha:raster). These examples make use of several datasets (available at the book website) described in Chapter ref:cha:dataSpatial.
 
 *** Packages
   label:sec:spatial-packages
@@ -360,7 +364,7 @@ label:part:Spatial
 
 #+INDEX: Packages!sp@\texttt{sp}
 
- The =sp= package cite:Pebesma.Bivand2005 provides classes and methods for dealing with spatial data in =R=. The spatial data classes implemented are points (=SpatialPoints=), grids (=SpatialPixels= and =SpatialGrid=), lines (=Line=, =Lines= and =SpatialLines=), rings, and polygons (=Polygon=, =Polygons=, and =SpatialPolygons=), each of them without data or with data (for example, =SpatialPointsDataFrame= or =SpatialLinesDataFrame=).
+ The =sp= package cite:Pebesma.Bivand2005 provides classes and methods for dealing with spatial data in =R=. The spatial data classes implemented are points (=SpatialPoints=), grids (=SpatialPixels= and =SpatialGrid=), lines (=Line=, =Lines= and =SpatialLines=), rings, and polygons (=Polygon=, =Polygons=, and =SpatialPolygons=), each of them without data or with data (for example, =SpatialPointsDataFrame= or =SpatialLinesDataFrame=)[fn:37].
 
  Selecting, retrieving, or replacing certain attributes in spatial objects with data is done using standard methods:
 
@@ -405,7 +409,7 @@ All functions and methods in =sf= that operate on spatial data are prefixed by =
 - =st_transform= for coordinate reference system transformations.
 - =st_as_sf.*=, a family of conversions functions between =sp= and =sf=.
 
-The =sf= package implements =plot= methods for displaying data using =base= graphics. Besides, provides a number of methods for conversion to =grob= objects in order to display these objects with packages working with the =grid= system (=lattice= and =ggplot2=). Finally, the =ggplot2= version[fn:35] to be released after 2.2.1 (on CRAN while writing this book) contains the =geom_sf= geom, designed for =sf= objects.
+The =sf= package implements =plot= methods for displaying data using =base= graphics. Besides, this package provides a number of methods for conversion to =grob= objects in order to display these objects with packages working with the =grid= system (=lattice= and =ggplot2=). Finally, the =ggplot2= version[fn:35] to be released after 2.2.1 (on CRAN while writing this book) contains the =geom_sf= geom, designed for =sf= objects.
 
 
 **** raster
@@ -420,10 +424,14 @@ The =sf= package implements =plot= methods for displaying data using =base= grap
  The package defines a number of =S4= classes. =RasterLayer=, =RasterBrick=, and =RasterStack= are the most important:
 
  -  A =RasterLayer= object represents single-layer (variable) raster
-    data. It can be created with the function =raster=. This function is able to create a =RasterLayer= from another object, including another =Raster*= object, or from a =SpatialPixels*= and =SpatialGrid*= object, or even a matrix. In addition, it can create a =RasterLayer= reading data from a file. The =raster= package can use raster files in several formats, some of them via the =rgdal= package. Supported formats for reading include GeoTIFF, ESRI, ENVI, and ERDAS.
+    data. It can be created with the function =raster=. This function is able to create a =RasterLayer= from another object, including another =Raster*= object[fn:36], or from a =SpatialPixels*= and =SpatialGrid*= object, or even a matrix. In addition, it can create a =RasterLayer= reading data from a file. The =raster= package can use raster files in several formats, some of them via the =rgdal= package. Supported formats for reading include GeoTIFF, ESRI, ENVI, and ERDAS.
 
- -  =RasterBrick= and =RasterStack= are classes for multilayer data. A
-    =RasterStack= is a list of =RasterLayer= objects with the same spatial extent and resolution. It can be formed with a collection of files in different locations or even mixed with =RasterLayer= objects that only exist in memory. A =RasterBrick= is truly a multilayered object, and processing it can be more efficient than processing a =RasterStack= representing the same data.
+\nomenclature{RasterLayer}{A class to represent single-layer (variable) raster data.}
+
+ -  =RasterBrick= and =RasterStack= are classes for multilayer data. A =RasterStack= is a list of =RasterLayer= objects with the same spatial extent and resolution. A =RasterStack= can be formed with a collection of files in different locations or even mixed with =RasterLayer= objects that only exist in memory. A =RasterBrick= is truly a multilayered object, and processing it can be more efficient than processing a =RasterStack= representing the same data.
+
+\nomenclature{RasterBrick}{A class to represent multilayer (variable) raster data.}
+\nomenclature{RasterStack}{A class to represent multilayer (variable) raster data.}
 
  The =raster= package defines a number of methods for raster algebra with =Raster*= objects: arithmetic operators, logical operators, and functions such as =abs=, =round=, =ceiling=, =floor=, =trunc=, =sqrt=, =log=, =log10=, =exp=, =cos=, =sin=, =max=, =min=, =range=, =prod=, =sum=, =any=, and =all=. In these functions, =Raster*= objects can be mixed with numbers.
 
@@ -665,9 +673,13 @@ inspired by the =grid= package.
 
 #+INCLUDE: "SpatioTime/animation.org"
 
-* Bibliography and Index 
+* Glossary, Bibliography and Index 
 
 \backmatter
+
+\printnomenclature
+
+\clearpage 
 
 \printbibliography
 
@@ -676,6 +688,10 @@ inspired by the =grid= package.
 \printindex
 
 * Footnotes
+
+[fn:37] The asterisk is commonly used as a wildcard character to denote subsets of classes. Thus, =SpatialLines*= comprises =SpatialLines= and =SpatialLinesDataFrame= classes. Moreover, =Spatial*= represents all the classes defined by the =sp= package.
+
+[fn:36] The notation =Raster*= represents all the classes of =Raster= objects: =RasterLayer=, =RasterStack=, and =RasterBrick=.
 
 [fn:35] The development version can be installed with the =remotes= package: =remotes::install_github("tidyverse/ggplot2")=.
 
