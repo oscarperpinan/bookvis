@@ -228,13 +228,13 @@ ref:fig:SISdm_horizonplot) methods, which reproduce the procedures
 described in Chapter ref:cha:timeHorizontalAxis to display
 multivariate time series.
 
-#+begin_src R :results output graphics :exports both :file figs/SISmm_xyplot.png :width 2000 :height 2000 :res 300
-xyplot(SISdm, digits = 1, col = 'black', lwd = 0.2, alpha = 0.4)
+#+begin_src R :results output graphics :exports both :file figs/SISmm_xyplot.pdf
+xyplot(SISdm, auto.key = list(space = 'right'))
 #+end_src
 
 #+CAPTION: Time graph of the average solar radiation for each latitude zone. Each line represents a latitude band. label:fig:SISmm_xyplot
 #+RESULTS:
-[[file:figs/SISmm_xyplot.png]]
+[[file:figs/SISmm_xyplot.pdf]]
 
 #+begin_src R :results output graphics :exports both :file figs/SISdm_horizonplot.pdf
 horizonplot(SISdm, digits = 1,
