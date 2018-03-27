@@ -236,7 +236,7 @@ pNO2 <- spplot(NO2sp["classNO2"],
 pNO2
 #+end_src 
 
-#+CAPTION: Annual average of $NO_2$ measurements in Madrid.  label:fig:airMadrid_classes
+#+CAPTION: Annual average of $NO_2$ measurements in Madrid. Enhancement of Figure ref:fig:airMadrid_spplot, using symbol sizes proposed by Borden Dent and a better key. label:fig:airMadrid_classes
 #+RESULTS[9f53f6015cd95a3fec85c3619d7aba384e1fa0f2]:
 [[file:figs/airMadrid_classes.pdf]]
 
@@ -355,7 +355,7 @@ spplot(NO2merc["classNO2"],
        key.space = NO2key)
 #+end_src
 
-#+CAPTION: Annual average of $NO_2$ measurements in Madrid. label:fig:airMadrid_stamen
+#+CAPTION: Annual average of $NO_2$ measurements in Madrid. Enhancement of Figure ref:fig:airMadrid_classes, using a Stamen map. label:fig:airMadrid_stamen
 #+RESULTS[fea21c22315e2622233bf425bdcf71b27918f9e1]:
 [[file:figs/airMadrid_stamen.pdf]]
 

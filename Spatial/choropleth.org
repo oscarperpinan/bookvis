@@ -241,7 +241,7 @@ spplot(spMapVotes["pcMax"],
 ##################################################################
 #+end_src
 
-It is evident in figure ref:fig:pcMaxUC that the =pcMax= variable is
+It is evident in Figure ref:fig:pcMaxUC that the =pcMax= variable is
 concentrated in the 0.2-0.4 range. Figure ref:fig:densityChoropleth
 displays the density estimation of this variable grouping by the
 political option. This result suggests to use data classification.
