@@ -25,14 +25,6 @@ source('configLattice.R')
 #+end_src
 
 
-#+RESULTS:
-
-A choropleth map shades regions according to the measurement of a
-variable displayed on the map. The choropleth map is an appropriate
-tool to visualize a variable uniformly distributed within each region,
-changing only at the region boundaries. This method performs correctly
-with homogeneous regions, both in size and shape.
-
 * Introduction
 
 This chapter details how to create choropleth maps depicting the

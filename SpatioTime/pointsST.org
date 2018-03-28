@@ -24,20 +24,6 @@ source('configLattice.R')
 * Introduction
 label:sec:intro_st
 
-Throughout this chapter we will revisit the data from the Integrated
-Air Quality system of the Madrid City Council (section
-ref:sec:airQualityData) to illustrate visualization methods
-applicable for point space-time data. This dataset comprises the time
-series of measurements acquired at each station of the network
-during 2011. In the section ref:cha:bubble the data were converted
-from spatiotemporal data to spatial data, where the time
-information was suppressed to display only the yearly average
-values. In this chapter we will work with the whole space-time dataset
-using the tools provided by the =spacetime= package
-cite:Pebesma2012.
-
-* Data and Spatial Information
-label:sec:data_st
 #+begin_src R :exports none
 ##################################################################
 ## Data and spatial information

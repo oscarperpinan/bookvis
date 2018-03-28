@@ -314,27 +314,91 @@ label:part:Time
 ** Time on the Horizontal Axis
  label:cha:timeHorizontalAxis
 
- The most frequent visualization method of a time series uses the horizontal axis to depict the time index. This chapter illustrates several variants to display multivariate time series: multiple time series with different scales, variables with the same scale, and stacked graphs.
+#+BEGIN_EXPORT latex
+\chapterprecishere{%
+  The most frequent visualization method of a time series uses the
+  horizontal axis to depict the time index. This chapter illustrates
+  several variants of this approach to display multivariate time
+  series: multiple time series with different scales, variables with
+  the same scale, and stacked graphs. The last section provides
+  examples and code for producing interactive visualizations.
+
+  Along this chapter these subjects are covered: small multiples,
+  panel functions, aspect ratio, diverging palettes, horizon and
+  stacked graphs, and interactive visualization.
+  
+  The most relevant packages in this chapter are: \texttt{zoo} and
+  \texttt{xts} for reading and arranging data as time series;
+  \texttt{colorspace} for defining color palettes; and
+  \texttt{dygraphs}, \texttt{highcharter}, \texttt{plotly},
+  \texttt{streamgraph}, and \texttt{gridSVG} for interactive
+  visualization.
+  %
+}
+#+END_EXPORT
 
 #+INCLUDE: "TimeSeries/timeHorizontalAxis.org" 
 
 ** Time as a Conditioning or Grouping Variable
 label:cha:timeGroupFactor
 
-In Section ref:sec:differentVariables we learned to display the time evolution of multiple time series with different scales. But, what if instead of displaying the time evolution we want to represent the relation between the variables? Section ref:SEC:groupVariable proposes the scatterplot matrix solution using groups defined according to the time as a grouping variable. Section ref:SEC:conditionVariable uses an enhanced scatterplot with time as a conditioning variable. Section ref:SEC:hexbin includes a discussion about the hexagonal binning for large datasets.
+#+BEGIN_EXPORT latex
+\chapterprecishere{%
+  In Section \ref{sec:differentVariables} we learned to display the
+  time evolution of multiple time series with different scales. But,
+  what if instead of displaying the time evolution we want to
+  represent the relation between the variables? This chapter follows
+  this approach: Section \ref{SEC:groupVariable} proposes the
+  scatterplot matrix solution using groups defined according to the
+  time as a grouping variable; Section \ref{SEC:conditionVariable}
+  produces an enhanced scatterplot with time as a conditioning
+  variable using the small multiples technique; Section
+  \ref{SEC:hexbin} includes a discussion about the hexagonal binning
+  for large datasets.
+
+  Along this chapter these subjects are covered: scatterplot matrices,
+  small multiples, hexagonal binning, and panel functions.
+
+  The most relevant packages in this Chapter are: \texttt{zoo} for
+  reading and arranging data as time series; \texttt{GGally} for
+  creating the scatterplot matrix with \texttt{ggplot2};
+  \texttt{hexbin} for hexagonal binning; \texttt{reshape2} for
+  converting data from the wide format to the long format.
+  %
+}
+#+END_EXPORT
 
 #+INCLUDE: "TimeSeries/timeGroupFactor.org"
 
 ** Time as a Complementary Variable
  label:cha:timeComplementary
 
-Gapminder [fn:17] is an independent foundation based in Stockholm, Sweden.  Its mission is "to debunk devastating myths about the world by offering free access to a fact-based world view." They provide free online tools, data, and videos "to better understand the changing world." The initial development of Gapminder was the Trendalyzer software, used by Hans Rosling in several sequences of his documentary "The Joy of Stats."
+#+BEGIN_EXPORT latex
+\chapterprecishere{%
+  In this chapter, time will be used as a complementary variable which
+  adds information to a graph where several variables are
+  confronted. We will illustrate this approach with the evolution of
+  the relationship between Gross National Income (GNI) and carbon
+  dioxide ($CO_2$) emissions for a set of countries extracted from the
+  database of the World Bank Open Data. We will try several solutions
+  to display the relationship between $CO_2$ emissions and GNI over
+  the years using time as a complementary variable.
 
-The information visualization technique used by Trendalyzer is an interactive bubble chart. By default it shows five variables: two numeric variables on the vertical and horizontal axes, bubble size and color, and a time variable that may be manipulated with a slider. The software uses brushing and linking techniques for displaying the numeric value of a highlighted country.
+  Along this chapter these subjects are covered: qualitative palettes,
+  visual discrimination, panel functions, label positioning, small
+  multiples, class intervals, and animation. Last section is devoted
+  to interactive graphics.
 
-This software was acquired by Google in 2007, and is now available as a Motion Chart gadget and as the Public Data Explorer.
-
-In this chapter, time will be used as a complementary variable which adds information to a graph where several variables are confronted. We will illustrate this approach with the evolution of the relationship between Gross National Income (GNI) and carbon dioxide ($CO_2$) emissions for a set of countries extracted from the database of the World Bank Open Data. We will try several solutions to display the relationship between $CO_2$ emissions and GNI over the years using time as a complementary variable. The final method will produce an animated plot resembling the Trendalyzer solution.
+  The most relevant packages in this chapter are: \texttt{zoo} for
+  reading and arranging data as time series; \texttt{reshape2} for
+  converting data from the wide format to the long format;
+  \texttt{RColorBrewer} for defining color palettes;
+  \texttt{directlabels} for label positioning; \texttt{classInt} for
+  computing class intervals; \texttt{plotly}, \texttt{googleVis}, and
+  \texttt{gridSVG} for interactive graphics.
+  %
+}
+#+END_EXPORT
 
 #+INCLUDE: "TimeSeries/timeComplementary.org"
 
@@ -348,13 +412,38 @@ label:part:Spatial
 ** Displaying Spatial Data: Introduction
   label:cha:spatialIntro
 
- Spatial data (also known as geospatial data) are directly or indirectly referenced to a location on the surface of the Earth. Their spatial reference is composed of coordinate values and a system of reference for these coordinates. Spatial data are often accessed, manipulated, or analyzed through Geographic Information Systems (GIS).
+ Spatial data (also known as geospatial data) are directly or
+ indirectly referenced to a location on the surface of the
+ Earth. Their spatial reference is composed of coordinate values and a
+ system of reference for these coordinates. Spatial data are often
+ accessed, manipulated, or analyzed through Geographic Information
+ Systems (GIS).
 
 \nomenclature{GIS}{Geographic Information Systems.}
 
- Real objects represented by GIS data can be divided into two abstractions: discrete objects (e.g., a road or a river) represented with vector data (points, lines, and polygons), and continuous fields (such as elevation or solar radiation) represented with raster data. The =sp= and =sf= packages are the preferred option to use vector data in =R=, and the =raster= package is the choice for raster data [fn:18].
+ Real objects represented by GIS data can be divided into two
+ abstractions: discrete objects (e.g., a road or a river) represented
+ with vector data (points, lines, and polygons), and continuous fields
+ (such as elevation or solar radiation) represented with raster
+ data. The =sp= and =sf= packages are the preferred option to use
+ vector data in =R=, and the =raster= package is the choice for raster
+ data [fn:18].
 
- This part exposes several examples where vector and raster data are displayed. These examples show geographic location of features (reference maps, Chapter ref:cha:refer-phys-maps), physical landscape features of a place (physical maps, Chapter ref:cha:refer-phys-maps), or a specific variable in the context of a geographic reference (thematic maps, Chapters ref:cha:bubble, ref:cha:choropleth, and ref:cha:raster). These examples make use of several datasets (available at the book website) described in Chapter ref:cha:dataSpatial.
+ This part exposes several examples where vector and raster data are
+ displayed. These examples make use of several datasets (available at
+ the book website) described in Chapter ref:cha:dataSpatial.
+
+ On the one hand, the Chapters ref:cha:bubble, ref:cha:choropleth, and
+ ref:cha:raster focus on thematic maps, that display a specific
+ variable commonly using geographic data such as coastlines,
+ boundaries, and places as points of reference for the variable being
+ mapped. These maps provide specific information about particular
+ locations or areas (proportional symbol mapping and choropleth maps)
+ and information about spatial patterns (isarithmic and raster maps).
+
+ On the other hand, the Chapter ref:cha:refer-phys-maps focuses on
+ reference maps, to show geographic location of features, and on
+ physical maps, to show the landscape and features of a place.
 
 *** Packages
   label:sec:spatial-packages
@@ -528,34 +617,133 @@ The =sf= package implements =plot= methods for displaying data using =base= grap
 ** Thematic Maps: Proportional Symbol Mapping
 label:cha:bubble
 
-A thematic map focuses on a specific theme or variable, commonly using geographic data such as coastlines, boundaries, and places as points of reference for the variable being mapped. These maps provide specific information about particular locations or areas (proportional symbol mapping and choropleth maps) and information about spatial patterns (isarithmic and raster maps). The present and following chapters illustrate the code you need to produce these maps.
+#+BEGIN_EXPORT latex
+\chapterprecishere{%
+  The proportional symbol technique uses symbols of different sizes to
+  represent data associated with areas or point locations, with
+  circles being the most frequently used geometric symbol. The data
+  and the size of symbols can be related through different types of
+  scaling: mathematical scaling sizes areas of point symbols in direct
+  proportion to the data; perceptual scaling corrects the mathematical
+  scaling to account for visual understimation of larger symbols; and
+  range grading, where data are grouped, and each class is represented
+  with a single symbol size.
+
+  The most relevant packages used in this chapter are: \texttt{sp} and
+  \texttt{sf}, and \texttt{rgdal} for reading and writing spatial
+  data; \texttt{maptools} for label positioning; \texttt{classInt} for
+  computing class intervals; \texttt{gstat} for spatial interpolation;
+  \texttt{mapview}, \texttt{plotKML}, \texttt{rgl}, and
+  \texttt{gridSVG} for interactive visualization.
+  %
+}
+#+END_EXPORT
 
 #+INCLUDE: "Spatial/bubble.org"
 
 ** Thematic Maps: Choropleth Maps
 label:cha:choropleth
+#+BEGIN_EXPORT latex
+\chapterprecishere{%
+  A choropleth map shades regions according to the measurement of a
+  variable displayed on the map. The choropleth map is an appropriate
+  tool to visualize a variable uniformly distributed within each
+  region, changing only at the region boundaries. This method performs
+  correctly with homogeneous regions, both in size and shape.
 
+  Next subjects are covered in this chapter: sequential and
+  qualitative palettes; small multiples; class intervals; and
+  interactive visualization.
+
+  The most relevant packages used in this chapter are: \texttt{sp} and
+  \texttt{sf}, and \texttt{rgdal} for reading and writing spatial
+  data; \texttt{classInt} for computing class intervals;
+  \texttt{RColorBrewer} for color palettes; and \texttt{mapview} for
+  interactive visualization.
+  %
+}
+#+END_EXPORT
 #+INCLUDE: "Spatial/choropleth.org"
 
 ** Thematic Maps: Raster Maps
 label:cha:raster
+#+BEGIN_EXPORT latex
+\chapterprecishere{%
+  A raster data structure is a matrix of cells organized into rows and
+  columns where each cell contains a value representing information,
+  such as temperature, altitude, population density, land use, etc.
+  This chapter describes how to display a raster with two different
+  data sets: CM-SAF solar irradiation rasters will illustrate the use
+  of quantitative data, and land cover and population data from the
+  NEO-NASA project will exemplify the display of categorical data and
+  multivariate rasters.
 
+  Main subjects covered in this chapter are: sequential, qualitative,
+  and diverging palettes; class intervals and visual discrimination;
+  hill shading; 3D and interactive visualization.
+
+  The most relevant packages used in this chapter are: \texttt{raster}
+  for reading raster data; \texttt{rasterVis} for visualization of
+  raster data; \texttt{maps}, \texttt{mapdata}, and \texttt{maptools}
+  for boundaries lines; \texttt{classInt} for computing class
+  intervals; \texttt{mapview} for interactive maps.
+%
+}
+#+END_EXPORT
 #+INCLUDE: "Spatial/raster.org"
 
 ** Vector Fields
 label:cha:vector
 
+#+BEGIN_EXPORT latex
+\chapterprecishere{%
+  Many objects in our natural environment exhibit directional features
+  that are naturally represented by vector data. Vector fields,
+  commonly found in science and engineering, describe the spatial
+  distribution of a vector variable such as fluid flow or
+  electromagnetic forces. A suitable visualization method has to
+  display both the magnitude and the direction of the vectors at any
+  point.
+
+  This chapter illustrates two visualization techniques, arrow plots
+  and stream lines, included in the \texttt{rasterVis} package.
+%
+}
+#+END_EXPORT
 #+INCLUDE: "Spatial/vector.org"
 
 ** Physical and Reference Maps
  label:cha:refer-phys-maps
 
- A physical map shows the physical landscape features of a place.  Mountains and elevation changes are usually shown with different colors and shades to show relief, using green to show lower elevations and browns for high elevations.
+#+BEGIN_EXPORT latex
+\chapterprecishere{%
+  A physical map shows the physical landscape features of a place.
+  Mountains and elevation changes are usually shown with different
+  colors and shades to show relief, using green to show lower
+  elevations and browns for high elevations.
 
- A reference map focuses on the geographic location of features. In these maps, cities are named and major transport routes are identified. In addition, natural features such as rivers and mountains are named, and elevation is shown using a simple color shading.
+  A reference map focuses on the geographic location of features. In
+  these maps, cities are named and major transport routes are
+  identified. In addition, natural features such as rivers and
+  mountains are named, and elevation is shown using a simple color
+  shading.
 
- This chapter details how to create a physical map of Brazil with data from different sources, and a reference map of a northern region of Spain using data from OpenStreetMap.
+  This chapter details how to create a physical map of Brazil with
+  data from different sources, and a reference map of a northern
+  region of Spain using data from OpenStreetMap.
 
+  Next subjects are covered in this chapter: label positioning, hill
+  shading, and map overlaying.
+
+  The most relevant packages used in this chapter are: \texttt{raster}
+  for reading raster data; \texttt{rgdal} for reading shapefiles;
+  \texttt{rgeos} for computing intersection between raster and vector
+  data;\texttt{rasterVis} for visualization of raster data;
+  \texttt{maptools} for label positioning; and \texttt{osmdata} for
+  retrieving data from OpenStreetMap.
+  %
+}
+#+END_EXPORT
 #+INCLUDE: "Spatial/physical.org"
 #+INCLUDE: "Spatial/osm.org"
 
@@ -668,16 +856,88 @@ inspired by the =grid= package.
 ** Spatiotemporal Raster Data
  label:cha:rasterST
 
+#+BEGIN_EXPORT latex
+\chapterprecishere{%
+  A space-time raster dataset is a collection of raster layers indexed
+  by time, or in other words, a time series of raster maps. The
+  \texttt{raster} package defines the classes \texttt{RasterStack} and
+  \texttt{RasterBrick} to build multilayer rasters. The index of the
+  collection can be set with the function \texttt{setZ} (which is not
+  restricted to time indexes). The \texttt{rasterVis} package provide
+  several methods to display space-time rasters.
+
+  This chapter covers these subjects: small multiples; scatterplot
+  matrices; horizon graph; and interactive and 3D visualization.
+
+  The most relevant packages in this chapter are: \texttt{raster} for
+  reading raster data; \texttt{zoo} for definition of time series;
+  \texttt{rasterVis} for displaying raster data; \texttt{mapview} for
+  interactive graphics.
+%
+}
+#+END_EXPORT
 #+INCLUDE: "SpatioTime/rasterST.org"
 
 ** Spatiotemporal Point Observations
  label:cha:pointsST
 
+#+BEGIN_EXPORT latex
+\chapterprecishere{%
+  Throughout this chapter we will revisit the data from the Integrated
+  Air Quality system of the Madrid City Council (section
+  \ref{sec:airQualityData}) to illustrate visualization methods
+  applicable for point space-time data. This dataset comprises the
+  time series of measurements acquired at each station of the network
+  during 2011. In the section \ref{cha:bubble} the data were converted
+  from spatiotemporal data to spatial data, where the time information
+  was suppressed to display only the yearly average values. In this
+  chapter we will work with the whole space-time dataset using the
+  tools provided by the \texttt{spacetime} package \cite{Pebesma2012}.
+
+  Most relevant packages in this chapter are: \texttt{sp},
+  \texttt{zoo}, and \texttt{spacetime} for reading and defining point
+  space-time data; \texttt{reshape2} for converting from long to wide
+  format.
+%
+}
+#+END_EXPORT
 #+INCLUDE: "SpatioTime/pointsST.org"
 
 ** Animation
  label:cha:animationST
 
+#+BEGIN_EXPORT latex
+\chapterprecishere{%
+  In the chapter \ref{cha:rasterST} a multilayer raster is displayed as
+  a 3D object with a matrix of levelplots using the small-multiple
+  technique (section \ref{sec:levelplot_st}) and as a 2D object after
+  aggregation following a certain direction (section
+  \ref{sec:spacetime_plot}). This chapter displays a multilayer raster
+  with a different approach, plotting the individual layers of the
+  space-time raster sequentially as movie frames to produce an
+  animation (section \ref{sec:animationST_var}).
+
+  On the other hand, in the chapter \ref{cha:pointsST} point space-time
+  data is represented with small multiples, space-time graphics and
+  time graphs. In this chapter the time evolution of the data is
+  represented with dynamic bubbles whose radius and color vary over
+  time.
+
+  Notwithstanding, the animation technique is not restricted to
+  displaying the evolution of a variable over time. Animations can
+  also be constructed from a sequence of changes in an attribute of
+  the variable: for example, the user's view of an static variable can
+  be gradually moved to create a fly-by animation (section
+  \ref{sec:animationST_3d}).
+
+  The most relevant packages in this Chapter are: \texttt{raster} for
+  reading raster data; \texttt{rasterVis} for visualization of raster
+  data; \texttt{maps}, \texttt{mapdata}, and \texttt{maptools} for
+  boundaries lines; \texttt{rgl} for 3D visualization; and
+  \texttt{gridSVG} for interactive graphics.
+  %
+}
+#+END_EXPORT
 #+INCLUDE: "SpatioTime/animation.org"
 
 * Glossary, Bibliography and Index 
@@ -742,8 +1002,6 @@ inspired by the =grid= package.
 [fn:15] [[http://en.wikipedia.org/wiki/ISO_8601]]
 
 [fn:16] [[https://github.com/mbostock/d3/wiki/Gallery]]
-
-[fn:17] [[http://www.gapminder.org/]]
 
 [fn:13] Repository: https://github.com/oscarperpinan/spacetime-vis/archive/master.zip, Website:  https://github.com/oscarperpinan/spacetime-vis/archive/gh-pages.zip
 

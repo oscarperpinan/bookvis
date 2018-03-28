@@ -59,6 +59,17 @@
 \renewcommand{\textfraction}{0.15}
 \renewcommand{\floatpagefraction}{0.7}
 
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable}
+\tcbset{colback=gray!5, breakable}
+
+\renewcommand{\prechapterprecis}{%
+  \vspace*{\prechapterprecisshift}%
+  \begin{tcolorbox}\precisfont}
+  
+\renewcommand{\postchapterprecis}{\end{tcolorbox}\vfill}
+
+\renewcommand*{\precisfont}{\normalfont}
 
 \usepackage{hyperref}
 \hypersetup{

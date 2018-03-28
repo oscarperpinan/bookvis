@@ -17,28 +17,6 @@ setwd('~/github/bookvis')
 Sys.setlocale("LC_TIME", 'C')
 #+end_src
 
-
-In the chapter ref:cha:rasterST a multilayer raster is displayed as a
-3D object with a matrix of levelplots using the small-multiple
-technique (section ref:sec:levelplot_st) and as a 2D object after
-aggregation following a certain direction (section
-ref:sec:spacetime_plot). This chapter displays a multilayer raster
-with a different approach, plotting the individual layers of the
-space-time raster sequentially as movie frames to produce an animation
-(section ref:sec:animationST_var).
-
-On the other hand, in the chapter ref:cha:pointsST point space-time
-data is represented with small multiples, space-time graphics and time
-graphs. In this chapter the time evolution of the data is represented
-with dynamic bubbles whose radius and color vary over time.
-
-Notwithstanding, the animation technique is not restricted to
-displaying the evolution of a variable over time. Animations can also
-be constructed from a sequence of changes in an attribute of the
-variable: for example, the user's view of an static variable can be
-gradually moved to create a fly-by animation (section
-ref:sec:animationST_3d).
-
 * Depicting variable changes over time: raster data label:sec:animationST_var
 
 This section uses animation to visualize changes of a raster variable

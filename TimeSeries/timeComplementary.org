@@ -35,16 +35,18 @@ source('configLattice.R')
 #+INDEX: Data!World Bank Open Data
 #+INDEX: Data!Gross National Income
 
+Our first approach is to display the entire data in a panel with a
+scatterplot using country names as the grouping factor. Points of each
+country are connected with polylines to reveal the time evolution
+(Figure ref:fig:CO2-GNI).
+
 #+begin_src R
 library(zoo)
 
 load('data/CO2.RData')
 #+end_src
 
-Our first approach is to display the entire data in a panel with a
-scatterplot using country names as the grouping factor. Points of each
-country are connected with polylines to reveal the time evolution
-(Figure ref:fig:CO2-GNI).
+
 #+begin_src R :results output graphics :exports both :file "figs/CO2_GNI.pdf" 
 ## lattice version
 xyplot(GNI.capita  ~ CO2.capita, data = CO2data,
@@ -498,11 +500,30 @@ xyplot(GNI.capita ~ CO2.capita|factor(Year), data = CO2data,
 
 Previous sections have been focused on static graphics. This section
 describes several solutions to display the data through animation with
-interactive functionalities. We will mimic the Trendalyzer/Motion
-Chart solution, using traveling bubbles of different colors and with
-radius proportional to the values of the variable
-=CO2.PPP=. Previously, you should watch the magistral video "200
-Countries, 200 Years, 4 Minutes"[fn:4].
+interactive functionalities. 
+
+Gapminder [fn:5] is an independent foundation based in Stockholm,
+Sweden.  Its mission is "to debunk devastating myths about the world
+by offering free access to a fact-based world view." They provide free
+online tools, data, and videos "to better understand the changing
+world." The initial development of Gapminder was the Trendalyzer
+software, used by Hans Rosling in several sequences of his documentary
+"The Joy of Stats."
+
+The information visualization technique used by Trendalyzer is an
+interactive bubble chart. By default it shows five variables: two
+numeric variables on the vertical and horizontal axes, bubble size and
+color, and a time variable that may be manipulated with a slider. The
+software uses brushing and linking techniques for displaying the
+numeric value of a highlighted country.
+
+This software was acquired by Google in 2007, and is now available as
+a Motion Chart gadget and as the Public Data Explorer.
+
+We will mimic the Trendalyzer/Motion Chart solution, using traveling
+bubbles of different colors and with radius proportional to the values
+of the variable =CO2.PPP=. Previously, you should watch the magistral
+video "200 Countries, 200 Years, 4 Minutes"[fn:4].
 
 Three packages are used here: =googleVis=, =plotly=, and =gridSVG=.
 
@@ -756,4 +777,6 @@ grid.export("figs/bubbles.svg")
   =googleVis=: https://developers.google.com/terms/.
 
 [fn:4] http://www.gapminder.org/videos/200-years-that-changed-the-world-bbc/
+
+[fn:5] [[http://www.gapminder.org/]]
 

@@ -14,23 +14,14 @@ setwd('~/github/bookvis/')
 ## with setwd to the folder where the repository is located.
 #+end_src
 
-
-Many objects in our natural environment exhibit directional
-features that are naturally represented by vector data. Vector
-fields, commonly found in science and engineering, describe the
-spatial distribution of a vector variable such as fluid flow or
-electromagnetic forces. A suitable visualization method has to
-display both the magnitude and the direction of the vectors at any
-point.
-
 * Introduction
 
-This chapter illustrates two visualization techniques, arrow plots and
-stream lines, with the help of the wind direction and speed forecast
-published in the THREDSS server[fn:1] of Meteogalicia[fn:2]. This
-server provides access through different protocols to the output of a
-Weather Research and Forecasting (WRF) model, a mesoscale numerical
-weather prediction system.
+The graphics of this chapter display the vector fields defined by the
+wind direction and speed forecast published in the THREDSS
+server[fn:1] of Meteogalicia[fn:2]. This server provides access
+through different protocols to the output of a Weather Research and
+Forecasting (WRF) model, a mesoscale numerical weather prediction
+system.
 
 \nomenclature{WRF}{Weather Research and Forecasting model.}
 

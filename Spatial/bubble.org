@@ -28,18 +28,8 @@ source('configLattice.R')
 
 #+RESULTS:
 
-
-The proportional symbol technique uses symbols of different sizes
-to represent data associated with areas or point locations, with
-circles being the most frequently used geometric symbol. The data
-and the size of symbols can be related through different types of
-scaling: mathematical scaling sizes areas of point symbols in
-direct proportion to the data; perceptual scaling corrects the
-mathematical scaling to account for visual understimation of
-larger symbols; and range grading, where data are grouped, and each
-class is represented with a single symbol size. 
-
 * Introduction
+
 In this chapter we display data from a grid of sensors belonging to
 the Integrated Air Quality system of the Madrid City Council (Section
 ref:sec:airQualityData) with circles as the proportional symbol, and

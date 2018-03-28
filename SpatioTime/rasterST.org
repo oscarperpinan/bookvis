@@ -19,21 +19,6 @@ Sys.setlocale("LC_TIME", 'C')
 
 * Introduction label:sec:intro_st
 
-A space-time raster dataset is a collection of raster layers indexed
-by time, or in other words, a time series of raster maps. The =raster=
-package defines the classes =RasterStack= and =RasterBrick= to build
-multilayer rasters. The index of the collection can be set with the
-function =setZ= (which is not restricted to time indexes). The
-=rasterVis= packages provide several methods to display space-time
-rasters.
-
-** Data
-#+begin_src R :exports none 
-##################################################################
-## CMSAF Data
-##################################################################
-#+end_src
-
 Throughout this chapter we will work with a multilayer raster of daily
 solar radiation estimates from CM SAF (section ref:sec:CMSAF) falling in
 the region of Galicia (north of Spain) during 2011. These data are

@@ -15,16 +15,6 @@ setwd('~/github/bookvis/')
 ## with setwd to the folder where the repository is located.
 #+end_src
 
-A raster data structure is a matrix of cells organized into rows and
-columns where each cell contains a value representing information,
-such as temperature, altitude, population density, land use, etc.
-This chapter describes how to display a raster with two different
-examples: CM-SAF solar irradiation rasters will illustrate the use of
-quantitative data, and land cover and population data from the
-NEO-NASA project will exemplify the display of categorical data and
-multivariate rasters. Read Chapter ref:cha:dataSpatial for
-details about these datasets.
-
 * Quantitative Data
 label:sec:quantitative_raster
 #+begin_src R :exports none
@@ -41,7 +31,8 @@ label:sec:quantitative_raster
 
 As an example of quantitative data, this section displays the
 distribution of annual solar irradiation over the Iberian peninsula
-using the estimates from CM SAF.
+using the estimates from CM SAF. Read Chapter ref:cha:dataSpatial for
+details about this dataset.
 
 #+begin_src R
 library(raster)
@@ -455,7 +446,10 @@ land covers change over time.
 
 This section illustrates how to read and display rasters with
 categorical information using information from the NEO-NASA
-project. After the land cover and population density files have been
+project. Read Chapter ref:cha:dataSpatial for details about these
+datasets.
+
+After the land cover and population density files have been
 downloaded, two =RasterLayers= can be created with the =raster=
 package. Both files are read, their geographical extent reduced to the
 area of India and China, and cleaned (=99999= cells are replaced with
@@ -755,7 +749,6 @@ writeWebGL(filename = 'docs/images/rgl/DEM.html',
 
 #+INDEX: Packages!mapview@\texttt{mapview}
 #+INDEX: Subjects!Interactive visualization
-
 The package =mapview= is able to work with =Raster*= objects. Thus, the =SISav= object can be easily displayed in a interactive map with next code. However, it must be noted that, unlike with vector data (Sections ref:sec:mapview_bubble and ref:sec:interactive_choropleth), the interactivity of this map is restricted to zoom and movement. The mouse hovering or click does not produce any result.
 
 #+begin_src R
