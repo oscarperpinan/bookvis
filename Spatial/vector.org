@@ -77,6 +77,7 @@ from a =Raster= object. Moreover, as the next example illustrates,
 this function displays =RasterStack= and =RasterBrick= objects with
 two layers encoding a vector field, slope (local vector magnitude) and
 aspect (local vector direction).
+
 #+begin_src R :results output graphics :exports both :file figs/vectorplot.pdf
 vectorTheme <- BTCTheme(regions = list(alpha = 0.7))
 
@@ -107,14 +108,15 @@ Another solution is to depict the directional structure of the vector
 field by its integral curves, also denoted as flow lines or
 streamlines. There are a variety of algorithms to produce such
 visualization. The =streamplot= function of =rasterVis= displays
-streamlines with a procedure inspired by the FROLIC algorithm: For
-each point, /droplet/, of a jittered regular grid, a short streamline
-portion, /streamlet/, is calculated by integrating the underlying
-vector field at that point. The main color of each streamlet indicates
-local vector magnitude. Streamlets are composed of points whose sizes,
-positions, and color degradation encode the local vector direction
-(Figure ref:fig:streamplot).
+streamlines with a procedure inspired by the FROLIC algorithm
+cite:Wegenkittl.Groeller1997: For each point, /droplet/, of a jittered
+regular grid, a short streamline portion, /streamlet/, is calculated
+by integrating the underlying vector field at that point. The main
+color of each streamlet indicates local vector magnitude. Streamlets
+are composed of points whose sizes, positions, and color degradation
+encode the local vector direction (Figure ref:fig:streamplot).
 
+#+INDEX: Subjects!Sequential palette
 
 #+begin_src R :results output graphics :exports both :file figs/streamplot.pdf
 myTheme <- streamTheme(
@@ -123,8 +125,9 @@ myTheme <- streamTheme(
 
 streamplot(windField, isField = TRUE,
            par.settings = myTheme,
-           droplet = list(pc = 12),
-           streamlet = list(L = 5, h = 5),
+           droplet = list(pc = 12), ## Amount of droplets, percentage of cells
+           streamlet = list(L = 5, ## Length of the streamlet
+                            h = 5), ## Calculation step
            scales = list(draw = FALSE),
            panel = panel.levelplot.raster)
 #+end_src

@@ -138,7 +138,8 @@ label:sec:hill-shading-osm
 #+INDEX: Subjects!Hill shading
 
 The second step is to produce layers to display the topography. A
-suitable method is shaded relief or hill shading, previously exposed in section ref:sec:hill-shading-raster.
+suitable method is shaded relief or hill shading, previously exposed
+in section ref:sec:hill-shading-raster.
 
 The hill shade layer is computed from the slope and aspect layers
 derived from a Digital Elevation Model. The DEM of Galicia is
@@ -172,7 +173,6 @@ demCedeira[demCedeira <= 0] <- NA
 The =slope= and =aspect= layers are computed with the =terrain=
 function, and the hill shade layer is derived with these layers for a
 fixed sun position. 
-
 
 #+begin_src R 
 slope <- terrain(demCedeira, 'slope')
@@ -238,6 +238,7 @@ sp.road <- function(line, lwd = 6, blwd = 7,
 #+INDEX: Packages!sp@\texttt{sp}  
 #+INDEX: Packages!latticeExtra@\texttt{latticeExtra}  
 #+INDEX: Packages!colorspace@\texttt{colorspace}  
+#+INDEX: Subjects!Label positioning
 
 #+begin_src R :results output graphics :exports both :file figs/cedeiraOSM.pdf
 ## Hill shade and DEM overlaid

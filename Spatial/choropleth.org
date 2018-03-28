@@ -44,6 +44,8 @@ shapefile. The result is stored in the =data= folder, in a set of
 files named =spMapVotes.*=. You can visit it for details if you are
 interested in this procedure.
 
+\nomenclature{SpatialPolygonsDataFrame}{Class to hold polygons with attributes.}
+
 As exposed in chapter ref:cha:bubble, two alternatives are available: 
 
 1. Import the data with the =rgdal= package and the function
@@ -189,6 +191,7 @@ choices, available in =R= via the =RColorBrewer= package
 cite:Neuwirth2014.
 
 #+INDEX: Packages!RColorBrewer@\texttt{RColorBrewer}
+#+INDEX: Subjects!Sequential palette
 
 #+begin_src R
 library(RColorBrewer)
@@ -245,6 +248,8 @@ It is evident in Figure ref:fig:pcMaxUC that the =pcMax= variable is
 concentrated in the 0.2-0.4 range. Figure ref:fig:densityChoropleth
 displays the density estimation of this variable grouping by the
 political option. This result suggests to use data classification.
+
+#+INDEX: Subjects!Class Intervals
 
 #+begin_src R :results output graphics :exports both :file figs/densityChoropleth.pdf
 ggplot(as.data.frame(spMapVotes),
@@ -373,6 +378,7 @@ summary(spMapVotes$whichMax)
 Figure ref:fig:whichMax encodes these levels with a qualitative palette from ColorBrewer.
 
 #+INDEX: Packages!RColorBrewer@\texttt{RColorBrewer}
+#+INDEX: Subjects!Qualitative palette
 
 #+begin_src R 
 classes <- levels(factor(spMapVotes$whichMax))
@@ -423,6 +429,8 @@ its usage is not well documented and cannot be recommended. Instead,
 the =ggplot= approach is easy to use thanks to the =facet_wrap=
 function. The result is displayed in Figure ref:fig:pcMax_panels.
 
+#+INDEX: Subjects!Small multiples
+
 #+begin_src R :results output graphics :exports both :file figs/pcMax_panels.pdf
 ggplot(sfMapVotes) +
     geom_sf(aes(fill = pcMaxInt),
@@ -465,6 +473,10 @@ color ramp for each member of the qualitative palette. Each ramp
 begins in the original color of the palette, and ends in a lighter
 color with its transparency fixed to 40%. 
 
+#+INDEX: Subjects!Sequential palette
+#+INDEX: Subjects!Qualitative palette
+
+
 #+begin_src R
 ## Number of intervals.
 N <- 3
@@ -476,6 +488,7 @@ multiPal <- sapply(1:nClasses, function(i)
 })
 #+end_src
 
+#+INDEX: Subjects!Class Intervals
 #+INDEX: Packages!classInt@\texttt{classInt}
 
 #+begin_src R
@@ -486,7 +499,6 @@ intFisher <- classIntervals(spMapVotes$pcMax,
 spMapVotes$pcMaxInt <- cut(spMapVotes$pcMax,
                             breaks = intFisher$brks)
 #+end_src
-
 
 With this multivariate palette we can produce a list of maps
 extracting the polygons according to each class of the qualitative
@@ -588,8 +600,7 @@ label:sec:interactive_choropleth
 ##################################################################
 #+end_src
 
-
-#+INDEX: Subjects!Interactive graphics
+#+INDEX: Subjects!Interactive visualization
 
 The package =mapview= was used in section ref:sec:mapview_bubble to
 produce interactive proportional symbol maps. In this section this package creates interactive choropleth maps. 

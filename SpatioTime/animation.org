@@ -85,6 +85,7 @@ resolution of 12 kilometers.
 
 #+INDEX: Data!Cloud cover
 #+INDEX: Data!MeteoGalicia
+#+INDEX: Subjects!Data processing and cleaning
 
 #+begin_src R
 library(raster)
@@ -166,6 +167,8 @@ function. This function provides the argument =layout= to control the
 arrangement of a multipanel display. If it is set to =c(1,1)=, a
 different page is created for each layer.
 
+#+INDEX: Subjects!Animation
+#+INDEX: Subjects!Sequential palette
 
 #+begin_src R 
 cloudTheme <- rasterTheme(region = brewer.pal(n = 9, 'Blues'))
@@ -210,6 +213,9 @@ of the forecast series) of the movie. This graphic is also created
 with =levelplot= but now using the argument =layers= to choose a
 subset of the layers, and with a different value for =layout= to
 display a matrix of twenty-four panels.
+
+#+INDEX: Subjects!Small multiples
+
 #+begin_src R :results output graphics :exports both :file figs/cft.pdf
 levelplot(cft,
           layers = 25:48, ## Layers to display (second day)
@@ -249,6 +255,8 @@ next code this package generates a 3D animation depicting the cloud
 evolution over time.
 
 #+INDEX: Packages!rgl@\texttt{rgl}
+#+INDEX: Subjects!3D visualization
+#+INDEX: Subjects!Animation
 
 #+begin_src R
 library(rgl)
@@ -286,7 +294,11 @@ label:sec:animation_st
 ##################################################################
  #+end_src
 
-The procedure for point space-time data is more complex than for raster data. This section details a method built over the functionalities of the =gridSVG= package.
+The procedure for point space-time data is more complex than for
+raster data. This section details a method built over the
+functionalities of the =gridSVG= package.
+
+#+INDEX: Subjects!Animation
 
 ** Initial Snapshot
  #+begin_src R :exports none
@@ -294,9 +306,9 @@ The procedure for point space-time data is more complex than for raster data. Th
 ## Initial snapshot
 ##################################################################
 #+end_src
+
 The first step is to define the initial parameters of the animation:
 starting values and duration.
-
 
 #+INDEX: Packages!gridSVG@\texttt{gridSVG}
 
@@ -385,6 +397,7 @@ grid.animate('stationsCircles',
 ## Time reference: progress bar
 ##################################################################
 #+end_src
+
 Information from an animation is better understood if a time
 reference is included, for example with a progress bar.  The following
 code builds a progress bar with ticks at the first day of each
@@ -394,7 +407,6 @@ a method so the user can stop and restart the animation sequence
 if desired.  This functionality is added with the definition of
 two events, =onmouseover= and =onmouseout=, included with the
 =grid.garnish= function.
-
 
 #+begin_src R 
 ## Progress bar
@@ -514,6 +526,9 @@ grid.export('figs/vLine.svg')
 
 In this section the =rgl= package is used to generate a fly-by animation over the Earth, as an example of an animation depicting changes of a spatial attribute.
 
+#+INDEX: Subjects!Animation
+#+INDEX: Subjects!3D visualization
+
 *** Basic 3D earth
 
 Firstly, a basic 3D Earth at night is created with the =surface3d= function, using the night lights images published by the NASA[fn:3].
@@ -582,6 +597,7 @@ through the Nominatim service of OpenStreetMap. An auxiliary function,
 =geocode=, obtains this information using the =XML= package.
 
 #+INDEX: Packages!XML@\texttt{XML}
+#+INDEX: Subjects!Web scraping
 #+INDEX: Data!OpenStreetMap
 
 #+begin_src R
@@ -627,6 +643,7 @@ locations. The =geosphere= package provides the =gcIntermediate=
 function for this task:
 
 #+INDEX: Packages!geosphere@\texttt{geosphere}
+#+INDEX: Subjects!Data processing and cleaning
 
 #+begin_src R
 library(geosphere)

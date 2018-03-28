@@ -66,6 +66,7 @@ seconds.
 #+INDEX: Subjects!Web scraping
 #+INDEX: Packages!XML@\texttt{XML}
 #+INDEX: Packages!sp@\texttt{sp}
+#+INDEX: Subjects!Data processing and cleaning
 
 #+begin_src R
   library(XML)
@@ -231,8 +232,12 @@ label:sec:photographs_stations
 #+end_src
 
 #+INDEX: Packages!XML@\texttt{XML}
+\nomenclature{XML}{Extensible Markup Language, a markup language that defines a set of rules for encoding documents in a format that is both human-readable and machine-readable.}
 
-The photographs of the stations are used for the tooltips of the interactive graphics (Section ref:sec:interactive_bubble). These photographs are downloaded from the Munimadrid webpage[fn:8] with the functions of the =XML= package. 
+The photographs of the stations are used for the tooltips of the
+interactive graphics (Section ref:sec:interactive_bubble). These
+photographs are downloaded from the Munimadrid webpage[fn:8] with the
+functions of the =XML= package.
 
 The =htmlParse= function from the =XML= package parses each station
 page, and the station photograph is extracted with =getNodeSet= and
@@ -283,6 +288,7 @@ groups are considered: the four main parties (=PP=, =PSOE=, =UP=,
 
 #+INDEX: Data!INE
 #+INDEX: Data!Spanish General Elections
+#+INDEX: Subjects!Data processing and cleaning
 
 #+begin_src R 
 dat2016 <- read.csv('data/GeneralSpanishElections2016.csv')
@@ -415,6 +421,8 @@ writeOGR(spMapVotes0, dsn = 'data/', layer = 'spMapVotes0',
          drive = 'ESRI Shapefile')
 #+end_src
 
+\nomenclature{shapefile}{A spatial data format. It stores geometry and attribute information for the spatial features in a data set.}
+
 Finally, Spanish maps are commonly displayed with the Canarian islands next
 to the peninsula. First we have to extract the polygons of the
 islands and the polygons of the peninsula, and then shift the
@@ -484,14 +492,16 @@ Surface Radiation Network (BSRN)[fn:4].
 
 The monthly means of SIS are available upon request from the CM SAF
 webpage \cite{Posselt.Muller.ea2011} and at the =data= folder of the
-book repository. Data from CM-SAF is published as raster files. The
-=raster= package provides the =stack= function to read a set of files
-and create a =RasterStack= object, where each layer stores the content
-of a file. Therefore, the twelve raster files of monthly averages
-produce a =RasterStack= with twelve layers.
+book repository. Data from CM-SAF is published as raster files using
+the NetCDF format. The =raster= package provides the =stack= function
+to read a set of files and create a =RasterStack= object, where each
+layer stores the content of a file. Therefore, the twelve raster files
+of monthly averages produce a =RasterStack= with twelve layers.
 
+\nomenclature{NetCDF}{Network Common Data Form, a set of software libraries and self-describing, machine-independent data formats that support the creation, access, and sharing of array-oriented scientific data.}
 #+INDEX: Data!CM SAF
 #+INDEX: Data!Solar radiation
+#+INDEX: Subjects!Data processing and cleaning
 
 #+INDEX: Packages!raster@\texttt{raster}
 
@@ -530,7 +540,10 @@ a repository of global data imagery. We use the population density and
 land cover classification rasters. Both rasters must be downloaded
 from their respective webpages as Geo-TIFF files.
 
-\nomenclature{NEO-NASA}{NASA Earth Observations, part of the NASA’s Earth Observing System (EOS)}
+\nomenclature{NEO-NASA}{NASA Earth Observations, part of the NASA’s Earth Observing System (EOS).}
+\nomenclature{Geo-TIFF}{A public domain metadata standard which allows georeferencing information to be embedded within a TIFF file.}
+\nomenclature{TIFF}{Tagged Image File Format, a computer file format for storing raster graphics images.}
+
 #+INDEX: Data!Population density
 #+INDEX: Data!Land cover
 

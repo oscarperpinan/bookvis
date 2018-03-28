@@ -75,6 +75,8 @@ from the =lattice= package, is able to display
 #+INDEX: Packages!sp@\texttt{sp}
 #+INDEX: Data!Air quality in Madrid
 
+\nomenclature{SpatialPointsDataFrame}{Class for spatial attributes that have spatial point locations.}
+
 #+begin_src R
 library(sp)
 library(rgdal)
@@ -88,6 +90,8 @@ ref:fig:airMadrid_spplot).  A sequential palette is defined with
 =colorRampPalette=, with colors denoting the value of the variable
 (green for lower values of the contaminant, brown for intermediate
 values, and black for highest values).
+
+#+INDEX: Subjects!Sequential palette
 
 #+begin_src R :results output graphics :exports both :file figs/airMadrid_spplot.pdf
 airPal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(5)
@@ -157,6 +161,7 @@ ref:fig:airMadrid_spplot:
   and maximize the variance between classes.
 
 #+INDEX: Packages!classInt@\texttt{classInt}
+#+INDEX: Subjects!Class Intervals
 
 #+begin_src R 
 library(classInt)
@@ -182,6 +187,8 @@ options(op)
   that were easily and consistently discriminated by his subjects. The
   alternative proposed by Dent et al. improves the discrimination
   between some of the circles.
+
+#+INDEX: Subjects!Visual discrimination
 
 #+begin_src R 
 ## Complete Dent set of circle radii (mm)
@@ -236,7 +243,7 @@ pNO2 <- spplot(NO2sp["classNO2"],
 pNO2
 #+end_src 
 
-#+CAPTION: Annual average of $NO_2$ measurements in Madrid. Enhancement of Figure ref:fig:airMadrid_spplot, using symbol sizes proposed by Borden Dent and a better key. label:fig:airMadrid_classes
+#+CAPTION: Annual average of $NO_2$ measurements in Madrid. Enhancement of Figure ref:fig:airMadrid_spplot, using symbol sizes proposed by Borden Dent and an improved legend. label:fig:airMadrid_classes
 #+RESULTS[9f53f6015cd95a3fec85c3619d7aba384e1fa0f2]:
 [[file:figs/airMadrid_classes.pdf]]
 
@@ -335,6 +342,8 @@ because the Stamen maps use the Web Mercator projection[fn:7]. The
 result, using the =sp.layout= argument, is shown in Figure
 ref:fig:airMadrid_stamen.
 
+#+INDEX: Subjects!Background map
+
 #+begin_src R :results output graphics :exports both :file figs/airMadrid_stamen.pdf
 ## ggmap with spplot
 ## Project the data into the web mercator projection
@@ -376,6 +385,8 @@ service[fn:1].
 
 A shapefile can be read with =readOGR= from the =rgdal= package, or
 with =st_read= from the =sf= package. 
+
+#+INDEX: Subjects!Background map
 
 *** rgdal and spplot
 #+begin_src R :exports none
@@ -568,6 +579,7 @@ weighted (IDW) interpolation with the =gstat= package cite:Pebesma2004
 /only/ for illustration purposes.
  
 #+INDEX: Packages!gstat@\texttt{gstat}
+\nomenclature{IDW}{Inverse Distance Weighted interpolation.}
 
 #+begin_src R
 library(gstat)
@@ -585,6 +597,7 @@ The result is a =SpatialPixelsDataFrame= that can be displayed with
 =spplot= and combined with the previous layers and the measurement
 station points (Figure ref:fig:airMadrid_krige).
 
+\nomenclature{SpatialPixelsDataFrame}{Class for spatial attributes that have spatial locations on a regular grid.}
 
 #+begin_src R :results output graphics :exports both :file figs/airMadrid_krige.png :width 4000 :height 4000 :res 600
 spplot(airKrige["var1.pred"], ## Variable interpolated
@@ -634,8 +647,6 @@ GeoJSON and KML formats; 3D visualization with the =rgl= package; and
 ** mapview 
 label:sec:mapview_bubble
 
-#+INDEX: Packages!mapview@\texttt{mapview}
-
 #+begin_src R :exports none
 ##################################################################
 ## mapView
@@ -645,6 +656,9 @@ label:sec:mapview_bubble
 The syntax of =mapview=[fn:12] resembles the syntax of =spplot=. Its first argument is the spatial object with the information and the variable to be depicted is selected with the argument =zcol=. Moreover, the size of the points can be linked to another variable with the argument =cex=, and their labels extracted from another variable with the argument =label=. 
 
 The next code produces an HTML page with an interactive graphic inserted in it (Figure ref:fig:mapview_bubble_simple). When the mouse is hovered over a point its label is displayed, and if the point is selected a tooltip with the whole information is deployed.
+
+#+INDEX: Packages!mapview@\texttt{mapview}
+#+INDEX: Subjects!Tooltip
 
 #+begin_src R
 library(mapview)
@@ -680,6 +694,9 @@ ref:fig:mapview_popup_images).
 
 As an additional feature, the provider[fn:11] of the background map is
 selected with the argument =map.type=.
+
+#+INDEX: Subjects!Tooltip
+#+INDEX: Subjects!Background map
 
 #+begin_src R
 img <- paste('images/', NO2sp$codEst, '.jpg', sep = '')
@@ -729,6 +746,8 @@ pList <- lapply(stations, function(i)
 This list of graphics, =pList=, is provided to =mapview= through the
 =popup= argument with the function =popupGraph= (Figure ref:fig:mapview_popup_graphs).
 
+#+INDEX: Subjects!Tooltip
+
 #+begin_src R
 mapview(NO2sp,
         zcol = "mean",
@@ -764,6 +783,8 @@ The next code generates three graphics to view different variables of
 the =NO2sp= object using different values in =zcol= and =cex=. All of
 them are viewed and synchronised together with =sync= (Figure
 ref:fig:mapview_sync):
+
+#+INDEX: Subjects!Background map
 
 #+begin_src R
 ## Map of the average value
@@ -812,6 +833,7 @@ a GeoJSON file with =writeOGR= from the =rgdal= package.
 
 #+INDEX: Packages!rgdal@\texttt{rgdal}
 #+INDEX: Subjects!GeoJSON
+#+INDEX: Subjects!KML
 
 #+begin_src R :eval no-export
 library(rgdal)
@@ -941,6 +963,8 @@ ref:sec:photographs_stations), the name of the station, and the
 statistics previously calculated with =aggregate= in the first step of
 this chapter. 
 
+#+INDEX: Subjects!Tooltip
+
 #+begin_src R 
 library(gridSVG)
 
@@ -1005,6 +1029,7 @@ objects to produce an SVG document with script elements.
 
 
 #+INDEX: Subjects!jQuery
+#+INDEX: Subjects!SVG
 
 #+begin_src R
 ## Add jQuery and jQuery UI scripts

@@ -176,6 +176,8 @@ On the other hand, the package =gridSVG= cite:Murrell.Potter2017 converts any gr
 Throughout the book, several \textsf{R} packages are used. All of them are available from \textsf{CRAN}, and you must install them before
 using the code. Most of them are loaded at the start of the code of each chapter, although some of them are loaded later if they are used only inside optional sections (marked with \floweroneleft). You should install the last version available at \textsf{CRAN} to ensure correct functioning of the code.
 
+\nomenclature{CRAN}{Comprehensive R Archive Network.}
+
 Although the introductory chapter of each part includes a section with an outline of the most relevant packages, some of them deserve to be
 highlighted here:
 
@@ -365,6 +367,8 @@ label:part:Spatial
 #+INDEX: Packages!sp@\texttt{sp}
 
  The =sp= package cite:Pebesma.Bivand2005 provides classes and methods for dealing with spatial data in =R=. The spatial data classes implemented are points (=SpatialPoints=), grids (=SpatialPixels= and =SpatialGrid=), lines (=Line=, =Lines= and =SpatialLines=), rings, and polygons (=Polygon=, =Polygons=, and =SpatialPolygons=), each of them without data or with data (for example, =SpatialPointsDataFrame= or =SpatialLinesDataFrame=)[fn:37].
+
+\nomenclature{SpatialLinesDataFrame}{A class that holds data consisting of sets of lines, where each set of lines relates to an attribute row in a data.frame}
 
  Selecting, retrieving, or replacing certain attributes in spatial objects with data is done using standard methods:
 

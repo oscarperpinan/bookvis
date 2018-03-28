@@ -41,7 +41,6 @@ library(zoo)
 load('data/CO2.RData')
 #+end_src
 
-
 Our first approach is to display the entire data in a panel with a
 scatterplot using country names as the grouping factor. Points of each
 country are connected with polylines to reveal the time evolution
@@ -80,53 +79,55 @@ Three improvements can be added to this graphical result:
 ##################################################################
  #+end_src
 
- The =Country.Name= categorical variable will be encoded with a
- qualitative palette, namely the first five colors of =Set1=
- palette[fn:2] from the =RColorBrewer= package
- cite:Neuwirth2014. Because there are more countries than colors, we
- have to repeat some colors to complete the number of levels of the
- variable =Country.Name=. The result is a palette with non-unique
- colors, and thus some countries will share the same color. This is not
- a problem because the curves will be labeled, and countries with the
- same color will be displayed at enough distance.
+The =Country.Name= categorical variable will be encoded with a
+qualitative palette, namely the first five colors of =Set1=
+palette[fn:2] from the =RColorBrewer= package
+cite:Neuwirth2014. Because there are more countries than colors, we
+have to repeat some colors to complete the number of levels of the
+variable =Country.Name=. The result is a palette with non-unique
+colors, and thus some countries will share the same color. This is not
+a problem because the curves will be labeled, and countries with the
+same color will be displayed at enough distance.
 
- #+INDEX: Packages!RColorBrewer@\texttt{RColorBrewer}
+#+INDEX: Packages!RColorBrewer@\texttt{RColorBrewer}
+#+INDEX: Subjects!Qualitative palette
+#+INDEX: Subjects!Visual discrimination
 
- #+begin_src R 
+#+begin_src R 
 library(RColorBrewer)
 
 nCountries <- nlevels(CO2data$Country.Name)
 pal <- brewer.pal(n = 5, 'Set1')
 pal <- rep(pal, length = nCountries)
- #+end_src
+#+end_src
 
 
- Adjacent colors of this palette are chosen to be easily
- distinguishable. Therefore, the connection between colors and
- countries must be in such a way that nearby lines are encoded
- with adjacent colors of the palette.
+Adjacent colors of this palette are chosen to be easily
+distinguishable. Therefore, the connection between colors and
+countries must be in such a way that nearby lines are encoded
+with adjacent colors of the palette.
 
- A simple approach is to calculate the annual average of the
- variable to be represented along the x-axis (=CO2.capita=), and
- extract colors from the palette according to the order of this
- value.  
+A simple approach is to calculate the annual average of the
+variable to be represented along the x-axis (=CO2.capita=), and
+extract colors from the palette according to the order of this
+value.  
 
 
- #+begin_src R 
+#+begin_src R 
 ## Rank of average values of CO2 per capita
 CO2mean <- aggregate(CO2.capita ~ Country.Name,
                      data = CO2data, FUN = mean)
 palOrdered <- pal[rank(CO2mean$CO2.capita)]  
- #+end_src
+#+end_src
 
+A more sophisticated solution is to use the ordered results of a
+hierarchical clustering of the time evolution of the $\mathrm{CO_2}$ per capita
+values (Figure ref:fig:hclustCO2). The data is extracted from the
+original $\mathrm{CO_2}$ =data.frame=.  
 
- A more sophisticated solution is to use the ordered results of a
- hierarchical clustering of the time evolution of the $\mathrm{CO_2}$ per capita
- values (Figure ref:fig:hclustCO2). The data is extracted from the
- original $\mathrm{CO_2}$ =data.frame=.  
- #+INDEX: Packages!reshape2@\texttt{reshape2}
+#+INDEX: Packages!reshape2@\texttt{reshape2}
 
- #+begin_src R :results output :exports both
+#+begin_src R :results output :exports both
 library(reshape2)
 
 CO2capita <- CO2data[, c('Country.Name',
@@ -135,10 +136,10 @@ CO2capita <- CO2data[, c('Country.Name',
 CO2capita <- dcast(CO2capita, Country.Name ~ Year)
 
 summary(CO2capita)
- #+end_src
+#+end_src
 
- #+RESULTS:
- #+begin_example
+#+RESULTS:
+#+begin_example
 Using CO2.capita as value column: use value.var to override.
   Country.Name      2000              2001              2002        
  Brazil :1     Min.   : 0.9799   Min.   : 0.9717   Min.   : 0.9674  
@@ -171,42 +172,42 @@ Using CO2.capita as value column: use value.var to override.
  Mean   : 7.475   Mean   : 7.387   Mean   : 7.396   Mean   : 7.097  
  3rd Qu.: 9.125   3rd Qu.: 9.168   3rd Qu.: 9.213   3rd Qu.: 8.832  
  Max.   :16.972   Max.   :16.304   Max.   :16.316   Max.   :16.494
- #+end_example
+#+end_example
 
 
- #+begin_src R :results output graphics :exports both :file "figs/hclust.pdf" 
+#+begin_src R :results output graphics :exports both :file "figs/hclust.pdf" 
 hCO2 <- hclust(dist(CO2capita[, -1]))
 
 oldpar <- par(mar = c(0, 2, 0, 0) + .1)
 plot(hCO2, labels = CO2capita$Country.Name,
      xlab = '', ylab = '', sub = '', main = '')
 par(oldpar)
- #+end_src
+#+end_src
 
- #+CAPTION: Hierarchical clustering of the time evolution of $\mathrm{CO_2}$ per capita values. label:fig:hclustCO2
- #+ATTR_LATEX: :height 0.3\textheight
- #+RESULTS:
- [[file:figs/hclust.pdf]]
+#+CAPTION: Hierarchical clustering of the time evolution of $\mathrm{CO_2}$ per capita values. label:fig:hclustCO2
+#+ATTR_LATEX: :height 0.3\textheight
+#+RESULTS:
+[[file:figs/hclust.pdf]]
 
 
- The colors of the palette are assigned to each country with =match=,
- which returns a vector of the positions of the matches of the country
- names in alphabetical order in the country names ordered according to
- the hierarchical clustering.
- #+begin_src R 
+The colors of the palette are assigned to each country with =match=,
+which returns a vector of the positions of the matches of the country
+names in alphabetical order in the country names ordered according to
+the hierarchical clustering.
+#+begin_src R 
 idx <- match(levels(CO2data$Country.Name), 
              CO2capita$Country.Name[hCO2$order])
 palOrdered <- pal[idx]  
- #+end_src
+#+end_src
 
- It must be highlighted that this palette links colors with the levels
- of =Country.Name= (country names in alphabetical order), which is
- exactly what the =groups= argument provides. The following code
- produces a curve for each country using different colors to
- distinguish them.
+It must be highlighted that this palette links colors with the levels
+of =Country.Name= (country names in alphabetical order), which is
+exactly what the =groups= argument provides. The following code
+produces a curve for each country using different colors to
+distinguish them.
 
 
- #+begin_src R 
+#+begin_src R 
 ## lattice version
 ## simpleTheme encapsulates the palette in a new theme for xyplot
 myTheme <- simpleTheme(pch = 19, cex = 0.6, col = palOrdered)
@@ -218,11 +219,11 @@ pCO2.capita <- xyplot(GNI.capita  ~ CO2.capita,
                       groups = Country.Name,
                       par.settings = myTheme,
                       type = 'b')
- #+end_src
+#+end_src
 
- #+RESULTS:
+#+RESULTS:
 
- #+begin_src R 
+#+begin_src R 
 ## ggplot2 version
 gCO2.capita <- ggplot(data = CO2data,
                       aes(x = CO2.capita,
@@ -233,7 +234,7 @@ gCO2.capita <- ggplot(data = CO2data,
     xlab('CO2 emissions (metric tons per capita)') +
     ylab('GNI per capita, PPP (current international $)') +
     theme_bw()
- #+end_src
+#+end_src
 
 ** Labels to Show Time Information
  #+begin_src R :exports none
@@ -241,16 +242,16 @@ gCO2.capita <- ggplot(data = CO2data,
 ## Labels to show time information
 ##################################################################
  #+end_src
- This result can be improved with labels displaying the years to show
- the time evolution.  A panel function with =panel.text= to print the
- year labels and =panel.superpose= to display the lines for each group
- is a solution. In the panel function, =subscripts= is a vector with
- the integer indices representing the rows of the =data.frame= to be
- displayed in the panel.
+This result can be improved with labels displaying the years to show
+the time evolution.  A panel function with =panel.text= to print the
+year labels and =panel.superpose= to display the lines for each group
+is a solution. In the panel function, =subscripts= is a vector with
+the integer indices representing the rows of the =data.frame= to be
+displayed in the panel.
 
- #+INDEX: Subjects!Panel function
+#+INDEX: Subjects!Panel function
 
- #+begin_src R :eval no-export
+#+begin_src R :eval no-export
 xyplot(GNI.capita  ~ CO2.capita,
        data = CO2data,
        xlab = "Carbon dioxide emissions (metric tons per capita)",
@@ -264,34 +265,34 @@ xyplot(GNI.capita  ~ CO2.capita,
                       pos = 2, cex = 0.5, col = 'gray')
            panel.superpose(x, y, subscripts, groups,...)
        })
- #+end_src
+#+end_src
 
- The same result with a clearer code is obtained with the combination
- of =+.trellis=, =glayer_= and =panel.text=. Using =glayer_= instead of
- =glayer=, we ensure that the labels are printed below the lines.
+The same result with a clearer code is obtained with the combination
+of =+.trellis=, =glayer_= and =panel.text=. Using =glayer_= instead of
+=glayer=, we ensure that the labels are printed below the lines.
 
- #+INDEX: Packages!latticeExtra@\texttt{latticeExtra}
+#+INDEX: Packages!latticeExtra@\texttt{latticeExtra}
 
- #+begin_src R
+#+begin_src R
 ## lattice version
 pCO2.capita <- pCO2.capita +
     glayer_(panel.text(...,
                        labels = CO2data$Year[subscripts],
                          pos = 2, cex = 0.5, col = 'gray'))
- #+end_src
+#+end_src
 
- #+RESULTS:
+#+RESULTS:
 
- #+begin_src R 
+#+begin_src R 
 ## ggplot2 version
 gCO2.capita <- gCO2.capita + geom_text(aes(label = Year),
                                        colour = 'gray',
                                        size = 2.5,
                                        hjust = 0, vjust = 0)
   
- #+end_src
+#+end_src
 
- #+RESULTS:
+#+RESULTS:
 
 ** Country Names: Positioning Labels
  #+begin_src R :exports none
@@ -300,46 +301,48 @@ gCO2.capita <- gCO2.capita + geom_text(aes(label = Year),
 ##################################################################
  #+end_src
 
- The common solution to link each curve with the group value is to add
- a legend. However, a legend can be confusing with too many items. In
- addition, the reader must carry out a complex task: Choose the line,
- memorize its color, search for it in the legend, and read the country
- name.
+The common solution to link each curve with the group value is to add
+a legend. However, a legend can be confusing with too many items. In
+addition, the reader must carry out a complex task: Choose the line,
+memorize its color, search for it in the legend, and read the country
+name.
 
- A better approach is to label each line using nearby text with the
- same color encoding. A suitable method is to place the labels avoiding
- the overlapping between labels and lines. The package =directlabels=
- cite:Hocking2017 includes a wide repertory of positioning methods to
- cope with overlapping. The main function, =direct.label=, is able to
- determine a suitable method for each plot, although the user can
- choose a different method from the collection or even define a custom
- method. For the =pCO2.capita= object, the best results are obtained
- with =extreme.grid= (Figure ref:fig:CO2-GNI-DL).
+#+INDEX: Subjects!Label positioning
 
- #+INDEX: Packages!directlabels@\texttt{directlabels}
+A better approach is to label each line using nearby text with the
+same color encoding. A suitable method is to place the labels avoiding
+the overlapping between labels and lines. The package =directlabels=
+cite:Hocking2017 includes a wide repertory of positioning methods to
+cope with overlapping. The main function, =direct.label=, is able to
+determine a suitable method for each plot, although the user can
+choose a different method from the collection or even define a custom
+method. For the =pCO2.capita= object, the best results are obtained
+with =extreme.grid= (Figure ref:fig:CO2-GNI-DL).
 
- #+begin_src R :results output graphics :exports both :file "figs/CO2_capitaDL.pdf"
+#+INDEX: Packages!directlabels@\texttt{directlabels}
+
+#+begin_src R :results output graphics :exports both :file "figs/CO2_capitaDL.pdf"
 library(directlabels)
 
 ## lattice version
 direct.label(pCO2.capita,
              method = 'extreme.grid')
- #+end_src
+#+end_src
 
- #+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita. Labels are placed with the \texttt{extreme.grid} method of the \texttt{directlabels} package. label:fig:CO2-GNI-DL 
- #+RESULTS:
+#+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita. Labels are placed with the \texttt{extreme.grid} method of the \texttt{directlabels} package. label:fig:CO2-GNI-DL 
+#+RESULTS:
  [[file:figs/CO2_capitaDL.pdf]]
 
- #+begin_src R 
+#+begin_src R 
 ## ggplot2 version
 direct.label(gCO2.capita, method = 'extreme.grid')
- #+end_src
+#+end_src
 
 * A Panel for Each Year
 #+begin_src R :exports none
-  ##################################################################
-  ## A panel for each year
-  ##################################################################
+##################################################################
+## A panel for each year
+##################################################################
 #+end_src
 
 Time can be used as a conditioning variable (as shown in previous
@@ -347,6 +350,8 @@ sections) to display subsets of the data in different panels. Figure
 ref:fig:CO2-GNI-panel is produced with the same code as in Figure
 ref:fig:CO2-GNI, now including =|factor(Year)= in the lattice
 version and =facet_wrap(~ Year)= in the =ggplot2= version.
+
+#+INDEX: Subjects!Small multiples
 
 #+begin_src R :results output graphics :exports both :file "figs/CO2_capita_panel.pdf"
 ## lattice version
@@ -377,6 +382,8 @@ ggplot(data = CO2data,
 Because the grouping variable, =Country.Name=, has many levels, the
 legend is not very useful. Once again, point labeling is recommended
 (Figure ref:fig:CO2-GNI-panel-labels).
+
+#+INDEX: Subjects!Label positioning
 
 #+begin_src R :results output graphics :exports both :file "figs/CO2_capita_panel_labels.pdf"
 ## lattice version
@@ -410,6 +417,7 @@ Product with purchasing power parity (PPP) estimations.
 To use this numeric variable as an additional grouping factor, its range must be divided into different classes. The typical solution is to use =cut= to coerce the numeric variable into a =factor= whose levels correspond to uniform intervals, which could be unrelated to the data distribution. The =classInt= package cite:Bivand2017 provides several methods to partition data into classes based on natural groups in the data distribution.
 
 #+INDEX: Packages!classInt@\texttt{classInt}
+#+INDEX: Subjects!Class Intervals
 
 #+begin_src R 
 library(classInt)

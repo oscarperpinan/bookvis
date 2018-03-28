@@ -349,6 +349,8 @@ is to choose the aspect ratio so that the absolute values of the
 orientations of the segments are centered on $\SI{45}{\degree}$
 (banking to $\SI{45}{\degree}$).
 
+#+INDEX: Subjects!Aspect ratio
+
 The problem with banking to $\SI{45}{\degree}$ is that the resulting
 aspect ratio is frequently too small. A suitable solution to
 minimize wasted space is the cut-and-stack method. The =xyplot.ts=
@@ -356,6 +358,7 @@ method implements this solution with the combination of the
 arguments =aspect= and =cut=. The version of Figure
 ref:fig:navarraNaive using banking to $\SI{45}{\degree}$ and the
 cut-and-stack method is produced with (Figure ref:fig:navarraBanking):
+
 #+begin_src R :results output graphics :exports both :file figs/navarraBanking.pdf
 xyplot(navarra - avRad,
        aspect = 'xy', cut = list(n = 3, overlap = 0.1),
@@ -376,11 +379,14 @@ xyplot(navarra - avRad,
 #+end_src
 
 #+INDEX: Subjects!Horizon graph
+
 The horizon graph is useful in examining how a large number of series
 changes over time, and does so in a way that allows both comparisons
 between the individual time series and independent analysis of
 each series. Moreover, extraordinary behaviors and predominant
 patterns are easily distinguished cite:Heer.Kong.ea2009,Few2008.
+
+#+INDEX: Subjects!Diverging palette
 
 This graph displays several stacked series collapsing the y-axis
 to free vertical space:
@@ -397,6 +403,7 @@ Because the panels share the same design structure, once this
 technique is understood, it is easy to establish comparisons or spot
 extraordinary events.  This method is what Tufte described as small
 multiples cite:Tufte1990.
+
 #+INDEX: Subjects!Small multiples
 
 Figure ref:fig:navarraHorizonplot displays the variations of solar
@@ -513,6 +520,8 @@ plot of Figure ref:fig:diffTa_horizon clearly displays the yearly
 evolution, the combination of variables of the level plot focuses on
 the comparison between years in a certain month.
 
+#+INDEX: Subjects!Diverging palette
+
 #+begin_src R 
 year <- function(x)as.numeric(format(x, '%Y'))
 day <- function(x)as.numeric(format(x, '%d'))
@@ -603,16 +612,19 @@ xyplot(unemployUSA,
 #+RESULTS:
 [[file:figs/unemployUSAxyplot.pdf]]
 
-This graphical output is not very useful: the legend includes too many items; the vertical scale is dominated by the largest
-series, with several series buried in the lower part of the scale; the
-trend, variations and structure of the total and individual
-contributions cannot be deduced from this graph.
+This graphical output is not very useful: the legend includes too many
+items; the vertical scale is dominated by the largest series, with
+several series buried in the lower part of the scale; the trend,
+variations and structure of the total and individual contributions
+cannot be deduced from this graph.
 
 A partial improvement is to display the multivariate time series as a
 set of stacked colored polygons to follow the macro/micro principle
 proposed by Tufte cite:Tufte1990: Show a collection of individual
 time series and also display their sum. A traditional stacked graph is
 easily obtained with =geom_area= (Figure ref:fig:unemployUSAgeomArea):
+
+#+INDEX: Subjects!Stacked graph
 
 #+begin_src R :results output graphics :exports both :file "figs/unemployUSAgeomArea.pdf" 
 library(scales) ## scale_x_yearmon needs scales::pretty_breaks
@@ -891,7 +903,7 @@ its last column (the upper line of the cumulative sum) (line [[(ylim)]]).
 
 * Interactive Graphics label:sec:interactive_horizontal
 
-#+INDEX: Subjects!Interactive graphics
+#+INDEX: Subjects!Interactive visualization
 
 This section describes the interactive alternatives of the static
 figures included in the previous sections with several packages:
@@ -925,9 +937,13 @@ dyTemp
 #+CAPTION: Snapshot of an interactive graphic produced with \texttt{dygraphs}. label:fig:dygraphs
 [[file:figs/dygraphs_aranjuez.png]]
 
-
-
-You can customize =dygraphs= by piping additional commands onto the original graphic.  The function =dyOptions= provides several choices for the graphic, and the function =dyHighlight= configures options for data series mouse-over highlighting. For example, with the next code the semi-transparency value of the non-selected lines is reduced and the width of selected line is increased (Figure ref:fig:dygraphs_selected).
+You can customize =dygraphs= by piping additional commands onto the
+original graphic.  The function =dyOptions= provides several choices
+for the graphic, and the function =dyHighlight= configures options for
+data series mouse-over highlighting. For example, with the next code
+the semi-transparency value of the non-selected lines is reduced and
+the width of selected line is increased (Figure
+ref:fig:dygraphs_selected).
 
 #+begin_src R
 dyTemp %>%
@@ -938,7 +954,11 @@ dyTemp %>%
 #+CAPTION: Snapshot of a selection in an interactive graphic produced with \texttt{dygraphs}. label:fig:dygraphs_selected
 [[file:figs/dygraphs_aranjuez_selected.png]]
 
-An alternative approach to depict the upper and lower variables of this time series is with a shaded region. The =dySeries= function accepts a character vector of length 3 that specifies a set of input column names to use as the lower, value, and upper for a series with a shaded region  around it (Figure ref:fig:dygraphs_maxmin).
+An alternative approach to depict the upper and lower variables of
+this time series is with a shaded region. The =dySeries= function
+accepts a character vector of length 3 that specifies a set of input
+column names to use as the lower, value, and upper for a series with a
+shaded region around it (Figure ref:fig:dygraphs_maxmin).
 #+begin_src R
 dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
         main = "Temperature in Aranjuez",
@@ -986,8 +1006,6 @@ highchart() %>%
 
 #+CAPTION: Snapshot of a zoom in an interactive graphic produced with \texttt{highcharter}. label:fig:highcharter_zoom
 [[file:figs/highcharter_aranjuez_zoom.png]]
-
-
 
 ** plotly label:sec:plotly_horizontal
 
@@ -1095,6 +1113,8 @@ been already visited. In addition, because the browsers display the
 content of the title attribute with a default tooltip, =grid.garnish=
 sets this attribute to =info=.
 
+\nomenclature{grob}{Graphical object as defined by the grid package.}
+
 #+begin_src R
 for (id in unique(IDs))
 {
@@ -1188,6 +1208,7 @@ interactive graphic created with the functions =streamgraph=,
 =%>%=.
 
 #+INDEX: Packages!streamgraph@\texttt{streamgraph}
+#+INDEX: Subjects!Stacked graph
 
 #+begin_src R
 ## remotes::install_github("hrbrmstr/streamgraph")

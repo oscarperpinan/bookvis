@@ -67,6 +67,10 @@ aranjuezDF$Month <- format(index(aranjuez), '%m')
 
 #+RESULTS:
 
+#+INDEX: Subjects!Small multiples
+#+INDEX: Subjects!Scatterplot matrix
+
+
 #+begin_src R
 ## Red-Blue palette with black added (12 colors)
 colors <- c(brewer.pal(n = 11, 'RdBu'), '#000000')
@@ -144,6 +148,8 @@ encoding uses gray scales, pseudo colors or partial
 transparency. An improved scheme encodes density as the size of
 hexagon symbols inscribed within hexagonal binning regions
 cite:Carr.Littlefield.ea1987.
+#+INDEX: Packages!hexbin@\texttt{hexbin}
+#+INDEX: Subjects!Hexagonal binning
 
 The =hexbin= package cite:Carr.Lewin-Koh.ea2018 includes several
 functions for hexagonal binning.  The =panel.hexbinplot= is a good
@@ -164,9 +170,9 @@ attempt with =splom= can be improved with several modifications
   (darker colors for high density values and lighter colors for almost
   empty regions, with a gradient of grays for intermediate values).
 
-
-#+INDEX: Packages!hexbin@\texttt{hexbin}
 #+INDEX: Subjects!Panel function
+#+INDEX: Subjects!Small multiples
+#+INDEX: Subjects!Scatterplot matrix
 
 #+begin_src R :results output graphics :exports both :file figs/aranjuezSplomHexbin.pdf
 library(hexbin)
@@ -297,6 +303,9 @@ This matrix of panels can be displayed with =ggplot= using
 transparency to cope with overplotting, small horizontal and vertical
 segments (=geom_rug=) to display points density on both variables, and
 a smooth line in each panel.
+
+#+INDEX: Subjects!Small multiples
+
 #+begin_src R :results output graphics :exports both  :width 2000 :height 2000 :res 300 :file figs/aranjuezFacetGrid.png
 ggplot(data = aranjuezRshp, aes(Radiation, Temperature)) +
     facet_grid(Statistic ~ Month) +

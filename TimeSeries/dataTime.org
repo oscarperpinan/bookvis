@@ -14,15 +14,14 @@ setwd('~/github/bookvis/')
 #+INDEX: Data!SIAR
 #+INDEX: Data!Meteorological variables
 
-
 The Agroclimatic Information System for Irrigation (SIAR)
-\cite{SIAR2011} is a free-download database operating since 1999,
+cite:SIAR2011 is a free-download database operating since 1999,
 covering the majority of the irrigated area of Spain.  This network
 belongs to the Ministry of Agriculture, Food and Environment of Spain,
 as a tool to predict and study meteorological variables for
 agriculture. SIAR is composed of twelve regional centers and a
 national center, aiming to centralize and depurate measurements from
-the stations of the network. Figure \ref{fig:SIAR_map} displays the
+the stations of the network. Figure ref:fig:SIAR_map displays the
 stations over an altitude map. Some stations from the complete network
 have been omitted, due to difficulties accessing their coordinates
 or to incomplete or spurious data series[fn:1].
@@ -110,6 +109,8 @@ summary(aranjuez)
                                   NA's   :14
 #+end_example
 
+#+INDEX: Subjects!Data processing and cleaning
+
 From the summary it is clear that parts of these time series include
 erroneous outliers that can be safely removed:
 #+begin_src R :results output :exports both
@@ -177,10 +178,10 @@ meteorological variable is important for a wide variety of scientific
 disciplines and engineering applications. Its variations and trends,
 dependent on the location (mainly latitude, and also longitude and
 altitude) and on time (day of the year), have been analyzed and
-modeled in a huge collection of papers and reports. In this section
-we will focus our attention on the time evolution of the solar
-radiation. The spatial distribution and the spatio-temporal behavior will
-be the subject of later sections.
+modeled in a huge collection of papers and reports. In this section we
+will focus our attention on the time evolution of the solar
+radiation. The spatial distribution and the spatio-temporal behavior
+will be the subject of later sections.
 
 The stations of the SIAR network include first-class pyranometers
 according to the World Meteorological Organization (WMO), whose
@@ -268,7 +269,6 @@ summary(navarra)
 ##################################################################
 #+end_src
 
-
 As an example of time series that can be displayed both in individual
 and in aggregate, we will use the unemployment data in the United
 States. The information on unemployed persons by industry and class of
@@ -282,6 +282,7 @@ this =data.frame=, dropping the =Series.ID= and the annual columns,
 and transpose the data.
 
 #+INDEX: Data!Unemployment in USA
+#+INDEX: Subjects!Data processing and cleaning
 
 #+begin_src R :results output :exports both
 unemployUSA <- read.csv('data/unemployUSA.csv')
@@ -449,6 +450,7 @@ summary(CO2data)
  Max.   :0.9194   Max.   :1.832e+13   Max.   :68310
 #+end_example
 
+#+INDEX: Subjects!Data processing and cleaning
 
 Only two minor modifications are needed: Remove rows with missing
 values (using =complete.cases=), and convert the =Country.Name= column

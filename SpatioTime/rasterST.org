@@ -46,6 +46,7 @@ indexed with =setZ=.
 
 #+INDEX: Data!CM SAF
 #+INDEX: Data!Solar radiation
+#+INDEX: Subjects!Data processing and cleaning
 
 #+begin_src R 
 library(raster)
@@ -89,6 +90,8 @@ panel using the small-multiple technique. The problem with this
 approach is that only a limited number of panels can be correctly
 displayed on one page. In this example, we print the first 12
 days of the sequence (Figure ref:fig:SISdm).
+
+#+INDEX: Subjects!Small multiples
 
 #+begin_src R :results output graphics :exports both :file figs/SISdm.pdf
 levelplot(SISdm, layers = 1:12, panel = panel.levelplot.raster)
@@ -145,6 +148,7 @@ levelplot(SISmm, panel = panel.levelplot.raster)
 ## Exploratory graphics
 ##################################################################
 #+end_src
+
 There are other graphical tools that complement the previous maps. The
 scatterplot and the matrix of scatterplots, the histogram and kernel
 density plot, and the boxplot are among the most important tools in
@@ -176,6 +180,8 @@ bwplot(SISdm, FUN = as.yearmon)
 splom(SISmm, xlab = '', plot.loess = TRUE)
 #+end_src
 
+#+INDEX: Subjects!Scatterplot matrix
+#+INDEX: Subjects!Small multiples
 #+CAPTION: Scatterplot matrix of monthly averages together with their kernel density estimations in the diagonal frames. label:fig:SISmm_splom
 #+RESULTS:
 [[file:figs/SISmm_splom.png]]
@@ -236,6 +242,8 @@ xyplot(SISdm, auto.key = list(space = 'right'))
 #+RESULTS:
 [[file:figs/SISmm_xyplot.pdf]]
 
+#+INDEX: Subjects!Horizon plot
+#+INDEX: Subjects!Small multiples
 #+begin_src R :results output graphics :exports both :file figs/SISdm_horizonplot.pdf
 horizonplot(SISdm, digits = 1,
             col.regions = rev(brewer.pal(n = 6, 'PuOr')),
@@ -255,7 +263,8 @@ average value of each latitude region.
 ** Interactive graphics: cubeView
 label:sec:cubeView
 
-#+INDEX: Subjects!Interactive graphics
+#+INDEX: Subjects!Interactive visualization
+#+INDEX: Subjects!3D visualization
 
 Figure ref:fig:SISdm_hovmoller_lat reduces the 3D raster to a 2D
 matrix with spatial aggregation following a certain direction. The

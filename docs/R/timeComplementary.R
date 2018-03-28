@@ -135,9 +135,9 @@ direct.label(pCO2.capita,
 ## ggplot2 version
 direct.label(gCO2.capita, method = 'extreme.grid')
 
-  ##################################################################
-  ## A panel for each year
-  ##################################################################
+##################################################################
+## A panel for each year
+##################################################################
 
 ## lattice version
 xyplot(GNI.capita  ~ CO2.capita | factor(Year),

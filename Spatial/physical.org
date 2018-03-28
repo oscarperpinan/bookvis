@@ -196,6 +196,9 @@ admNames <- sapply(admNames,
 ## Overlaying layers of information
 ##################################################################
 #+end_src
+
+#+INDEX: Subjects!Background map
+
 Therefore, the physical map (Figure ref:fig:brazil) is composed
 of four layers: 
 
@@ -238,7 +241,8 @@ of four layers:
    the =panel.pointLabel= function. This function uses optimization
    routines to find good locations for point labels without overlaps.
 
-  
+  #+INDEX: Subjects!Label positioning
+    
   #+begin_src R :results output graphics :exports both :file figs/brazil.png :width 2000 :height 2000 :res 300
   seaPlot + altPlot + layer({
       ## Rivers
