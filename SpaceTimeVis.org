@@ -168,7 +168,7 @@ Both =lattice= and =ggplot2= (and every package based on =grid=) generate static
 
 On the other hand, the package =gridSVG= cite:Murrell.Potter2017 converts any grid scene to a Scalable Vector Graphics (\textsf{SVG}) document. The =grid.hyperlink= function allows a hyperlink to be associated with any component of the scene, the =grid.animate= function can be used to animate any component of a scene, and the =grid.garnish= function can be used to add \textsf{SVG} attributes to the components of a scene. By setting event handler attributes on a component, plus possibly using the =grid.script= function to add \textsf{JavaScript} to the scene, it is possible to make the component respond to user input such as mouse clicks.
 
-\nomenclature{SVG}{Scalable Vector Graphics}
+\nomenclature{SVG}{Scalable Vector Graphics.}
 
 *** Packages
  label:sec:introduction-packages
@@ -350,7 +350,7 @@ label:part:Spatial
 
  Spatial data (also known as geospatial data) are directly or indirectly referenced to a location on the surface of the Earth. Their spatial reference is composed of coordinate values and a system of reference for these coordinates. Spatial data are often accessed, manipulated, or analyzed through Geographic Information Systems (GIS).
 
-\nomenclature{GIS}{Geographic Information Systems}
+\nomenclature{GIS}{Geographic Information Systems.}
 
  Real objects represented by GIS data can be divided into two abstractions: discrete objects (e.g., a road or a river) represented with vector data (points, lines, and polygons), and continuous fields (such as elevation or solar radiation) represented with raster data. The =sp= and =sf= packages are the preferred option to use vector data in =R=, and the =raster= package is the choice for raster data [fn:18].
 
@@ -368,7 +368,10 @@ label:part:Spatial
 
  The =sp= package cite:Pebesma.Bivand2005 provides classes and methods for dealing with spatial data in =R=. The spatial data classes implemented are points (=SpatialPoints=), grids (=SpatialPixels= and =SpatialGrid=), lines (=Line=, =Lines= and =SpatialLines=), rings, and polygons (=Polygon=, =Polygons=, and =SpatialPolygons=), each of them without data or with data (for example, =SpatialPointsDataFrame= or =SpatialLinesDataFrame=)[fn:37].
 
-\nomenclature{SpatialLinesDataFrame}{A class that holds data consisting of sets of lines, where each set of lines relates to an attribute row in a data.frame}
+\nomenclature{SpatialPointsDataFrame}{Class for spatial attributes that have spatial point locations.}
+\nomenclature{SpatialLinesDataFrame}{Class for spatial attributes consisting of sets of lines, where each set of lines relates to an attribute row in a data.frame.}
+\nomenclature{SpatialPixelsDataFrame}{Class for spatial attributes that have spatial locations on a regular grid.}
+\nomenclature{SpatialPolygonsDataFrame}{Class to hold polygons with attributes.}
 
  Selecting, retrieving, or replacing certain attributes in spatial objects with data is done using standard methods:
 

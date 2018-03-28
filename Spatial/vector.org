@@ -32,7 +32,7 @@ server provides access through different protocols to the output of a
 Weather Research and Forecasting (WRF) model, a mesoscale numerical
 weather prediction system.
 
-\nomenclature{WRF}{Weather Research and Forecasting model}
+\nomenclature{WRF}{Weather Research and Forecasting model.}
 
 This vector field is encoded in a =RasterStack= object with two
 layers: wind speed or vector magnitude, and wind direction or vector

@@ -44,8 +44,6 @@ shapefile. The result is stored in the =data= folder, in a set of
 files named =spMapVotes.*=. You can visit it for details if you are
 interested in this procedure.
 
-\nomenclature{SpatialPolygonsDataFrame}{Class to hold polygons with attributes.}
-
 As exposed in chapter ref:cha:bubble, two alternatives are available: 
 
 1. Import the data with the =rgdal= package and the function

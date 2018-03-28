@@ -75,8 +75,6 @@ from the =lattice= package, is able to display
 #+INDEX: Packages!sp@\texttt{sp}
 #+INDEX: Data!Air quality in Madrid
 
-\nomenclature{SpatialPointsDataFrame}{Class for spatial attributes that have spatial point locations.}
-
 #+begin_src R
 library(sp)
 library(rgdal)
@@ -597,8 +595,6 @@ The result is a =SpatialPixelsDataFrame= that can be displayed with
 =spplot= and combined with the previous layers and the measurement
 station points (Figure ref:fig:airMadrid_krige).
 
-\nomenclature{SpatialPixelsDataFrame}{Class for spatial attributes that have spatial locations on a regular grid.}
-
 #+begin_src R :results output graphics :exports both :file figs/airMadrid_krige.png :width 4000 :height 4000 :res 600
 spplot(airKrige["var1.pred"], ## Variable interpolated
        col.regions = colorRampPalette(airPal)) +
@@ -641,8 +637,8 @@ the =mapview= package based on the =htmlwidgets= package; export to
 GeoJSON and KML formats; 3D visualization with the =rgl= package; and
 =SVG= graphics with the =gridSVG= package.
 
-\nomenclature{GeoJSON}{Format for encoding a variety of geographic data structures}
-\nomenclature{KML}{Keyhole Markup Language, an XML notation for expressing geographic annotation and visualization within Internet-based, two-dimensional maps and three-dimensional Earth browsers}
+\nomenclature{GeoJSON}{Format for encoding a variety of geographic data structures.}
+\nomenclature{KML}{Keyhole Markup Language, an XML notation for expressing geographic annotation and visualization within Internet-based, two-dimensional maps and three-dimensional Earth browsers.}
 
 ** mapview 
 label:sec:mapview_bubble

@@ -127,7 +127,7 @@ slope and aspect layers derived from a Digital Elevation Model
 (DEM). This layer will underlay the DEM raster, which will be printed
 using semitransparency.
 
-\nomenclature{DEM}{Digital Elevation Model}
+\nomenclature{DEM}{Digital Elevation Model.}
 #+INDEX: Subjects!Hill shading
 
 The procedure is as follows:
