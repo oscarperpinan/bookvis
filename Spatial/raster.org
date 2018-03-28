@@ -80,8 +80,8 @@ ext <- as.vector(extent(SISav))
 boundaries <- map('worldHires',
                   xlim = ext[1:2], ylim = ext[3:4],
                   plot = FALSE)
-## Convert the result to a SpatialLines object with the projection of
-## the Raster object
+## Convert the result to a SpatialLines with the projection of the
+## Raster object
 boundaries <- map2SpatialLines(boundaries,
                                proj4string = CRS(projection(SISav)))
 #+end_src
@@ -185,21 +185,18 @@ levelplot(SISav,
 Next, instead of displaying the absolute values of each cell, we will
 analyze the differences between each cell and the global average
 value. This average is computed with the =cellStats= function and
-substracted from the original =RasterLayer=. Figure
-ref:fig:xyplotSISav displays the relation between these scaled
-values and latitude (=y=), with five different groups defined by the
-longitude (=cut(x, 5)=). It is evident that larger irradiation values
-are associated with lower latitudes. However, there is no such clear
-relation between irradiation and longitude.
-
+substracted from the original =RasterLayer=. 
 
 #+begin_src R
 meanRad <- cellStats(SISav, 'mean')
 SISav <- SISav - meanRad
 #+end_src
 
-#+RESULTS:
-
+Figure ref:fig:xyplotSISav displays the relation between these scaled
+values and latitude (=y=), with five different groups defined by the
+longitude (=cut(x, 5)=). It is evident that larger irradiation values
+are associated with lower latitudes. However, there is no such clear
+relation between irradiation and longitude.
 
 #+INDEX: Packages!hexbin@\texttt{hexbin}
 

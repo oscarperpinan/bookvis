@@ -32,8 +32,8 @@ and forests. I will show you a map of these marvelous places.
 The first step is to acquire information from the OpenStreetMap (OSM)
 project. There are several packages to extract data from this service
 but, while most of them only provide already rendered raster images,
-the =osmdata= package[fn:6] cite:Eugster.Schlesinger2010 enables the
-use of the raw data with classes from the packages =sp= and =sf=.
+the =osmdata= package[fn:6] enables the use of the raw data with
+classes from the packages =sp= and =sf=.
 
 =osmdata= obtains data from the overpass API[fn:2], a read-only API that
 serves up custom selected parts of the OSM map data. The first step is

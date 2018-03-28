@@ -156,16 +156,17 @@ functions for hexagonal binning.  The =panel.hexbinplot= is a good
 substitute for the default panel function. In addition, our first
 attempt with =splom= can be improved with several modifications
 (Figure ref:fig:aranjuezSplomHexbin):
-- The scale's ticks and labels are suppressed with =pscale=0=.
 - The panels of the lower part of the matrix (=lower.panel=) will
   include a locally weighted scatterplot smoothing (loess) with
-  =panel.loess=.
-- The diagonal panels (=diag.panel=) will display the kernel
-  density estimate of each variable. The =density= function
-  computes this estimate. The result is adjusted to the panel
-  limits (calculated with =current.panel.limits=). The kernel
-  density is plotted with =panel.lines= and the =diag.panel.splom=
-  function completes the content of each diagonal panel.
+  =panel.loess= (line [[(lowerPanel)]]).
+- The diagonal panels (=diag.panel=) will display the kernel density
+  estimate of each variable (line [[(diagPanel)]]). The =density=
+  function computes this estimate. The result is adjusted to the panel
+  limits (calculated with =current.panel.limits=). The kernel density
+  is plotted with =panel.lines= and the =diag.panel.splom= function
+  completes the content of each diagonal panel.
+- The scale's ticks and labels are suppressed with =pscale=0= (line
+  [[(pscale)]])
 - The point density is encoded with the default palette, =LinGray=,
   (darker colors for high density values and lighter colors for almost
   empty regions, with a gradient of grays for intermediate values).
@@ -174,24 +175,25 @@ attempt with =splom= can be improved with several modifications
 #+INDEX: Subjects!Small multiples
 #+INDEX: Subjects!Scatterplot matrix
 
-#+begin_src R :results output graphics :exports both :file figs/aranjuezSplomHexbin.pdf
+#+begin_src R -n -r :results output graphics :exports both :file figs/aranjuezSplomHexbin.pdf
 library(hexbin)
   
 splom(~as.data.frame(aranjuez),
       panel = panel.hexbinplot,
-      diag.panel = function(x, ...){
+      diag.panel = function(x, ...){                           (ref:diagPanel)
           yrng <- current.panel.limits()$ylim
           d <- density(x, na.rm = TRUE)
           d$y <- with(d, yrng[1] + 0.95 * diff(yrng) * y / max(y))
           panel.lines(d)
           diag.panel.splom(x, ...)
       },
-      lower.panel = function(x, y, ...){
+      lower.panel = function(x, y, ...){                      (ref:lowerPanel)
           panel.hexbinplot(x, y, ...)
           panel.loess(x, y, ..., col = 'red')
       },
       xlab = '',
-      pscale = 0, varname.cex = 0.7)
+      pscale = 0,                                                  (ref:pscale)
+      varname.cex = 0.7)
 #+end_src
 
 #+CAPTION: Scatterplot matrix of the collection of meteorological time series of the Aranjuez station using hexagonal binning. label:fig:aranjuezSplomHexbin
@@ -311,7 +313,8 @@ ggplot(data = aranjuezRshp, aes(Radiation, Temperature)) +
     facet_grid(Statistic ~ Month) +
     geom_point(col = 'skyblue4', pch = 19, cex = 0.5, alpha = 0.3) +
     geom_rug() +
-    stat_smooth(se = FALSE, method = 'loess', col = 'indianred1', lwd = 1.2) +
+    stat_smooth(se = FALSE, method = 'loess',
+                col = 'indianred1', lwd = 1.2) +
     theme_bw()
 #+end_src
 
@@ -327,14 +330,17 @@ variables on the top and left outer margins (Figure
 #+INDEX: Packages!latticeExtra@\texttt{latticeExtra}
 
 #+begin_src R :results output graphics :exports both :file figs/aranjuezOuterStrips.pdf
-useOuterStrips(xyplot(Temperature ~ Radiation | Month * Statistic,
-                      data = aranjuezRshp,
-                      between = list(x = 0),
-                      col = 'skyblue4', pch = 19,
-                      cex = 0.5, alpha = 0.3)) +
+useOuterStrips(
+    xyplot(Temperature ~ Radiation | Month * Statistic,
+           data = aranjuezRshp,
+           between = list(x = 0),
+           col = 'skyblue4', pch = 19,
+           cex = 0.5, alpha = 0.3)) +
     layer({
-        panel.rug(..., col.line = 'indianred1', end = 0.05, alpha = 0.6)
-        panel.loess(..., col = 'indianred1', lwd = 1.5, alpha = 1)
+        panel.rug(..., col.line = 'indianred1',
+                  end = 0.05, alpha = 0.6)
+        panel.loess(..., col = 'indianred1',
+                    lwd = 1.5, alpha = 1)
     })
 #+end_src
 

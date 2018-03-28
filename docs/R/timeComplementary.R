@@ -69,10 +69,10 @@ idx <- match(levels(CO2data$Country.Name),
              CO2capita$Country.Name[hCO2$order])
 palOrdered <- pal[idx]
 
-## lattice version
 ## simpleTheme encapsulates the palette in a new theme for xyplot
 myTheme <- simpleTheme(pch = 19, cex = 0.6, col = palOrdered)
 
+## lattice version
 pCO2.capita <- xyplot(GNI.capita  ~ CO2.capita,
                       data = CO2data,
                       xlab = "Carbon dioxide emissions (metric tons per capita)",
@@ -196,17 +196,18 @@ ggplot(data = CO2data,
 op <- options(digits = 2)
 tab <- print(intervals)
 options(op)
-  
+
 key <- list(space = 'right',
             title = expression(CO[2]/GNI.PPP),
             cex.title = 1,
             ## Labels of the key are the intervals strings
             text = list(labels = names(tab), cex = 0.85),
             ## Points sizes are defined with cex.key
-            points = list(col = 'black', pch = 19,
-                cex = cex.key, alpha = 0.7))
+            points = list(col = 'black', 
+                          pch = 19,
+                          cex = cex.key,
+                          alpha = 0.7))
 
-  
 xyplot(GNI.capita ~ CO2.capita|factor(Year), data = CO2data,
        xlab = "Carbon dioxide emissions (metric tons per capita)",
        ylab = "GNI per capita, PPP (current international $)",
@@ -268,14 +269,15 @@ xyplot(GNI.capita ~ CO2.capita,
        data = CO2data,
        xlab = "Carbon dioxide emissions (metric tons per capita)",
        ylab = "GNI per capita, PPP (current international $)",
-       subset = Year==2000, groups = Country.Name,
+       subset = Year==2000,
+       groups = Country.Name,
        ## The limits of the graphic are defined
        ## with the entire dataset
        xlim = extendrange(CO2data$CO2.capita),
        ylim = extendrange(CO2data$GNI.capita),
        panel = function(x, y, ..., subscripts, groups) {
-           color <- palOrdered[groups[subscripts]]
-           radius <- CO2data$CO2.PPP[subscripts]
+           color <- palOrdered[groups[subscripts]]                  
+           radius <- CO2data$CO2.PPP[subscripts]                   
            ## Size of labels
            cex <- 1.1*sqrt(radius)
            ## Bubbles
@@ -303,26 +305,28 @@ years <- unique(CO2data$Year)
 nYears <- length(years)
 
 ## Intermediate positions of the bubbles
-x_points <- animUnit(unit(CO2data$CO2.capita, 'native'),
+x_points <- animUnit(unit(CO2data$CO2.capita, 'native'),       
                      id = rep(seq_len(nCountries), each = nYears))
-y_points <- animUnit(unit(CO2data$GNI.capita, 'native'),
+y_points <- animUnit(unit(CO2data$GNI.capita, 'native'),       
                      id = rep(seq_len(nCountries), each = nYears))
 ## Intermediate positions of the labels
-y_labels <- animUnit(unit(CO2data$GNI.capita, 'native') +
+y_labels <- animUnit(unit(CO2data$GNI.capita, 'native') +      
                      1.5 * CO2data$CO2.PPP * unit(.25, 'inch'),
                      id = rep(seq_len(nCountries), each = nYears))
 ## Intermediate sizes of the bubbles
-size <- animUnit(CO2data$CO2.PPP * unit(.25, 'inch'),
+size <- animUnit(CO2data$CO2.PPP * unit(.25, 'inch'),        
                  id = rep(seq_len(nCountries), each = nYears))
 
-grid.animate(trellis.grobname("points", type = "panel", row = 1, col = 1),
+grid.animate(trellis.grobname("points", type = "panel",    
+                              row = 1, col = 1),
              duration = duration,
              x = x_points,
              y = y_points,
              r = size,
-             rep = TRUE)
+             rep = TRUE)                                        
 
-grid.animate(trellis.grobname("labels", type = "panel", row = 1, col = 1),
+grid.animate(trellis.grobname("labels", type = "panel",    
+                              row = 1, col = 1),
              duration = duration,
              x = x_points,
              y = y_labels,

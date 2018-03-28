@@ -75,9 +75,10 @@ aranjuez <- aranjuez[, -c(1:4)]
 names(aranjuez) <- c('TempAvg', 'TempMax', 'TempMin',
                      'HumidAvg', 'HumidMax',
                      'WindAvg', 'WindMax',
-                     'Radiation', 'Rain', 'ET')
-  
-  
+                     'Radiation', 'Rain', 'ET')  
+#+end_src
+
+#+begin_src R :exports none :tangle no
 summary(aranjuez)
 #+end_src
 
@@ -120,7 +121,9 @@ aranjuezClean <- within(as.data.frame(aranjuez),{
 })
 
 aranjuez <- zoo(aranjuezClean, index(aranjuez))
+#+end_src
 
+#+begin_src R :exports none :tangle no
 summary(aranjuez)
 #+end_src
 
@@ -198,7 +201,9 @@ dataset are the abbreviations of each station name.
 library(zoo)
 
 load('data/navarra.RData')
+#+end_src
 
+#+begin_src R :exports none :tangle no
 summary(navarra)
 #+end_src
 
@@ -293,7 +298,9 @@ annualCols <- 14 + 13*(0:12)
 unemployUSA <- as.data.frame(t(unemployUSA[,-c(1, annualCols)]))
 ## First 7 characters can be suppressed
 names(unemployUSA) <- substring(nms, 7)
+#+end_src
 
+#+begin_src R :exports none :tangle no
 summary(unemployUSA)
 #+end_src
 
@@ -355,7 +362,9 @@ Finally, those rows with =NA= values are removed.
 
 #+begin_src R :results output :exports both
 unemployUSA <- unemployUSA[complete.cases(unemployUSA), ]
+#+end_src
 
+#+begin_src R :exports none :tangle no
 summary(unemployUSA)
 #+end_src
 
@@ -428,7 +437,10 @@ CO2data <- WDI(indicator = c('EN.ATM.CO2E.PC', 'EN.ATM.CO2E.PP.GD',
 names(CO2data) <- c('iso2c', 'Country.Name', 'Year',
                     'CO2.capita', 'CO2.PPP',
                     'GNI.PPP', 'GNI.capita')
+#+end_src
 
+
+#+begin_src R :exports none :tangle no
 summary(CO2data)
 #+end_src
 
@@ -462,7 +474,9 @@ for grouping.
 CO2data <- CO2data[complete.cases(CO2data), ]
 
 CO2data$Country.Name <- factor(CO2data$Country.Name)
+#+end_src
 
+#+begin_src R :exports none :tangle no
 summary(CO2data)
 #+end_src
 

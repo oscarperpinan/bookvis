@@ -23,7 +23,7 @@ library(rgdal)
 NO2sp <- readOGR(dsn = 'data/', layer = 'NO2sp')
 
 airPal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(5)
-  
+
 spplot(NO2sp["mean"],
        col.regions = airPal, ## Palette
        cex = sqrt(1:5), ## Size of circles
@@ -427,11 +427,11 @@ tooltips <- sapply(seq_len(nrow(NO2df)), function(i)
 {
     codEst <- NO2df[i, "codEst"]
     ## Information to be attached to each line
-    stats <- paste(c('Mean', 'Median', 'SD'),
+    stats <- paste(c('Mean', 'Median', 'SD'),                       
                    signif(NO2df[i, c('mean', 'median', 'sd')], 4),
                    sep = ' = ', collapse = '<br />')
     ## Station photograph 
-    imageURL <- paste('images/', codEst, '.jpg', sep = '')
+    imageURL <- paste('images/', codEst, '.jpg', sep = '')          
     imageInfo <- paste("<img src=", imageURL,
                        " width = '100' height = '100' />", sep = '')
     ## Text to be included in the tooltip
@@ -443,7 +443,7 @@ tooltips <- sapply(seq_len(nrow(NO2df)), function(i)
     paste(imageInfo, info, sep = '<br />')
 })
 grid.garnish('points.panel',
-             title = tooltips,
+             title = tooltips,                              
              grep = TRUE,
              group = FALSE)
 

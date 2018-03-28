@@ -523,12 +523,12 @@ options(op)
 
 The bidimensional legend of this graphic is produced with
 =grid.raster=, a function of the =grid= package, able to display a
-color matrix. The axis of the color matrix are created with
-=grid.text=.
+color matrix (line [[(gridRaster)]]). The axis of the color matrix are
+created with =grid.text= (lines [[(gridTextX)]] and [[(gridTextY)]]).
 
 #+INDEX: Packages!grid@\texttt{grid}
 
-#+begin_src R
+#+begin_src R -n -r
 library(grid)
 
 legend <- layer(
@@ -541,13 +541,13 @@ legend <- layer(
     ## Height of the legend
     h <- 100000
     ## Colors
-    grid.raster(multiPal, interpolate = FALSE,
+    grid.raster(multiPal, interpolate = FALSE,                (ref:gridRaster)
                       x = unit(x0, "native"),
                       y = unit(y0, "native"),
                 width = unit(w, "native"),
                 height = unit(h, "native"))
     ## x-axis (qualitative variable)
-    grid.text(classes,
+    grid.text(classes,                                        (ref:gridTextX)
               x = unit(seq(x0 - w * (nClasses -1)/(2*nClasses),
                            x0 + w * (nClasses -1)/(2*nClasses),
                            length = nClasses),
@@ -558,7 +558,7 @@ legend <- layer(
               gp = gpar(fontsize = 4))
     ## y-axis (quantitative variable)
     Ni <- length(intervals)
-    grid.text(intervals,
+    grid.text(intervals,                                      (ref:gridTextY)
               x = unit(x0 + w/2, "native"),
               y = unit(seq(y0 - h * (Ni -1)/(2*Ni),
                            y0 + h * (Ni -1)/(2*Ni),

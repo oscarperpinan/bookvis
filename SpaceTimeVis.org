@@ -2,7 +2,7 @@
 
 #+AUTHOR: Oscar Perpiñán Lamigueiro
 
-#+DATE: January 2018
+#+DATE: March 2018
 
 #+SETUPFILE: config.org
 
@@ -56,7 +56,7 @@ label:sec:introduction
 
  - *Finally, this book is not a handbook of data analysis, geostatistics, point pattern analysis, or time series theory*.
 
-   Instead, this book is focused on the exploration of data with visual methods, so it may be framed in the Exploratory Data Analysis approach. Therefore, this book may be a useful complement for superb bibliographic references where you will find plenty of information about those subjects. For example, cite:Chatfield2016, cite:Cressie.Wikle2011, cite:Slocum.McMaster.ea2005 and cite:Bivand.Pebesma.ea2013.
+   Instead, this book is focused on the exploration of data with visual methods, so it may be framed in the Exploratory Data Analysis approach. Therefore, this book may be a useful complement for superb bibliographic references where you will find plenty of information about those subjects. For example, cite:Chatfield2016, cite:Cressie.Wikle2015, cite:Slocum.McMaster.ea2005 and cite:Bivand.Pebesma.ea2013.
 
 *** How to Read This Book
  label:sec:how-read

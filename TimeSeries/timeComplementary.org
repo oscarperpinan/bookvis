@@ -208,12 +208,13 @@ exactly what the =groups= argument provides. The following code
 produces a curve for each country using different colors to
 distinguish them.
 
+#+begin_src R
+## simpleTheme encapsulates the palette in a new theme for xyplot
+myTheme <- simpleTheme(pch = 19, cex = 0.6, col = palOrdered)
+#+end_src
 
 #+begin_src R 
 ## lattice version
-## simpleTheme encapsulates the palette in a new theme for xyplot
-myTheme <- simpleTheme(pch = 19, cex = 0.6, col = palOrdered)
-
 pCO2.capita <- xyplot(GNI.capita  ~ CO2.capita,
                       data = CO2data,
                       xlab = "Carbon dioxide emissions (metric tons per capita)",
@@ -222,8 +223,6 @@ pCO2.capita <- xyplot(GNI.capita  ~ CO2.capita,
                       par.settings = myTheme,
                       type = 'b')
 #+end_src
-
-#+RESULTS:
 
 #+begin_src R 
 ## ggplot2 version
@@ -458,23 +457,26 @@ ggplot(data = CO2data,
 [[file:figs/CO2pointsGG.pdf]]
 
 The =auto.key= mechanism of the =lattice= version is not able to cope with two grouping variables. Therefore, the legend, whose main componens are the labels (=intervals=) and the point sizes (=cex.key=), should be defined manually (Figure ref:fig:CO2points). 
-
-
-#+begin_src R :results output graphics :exports both :file "figs/CO2points.pdf" 
+#+begin_src R
 op <- options(digits = 2)
 tab <- print(intervals)
 options(op)
-  
+#+end_src
+
+#+begin_src R
 key <- list(space = 'right',
             title = expression(CO[2]/GNI.PPP),
             cex.title = 1,
             ## Labels of the key are the intervals strings
             text = list(labels = names(tab), cex = 0.85),
             ## Points sizes are defined with cex.key
-            points = list(col = 'black', pch = 19,
-                cex = cex.key, alpha = 0.7))
+            points = list(col = 'black', 
+                          pch = 19,
+                          cex = cex.key,
+                          alpha = 0.7))
+#+end_src
 
-  
+#+begin_src R :results output graphics :exports both :file "figs/CO2points.pdf" 
 xyplot(GNI.capita ~ CO2.capita|factor(Year), data = CO2data,
        xlab = "Carbon dioxide emissions (metric tons per capita)",
        ylab = "GNI per capita, PPP (current international $)",
@@ -634,16 +636,16 @@ The final solution to create an animation is based on the function
 =grid.animate= of the =gridSVG= package. 
 
 The first step is to draw the initial state of the bubbles. Their
-colors are again defined by the =palOrdered= palette, although the
-=adjustcolor= function is used for a ligther =fill= color. Because
-there will not be a legend, there is no need to define class
-intervals, and thus the radius is directly proportional to the value
-of =CO2data$CO2.PPP=.
+colors are again defined by the =palOrdered= palette (line [[(color)]]),
+although the =adjustcolor= function is used for a ligther =fill=
+color. Because there will not be a legend, there is no need to define
+class intervals, and thus the radius is directly proportional to the
+value of =CO2data$CO2.PPP= (line [[(radius)]]).
 
 #+INDEX: Packages!gridSVG@\texttt{gridSVG}
 #+INDEX: Packages!grid@\texttt{grid}
 
-#+begin_src R 
+#+begin_src R -n -r
 library(gridSVG)
 library(grid)
 
@@ -651,14 +653,15 @@ xyplot(GNI.capita ~ CO2.capita,
        data = CO2data,
        xlab = "Carbon dioxide emissions (metric tons per capita)",
        ylab = "GNI per capita, PPP (current international $)",
-       subset = Year==2000, groups = Country.Name,
+       subset = Year==2000,
+       groups = Country.Name,
        ## The limits of the graphic are defined
        ## with the entire dataset
        xlim = extendrange(CO2data$CO2.capita),
        ylim = extendrange(CO2data$GNI.capita),
        panel = function(x, y, ..., subscripts, groups) {
-           color <- palOrdered[groups[subscripts]]
-           radius <- CO2data$CO2.PPP[subscripts]
+           color <- palOrdered[groups[subscripts]]                  (ref:color)
+           radius <- CO2data$CO2.PPP[subscripts]                   (ref:radius)
            ## Size of labels
            cex <- 1.1*sqrt(radius)
            ## Bubbles
@@ -680,17 +683,18 @@ xyplot(GNI.capita ~ CO2.capita,
 #+end_src
 
 From this initial state, =grid.animate= creates a collection of
-animated graphical objects with the result of =animUnit=. This
+animated graphical objects with the result of =animUnit= (lines
+[[(animUnitxp)]], [[(animUnityp)]], [[(animUnityl)]] and [[(animUnitsize)]]). This
 function produces a set of values that will be interpreted by
 =grid.animate= as intermediate states of a feature of the graphical
-object. Thus, the bubbles will travel across the values defined by
-=x_points= and =y_points=, while their labels will use =x_points= and
-=x_labels=.
+object (lines [[(ganimatePoints)]] and [[(ganimateLabels)]]). Thus, the
+bubbles will travel across the values defined by =x_points= and
+=y_points=, while their labels will use =x_points= and =x_labels=.
 
 The use of =rep=TRUE= ensures that the animation will be repeated
-indefinitely.
+indefinitely (lines [[(repPoints)]] and [[(repLabels)]]).
 
-#+begin_src R  
+#+begin_src R -n -r 
 ## Duration in seconds of the animation
 duration <- 20
   
@@ -699,30 +703,32 @@ years <- unique(CO2data$Year)
 nYears <- length(years)
 
 ## Intermediate positions of the bubbles
-x_points <- animUnit(unit(CO2data$CO2.capita, 'native'),
+x_points <- animUnit(unit(CO2data$CO2.capita, 'native'),       (ref:animUnitxp)
                      id = rep(seq_len(nCountries), each = nYears))
-y_points <- animUnit(unit(CO2data$GNI.capita, 'native'),
+y_points <- animUnit(unit(CO2data$GNI.capita, 'native'),       (ref:animUnityp)
                      id = rep(seq_len(nCountries), each = nYears))
 ## Intermediate positions of the labels
-y_labels <- animUnit(unit(CO2data$GNI.capita, 'native') +
+y_labels <- animUnit(unit(CO2data$GNI.capita, 'native') +      (ref:animUnityl)
                      1.5 * CO2data$CO2.PPP * unit(.25, 'inch'),
                      id = rep(seq_len(nCountries), each = nYears))
 ## Intermediate sizes of the bubbles
-size <- animUnit(CO2data$CO2.PPP * unit(.25, 'inch'),
+size <- animUnit(CO2data$CO2.PPP * unit(.25, 'inch'),        (ref:animUnitsize)
                  id = rep(seq_len(nCountries), each = nYears))
 
-grid.animate(trellis.grobname("points", type = "panel", row = 1, col = 1),
+grid.animate(trellis.grobname("points", type = "panel",    (ref:ganimatePoints)
+                              row = 1, col = 1),
              duration = duration,
              x = x_points,
              y = y_points,
              r = size,
-             rep = TRUE)
+             rep = TRUE)                                        (ref:repPoints)
 
-grid.animate(trellis.grobname("labels", type = "panel", row = 1, col = 1),
+grid.animate(trellis.grobname("labels", type = "panel",    (ref:ganimateLabels)
+                              row = 1, col = 1),
              duration = duration,
              x = x_points,
              y = y_labels,
-             rep = TRUE)
+             rep = TRUE)                                        (ref:repLabels)
 
 #+end_src
 

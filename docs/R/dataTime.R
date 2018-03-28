@@ -19,9 +19,6 @@ names(aranjuez) <- c('TempAvg', 'TempMax', 'TempMin',
                      'HumidAvg', 'HumidMax',
                      'WindAvg', 'WindMax',
                      'Radiation', 'Rain', 'ET')
-  
-  
-summary(aranjuez)
 
 aranjuezClean <- within(as.data.frame(aranjuez),{
     TempMin[TempMin > 40] <- NA
@@ -29,8 +26,6 @@ aranjuezClean <- within(as.data.frame(aranjuez),{
 })
 
 aranjuez <- zoo(aranjuezClean, index(aranjuez))
-
-summary(aranjuez)
 
 save(aranjuez, file = 'data/aranjuez.RData')
 
@@ -41,8 +36,6 @@ save(aranjuez, file = 'data/aranjuez.RData')
 library(zoo)
 
 load('data/navarra.RData')
-
-summary(navarra)
 
 ##################################################################
 ## Unemployment in the United States
@@ -57,8 +50,6 @@ unemployUSA <- as.data.frame(t(unemployUSA[,-c(1, annualCols)]))
 ## First 7 characters can be suppressed
 names(unemployUSA) <- substring(nms, 7)
 
-summary(unemployUSA)
-
 library(zoo)
   
 Sys.setlocale("LC_TIME", 'C')
@@ -66,8 +57,6 @@ idx <- as.yearmon(row.names(unemployUSA), format = '%b.%Y')
 unemployUSA <- zoo(unemployUSA, idx)
 
 unemployUSA <- unemployUSA[complete.cases(unemployUSA), ]
-
-summary(unemployUSA)
 
 save(unemployUSA, file = 'data/unemployUSA.RData')
 
@@ -89,12 +78,8 @@ names(CO2data) <- c('iso2c', 'Country.Name', 'Year',
                     'CO2.capita', 'CO2.PPP',
                     'GNI.PPP', 'GNI.capita')
 
-summary(CO2data)
-
 CO2data <- CO2data[complete.cases(CO2data), ]
 
 CO2data$Country.Name <- factor(CO2data$Country.Name)
-
-summary(CO2data)
 
 save(CO2data, file = 'data/CO2.RData')

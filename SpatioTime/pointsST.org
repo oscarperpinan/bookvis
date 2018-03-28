@@ -73,7 +73,7 @@ multivariate time series where each station is a different variable
 - Reshape the =data.frame= from long to wide format with
   =dcast= (line [[(long2wide)]]).
 - Define a multivariate time series with =zoo= (Figure
-  [[fig:NO2zoo]], line [[(zoo)]]
+  [[fig:NO2zoo]], line [[(zoo)]])
 - Coerce this time series to a vector with =n·m= rows (line [[(vector)]]).
 - Finally, create the =STFDF= object with the previous components
   (line [[(stfdf)]]).

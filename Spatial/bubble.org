@@ -72,18 +72,22 @@ library(rgdal)
 NO2sp <- readOGR(dsn = 'data/', layer = 'NO2sp')
 #+end_src
 
-Both color and size can be combined in a unique graphical output
-because =spplot= accepts both of them (Figure
-ref:fig:airMadrid_spplot).  A sequential palette is defined with
+#+INDEX: Subjects!Sequential palette
+A sequential palette is defined with
 =colorRampPalette=, with colors denoting the value of the variable
 (green for lower values of the contaminant, brown for intermediate
 values, and black for highest values).
 
-#+INDEX: Subjects!Sequential palette
-
-#+begin_src R :results output graphics :exports both :file figs/airMadrid_spplot.pdf
+#+begin_src R
 airPal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(5)
-  
+#+end_src
+
+
+Both color and size can be combined in a unique graphical output
+because =spplot= accepts both of them (Figure
+ref:fig:airMadrid_spplot).
+
+#+begin_src R :results output graphics :exports both :file figs/airMadrid_spplot.pdf  
 spplot(NO2sp["mean"],
        col.regions = airPal, ## Palette
        cex = sqrt(1:5), ## Size of circles
@@ -560,7 +564,7 @@ underlying process. It is quite common to approximate the spatial
 distribution of the measured variable with the interpolation between
 measurement locations. Selection of the optimal interpolation method
 is outside the scope of this book. The interested reader is referred
-to cite:Cressie.Wikle2015 and cite:Bivand.Pebesma.ea2008.
+to cite:Cressie.Wikle2015 and cite:Bivand.Pebesma.ea2013.
 
 The following code illustrates an easy solution using inverse distance
 weighted (IDW) interpolation with the =gstat= package cite:Pebesma2004
@@ -888,30 +892,37 @@ Earth or Marble.
 #+INDEX: Subjects!3D visualization
 #+INDEX: Subjects!WebGL
 
-An alternative method is 3D visualization where the user can
-rotate or zoom the figure. This solution is available thanks to the
-=rgl= package, which provides functions for 3D interactive
-graphics. 
-
-Previously, the =SpatialPointsDataFrame= object must be converted to a
-=data.frame=. The =xyz= coordinates will be the longitude, latitude,
-and altitude of each station. The color of each point is determined by
-the corresponding class (Section ref:sec:classification_bubble), and
-the radius of each bubble depends on the mean value of the depicted
-variable. A snapshot of this graphic is displayed in Figure
-ref:fig:rgl_bubble.
-
+An alternative method is 3D visualization where the user can rotate or
+zoom the figure. This solution is available thanks to the =rgl=
+package, which provides functions for 3D interactive graphics.
 
 #+begin_src R
 library(rgl)
+#+end_src
 
+Previously, the =SpatialPointsDataFrame= object must be converted to a
+=data.frame=. The =xyz= coordinates will be the longitude, latitude,
+and altitude of each station.
+
+#+begin_src R
 ## rgl does not understand Spatial* objects
 NO2df <- as.data.frame(NO2sp)
+#+end_src
 
+The color of each point is determined by the corresponding class
+(Section ref:sec:classification_bubble), and the radius of each bubble
+depends on the mean value of the depicted variable.
+
+#+begin_src R
 ## Color of each point according to its class
 airPal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(5)
 colorClasses <- airPal[NO2df$classNO2]
+#+end_src
 
+A snapshot of this graphic is displayed in Figure
+ref:fig:rgl_bubble.
+
+#+begin_src R
 plot3d(x = NO2df$coords.x1, 
        y = NO2df$coords.x2,
        z = NO2df$alt, 
@@ -939,19 +950,19 @@ plot3d(x = NO2df$coords.x1,
 
 The =gridSVG= package is able to create an SVG graphic, where each
 component owns a =title= attribute; the content of this attribute is
-commonly displayed as a tooltip when the mouse hovers over the
-element. The content of this attribute can be modified thanks to the
-=grid.garnish= function. Moreover, the =grid.hyperlink= function can
-add hyperlinks to the correspondent graphical element.
+commonly displayed as a tooltip when the mouse hovers over the element
+(line [[(titleTooltip)]]). The content of this attribute can be modified
+thanks to the =grid.garnish= function. Moreover, the =grid.hyperlink=
+function can add hyperlinks to the correspondent graphical element.
 
 The tooltips will display the photography of the station (Section
-ref:sec:photographs_stations), the name of the station, and the
-statistics previously calculated with =aggregate= in the first step of
-this chapter. 
+ref:sec:photographs_stations, line [[(photo)]]), the name of the station,
+and the statistics previously calculated with =aggregate= in the first
+step of this chapter (line [[(stats)]]).
 
 #+INDEX: Subjects!Tooltip
 
-#+begin_src R 
+#+begin_src R -n -r
 library(gridSVG)
 
 print(pNO2 +
@@ -965,11 +976,11 @@ tooltips <- sapply(seq_len(nrow(NO2df)), function(i)
 {
     codEst <- NO2df[i, "codEst"]
     ## Information to be attached to each line
-    stats <- paste(c('Mean', 'Median', 'SD'),
+    stats <- paste(c('Mean', 'Median', 'SD'),                       (ref:stats)
                    signif(NO2df[i, c('mean', 'median', 'sd')], 4),
                    sep = ' = ', collapse = '<br />')
     ## Station photograph 
-    imageURL <- paste('images/', codEst, '.jpg', sep = '')
+    imageURL <- paste('images/', codEst, '.jpg', sep = '')          (ref:photo)
     imageInfo <- paste("<img src=", imageURL,
                        " width = '100' height = '100' />", sep = '')
     ## Text to be included in the tooltip
@@ -981,15 +992,14 @@ tooltips <- sapply(seq_len(nrow(NO2df)), function(i)
     paste(imageInfo, info, sep = '<br />')
 })
 grid.garnish('points.panel',
-             title = tooltips,
+             title = tooltips,                              (ref:titleTooltip)
              grep = TRUE,
              group = FALSE)
 #+end_src
 
 #+RESULTS[b2d8b3e7ab5cc3986acf8d01610339b0a26d0eb0]:
 
-Next, we attach the hyperlink and the SVG information to
-each circle.
+Next, we attach the hyperlink and the SVG information to each circle.
 
 #+begin_src R 
 ## Webpage of each station
