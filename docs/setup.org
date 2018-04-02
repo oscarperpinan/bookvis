@@ -14,4 +14,4 @@
 #+HTML_HEAD:    <script src="js/jquery.colorbox.js"></script>
 #+HTML_HEAD:    <script src="js/colorbox.js"></script>
 
-#+BIND: org-html-postamble "<p><a href=\"http://oscarperpinan.github.io/spacetime-vis\">HOME</a> <p>Maintained by <a href=\"http://oscarperpinan.github.io/\">Oscar Perpiñán</a>.</p>"
+#+BIND: org-html-postamble "<p><a href=\"http://oscarperpinan.github.io/bookvis\">HOME</a> <p>Maintained by <a href=\"http://oscarperpinan.github.io/\">Oscar Perpiñán</a>.</p>"

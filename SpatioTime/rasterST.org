@@ -17,7 +17,8 @@ setwd('~/github/bookvis')
 Sys.setlocale("LC_TIME", 'C')
 #+end_src
 
-* Introduction label:sec:intro_st
+* Introduction
+label:sec:intro_rasterST
 
 Throughout this chapter we will work with a multilayer raster of daily
 solar radiation estimates from CM SAF (section ref:sec:CMSAF) falling in

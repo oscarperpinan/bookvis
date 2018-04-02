@@ -20,22 +20,55 @@
   :HTML_CONTAINER_CLASS: container jumbotron
   :END:
 
-This is the accompanying website of the book published with
-[[https://www.crcpress.com/Displaying-Time-Series-Spatial-and-Space-Time-Data-with-R/Lamigueiro/9781466565203][Chapman&Hall/CRC]], a project created and maintained by [[http://oscarperpinan.github.io/][Oscar Perpiñán
-Lamigueiro]]. 
+This is the accompanying website of the *second edition* of the book
+"/Displaying time series, spatial and space-time data with R/", to be
+published with [[https://www.crcpress.com/][Chapman&Hall/CRC]]. This is a project created and
+maintained by [[http://oscarperpinan.github.io/][Oscar Perpiñán Lamigueiro]].
+
+* 
+  :PROPERTIES:
+  :HTML_CONTAINER_CLASS: container jumbotron
+  :END:
 
 
-*** 
-    :PROPERTIES:
-    :HTML_CONTAINER_CLASS: col-md-3
-    :END:
+
+** Time Series
+   :PROPERTIES:
+   :HTML_CONTAINER_CLASS: col-md-4
+   :END:
+
+ [[file:timeseries.org][file:images/aranjuezXblocks_small.png]] 
+
+** Spatial Data 
+   :PROPERTIES:
+   :HTML_CONTAINER_CLASS: col-md-4
+   :END:
+
+ [[file:spatial.org][file:images/popLandClass_small.png]]
+
+** Space-time Data
+   :PROPERTIES:
+   :HTML_CONTAINER_CLASS: col-md-4
+   :END:
+
+ [[file:spacetime.org][file:images/cft_small.png]]
+
+* 
+  :PROPERTIES:
+  :HTML_CONTAINER_CLASS: container jumbotron
+  :END:
+ 
+** 
+   :PROPERTIES:
+   :HTML_CONTAINER_CLASS: col-md-3
+   :END:
 
 [[http://goo.gl/6iN5KR][http://images.tandf.co.uk/common/jackets/weblarge/978146656/9781466565203.jpg]]
 
-*** 
-    :PROPERTIES:
-    :HTML_CONTAINER_CLASS: col-md-9
-    :END:
+** 
+   :PROPERTIES:
+   :HTML_CONTAINER_CLASS: col-md-9
+   :END:
 Focusing on the exploration of data with visual methods, *Displaying
 Time Series, Spatial, and Space-Time Data with R* presents methods and
 R code for producing high-quality graphics of time series, spatial,
@@ -51,27 +84,5 @@ Along with the main graphics from the text, this website offers access
 to the datasets used in the examples as well as the full R code. This
 combination of freely available code and data enables you to practice
 with the methods and modify the code to suit your own needs.
-
-* Time Series
-    :PROPERTIES:
-    :HTML_CONTAINER_CLASS: col-md-4
-    :END:
-
-[[file:timeseries.org][file:images/aranjuezXblocks_small.png]] 
-
-* Spatial Data 
-    :PROPERTIES:
-    :HTML_CONTAINER_CLASS: col-md-4
-    :END:
-
-[[file:spatial.org][file:images/popLandClass_small.png]]
-
-* Space-time Data
-    :PROPERTIES:
-    :HTML_CONTAINER_CLASS: col-md-4
-    :END:
-
-[[file:spacetime.org][file:images/cft_small.png]]
-
 
 

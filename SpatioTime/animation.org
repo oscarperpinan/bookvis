@@ -416,7 +416,7 @@ grid.garnish('bgbar',
              onmouseout = 'document.rootElement.unpauseAnimations()')
 #+end_src   
 
-The SVG file is finally produced with =gridToSVG= (Figure ref:fig:NO2pb)
+The SVG file is finally produced with =grid.export= (Figure ref:fig:NO2pb)
 
 
 #+begin_src R 
@@ -707,7 +707,7 @@ summary(route)
 Finally, this matrix of points is used to change the viewpoint of the
 OpenGL scene with the =rgl.viewpoint= function. The =travel= function
 wraps this function to automate the process with the =movie3d=
-function. Figure ref:fig:travel_example shows examples of frames
+function. Figure ref:fig:travel_example shows an example of a frame
 produced with this function.
 
 #+begin_src R
@@ -724,18 +724,14 @@ travel <- function(tt){
 #+RESULTS:
 
 #+begin_src R
-## Examples of usage of travel
-## First frame
-travel(1)
-rgl.snapshot('images/travel1.png')
+## Example of usage of travel
 ## Frame no.1200
 travel(1200)
-rgl.snapshot('images/travel2.png')
+rgl.snapshot(figs/rgl_travel1200.png')
 #+end_src
 
-#+CAPTION: Examples of usage of the =travel= function (frames no.1 and no.1200). label:fig:travel_example
-[[file:images/travel1.png]]
-[[file:images/travel2.png]]
+#+CAPTION: Example of usage of the =travel= function (frame no.1200). label:fig:travel_example
+[[file:figs/rgl_travel1200.png]]
 
 The =movie3d= accepts a function, =travel= in our code, to modify the
 RGL scene. It creates an snapshot at each step, and paste these

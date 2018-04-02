@@ -2,7 +2,7 @@
 
 #+AUTHOR: Oscar Perpiñán Lamigueiro
 
-#+DATE: March 2018
+#+DATE: April 2018
 
 #+SETUPFILE: config.org
 
@@ -72,11 +72,11 @@ label:sec:introduction
 
  The book website with the main graphics of this book is located at
  #+BEGIN_CENTER
-   http://oscarperpinan.github.com/spacetime-vis/
+   http://oscarperpinan.github.com/bookvis
  #+END_CENTER
  The full code is freely available from the repository:
  #+BEGIN_CENTER
-   https://github.com/oscarperpinan/spacetime-vis
+   [[https://github.com/oscarperpinan/bookvis]]
  #+END_CENTER
 
  On the other hand, the datasets used in the examples are either available at the repository or can be freely obtained from other websites. It must be underlined that the combination of code and data freely available allows this book to be fully reproducible.
@@ -86,10 +86,10 @@ label:sec:introduction
  - They cover different scientific and professional fields (meteorology and climate research, economy and social sciences,
    energy and engineering, environmental research, epidemiology, etc.).
 
- The repository and the website can be downloaded as compressed files[fn:13], and if you use =git=, you can clone the repository with
+ The repository and the website can be downloaded as a compressed file[fn:13], or if you use =git=, you can clone the repository with:
 
  #+BEGIN_SRC bash
-git clone https://github.com/oscarperpinan/spacetime-vis.git
+git clone https://github.com/oscarperpinan/bookvis.git
  #+END_SRC
 
 *** =R= Graphics
@@ -331,8 +331,7 @@ label:part:Time
   \texttt{xts} for reading and arranging data as time series;
   \texttt{colorspace} for defining color palettes; and
   \texttt{dygraphs}, \texttt{highcharter}, \texttt{plotly},
-  \texttt{streamgraph}, and \texttt{gridSVG} for interactive
-  visualization.
+  and \texttt{streamgraph} for interactive visualization.
   %
 }
 #+END_EXPORT
@@ -633,8 +632,8 @@ label:cha:bubble
   \texttt{sf}, and \texttt{rgdal} for reading and writing spatial
   data; \texttt{maptools} for label positioning; \texttt{classInt} for
   computing class intervals; \texttt{gstat} for spatial interpolation;
-  \texttt{mapview}, \texttt{plotKML}, \texttt{rgl}, and
-  \texttt{gridSVG} for interactive visualization.
+  \texttt{mapview}, \texttt{plotKML}, and \texttt{rgl} for interactive
+  visualization.
   %
 }
 #+END_EXPORT
@@ -1003,7 +1002,7 @@ inspired by the =grid= package.
 
 [fn:16] [[https://github.com/mbostock/d3/wiki/Gallery]]
 
-[fn:13] Repository: https://github.com/oscarperpinan/spacetime-vis/archive/master.zip, Website:  https://github.com/oscarperpinan/spacetime-vis/archive/gh-pages.zip
+[fn:13] https://github.com/oscarperpinan/bookvis/archive/master.zip
 
 [fn:12] http://cran.r-project.org/web/views/Graphics.html
 
@@ -1028,7 +1027,7 @@ inspired by the =grid= package.
 [fn:2] Take a look at the time comparison published as the final result of the previous series of blog posts,
    http://learnr.files.wordpress.com/2009/08/latbook.pdf
 
-[fn:1] http://learnr.wordpress.com/2009/06/28/ggplot2-version-of-figures-in-lattice-multivariate-data-visualization-with-r-part-1/
+[fn:1] [[http://learnr.wordpress.com/2009/06/28/]]
 
 * COMMENT Local Variables
 # local variables:

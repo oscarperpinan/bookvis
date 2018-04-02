@@ -22,7 +22,7 @@ source('configLattice.R')
 #+end_src
 
 * Introduction
-label:sec:intro_st
+label:sec:intro_pointsST
 
 #+begin_src R :exports none
 ##################################################################

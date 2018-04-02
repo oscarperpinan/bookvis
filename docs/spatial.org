@@ -43,10 +43,6 @@
 #+ATTR_HTML: :class iframe
 [[file:images/rgl/bubbles.html][file:images/thumbs/rgl_bubble.png]]
 
-*** gridSVG
-#+ATTR_HTML: :class svg
-[[file:airMadrid.html][file:images/thumbs/airMadrid.png]]
-
 * Choropleth maps
   :PROPERTIES:
   :CUSTOM_ID: choropleth
