@@ -628,8 +628,7 @@ to produce interactive graphics with tooltips and hyperlinks.
 
 In this section we visit several approaches to create these products:
 the =mapview= package based on the =htmlwidgets= package; export to
-GeoJSON and KML formats; 3D visualization with the =rgl= package; and
-=SVG= graphics with the =gridSVG= package.
+GeoJSON and KML formats; and 3D visualization with the =rgl= package.
 
 \nomenclature{GeoJSON}{Format for encoding a variety of geographic data structures.}
 \nomenclature{KML}{Keyhole Markup Language, an XML notation for expressing geographic annotation and visualization within Internet-based, two-dimensional maps and three-dimensional Earth browsers.}
@@ -936,135 +935,6 @@ plot3d(x = NO2df$coords.x1,
 
 #+CAPTION: Snapshot of the interactive graphic produced with =rgl=. label:fig:rgl_bubble
 [[file:figs/rgl_bubble.png]]
-
-
-** \floweroneleft gridSVG
-#+begin_src R :exports none
-##################################################################
-## gridSVG
-##################################################################
-#+end_src
-
-#+INDEX: Packages!gridSVG@\texttt{gridSVG}
-#+INDEX: Subjects!JavaScript
-
-The =gridSVG= package is able to create an SVG graphic, where each
-component owns a =title= attribute; the content of this attribute is
-commonly displayed as a tooltip when the mouse hovers over the element
-(line [[(titleTooltip)]]). The content of this attribute can be modified
-thanks to the =grid.garnish= function. Moreover, the =grid.hyperlink=
-function can add hyperlinks to the correspondent graphical element.
-
-The tooltips will display the photography of the station (Section
-ref:sec:photographs_stations, line [[(photo)]]), the name of the station,
-and the statistics previously calculated with =aggregate= in the first
-step of this chapter (line [[(stats)]]).
-
-#+INDEX: Subjects!Tooltip
-
-#+begin_src R -n -r
-library(gridSVG)
-
-print(pNO2 +
-      layer_(sp.polygons(distritosMadrid,
-                         fill = 'gray97',
-                         lwd = 0.3)))
-
-NO2df <- as.data.frame(NO2sp)
-
-tooltips <- sapply(seq_len(nrow(NO2df)), function(i)
-{
-    codEst <- NO2df[i, "codEst"]
-    ## Information to be attached to each line
-    stats <- paste(c('Mean', 'Median', 'SD'),                       (ref:stats)
-                   signif(NO2df[i, c('mean', 'median', 'sd')], 4),
-                   sep = ' = ', collapse = '<br />')
-    ## Station photograph 
-    imageURL <- paste('images/', codEst, '.jpg', sep = '')          (ref:photo)
-    imageInfo <- paste("<img src=", imageURL,
-                       " width = '100' height = '100' />", sep = '')
-    ## Text to be included in the tooltip
-    nameStation <- paste('<b>', 
-                         as.character(NO2df[i, "Nombre"]),
-                         '</b>', sep = '')
-    info <- paste(nameStation, stats, sep = '<br />')
-    ## Tooltip includes the image and the text
-    paste(imageInfo, info, sep = '<br />')
-})
-grid.garnish('points.panel',
-             title = tooltips,                              (ref:titleTooltip)
-             grep = TRUE,
-             group = FALSE)
-#+end_src
-
-#+RESULTS[b2d8b3e7ab5cc3986acf8d01610339b0a26d0eb0]:
-
-Next, we attach the hyperlink and the SVG information to each circle.
-
-#+begin_src R 
-## Webpage of each station
-rootURL <- 'http://www.mambiente.munimadrid.es'
-urlList <- sapply(seq_len(nrow(NO2df)), function(i){
-    codEst <- NO2df[i, "codEst"]
-    codURL <- as.numeric(substr(codEst, 7, 8))
-    stationURL <- paste(rootURL,
-                        '/opencms/opencms/calaire/contenidos/estaciones/estacion',
-                        codURL, '.html', sep = '')
-})
-
-grid.hyperlink('points.panel', urlList, grep = TRUE, group = FALSE)
-#+end_src
-
-#+RESULTS[8191337354457eb6b2b7c4cf4beb3f2e521fec4c]:
-
-The =title= attribute can be accessed with the JavaScript plug-ins
-jQuery[fn:8] and jQuery UI[fn:6] to display tooltips when the mouse
-hovers over each station. The =grid.script= function creates objects
-containing links to these plug-ins. And =grid.export= uses these
-objects to produce an SVG document with script elements.
-
-
-#+INDEX: Subjects!jQuery
-#+INDEX: Subjects!SVG
-
-#+begin_src R
-## Add jQuery and jQuery UI scripts
-grid.script(file = 'http://code.jquery.com/jquery-1.8.3.js')
-grid.script(file = 'http://code.jquery.com/ui/1.9.2/jquery-ui.js')
-## Simple JavaScript code to initialize the tooltip
-grid.script(file = 'js/myTooltip.js')
-## Produce the SVG graphic: the results of grid.garnish,
-## grid.hyperlink and grid.script are converted to SVG code
-grid.export('figs/airMadrid.svg')
-#+end_src
-
-These plug-ins will work only after the file =airMadrid.svg= created by
-=grid.export= is inserted in a HTML file with standard headers. Figure
-ref:fig:airMadridTooltip shows a capture of the result.
-
-#+begin_src R
-htmlBegin <- '<!DOCTYPE html>
-<html>
-<head>
-<title>Tooltips with jQuery and gridSVG</title>
-<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.2/themes/smoothness/jquery-ui.css" />
-<meta charset="utf-8">
-</head>
-<body>'
-
-htmlEnd <- '</body> </html>'
-
-svgText <- paste(readLines('figs/airMadrid.svg'), collapse = '\n')
-
-writeLines(paste(htmlBegin, svgText, htmlEnd, sep = '\n'),
-           'airMadrid.html')
-#+end_src
-
-#+RESULTS[86f1c1ed2c5b2b4e4e11e843c412fc1fac30518f]:
-
-
-#+CAPTION: label:fig:airMadridTooltip Tooltips generated with \texttt{gridSVG} using jQuery and jQuery UI.
-file:figs/airMadridTooltip.png
 
 
 * Footnotes

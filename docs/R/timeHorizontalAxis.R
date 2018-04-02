@@ -31,35 +31,34 @@ autoplot(aranjuez) + facet_free()
 
 ## lattice version
 
-library(grid)
-library(latticeExtra)
-  
 ## Auxiliary function to extract the year value of a POSIXct time
 ## index
-Year <- function(x)format(x, "%Y")
+Year <- function(x)format(x, "%Y")                           
   
-xyplot(aranjuez, layout = c(1, ncol(aranjuez)), strip = FALSE,
+xyplot(aranjuez,
+       layout = c(1, ncol(aranjuez)),
+       strip = FALSE,
        scales = list(y = list(cex = 0.6, rot = 0)),
        panel = function(x, y, ...){
            ## Alternation of years
-           panel.xblocks(x, Year,
+           panel.xblocks(x, Year,                              
                          col = c("lightgray", "white"),
                          border = "darkgray")
            ## Values under the average highlighted with red regions
-           panel.xblocks(x, y<mean(y, na.rm = TRUE),
+           panel.xblocks(x, y < mean(y, na.rm = TRUE),        
                          col = "indianred1",
                          height = unit(0.1, 'npc'))
            ## Time series
            panel.lines(x, y, col = 'royalblue4', lwd = 0.5, ...)
            ## Label of each time series
-           panel.text(x[1], min(y, na.rm = TRUE),
+           panel.text(x[1], min(y, na.rm = TRUE),                    
                       names(aranjuez)[panel.number()],
                       cex = 0.6, adj = c(0, 0), srt = 90, ...)
-           ## Triangles to point the maxima and minima 
-           idxMax <- which.max(y)
+           ## Triangles to point the maxima and minima          
+           idxMax <- which.max(y)                              
            panel.points(x[idxMax], y[idxMax],
                         col = 'black', fill = 'lightblue', pch = 24)
-           idxMin <- which.min(y)
+           idxMin <- which.min(y)                            
            panel.points(x[idxMin], y[idxMin],
                         col = 'black', fill = 'lightblue', pch = 25)
        })
@@ -238,12 +237,12 @@ autoplot(unemployUSA, facets = NULL, geom = 'area') +
 
 panel.flow <- function(x, y, groups, origin, ...)
 {
-    dat <- data.frame(x = x, y = y, groups = groups)
+    dat <- data.frame(x = x, y = y, groups = groups)            (ref:dataframe)
     nVars <- nlevels(groups)
     groupLevels <- levels(groups)
     
     ## From long to wide
-    yWide <- unstack(dat, y~groups)
+    yWide <- unstack(dat, y~groups)                               (ref:yunstack)
     ## Where are the maxima of each variable located? We will use
     ## them to position labels.
     idxMaxes <- apply(yWide, 2, which.max)
@@ -253,28 +252,28 @@ panel.flow <- function(x, y, groups, origin, ...)
     else origin = 0 
     yWide <- cbind(origin = origin, yWide)
     ## Cumulative sums to define the polygon
-    yCumSum <- t(apply(yWide, 1, cumsum))
-    Y <- as.data.frame(sapply(seq_len(nVars),
+    yCumSum <- t(apply(yWide, 1, cumsum))                         (ref:ycumsum)
+    Y <- as.data.frame(sapply(seq_len(nVars),                    (ref:yPolygon)
                               function(iCol)c(yCumSum[,iCol+1],
                                               rev(yCumSum[,iCol]))))
     names(Y) <- levels(groups)
     ## Back to long format, since xyplot works that way
-    y <- stack(Y)$values
+    y <- stack(Y)$values                                           (ref:yStack)
     
     ## Similar but easier for x
-    xWide <- unstack(dat, x~groups)
-    x <- rep(c(xWide[,1], rev(xWide[,1])), nVars)
+    xWide <- unstack(dat, x~groups)                              (ref:xunstack)
+    x <- rep(c(xWide[,1], rev(xWide[,1])), nVars)                (ref:xPolygon)
     ## Groups repeated twice (upper and lower limits of the polygon)
-    groups <- rep(groups, each = 2)
+    groups <- rep(groups, each = 2)                                (ref:groups)
     
     ## Graphical parameters
-    superpose.polygon <- trellis.par.get("superpose.polygon")
+    superpose.polygon <- trellis.par.get("superpose.polygon")        (ref:gpar)
     col = superpose.polygon$col
     border = superpose.polygon$border 
     lwd = superpose.polygon$lwd 
     
     ## Draw polygons
-    for (i in seq_len(nVars)){
+    for (i in seq_len(nVars)){                                    (ref:forVars)
         xi <- x[groups==groupLevels[i]]
         yi <- y[groups==groupLevels[i]]
         panel.polygon(xi, yi, border = border,
@@ -293,7 +292,7 @@ panel.flow <- function(x, y, groups, origin, ...)
         hChar <- convertHeight(h, 'char', TRUE)
         ## If there is enough space and we are not at the first or
         ## last variable, then the label is printed inside the polygon.
-        if((hChar >= 1) && !(i %in% c(1, nVars))){
+        if((hChar >= 1) && !(i %in% c(1, nVars))){                  (ref:hChar)
             grid.text(groupLevels[i],
                       xi[idxMaxes[i]],
                       (yi[idxMaxes[i]] +
@@ -323,9 +322,9 @@ prepanel.flow <- function(x, y, groups, origin,...)
     yWide <- cbind(origin = origin, yWide)
     yCumSum <- t(apply(yWide, 1, cumsum))
     
-    list(xlim = range(x),
-         ylim = c(min(yCumSum[,1]), max(yCumSum[,nVars+1])),
-         dx = diff(x),
+    list(xlim = range(x),                                            (ref:xlim)
+         ylim = c(min(yCumSum[,1]), max(yCumSum[,nVars+1])),         (ref:ylim)
+         dx = diff(x),                                                 (ref:dx)
          dy = diff(c(yCumSum[,-1])))
 }
 
@@ -392,41 +391,6 @@ plot_ly(aranjuezDF) %>%
     add_lines(x = ~ Index,
               y = ~ Value,
               color = ~ Series)
-
-##################################################################
-## Interaction with gridSVG
-##################################################################
-
-library(gridSVG)
-## grobs in the graphical output
-pNavarra
-grobs <- grid.ls(print = FALSE)
-## only interested in some of them
-nms <- grobs$name[grobs$type == "grobListing"]
-idxNames <- grep('lines', nms)
-IDs <- nms[idxNames]
-
-for (id in unique(IDs))
-{
-    ## extract information from the data
-    ## according to the ID value
-    i <- strsplit(id, '\\.')
-    i <- sapply(i, function(x)as.numeric(x[5]))
-    ## Information to be attached to each line: annual mean of daily
-    ## radiation and abbreviated name of the station
-    dat <- round(mean(navarra[,i], na.rm = TRUE), 2)
-    info <- paste(names(navarra)[i], paste(dat, collapse = ','),
-                  sep = ': ')
-    ## attach SVG attributes
-    grid.garnish(id,
-                 onmouseover = "highlight(evt)",
-                 onmouseout = "hide(evt)",
-                 title = info)
-}
-
-grid.script(filename="highlight.js")
-
-grid.export('figs/navarraRadiation.svg')
 
 unemployDF <- fortify(unemployUSA, melt = TRUE)
 

@@ -907,11 +907,9 @@ its last column (the upper line of the cumulative sum) (line [[(ylim)]]).
 
 This section describes the interactive alternatives of the static
 figures included in the previous sections with several packages:
-=dygraphs=, =highcharter=, =plotly=, =streamgraph=, and =gridSVG=.
-
-=dygraphs=, =highcharter=, =plotly=, and =streamgraph= are =R= interfaces to
-JavaScript libraries based on the =htmlwidgets= package, while the
-=gridSVG= package converts a =grid= graphic object into an SVG file.
+=dygraphs=, =highcharter=, =plotly=, and =streamgraph=. These packages
+are =R= interfaces to JavaScript libraries based on the =htmlwidgets=
+package.
 
 ** Dygraphs label:sec:dygraphs
 The =dygraphs= package is an interface to the =dygraphs= JavaScript
@@ -1064,117 +1062,6 @@ plot_ly(aranjuezDF) %>%
 
 #+CAPTION: Snapshot of a zoom in an interactive graphic produced with \texttt{plotly}. label:fig:plotly_zoom
 [[file:figs/plotly_aranjuez_zoom.png]]
-
-
-** \floweroneleft Interaction with =gridSVG=
-#+begin_src R :exports none
-##################################################################
-## Interaction with gridSVG
-##################################################################
-#+end_src
-
-The =gridSVG= package provides functions to convert =grid=-based =R=
-graphics to an SVG format. It provides several functions to add
-dynamic and interactive capabilities to =R= graphics. In this section
-we will use =grid.script=, a function to add JavaScript code to a
-plot.
-
-The first step is to specify which component of the scene
-will run the JavaScript code. The =grid.ls= function  returns a
-listing of the names of grobs or viewports included in the graphic
-output: only the lines will be connected with the JavaScript
-code. 
-
-#+INDEX: Packages!gridSVG@\texttt{gridSVG}
-
-#+begin_src R
-library(gridSVG)
-## grobs in the graphical output
-pNavarra
-grobs <- grid.ls(print = FALSE)
-## only interested in some of them
-nms <- grobs$name[grobs$type == "grobListing"]
-idxNames <- grep('lines', nms)
-IDs <- nms[idxNames]
-#+end_src
-
-The second step is to modify each =grob= (graphical object) to add
-attributes that specify when it will call JavaScript code. For each
-line identified with the elements of the =IDs= vector and associated
-to a meteorological station, the =navarra= object is accessed to
-extract the annual mean value of the daily radiation and the
-abbreviated name of the corresponding station (=info=).  The
-=grid.garnish= function adds attributes to the =grob= of each line so
-that when the mouse moves over a =grob=, the line is highlighted and
-colored in red (=highlight=). When the mouse hovers out of the =grob=,
-the =hide= function sets back the default values of line width and
-transparency, but uses the green color to denote that this line has
-been already visited. In addition, because the browsers display the
-content of the title attribute with a default tooltip, =grid.garnish=
-sets this attribute to =info=.
-
-\nomenclature{grob}{Graphical object as defined by the grid package.}
-
-#+begin_src R
-for (id in unique(IDs))
-{
-    ## extract information from the data
-    ## according to the ID value
-    i <- strsplit(id, '\\.')
-    i <- sapply(i, function(x)as.numeric(x[5]))
-    ## Information to be attached to each line: annual mean of daily
-    ## radiation and abbreviated name of the station
-    dat <- round(mean(navarra[,i], na.rm = TRUE), 2)
-    info <- paste(names(navarra)[i], paste(dat, collapse = ','),
-                  sep = ': ')
-    ## attach SVG attributes
-    grid.garnish(id,
-                 onmouseover = "highlight(evt)",
-                 onmouseout = "hide(evt)",
-                 title = info)
-}
-#+end_src
-
-These JavaScript functions are included in a script file named
-=highlight.js= (available at the website of the book). It can be
-added as an additional object with =grid.script=.
-
-#+begin_src R 
-grid.script(filename="highlight.js")
-#+end_src
-
-This script is easy to understand, even without previous
-JavaScript knowledge:
-#+INDEX: Subjects!JavaScript
-#+begin_example
-highlight = function(evt){',
-      evt.target.setAttribute('opacity', '1');
-      evt.target.setAttribute('stroke', 'red');
-      evt.target.setAttribute('stroke-width', '1');
-  }
-  
-hide = function(evt){
-      evt.target.setAttribute('opacity', '0.3');
-      evt.target.setAttribute('stroke', green');
-      evt.target.setAttribute('stroke-width', '0.3');
-  }
-#+end_example
-
-Finally, =gridToSVG= exports the whole scene to SVG. 
-
-
-#+begin_src R
-grid.export('figs/navarraRadiation.svg')
-#+end_src
-
-A snapshot of the result, as viewed in a browser with a line
-highlighted, is shown in Figure ref:fig:navarraSVG. Open the SVG
-file with your browser, explore it using the horizon graph (Figure
-ref:fig:navarraHorizonplot) as a reference, and try to answer the
-questions raised with that graphic.
-
-#+CAPTION: Snapshot of an SVG graphic produced with \texttt{gridSVG}. label:fig:navarraSVG 
-[[file:figs/navarraSVG_captura.png]]
 
 
 ** streamgraph label:sec:interactive_streamgraph
