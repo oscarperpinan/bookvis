@@ -140,6 +140,7 @@ CO2capita <- dcast(CO2capita, Country.Name ~ Year)
 summary(CO2capita)
 #+end_src
 
+#+ATTR_LATEX: :environment results
 #+RESULTS:
 #+begin_example
 Using CO2.capita as value column: use value.var to override.
@@ -780,7 +781,7 @@ grid.export("figs/bubbles.svg")
 [fn:2] http://colorbrewer2.org/
 
 [fn:3] You should read the Google API Terms of Service before using
-  =googleVis=: https://developers.google.com/terms/.
+  =googleVis=: https://developers.google.com/terms/
 
 [fn:4] http://www.gapminder.org/videos/200-years-that-changed-the-world-bbc/
 

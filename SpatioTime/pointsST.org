@@ -119,7 +119,7 @@ chosen (default) it is mainly a wrapper around =spplot= and displays a
 panel with the spatial data for each element of the time index (Figure
 [[fig:NO2STxy]]). The problem with this approach is that only a limited
 number of panels can be correctly displayed on one page. In this
-example, we print the first 12 days of the sequence.
+example, we print the first twelve days of the sequence.
 
 #+INDEX: Subjects!Small multiples
 #+begin_src R :results output graphics :exports both :file figs/NO2STxy.pdf
@@ -170,7 +170,7 @@ stplot(NO2st, mode = 'ts',
 These three graphics complement each other and together provide a more
 complete view of the behavior of the data. For example in Figure
 [[fig:NO2STxy]], we can find stations whose levels remain almost constant
-throughout the 12-day period (namely, El Pardo-28079058[fn:1], the
+throughout the twelve days period (namely, El Pardo-28079058[fn:1], the
 station at the top-left corner that is far from the city center),
 while others fluctuate notably during this same period (for example,
 Barajas-28079027 and Urb. Embajada-28079055, the two nearby stations

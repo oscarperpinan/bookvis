@@ -50,6 +50,7 @@ names(SISdm) <- format(timeIndex, '%a_%Y%m%d')
 SISdm
 #+end_src
 
+#+ATTR_LATEX: :environment results
 #+RESULTS:
 #+begin_example
 class       : RasterBrick 
@@ -90,10 +91,7 @@ levelplot(SISdm, layers = 1:12, panel = panel.levelplot.raster)
 When the number of layers is very high, a partial solution is to
 aggregate the data, grouping the layers according to a time
 condition. For example, we can build a new space-time raster with
-the monthly averages using =zApply= and =as.yearmon=. This raster
-can be completely displayed on one page (Figure ref:fig:SISmm),
-although part of the information of the original data is lost in
-the aggregation procedure.
+the monthly averages using =zApply= and =as.yearmon=. 
 
 #+begin_src R 
 SISmm <- zApply(SISdm, by = as.yearmon, fun = 'mean')
@@ -105,6 +103,7 @@ SISmm <- zApply(SISdm, by = as.yearmon, fun = 'mean')
 SISmm
 #+end_src
 
+#+ATTR_LATEX: :environment results
 #+RESULTS:
 #+begin_example
 class       : RasterBrick 
@@ -119,6 +118,9 @@ max values  :  74.62326, 123.82005, 167.88226, 249.85596, 313.51773, 340.51255, 
             : ene 2011, feb 2011, mar 2011, abr 2011, may 2011, jun 2011, jul 2011, ago 2011, sep 2011, oct 2011, nov 2011, dic 2011
 #+end_example
 
+This raster can be completely displayed on one page (Figure
+ref:fig:SISmm), although part of the information of the original data
+is lost in the aggregation procedure.
 #+begin_src R :results output graphics :exports both :file figs/SISmm.pdf
 levelplot(SISmm, panel = panel.levelplot.raster)
 #+end_src
@@ -139,11 +141,8 @@ There are other graphical tools that complement the previous maps. The
 scatterplot and the matrix of scatterplots, the histogram and kernel
 density plot, and the boxplot are among the most important tools in
 the frame of the Exploratory Data Analysis approach. Some of them were
-previously used with a spatial raster (chapter ref:cha:raster). In
+previously used with a spatial raster (Chapter ref:cha:raster). In
 this section we will use the histogram (Figure ref:fig:SISdm_hist),
-the violin plot (a combination of a boxplot and a kernel density plot)
-(Figure ref:fig:SISdm_boxplot), and the matrix of scatterplots
-(section ref:SEC:groupVariable, Figure ref:fig:SISmm_splom).
 
 #+begin_src R :results output graphics :exports both :file figs/SISdm_histogram.pdf
 histogram(SISdm, FUN = as.yearmon)
@@ -153,7 +152,8 @@ histogram(SISdm, FUN = as.yearmon)
 #+RESULTS:
 [[file:figs/SISdm_histogram.pdf]]
 
-
+the violin plot (a combination of a boxplot and a kernel density plot)
+(Figure ref:fig:SISdm_boxplot),
 #+begin_src R :results output graphics :exports both :file figs/SISdm_boxplot.pdf
 bwplot(SISdm, FUN = as.yearmon)
 #+end_src
@@ -162,6 +162,7 @@ bwplot(SISdm, FUN = as.yearmon)
 #+RESULTS:
 [[file:figs/SISdm_boxplot.pdf]]
 
+and the matrix of scatterplots (section ref:SEC:groupVariable, Figure ref:fig:SISmm_splom).
 #+begin_src R :results output graphics :exports both :file figs/SISmm_splom.png :width 4000 :height 4000 :res 600
 splom(SISmm, xlab = '', plot.loess = TRUE)
 #+end_src

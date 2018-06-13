@@ -43,7 +43,7 @@ or to incomplete or spurious data series[fn:1].
 #+end_src
    
 As an example of multiple time series with different scales, we
-will use 8 years (from January 2004 to December 2011) of daily
+will use eight years (from January 2004 to December 2011) of daily
 data corresponding to several meteorological variables measured at
 the SIAR station located at Aranjuez (Madrid, Spain) available on
 the SIAR webpage[fn:4]. The =aranjuez.gz= file, available in the
@@ -82,6 +82,7 @@ names(aranjuez) <- c('TempAvg', 'TempMax', 'TempMin',
 summary(aranjuez)
 #+end_src
 
+#+ATTR_LATEX: :environment results
 #+RESULTS:
 #+begin_example
      Index               TempAvg          TempMax         TempMin       
@@ -127,6 +128,7 @@ aranjuez <- zoo(aranjuezClean, index(aranjuez))
 summary(aranjuez)
 #+end_src
 
+#+ATTR_LATEX: :environment results
 #+RESULTS:
 #+begin_example
      Index               TempAvg          TempMax         TempMin       
@@ -207,6 +209,7 @@ load('data/navarra.RData')
 summary(navarra)
 #+end_src
 
+#+ATTR_LATEX: :environment results
 #+RESULTS:
 #+begin_example
      Index                 Arzr             Adó              Lmbr       
@@ -304,6 +307,7 @@ names(unemployUSA) <- substring(nms, 7)
 summary(unemployUSA)
 #+end_src
 
+#+ATTR_LATEX: :environment results
 #+RESULTS:
 #+begin_example
      32230            32231            32232            32235     
@@ -368,6 +372,7 @@ unemployUSA <- unemployUSA[complete.cases(unemployUSA), ]
 summary(unemployUSA)
 #+end_src
 
+#+ATTR_LATEX: :environment results
 #+RESULTS:
 #+begin_example
      Index          32230            32231            32232       
@@ -444,6 +449,7 @@ names(CO2data) <- c('iso2c', 'Country.Name', 'Year',
 summary(CO2data)
 #+end_src
 
+#+ATTR_LATEX: :environment results
 #+RESULTS:
 #+begin_example
     iso2c           Country.Name            Year        CO2.capita     
@@ -480,6 +486,7 @@ CO2data$Country.Name <- factor(CO2data$Country.Name)
 summary(CO2data)
 #+end_src
 
+#+ATTR_LATEX: :environment results
 #+RESULTS:
 #+begin_example
     iso2c            Country.Name      Year        CO2.capita     

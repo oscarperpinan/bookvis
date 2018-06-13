@@ -2,7 +2,7 @@
 
 #+AUTHOR: Oscar Perpiñán Lamigueiro
 
-#+DATE: April 2018
+#+DATE: June 2018
 
 #+SETUPFILE: config.org
 
@@ -154,7 +154,7 @@ ggplot(mtcars, aes(mpg, wt)) +
     facet_grid(. ~ am)
 #+end_src
  
- This package is very popular, with a large list packages depending on it. In the context of this book, time series can be displayed with it because the =zoo= package defines the =autoplot= function based on =ggplot2=. Regarding spatial data, recent versions of this package provide a =geom= function designed for spatial data. Detailed information is provided in section ref:sec:sf.
+ This package is very popular, with a large list packages depending on it. In the context of this book, time series can be displayed with it because the =zoo= package defines the =autoplot= function based on =ggplot2=. Regarding spatial data, recent versions of this package provide a =geom= function designed for spatial data. Detailed information is provided in Section ref:sec:sf.
 
 **** Comparison between lattice and ggplot2
  label:sec:comparison
@@ -199,7 +199,7 @@ highlighted here:
 *** About the Author
  label:sec:aboutMe
 During the past 18 years, my main area of expertise has been photovoltaic solar energy systems, with a special interest in solar radiation.
-Initially I worked as an engineer for a private company and I was involved in several commercial and research projects. The project teams were partly integrated by people with low technical skills who relied on the input from engineers to complete their work. I learned how a good visualization output eased the communication process. 
+Initially I worked as an engineer for a private company, and I was involved in several commercial and research projects. The project teams were partly integrated by people with low technical skills who relied on the input from engineers to complete their work. I learned how a good visualization output eased the communication process. 
 
 Now I work as a professor and researcher at the university. Data visualization is one of the most important tools I have available. It helps me embrace and share the steps, methods, and results of my research. With students, it is an inestimable partner in helping them understand complex concepts.
 
@@ -358,7 +358,7 @@ label:cha:timeGroupFactor
   Along this chapter these subjects are covered: scatterplot matrices,
   small multiples, hexagonal binning, and panel functions.
 
-  The most relevant packages in this Chapter are: \texttt{zoo} for
+  The most relevant packages in this chapter are: \texttt{zoo} for
   reading and arranging data as time series; \texttt{GGally} for
   creating the scatterplot matrix with \texttt{ggplot2};
   \texttt{hexbin} for hexagonal binning; \texttt{reshape2} for
@@ -488,7 +488,7 @@ label:sec:sf
 
 #+INDEX: Packages!sf@\texttt{sf}
 
-The =sf= package cite:Pebesma2018, the long term successor of =sp=, implements simple features in =R=. Simple features is an open (OGC and ISO) interface standard for access and manipulation of spatial vector data (points, lines, polygons). This package is under heavy development while writing this book.
+The =sf= package cite:Pebesma2018, the long term successor of =sp=, implements simple features in =R=. Simple features is an open (OGC and ISO) interface standard for access and manipulation of spatial vector data (points, lines, polygons). 
 
 This package represents simple features using simple data structures, commonly =data.frame= objects. Feature geometries are stored in a data.frame column, using a list-column because geometries are not single-valued. The length of this list is equal to the number of records in the =data.frame=, with the simple feature geometry of that feature in each element of the list. 
 
@@ -504,7 +504,7 @@ All functions and methods in =sf= that operate on spatial data are prefixed by =
 - =st_transform= for coordinate reference system transformations.
 - =st_as_sf.*=, a family of conversions functions between =sp= and =sf=.
 
-The =sf= package implements =plot= methods for displaying data using =base= graphics. Besides, this package provides a number of methods for conversion to =grob= objects in order to display these objects with packages working with the =grid= system (=lattice= and =ggplot2=). Finally, the =ggplot2= version[fn:35] to be released after 2.2.1 (on CRAN while writing this book) contains the =geom_sf= geom, designed for =sf= objects.
+The =sf= package implements =plot= methods for displaying data using =base= graphics. Besides, this package provides a number of methods for conversion to =grob= objects in order to display these objects with packages working with the =grid= system (=lattice= and =ggplot2=). Finally, the =ggplot2= version[fn:35] to be released after 2.2.1 (on CRAN at the time of writing this book) contains the =geom_sf= geom, designed for =sf= objects.
 
 
 **** raster
@@ -883,11 +883,11 @@ inspired by the =grid= package.
 #+BEGIN_EXPORT latex
 \chapterprecishere{%
   Throughout this chapter we will revisit the data from the Integrated
-  Air Quality system of the Madrid City Council (section
+  Air Quality system of the Madrid City Council (Section
   \ref{sec:airQualityData}) to illustrate visualization methods
   applicable for point space-time data. This dataset comprises the
   time series of measurements acquired at each station of the network
-  during 2011. In the section \ref{cha:bubble} the data were converted
+  during 2011. In Section \ref{cha:bubble} the data were converted
   from spatiotemporal data to spatial data, where the time information
   was suppressed to display only the yearly average values. In this
   chapter we will work with the whole space-time dataset using the
@@ -907,16 +907,16 @@ inspired by the =grid= package.
 
 #+BEGIN_EXPORT latex
 \chapterprecishere{%
-  In the chapter \ref{cha:rasterST} a multilayer raster is displayed as
+  In the Chapter \ref{cha:rasterST} a multilayer raster is displayed as
   a 3D object with a matrix of levelplots using the small-multiple
-  technique (section \ref{sec:levelplot_st}) and as a 2D object after
-  aggregation following a certain direction (section
+  technique (Section \ref{sec:levelplot_st}) and as a 2D object after
+  aggregation following a certain direction (Section
   \ref{sec:spacetime_plot}). This chapter displays a multilayer raster
   with a different approach, plotting the individual layers of the
   space-time raster sequentially as movie frames to produce an
-  animation (section \ref{sec:animationST_var}).
+  animation (Section \ref{sec:animationST_var}).
 
-  On the other hand, in the chapter \ref{cha:pointsST} point space-time
+  On the other hand, in Chapter \ref{cha:pointsST} point space-time
   data is represented with small multiples, space-time graphics and
   time graphs. In this chapter the time evolution of the data is
   represented with dynamic bubbles whose radius and color vary over
@@ -926,10 +926,10 @@ inspired by the =grid= package.
   displaying the evolution of a variable over time. Animations can
   also be constructed from a sequence of changes in an attribute of
   the variable: for example, the user's view of an static variable can
-  be gradually moved to create a fly-by animation (section
+  be gradually moved to create a fly-by animation (Section
   \ref{sec:animationST_3d}).
 
-  The most relevant packages in this Chapter are: \texttt{raster} for
+  The most relevant packages in this chapter are: \texttt{raster} for
   reading raster data; \texttt{rasterVis} for visualization of raster
   data; \texttt{maps}, \texttt{mapdata}, and \texttt{maptools} for
   boundaries lines; \texttt{rgl} for 3D visualization; and

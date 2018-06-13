@@ -132,7 +132,7 @@ ggplot(data = NO2sf) +
 
 #+RESULTS:
 
-* Optimal Classification and Sizes to Improve Discrimination
+* Optimal Classification to Improve Discrimination
 label:sec:classification_bubble
 #+begin_src R :exports none
 ##################################################################
@@ -279,7 +279,7 @@ Maps\textsuperscript{\texttrademark} or OpenStreetMap and transform it
 adequately. There are several packages that provide an interface to
 query several map servers: =RGoogleMaps=, =OpenStreetMaps=, and
 =ggmap= provide raster images from static maps obtained from Google
-Maps, Stamen, OpenStreetMap, etc..
+Maps, Stamen, OpenStreetMap, etc.
 
 Among these options, I have chosen the Stamen watercolor maps, and the
 =ggmap= package cite:Kahle.Wickham2013. It is worth noting that these
@@ -724,12 +724,13 @@ NO2$tt <- with(NO2,
 ## Stations code
 stations <- unique(NO2$codEst)
 ## Loop to create a scatterplot for each station.
-pList <- lapply(stations, function(i)
-    xyplot(dat ~ tt, data = NO2,
-           subset = (codEst == i),
-           type = 'l',
-           xlab = '', ylab = '')
-    )
+pList <- lapply(stations,
+                function(i)
+                    xyplot(dat ~ tt, data = NO2,
+                           subset = (codEst == i),
+                           type = 'l',
+                           xlab = '', ylab = '')
+                )
 #+end_src
 
 This list of graphics, =pList=, is provided to =mapview= through the
@@ -764,9 +765,9 @@ The =mapview= package recreates the small multiple technique (Sections
 ref:SEC:sameScale and ref:SEC:groupVariable) with the functions =sync=
 and =latticeView=. With them, multiple variables can be rendered
 simultaneously and synchronised together (with the =sync= function):
-if a panel is zoomed, all other panels will also zoom; the mouse
-position in a panel is signaled with a red circle in the rest of
-panels.
+- if a panel is zoomed, all other panels will also zoom
+- the mouse position in a panel is signaled with a red circle in the
+  rest of panels.
 
 The next code generates three graphics to view different variables of
 the =NO2sp= object using different values in =zcol= and =cex=. All of

@@ -229,6 +229,7 @@ aranjuezRshp <- melt(aranjuezDF,
 summary(aranjuezRshp)
 #+end_src
 
+#+ATTR_LATEX: :environment results
 #+RESULTS:
 #+begin_example
     HumidAvg        HumidMax         WindAvg         WindMax      

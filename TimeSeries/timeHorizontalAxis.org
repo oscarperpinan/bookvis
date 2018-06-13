@@ -3,6 +3,8 @@
 #+BIND: org-export-latex-image-default-option "height=0.45\\textheight"
 
 #+begin_src R :exports none :tangle no
+Sys.setlocale("LC_TIME", 'C')
+
 setwd('~/github/bookvis')
 #+end_src
 
@@ -40,7 +42,7 @@ with different characteristics is not very useful (unless their
 values were previously rescaled), so this option is postponed for
 Section ref:SEC:sameScale.
 
-For this example we will use the 8 years of daily data from the
+For this example we will use the eight years of daily data from the
 SIAR meteorological station located at Aranjuez (Madrid).  This
 multivariate time series can be displayed with the =xyplot= method of
 =lattice= for =zoo= objects with a panel for each variable (Figure
@@ -917,7 +919,7 @@ library, and provides facilities for charting time-series. It works
 automatically with =xts= time series objects, or with objects than can
 be coerced to this class. The result is an interactive graph, where
 values are displayed according to the mouse position over the time
-series. Regions can be selected to zoom into a time period. The figure
+series. Regions can be selected to zoom into a time period. Figure
 ref:fig:dygraphs is an snapshot of the interactive graph.
 
 #+INDEX: Packages!dygraphs@\texttt{dygraphs}
@@ -1070,7 +1072,7 @@ The =streamgraph= package[fn:1] creates interactive stream graphs based on
 the =htmlwidgets= package and the =D3.js= JavaScript library. Its main
 function, =streamgraph=, requires a =data.frame= as the first
 argument. Besides, its three next arguments, =key=, =value=, and
-=date=, makes this function a good candidate to work together with
+=date=, make this function a good candidate to work together with
 =fortify= and =melt=.
 
 #+begin_src R :results output :exports both
@@ -1130,5 +1132,5 @@ streamgraph(unemployDF,
 
 [fn:5] This approach was inspired by the =strip= function of the
 =metvurst= package
-https://metvurst.wordpress.com/2013/03/04/visualising-large-amounts-of-hourly-environmental-data-2/.
+https://metvurst.wordpress.com/2013/03/04/visualising-large-amounts-of-hourly-environmental-data-2/
 

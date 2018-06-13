@@ -123,6 +123,8 @@
 \newcommand\indexfunctions[1]{\index{Functions!#1@\texttt{#1}}}
 \lstset{
   numberstyle=\tiny\color{Blue},
+  framexleftmargin=5mm,
+  xleftmargin=\parindent,
   keywordstyle=\color{Blue},
   emphstyle=\color{Blue},
   commentstyle=\color{YellowGreen},
@@ -144,11 +146,16 @@
 
 \renewcommand{\lstlistingname}{Code}
 
+\lstnewenvironment{results}{%
+  \lstset{language={},
+    basicstyle=\small\ttfamily\color{darkgray!90},
+    backgroundcolor=\color{gray!5}
+    }}{}{}
+
 \usepackage{fancyvrb}
 \DefineVerbatimEnvironment{verbatim}{Verbatim}{%
   fontsize=\small,
   formatcom = {\color{gray!97}}}
-
 
 \pretitle{\vfill\begin{flushright}\bfseries\scshape\HUGE}
 \posttitle{\par\end{flushright}}

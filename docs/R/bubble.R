@@ -329,12 +329,13 @@ NO2$tt <- with(NO2,
 ## Stations code
 stations <- unique(NO2$codEst)
 ## Loop to create a scatterplot for each station.
-pList <- lapply(stations, function(i)
-    xyplot(dat ~ tt, data = NO2,
-           subset = (codEst == i),
-           type = 'l',
-           xlab = '', ylab = '')
-    )
+pList <- lapply(stations,
+                function(i)
+                    xyplot(dat ~ tt, data = NO2,
+                           subset = (codEst == i),
+                           type = 'l',
+                           xlab = '', ylab = '')
+                )
 
 mapview(NO2sp,
         zcol = "mean",

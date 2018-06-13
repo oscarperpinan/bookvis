@@ -17,7 +17,7 @@ setwd('~/github/bookvis')
 Sys.setlocale("LC_TIME", 'C')
 #+end_src
 
-* Depicting variable changes over time: raster data label:sec:animationST_var
+* Depicting Variable Changes Over Time: Raster Data label:sec:animationST_var
 
 This section uses animation to visualize changes of a raster variable
 over time. The procedure is quite simple:
@@ -44,7 +44,7 @@ the important variations.
 ##################################################################
 #+end_src
 
-The daily solar radiation CM-SAF data (chapter ref:cha:rasterST) do
+The daily solar radiation CM-SAF data (Chapter ref:cha:rasterST) do
 not meet the condition of a smooth transition between layers. The
 changes between the consecutive snapshots of daily radiation are too
 abrupt to be glued one after another. We will work with a different
@@ -78,21 +78,6 @@ timeIndex <- seq(as.POSIXct('2013-04-17 01:00:00', tz = 'UTC'), length = 96, by 
 cft <- setZ(cft, timeIndex)
 names(cft) <- format(timeIndex, 'D%d_H%H')
 #+end_src
-
-#+begin_src R :results output :exports results :tangle no
-cft
-#+end_src
-
-#+RESULTS:
-: class       : RasterBrick 
-: dimensions  : 99, 99, 9801, 96  (nrow, ncol, ncell, nlayers)
-: resolution  : 12, 12  (x, y)
-: extent      : 858, 2046, -6, 1182  (xmin, xmax, ymin, ymax)
-: coord. ref. : +proj=lcc +lon_0=-14.1 +lat_0=34.823 +lat_1=43 lat_2=43 +x_0=536402.3 +y_0=-18558.61 +units=km +ellps=WGS84 
-: data source : /home/oscar/github/bookvis/data/cft_20130417_0000.nc 
-: names       : D17_H01, D17_H02, D17_H03, D17_H04, D17_H05, D17_H06, D17_H07, D17_H08, D17_H09, D17_H10, D17_H11, D17_H12, D17_H13, D17_H14, D17_H15, ... 
-: time        : 2013-04-17 01:00:00, 2013-04-21 00:00:00 (min, max)
-: varname     : cft
 
 
 ** Spatial Context: Administrative Boundaries
@@ -264,7 +249,7 @@ rglwidget() %>%
 #+CAPTION: 3D animation of the forecast of hourly cloud cover at low and mid levels. label:fig:cftRGL
 [[file:figs/cftRGL.png]]
 
-* \floweroneleft Depicting variable changes over time: point space-time data
+* \floweroneleft Depicting Variable Changes Over Time: Point Space-Time Data
 label:sec:animation_st
  #+begin_src R :exports none
 ##################################################################
@@ -496,18 +481,18 @@ grid.garnish('timePlot', grep = TRUE,
 grid.export('figs/vLine.svg')
 #+end_src
 
-#+CAPTION: Animated circles of the $NO_2$ space-time data with a a time series as reference. label:fig:vLine
+#+CAPTION: Animated circles of the $NO_2$ space-time data with a time series as reference. label:fig:vLine
 [[file:figs/vLine.png]]
 
 
-* Fly-by animation label:sec:animationST_3d
+* Fly-by Animation label:sec:animationST_3d
 
 In this section the =rgl= package is used to generate a fly-by animation over the Earth, as an example of an animation depicting changes of a spatial attribute.
 
 #+INDEX: Subjects!Animation
 #+INDEX: Subjects!3D visualization
 
-*** Basic 3D earth
+*** Basic 3D Earth
 
 Firstly, a basic 3D Earth at night is created with the =surface3d= function, using the night lights images published by the NASA[fn:3].
 
@@ -554,7 +539,7 @@ writeWebGL('nightLights', width = 1000)
 #+CAPTION: Snapshot of the WebGL figure created with =writeWebGL=. label:fig:WebGL
 [[file:figs/nightLights.png]]
 
-*** Define the locations
+*** Define the Locations
 
 Once the Earth is represented with the sphere and the superimposed
 image, the fly-by animation is defined with a set of locations to be
@@ -614,7 +599,7 @@ cities <- cbind(cities, points)
   | Sao Paulo | Brazil    | -46.6333824 | -23.5506507 |
   | New York  | USA       | -87.2008048 |  30.8385202 |
 
-*** Generate the route 
+*** Generate the Route 
 
 The next step computes the intermediate points between each pair of
 locations. The =geosphere= package provides the =gcIntermediate=
@@ -687,6 +672,7 @@ route <- rbind(route,
 summary(route)
 #+end_src
 
+#+ATTR_LATEX: :environment results
 #+RESULTS:
 #+begin_example
       lon                lat               zoom               name    
@@ -702,7 +688,7 @@ summary(route)
  travel: 800
 #+end_example
 
-*** Produce the frames
+*** Produce the Frames
 
 Finally, this matrix of points is used to change the viewpoint of the
 OpenGL scene with the =rgl.viewpoint= function. The =travel= function
