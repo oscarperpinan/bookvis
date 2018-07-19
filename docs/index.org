@@ -9,9 +9,9 @@
 
 #+OPTIONS: html-style:nil
 
-#+HTML_HEAD:    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-#+HTML_HEAD:    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/readable/bootstrap.min.css">
-#+HTML_HEAD:    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+#+HTML_HEAD:    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+#+HTML_HEAD:    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/readable/bootstrap.min.css">
+#+HTML_HEAD:    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 #+HTML_HEAD: <link rel="icon" type="image/ico" href="favicon.ico">
 #+BIND: org-html-postamble nil
 
@@ -22,7 +22,7 @@
 
 This is the accompanying website of the *second edition* of the book
 "/Displaying time series, spatial and space-time data with R/", to be
-published with [[https://www.crcpress.com/][Chapman&Hall/CRC]]. This is a project created and
+published with [[https://www.crcpress.com/Displaying-Time-Series-Spatial-and-Space-Time-Data-with-R-Second-Edition/Lamigueiro/p/book/9781138089983][Chapman&Hall/CRC]]. This is a project created and
 maintained by [[http://oscarperpinan.github.io/][Oscar Perpiñán Lamigueiro]].
 
 * 
@@ -63,7 +63,7 @@ maintained by [[http://oscarperpinan.github.io/][Oscar Perpiñán Lamigueiro]].
    :HTML_CONTAINER_CLASS: col-md-3
    :END:
 
-[[http://goo.gl/6iN5KR][http://images.tandf.co.uk/common/jackets/weblarge/978146656/9781466565203.jpg]]
+[[https://www.crcpress.com/Displaying-Time-Series-Spatial-and-Space-Time-Data-with-R-Second-Edition/Lamigueiro/p/book/9781138089983][file:images/book.png]]
 
 ** 
    :PROPERTIES:

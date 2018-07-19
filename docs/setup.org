@@ -2,16 +2,16 @@
 
 #+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="stylesheets/styles.css" />
 
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/readtheorg/css/htmlize.css"/>
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/readtheorg/css/readtheorg.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://www.pirilampo.org/styles/readtheorg/css/htmlize.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://www.pirilampo.org/styles/readtheorg/css/readtheorg.css"/>
 
 #+HTML_HEAD: <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 #+HTML_HEAD: <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-#+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/readtheorg/js/readtheorg.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="https://www.pirilampo.org/styles/readtheorg/js/readtheorg.js"></script>
 
 #+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="stylesheets/colorbox.css" />
 
 #+HTML_HEAD:    <script src="js/jquery.colorbox.js"></script>
 #+HTML_HEAD:    <script src="js/colorbox.js"></script>
 
-#+BIND: org-html-postamble "<p><a href=\"http://oscarperpinan.github.io/bookvis\">HOME</a> <p>Maintained by <a href=\"http://oscarperpinan.github.io/\">Oscar Perpiñán</a>.</p>"
+#+BIND: org-html-postamble "<p><a href=\"https://oscarperpinan.github.io/bookvis\">HOME</a> <p>Maintained by <a href=\"https://oscarperpinan.github.io/\">Oscar Perpiñán</a>.</p>"
