@@ -21,7 +21,7 @@
   :END:
 
 This is the accompanying website of the *second edition* of the book
-"/Displaying time series, spatial and space-time data with R/", to be
+"/Displaying time series, spatial and space-time data with R/",
 published with [[https://www.crcpress.com/Displaying-Time-Series-Spatial-and-Space-Time-Data-with-R-Second-Edition/Lamigueiro/p/book/9781138089983][Chapman&Hall/CRC]]. This is a project created and
 maintained by [[http://oscarperpinan.github.io/][Oscar Perpiñán Lamigueiro]].
 
