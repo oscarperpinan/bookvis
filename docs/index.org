@@ -22,15 +22,13 @@
 
 This is the accompanying website of the *second edition* of the book
 "/Displaying time series, spatial and space-time data with R/",
-published with [[https://www.crcpress.com/Displaying-Time-Series-Spatial-and-Space-Time-Data-with-R-Second-Edition/Lamigueiro/p/book/9781138089983][Chapman&Hall/CRC]]. This is a project created and
-maintained by [[http://oscarperpinan.github.io/][Oscar Perpiñán Lamigueiro]].
+published with [[https://www.crcpress.com/Displaying-Time-Series-Spatial-and-Space-Time-Data-with-R-Second-Edition/Lamigueiro/p/book/9781138089983][Chapman&Hall/CRC]]. 
 
+Code, data, and figures are available at this [[https://github.com/oscarperpinan/bookvis][GitHub repository]].
 * 
   :PROPERTIES:
   :HTML_CONTAINER_CLASS: container jumbotron
   :END:
-
-
 
 ** Time Series
    :PROPERTIES:
@@ -86,3 +84,8 @@ combination of freely available code and data enables you to practice
 with the methods and modify the code to suit your own needs.
 
 
+* 
+  :PROPERTIES:
+  :HTML_CONTAINER_CLASS: container jumbotron
+  :END:
+This is a project created and maintained by [[http://oscarperpinan.github.io/][Oscar Perpiñán Lamigueiro]].
