@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-07-19 jue 02:22 -->
+<!-- 2019-02-07 jue 19:12 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Spatial Data - Displaying time series, spatial and space-time data with R</title>
@@ -161,6 +161,19 @@
   .footdef  { margin-bottom: 1em; }
   .figure { padding: 1em; }
   .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
   .inlinetask {
     padding: 10px;
     border: 2px solid gray;
@@ -181,8 +194,8 @@
   /*]]>*/-->
 </style>
 <link rel="stylesheet" type="text/css" href="stylesheets/styles.css" />
-<link rel="stylesheet" type="text/css" href="https://www.pirilampo.org/styles/readtheorg/css/htmlize.css"/>
-<link rel="stylesheet" type="text/css" href="https://www.pirilampo.org/styles/readtheorg/css/readtheorg.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/styles/readtheorg/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/styles/readtheorg/css/readtheorg.css"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://www.pirilampo.org/styles/readtheorg/js/readtheorg.js"></script>
@@ -276,8 +289,8 @@ for the JavaScript code in this tag.
 </div>
 
 
-<div id="outline-container-org5ef1b1e" class="outline-2">
-<h2 id="proportional"><a id="org5ef1b1e"></a>Proportional symbol mapping</h2>
+<div id="outline-container-org418d498" class="outline-2">
+<h2 id="proportional">Proportional symbol mapping</h2>
 <div class="outline-text-2" id="text-proportional">
 
 <div class="figure">
@@ -298,14 +311,14 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org687a1ba" class="outline-3">
-<h3 id="interactive_proportional"><a id="org687a1ba"></a>Interactive Graphics</h3>
+<div id="outline-container-orgdcdd5b5" class="outline-3">
+<h3 id="interactive_proportional">Interactive Graphics</h3>
 <div class="outline-text-3" id="text-interactive_proportional">
 </div>
 
-<div id="outline-container-orgfa9fe02" class="outline-4">
-<h4 id="orgfa9fe02">mapView</h4>
-<div class="outline-text-4" id="text-orgfa9fe02">
+<div id="outline-container-org694c07b" class="outline-4">
+<h4 id="org694c07b">mapView</h4>
+<div class="outline-text-4" id="text-org694c07b">
 
 <div class="figure">
 <p><a href="images/mapview/mapview_simple.html" class="iframe"><img src="images/thumbs/mapview_simple.png" alt="mapview_simple.png" class="iframe" /></a>
@@ -332,9 +345,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org2290a20" class="outline-4">
-<h4 id="org2290a20">GeoJSON</h4>
-<div class="outline-text-4" id="text-org2290a20">
+<div id="outline-container-org69652f9" class="outline-4">
+<h4 id="org69652f9">GeoJSON</h4>
+<div class="outline-text-4" id="text-org69652f9">
 
 <div class="figure">
 <p><a href="images/geojson.html" class="vimeo"><img src="images/thumbs/geojson.png" alt="geojson.png" class="vimeo" /></a>
@@ -343,9 +356,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org8f2c9ad" class="outline-4">
-<h4 id="org8f2c9ad">rgl</h4>
-<div class="outline-text-4" id="text-org8f2c9ad">
+<div id="outline-container-org4cef4c8" class="outline-4">
+<h4 id="org4cef4c8">rgl</h4>
+<div class="outline-text-4" id="text-org4cef4c8">
 
 <div class="figure">
 <p><a href="images/rgl/bubbles.html" class="iframe"><img src="images/thumbs/rgl_bubble.png" alt="rgl_bubble.png" class="iframe" /></a>
@@ -356,8 +369,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgfd2b111" class="outline-2">
-<h2 id="choropleth"><a id="orgfd2b111"></a>Choropleth maps</h2>
+<div id="outline-container-org688239a" class="outline-2">
+<h2 id="choropleth">Choropleth maps</h2>
 <div class="outline-text-2" id="text-choropleth">
 
 <div class="figure">
@@ -378,8 +391,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org306bd96" class="outline-3">
-<h3 id="interactive_choropleth"><a id="org306bd96"></a>Interactive Graphics</h3>
+<div id="outline-container-org3de6487" class="outline-3">
+<h3 id="interactive_choropleth">Interactive Graphics</h3>
 <div class="outline-text-3" id="text-interactive_choropleth">
 
 <div class="figure">
@@ -397,8 +410,8 @@ for the JavaScript code in this tag.
 </div>
 
 
-<div id="outline-container-org8d516d7" class="outline-2">
-<h2 id="raster"><a id="org8d516d7"></a>Raster maps</h2>
+<div id="outline-container-org201c6a1" class="outline-2">
+<h2 id="raster">Raster maps</h2>
 <div class="outline-text-2" id="text-raster">
 
 <div class="figure">
@@ -437,8 +450,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org268c7a6" class="outline-3">
-<h3 id="interactive_raster"><a id="org268c7a6"></a>Interactive Graphics</h3>
+<div id="outline-container-org4128928" class="outline-3">
+<h3 id="interactive_raster">Interactive Graphics</h3>
 <div class="outline-text-3" id="text-interactive_raster">
 
 <div class="figure">
@@ -455,8 +468,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org90ec310" class="outline-2">
-<h2 id="vector"><a id="org90ec310"></a>Vector fields</h2>
+<div id="outline-container-org3f6deb9" class="outline-2">
+<h2 id="vector">Vector fields</h2>
 <div class="outline-text-2" id="text-vector">
 
 <div class="figure">
@@ -472,8 +485,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org793ed0a" class="outline-2">
-<h2 id="physical"><a id="org793ed0a"></a>Physical maps</h2>
+<div id="outline-container-org6563c39" class="outline-2">
+<h2 id="physical">Physical maps</h2>
 <div class="outline-text-2" id="text-physical">
 
 <div class="figure">
@@ -484,8 +497,8 @@ for the JavaScript code in this tag.
 </div>
 
 
-<div id="outline-container-org06ded9c" class="outline-2">
-<h2 id="reference"><a id="org06ded9c"></a>Reference maps</h2>
+<div id="outline-container-org9bc7855" class="outline-2">
+<h2 id="reference">Reference maps</h2>
 <div class="outline-text-2" id="text-reference">
 
 <div class="figure">
@@ -495,16 +508,16 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org99fd708" class="outline-2">
-<h2 id="code"><a id="org99fd708"></a>Code</h2>
+<div id="outline-container-orgf65777e" class="outline-2">
+<h2 id="code">Code</h2>
 <div class="outline-text-2" id="text-code">
 <p>
 <a href="R/configLattice.R">configLattice.R</a>
 </p>
 </div>
 
-<div id="outline-container-org3f1f332" class="outline-3">
-<h3 id="code_choropleth"><a id="org3f1f332"></a>Choropleth maps</h3>
+<div id="outline-container-org7f0a926" class="outline-3">
+<h3 id="code_choropleth">Choropleth maps</h3>
 <div class="outline-text-3" id="text-code_choropleth">
 <p>
 <a href="R/choropleth.R">Download</a>
@@ -719,10 +732,10 @@ pList <span class="org-ess-assignment">&lt;-</span> lapply(1:nClasses, <span cla
 names(pList) <span class="org-ess-assignment">&lt;-</span> classes
 p <span class="org-ess-assignment">&lt;-</span> Reduce(<span class="org-string">'+'</span>, pList)
 
-op <span class="org-ess-assignment">&lt;-</span> options(digits = 4)
+op <span class="org-ess-assignment">&lt;-</span> <span class="org-ess-modifiers">options</span>(digits = 4)
 tabFisher <span class="org-ess-assignment">&lt;-</span> print(intFisher)
 intervals <span class="org-ess-assignment">&lt;-</span> names(tabFisher)
-options(op)
+<span class="org-ess-modifiers">options</span>(op)
 
 <span class="org-ess-modifiers">library</span>(grid)
 
@@ -791,8 +804,8 @@ mapView(sfMapVotes0,
 </div>
 </div>
 
-<div id="outline-container-orga92e726" class="outline-3">
-<h3 id="code_raster"><a id="orga92e726"></a>Raster maps</h3>
+<div id="outline-container-org0138978" class="outline-3">
+<h3 id="code_raster">Raster maps</h3>
 <div class="outline-text-3" id="text-code_raster">
 <p>
 <a href="R/raster.R">Download</a>
@@ -839,7 +852,7 @@ levelplot(SISav) +
 <span class="org-comment-delimiter">## </span><span class="org-comment">Hill shading</span>
 <span class="org-comment-delimiter">##################################################################</span>
 
-old <span class="org-ess-assignment">&lt;-</span> setwd(tempdir())
+old <span class="org-ess-assignment">&lt;-</span> <span class="org-ess-modifiers">setwd</span>(tempdir())
 download.file(<span class="org-string">'http://biogeo.ucdavis.edu/data/diva/msk_alt/ESP_msk_alt.zip'</span>, <span class="org-string">'ESP_msk_alt.zip'</span>)
 unzip(<span class="org-string">'ESP_msk_alt.zip'</span>, exdir = <span class="org-string">'.'</span>)
 
@@ -850,7 +863,7 @@ aspect <span class="org-ess-assignment">&lt;-</span> terrain(DEM, <span class="o
 hs <span class="org-ess-assignment">&lt;-</span> hillShade(slope = slope, aspect = aspect,
                 angle = 60, direction = 45)
 
-setwd(old)
+<span class="org-ess-modifiers">setwd</span>(old)
 
 <span class="org-comment-delimiter">## </span><span class="org-comment">hillShade theme: gray colors and semitransparency</span>
 hsTheme <span class="org-ess-assignment">&lt;-</span> GrTheme(regions = list(alpha = 0.5))
@@ -1141,8 +1154,8 @@ mvSIS + mvSIAR
 </div>
 
 
-<div id="outline-container-org38900b1" class="outline-3">
-<h3 id="code_proportional"><a id="org38900b1"></a>Proportional symbol mapping</h3>
+<div id="outline-container-org7badcb4" class="outline-3">
+<h3 id="code_proportional">Proportional symbol mapping</h3>
 <div class="outline-text-3" id="text-code_proportional">
 <p>
 <a href="R/bubble.R">Download</a>
@@ -1209,9 +1222,9 @@ intervals <span class="org-ess-assignment">&lt;-</span> classIntervals(NO2sp$mea
 <span class="org-comment-delimiter">## </span><span class="org-comment">Number of classes is not always the same as the proposed number</span>
 nClasses <span class="org-ess-assignment">&lt;-</span> length(intervals$brks) - 1
 
-op <span class="org-ess-assignment">&lt;-</span> options(digits = 4)
+op <span class="org-ess-assignment">&lt;-</span> <span class="org-ess-modifiers">options</span>(digits = 4)
 tab <span class="org-ess-assignment">&lt;-</span> print(intervals)
-options(op)
+<span class="org-ess-modifiers">options</span>(op)
 
 <span class="org-comment-delimiter">## </span><span class="org-comment">Complete Dent set of circle radii (mm)</span>
 dent <span class="org-ess-assignment">&lt;-</span> c(0.64, 1.14, 1.65, 2.79, 4.32, 6.22, 9.65, 12.95, 15.11)
@@ -1566,8 +1579,8 @@ plot3d(x = NO2df$coords.x1,
 </div>
 
 
-<div id="outline-container-orgf6384cb" class="outline-3">
-<h3 id="code_vector"><a id="orgf6384cb"></a>Vector fields</h3>
+<div id="outline-container-org8dfb94d" class="outline-3">
+<h3 id="code_vector">Vector fields</h3>
 <div class="outline-text-3" id="text-code_vector">
 <p>
 <a href="R/vector.R">Download</a>
@@ -1620,8 +1633,8 @@ streamplot(windField, isField = <span class="org-ess-constant">TRUE</span>,
 </div>
 
 
-<div id="outline-container-org17b1e52" class="outline-3">
-<h3 id="code_physical"><a id="org17b1e52"></a>Physical maps</h3>
+<div id="outline-container-orgf1a8458" class="outline-3">
+<h3 id="code_physical">Physical maps</h3>
 <div class="outline-text-3" id="text-code_physical">
 <p>
 <a href="R/physical.R">Download</a>
@@ -1648,7 +1661,7 @@ streamplot(windField, isField = <span class="org-ess-constant">TRUE</span>,
 <span class="org-comment-delimiter">## </span><span class="org-comment">Retrieving data from DIVA-GIS, GADM and Natural Earth Data</span>
 <span class="org-comment-delimiter">##################################################################</span>
 
-     old <span class="org-ess-assignment">&lt;-</span> setwd(tempdir())
+     old <span class="org-ess-assignment">&lt;-</span> <span class="org-ess-modifiers">setwd</span>(tempdir())
 
      download.file(<span class="org-string">'http://biogeo.ucdavis.edu/data/gadm2.8/shp/BRA_adm_shp.zip'</span>,
                    <span class="org-string">'BRA_adm.zip'</span>)
@@ -1672,7 +1685,7 @@ streamplot(windField, isField = <span class="org-ess-constant">TRUE</span>,
      unzip(<span class="org-string">'neSea.zip'</span>)
      worldSea <span class="org-ess-assignment">&lt;-</span> raster(<span class="org-string">'OB_LR.tif'</span>)
      brazilSea <span class="org-ess-assignment">&lt;-</span> crop(worldSea, brazilDEM)
-     setwd(old)
+     <span class="org-ess-modifiers">setwd</span>(old)
 
 <span class="org-comment-delimiter">##################################################################</span>
 <span class="org-comment-delimiter">## </span><span class="org-comment">Intersection of shapefiles and elevation model</span>
@@ -1752,8 +1765,8 @@ print(altPlot, split=c(2, 1, 2, 1))
 </div>
 </div>
 
-<div id="outline-container-orgfbe9dee" class="outline-3">
-<h3 id="code_data"><a id="orgfbe9dee"></a>Data</h3>
+<div id="outline-container-org8434194" class="outline-3">
+<h3 id="code_data">Data</h3>
 <div class="outline-text-3" id="text-code_data">
 <p>
 <a href="R/dataSpatial.R">Download</a>
@@ -1884,7 +1897,7 @@ writeOGR(NO2sp, dsn = <span class="org-string">'data/'</span>, layer = <span cla
 
 <span class="org-ess-modifiers">library</span>(XML)
 
-old <span class="org-ess-assignment">&lt;-</span> setwd(<span class="org-string">'images'</span>)
+old <span class="org-ess-assignment">&lt;-</span> <span class="org-ess-modifiers">setwd</span>(<span class="org-string">'images'</span>)
 <span class="org-ess-keyword">for</span> (i <span class="org-ess-keyword">in</span> 1:nrow(NO2df))
 {
     codEst <span class="org-ess-assignment">&lt;-</span> NO2df[i, <span class="org-string">"codEst"</span>]
@@ -1902,7 +1915,7 @@ old <span class="org-ess-assignment">&lt;-</span> setwd(<span class="org-string"
     imageURL <span class="org-ess-assignment">&lt;-</span> paste(rootURL, imageURL, sep = <span class="org-string">''</span>)
     download.file(imageURL, destfile = paste(codEst, <span class="org-string">'.jpg'</span>, sep = <span class="org-string">''</span>))
 }
-setwd(old)
+<span class="org-ess-modifiers">setwd</span>(old)
 
 <span class="org-comment-delimiter">##################################################################</span>
 <span class="org-comment-delimiter">## </span><span class="org-comment">Spanish General Elections</span>
@@ -1944,7 +1957,7 @@ write.csv(votes2016, <span class="org-string">'data/votes2016.csv'</span>, row.n
 <span class="org-ess-modifiers">library</span>(sp)
 <span class="org-ess-modifiers">library</span>(rgdal)
 
-old <span class="org-ess-assignment">&lt;-</span> setwd(tempdir())
+old <span class="org-ess-assignment">&lt;-</span> <span class="org-ess-modifiers">setwd</span>(tempdir())
 
 download.file(<span class="org-string">'ftp://www.ine.es/pcaxis/mapas_completo_municipal.rar'</span>,
               <span class="org-string">'mapas_completo_municipal.rar'</span>)
@@ -1954,7 +1967,7 @@ spMap <span class="org-ess-assignment">&lt;-</span> readOGR(<span class="org-str
                  p4s = <span class="org-string">"+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs"</span>)
 Encoding(levels(spMap$NOMBRE)) <span class="org-ess-assignment">&lt;-</span> <span class="org-string">"latin1"</span>
 
-setwd(old)
+<span class="org-ess-modifiers">setwd</span>(old)
 
 <span class="org-comment-delimiter">## </span><span class="org-comment">dissolve repeated polygons</span>
 spPols <span class="org-ess-assignment">&lt;-</span> unionSpatialPolygons(spMap, spMap$PROVMUN)

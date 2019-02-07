@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-07-19 jue 02:22 -->
+<!-- 2019-02-07 jue 19:11 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Time Series - Displaying time series, spatial and space-time data with R</title>
@@ -161,6 +161,19 @@
   .footdef  { margin-bottom: 1em; }
   .figure { padding: 1em; }
   .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
   .inlinetask {
     padding: 10px;
     border: 2px solid gray;
@@ -181,8 +194,8 @@
   /*]]>*/-->
 </style>
 <link rel="stylesheet" type="text/css" href="stylesheets/styles.css" />
-<link rel="stylesheet" type="text/css" href="https://www.pirilampo.org/styles/readtheorg/css/htmlize.css"/>
-<link rel="stylesheet" type="text/css" href="https://www.pirilampo.org/styles/readtheorg/css/readtheorg.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/styles/readtheorg/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/styles/readtheorg/css/readtheorg.css"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://www.pirilampo.org/styles/readtheorg/js/readtheorg.js"></script>
@@ -278,13 +291,13 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orge0dd153" class="outline-2">
-<h2 id="horizontal"><a id="orge0dd153"></a>Time on the horizontal axis</h2>
+<div id="outline-container-org68930db" class="outline-2">
+<h2 id="horizontal">Time on the horizontal axis</h2>
 <div class="outline-text-2" id="text-horizontal">
 </div>
 
-<div id="outline-container-orgbf3a429" class="outline-3">
-<h3 id="horizontal_different_scales"><a id="orgbf3a429"></a>Time Graph of Variables with Different Scales</h3>
+<div id="outline-container-org4b2247f" class="outline-3">
+<h3 id="horizontal_different_scales">Time Graph of Variables with Different Scales</h3>
 <div class="outline-text-3" id="text-horizontal_different_scales">
 
 <div class="figure">
@@ -294,8 +307,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org4c91cfc" class="outline-3">
-<h3 id="horizontal_same_scale"><a id="org4c91cfc"></a>Time Series of Variables with the Same Scale</h3>
+<div id="outline-container-org7f7bc09" class="outline-3">
+<h3 id="horizontal_same_scale">Time Series of Variables with the Same Scale</h3>
 <div class="outline-text-3" id="text-horizontal_same_scale">
 
 <div class="figure">
@@ -305,8 +318,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org71a70a8" class="outline-3">
-<h3 id="horizonplot"><a id="org71a70a8"></a>The Horizon Graph</h3>
+<div id="outline-container-orgf7771f4" class="outline-3">
+<h3 id="horizonplot">The Horizon Graph</h3>
 <div class="outline-text-3" id="text-horizonplot">
 
 <div class="figure">
@@ -316,8 +329,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgad76345" class="outline-3">
-<h3 id="stacked"><a id="orgad76345"></a>Stacked Graphs</h3>
+<div id="outline-container-org92a9718" class="outline-3">
+<h3 id="stacked">Stacked Graphs</h3>
 <div class="outline-text-3" id="text-stacked">
 
 <div class="figure">
@@ -327,14 +340,14 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org4cb8422" class="outline-3">
-<h3 id="interactive_timehorizontal"><a id="org4cb8422"></a>Interactive</h3>
+<div id="outline-container-org38e9c76" class="outline-3">
+<h3 id="interactive_timehorizontal">Interactive</h3>
 <div class="outline-text-3" id="text-interactive_timehorizontal">
 </div>
 
-<div id="outline-container-org1f6bfca" class="outline-4">
-<h4 id="org1f6bfca">dygraphs</h4>
-<div class="outline-text-4" id="text-org1f6bfca">
+<div id="outline-container-org6828d5a" class="outline-4">
+<h4 id="org6828d5a">dygraphs</h4>
+<div class="outline-text-4" id="text-org6828d5a">
 
 <div class="figure">
 <p><a href="images/dygraphs/TimeHorizontalAxis1.html" class="iframe"><img src="images/dygraphs_aranjuez.png" alt="dygraphs_aranjuez.png" class="iframe" /></a>
@@ -348,9 +361,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgd917d49" class="outline-4">
-<h4 id="orgd917d49">highcharter</h4>
-<div class="outline-text-4" id="text-orgd917d49">
+<div id="outline-container-orge3a17eb" class="outline-4">
+<h4 id="orge3a17eb">highcharter</h4>
+<div class="outline-text-4" id="text-orge3a17eb">
 
 <div class="figure">
 <p><a href="images/highcharter/TimeHorizontalAxis.html" class="iframe"><img src="images/highcharter_aranjuez.png" alt="highcharter_aranjuez.png" class="iframe" /></a>
@@ -359,9 +372,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org63f50f5" class="outline-4">
-<h4 id="org63f50f5">plotly</h4>
-<div class="outline-text-4" id="text-org63f50f5">
+<div id="outline-container-org87a8abc" class="outline-4">
+<h4 id="org87a8abc">plotly</h4>
+<div class="outline-text-4" id="text-org87a8abc">
 
 <div class="figure">
 <p><a href="images/plotly/TimeHorizontalAxis.html" class="iframe"><img src="images/plotly_aranjuez.png" alt="plotly_aranjuez.png" class="iframe" /></a>
@@ -370,9 +383,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org80d4e88" class="outline-4">
-<h4 id="org80d4e88">streamgraph</h4>
-<div class="outline-text-4" id="text-org80d4e88">
+<div id="outline-container-org9d5304a" class="outline-4">
+<h4 id="org9d5304a">streamgraph</h4>
+<div class="outline-text-4" id="text-org9d5304a">
 
 <div class="figure">
 <p><a href="images/streamgraph/index.html" class="iframe"><img src="images/streamgraph_interactive.png" alt="streamgraph_interactive.png" class="iframe" /></a>
@@ -383,13 +396,13 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org94684a1" class="outline-2">
-<h2 id="group"><a id="org94684a1"></a>Time as a conditioning or grouping variable</h2>
+<div id="outline-container-orgd84b3de" class="outline-2">
+<h2 id="group">Time as a conditioning or grouping variable</h2>
 <div class="outline-text-2" id="text-group">
 </div>
 
-<div id="outline-container-org2b228da" class="outline-3">
-<h3 id="scatterplot_group"><a id="org2b228da"></a>Scatterplot Matrix: Time as a Grouping Variable</h3>
+<div id="outline-container-orgd33a392" class="outline-3">
+<h3 id="scatterplot_group">Scatterplot Matrix: Time as a Grouping Variable</h3>
 <div class="outline-text-3" id="text-scatterplot_group">
 
 <div class="figure">
@@ -412,8 +425,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgf227e05" class="outline-3">
-<h3 id="scatterplot_condition"><a id="orgf227e05"></a>Scatterplot with Time as a Conditioning Variable</h3>
+<div id="outline-container-orge6e68b5" class="outline-3">
+<h3 id="scatterplot_condition">Scatterplot with Time as a Conditioning Variable</h3>
 <div class="outline-text-3" id="text-scatterplot_condition">
 
 <div class="figure">
@@ -425,13 +438,13 @@ for the JavaScript code in this tag.
 </div>
 
 
-<div id="outline-container-org787a1f7" class="outline-2">
-<h2 id="complementary"><a id="org787a1f7"></a>Time as a complementary variable</h2>
+<div id="outline-container-orgd600539" class="outline-2">
+<h2 id="complementary">Time as a complementary variable</h2>
 <div class="outline-text-2" id="text-complementary">
 </div>
 
-<div id="outline-container-org4d06a4b" class="outline-3">
-<h3 id="complementary_polylines"><a id="org4d06a4b"></a>Polylines</h3>
+<div id="outline-container-org0e1a1bd" class="outline-3">
+<h3 id="complementary_polylines">Polylines</h3>
 <div class="outline-text-3" id="text-complementary_polylines">
 
 <div class="figure">
@@ -441,8 +454,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org9a6505a" class="outline-3">
-<h3 id="complementary_labels"><a id="org9a6505a"></a>Labels to Show Time Information</h3>
+<div id="outline-container-orgb93480e" class="outline-3">
+<h3 id="complementary_labels">Labels to Show Time Information</h3>
 <div class="outline-text-3" id="text-complementary_labels">
 
 <div class="figure">
@@ -452,8 +465,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgdc4b86e" class="outline-3">
-<h3 id="complementary_size"><a id="orgdc4b86e"></a>Using Variable Size to Encode an Additional Variable</h3>
+<div id="outline-container-orgcc26fd4" class="outline-3">
+<h3 id="complementary_size">Using Variable Size to Encode an Additional Variable</h3>
 <div class="outline-text-3" id="text-complementary_size">
 
 <div class="figure">
@@ -463,14 +476,14 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org55644c1" class="outline-3">
-<h3 id="complementary_animation"><a id="org55644c1"></a>Interactive graphics: animation</h3>
+<div id="outline-container-org2458167" class="outline-3">
+<h3 id="complementary_animation">Interactive graphics: animation</h3>
 <div class="outline-text-3" id="text-complementary_animation">
 </div>
 
-<div id="outline-container-orga6baf0f" class="outline-4">
-<h4 id="orga6baf0f">plotly</h4>
-<div class="outline-text-4" id="text-orga6baf0f">
+<div id="outline-container-orge44b27e" class="outline-4">
+<h4 id="orge44b27e">plotly</h4>
+<div class="outline-text-4" id="text-orge44b27e">
 
 <div class="figure">
 <p><a href="images/plotly/TimeComplementary.html" class="iframe"><img src="images/plotly_animation.png" alt="plotly_animation.png" class="iframe" /></a>
@@ -479,9 +492,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org11afe8a" class="outline-4">
-<h4 id="org11afe8a">googleVis</h4>
-<div class="outline-text-4" id="text-org11afe8a">
+<div id="outline-container-org6ff1fee" class="outline-4">
+<h4 id="org6ff1fee">googleVis</h4>
+<div class="outline-text-4" id="text-org6ff1fee">
 
 <div class="figure">
 <p><a href="images/googleVis.html" class="svg"><img src="images/thumbs/googleVis.png" alt="googleVis.png" class="svg" /></a>
@@ -490,9 +503,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org8cb6040" class="outline-4">
-<h4 id="org8cb6040">gridSVG</h4>
-<div class="outline-text-4" id="text-org8cb6040">
+<div id="outline-container-orgbbd9835" class="outline-4">
+<h4 id="orgbbd9835">gridSVG</h4>
+<div class="outline-text-4" id="text-orgbbd9835">
 
 <div class="figure">
 <p><a href="images/bubbles.svg" class="svg"><img src="images/thumbs/bubbles.png" alt="bubbles.png" class="svg" /></a> 
@@ -503,16 +516,16 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgb75224a" class="outline-2">
-<h2 id="code_time"><a id="orgb75224a"></a>Code</h2>
+<div id="outline-container-org5f144a0" class="outline-2">
+<h2 id="code_time">Code</h2>
 <div class="outline-text-2" id="text-code_time">
 <p>
 <a href="R/configLattice.R">configLattice.R</a>
 </p>
 </div>
 
-<div id="outline-container-org660ea7c" class="outline-3">
-<h3 id="code_horizontal"><a id="org660ea7c"></a>Time on the horizontal axis</h3>
+<div id="outline-container-org15dbf91" class="outline-3">
+<h3 id="code_horizontal">Time on the horizontal axis</h3>
 <div class="outline-text-3" id="text-code_horizontal">
 <p>
 <a href="R/timeHorizontalAxis.R">Download</a>
@@ -539,7 +552,7 @@ for the JavaScript code in this tag.
 <span class="org-comment-delimiter">##################################################################</span>
 
 <span class="org-ess-modifiers">library</span>(zoo)
-load(<span class="org-string">'data/aranjuez.RData'</span>)
+<span class="org-ess-modifiers">load</span>(<span class="org-string">'data/aranjuez.RData'</span>)
 
 <span class="org-comment-delimiter">## </span><span class="org-comment">The layout argument arranges panels in rows</span>
 xyplot(aranjuez, layout = c(1, ncol(aranjuez)))
@@ -649,7 +662,7 @@ ggplot(data = aranjuezLong, aes(Index, Value)) +
 <span class="org-comment-delimiter">## </span><span class="org-comment">Time series of variables with the same scale</span>
 <span class="org-comment-delimiter">##################################################################</span>
 
-load(<span class="org-string">'data/navarra.RData'</span>)
+<span class="org-ess-modifiers">load</span>(<span class="org-string">'data/navarra.RData'</span>)
 
 avRad <span class="org-ess-assignment">&lt;-</span> zoo(rowMeans(navarra, na.rm = 1), index(navarra))
 pNavarra <span class="org-ess-assignment">&lt;-</span> xyplot(navarra - avRad,
@@ -744,7 +757,7 @@ ggplot(data = df,
 <span class="org-comment-delimiter">## </span><span class="org-comment">Stacked graphs</span>
 <span class="org-comment-delimiter">##################################################################</span>
 
-load(<span class="org-string">'data/unemployUSA.RData'</span>)
+<span class="org-ess-modifiers">load</span>(<span class="org-string">'data/unemployUSA.RData'</span>)
 
 xyplot(unemployUSA,
        superpose = <span class="org-ess-constant">TRUE</span>,
@@ -931,8 +944,8 @@ streamgraph(unemployDF,
 </div>
 </div>
 
-<div id="outline-container-orgddb5f91" class="outline-3">
-<h3 id="code_group"><a id="orgddb5f91"></a>Time as a conditioning or grouping variable</h3>
+<div id="outline-container-org4b5457a" class="outline-3">
+<h3 id="code_group">Time as a conditioning or grouping variable</h3>
 <div class="outline-text-3" id="text-code_group">
 <p>
 <a href="R/timeGroupFactor.R">Download</a>
@@ -960,7 +973,7 @@ streamgraph(unemployDF,
 
 <span class="org-ess-modifiers">library</span>(zoo)
 
-load(<span class="org-string">'data/aranjuez.RData'</span>)
+<span class="org-ess-modifiers">load</span>(<span class="org-string">'data/aranjuez.RData'</span>)
 aranjuezDF <span class="org-ess-assignment">&lt;-</span> as.data.frame(aranjuez)
 aranjuezDF$Month <span class="org-ess-assignment">&lt;-</span> format(index(aranjuez), <span class="org-string">'%m'</span>)
 
@@ -1059,8 +1072,8 @@ useOuterStrips(xyplot(Temperature ~ Radiation | Month * Statistic,
 </div>
 </div>
 
-<div id="outline-container-orgcf10c24" class="outline-3">
-<h3 id="code_complementary"><a id="orgcf10c24"></a>Time as a complementary variable</h3>
+<div id="outline-container-orge9cf2a9" class="outline-3">
+<h3 id="code_complementary">Time as a complementary variable</h3>
 <div class="outline-text-3" id="text-code_complementary">
 <p>
 <a href="R/timeComplementary.R">Download</a>
@@ -1088,7 +1101,7 @@ useOuterStrips(xyplot(Temperature ~ Radiation | Month * Statistic,
 
 <span class="org-ess-modifiers">library</span>(zoo)
 
-load(<span class="org-string">'data/CO2.RData'</span>)
+<span class="org-ess-modifiers">load</span>(<span class="org-string">'data/CO2.RData'</span>)
 
 <span class="org-comment-delimiter">## </span><span class="org-comment">lattice version</span>
 xyplot(GNI.capita  ~ CO2.capita, data = CO2data,
@@ -1129,10 +1142,10 @@ summary(CO2capita)
 
 hCO2 <span class="org-ess-assignment">&lt;-</span> hclust(dist(CO2capita[, -1]))
 
-oldpar <span class="org-ess-assignment">&lt;-</span> par(mar = c(0, 2, 0, 0) + .1)
+oldpar <span class="org-ess-assignment">&lt;-</span> <span class="org-ess-modifiers">par</span>(mar = c(0, 2, 0, 0) + .1)
 plot(hCO2, labels = CO2capita$Country.Name,
      xlab = <span class="org-string">''</span>, ylab = <span class="org-string">''</span>, sub = <span class="org-string">''</span>, main = <span class="org-string">''</span>)
-par(oldpar)
+<span class="org-ess-modifiers">par</span>(oldpar)
 
 idx <span class="org-ess-assignment">&lt;-</span> match(levels(CO2data$Country.Name), 
              CO2capita$Country.Name[hCO2$order])
@@ -1262,9 +1275,9 @@ ggplot(data = CO2data,
     ylab(<span class="org-string">'GNI per capita, PPP (current international $)'</span>) +
     theme_bw()
 
-op <span class="org-ess-assignment">&lt;-</span> options(digits = 2)
+op <span class="org-ess-assignment">&lt;-</span> <span class="org-ess-modifiers">options</span>(digits = 2)
 tab <span class="org-ess-assignment">&lt;-</span> print(intervals)
-options(op)
+<span class="org-ess-modifiers">options</span>(op)
 
 key <span class="org-ess-assignment">&lt;-</span> list(space = <span class="org-string">'right'</span>,
             title = expression(CO[2]/GNI.PPP),
@@ -1423,8 +1436,8 @@ grid.export(<span class="org-string">"figs/bubbles.svg"</span>)
 </div>
 </div>
 
-<div id="outline-container-orge08db15" class="outline-3">
-<h3 id="code_data"><a id="orge08db15"></a>Data</h3>
+<div id="outline-container-org328ef49" class="outline-3">
+<h3 id="code_data">Data</h3>
 <div class="outline-text-3" id="text-code_data">
 <p>
 <a href="R/dataTime.R">Download</a>
@@ -1468,7 +1481,7 @@ save(aranjuez, file = <span class="org-string">'data/aranjuez.RData'</span>)
 
 <span class="org-ess-modifiers">library</span>(zoo)
 
-load(<span class="org-string">'data/navarra.RData'</span>)
+<span class="org-ess-modifiers">load</span>(<span class="org-string">'data/navarra.RData'</span>)
 
 <span class="org-comment-delimiter">##################################################################</span>
 <span class="org-comment-delimiter">## </span><span class="org-comment">Unemployment in the United States</span>

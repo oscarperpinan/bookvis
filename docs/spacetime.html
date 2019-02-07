@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-07-19 jue 02:22 -->
+<!-- 2019-02-07 jue 19:12 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Spatio-temporal data - Displaying time series, spatial and space-time data with R</title>
@@ -161,6 +161,19 @@
   .footdef  { margin-bottom: 1em; }
   .figure { padding: 1em; }
   .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
   .inlinetask {
     padding: 10px;
     border: 2px solid gray;
@@ -181,8 +194,8 @@
   /*]]>*/-->
 </style>
 <link rel="stylesheet" type="text/css" href="stylesheets/styles.css" />
-<link rel="stylesheet" type="text/css" href="https://www.pirilampo.org/styles/readtheorg/css/htmlize.css"/>
-<link rel="stylesheet" type="text/css" href="https://www.pirilampo.org/styles/readtheorg/css/readtheorg.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/styles/readtheorg/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/styles/readtheorg/css/readtheorg.css"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://www.pirilampo.org/styles/readtheorg/js/readtheorg.js"></script>
@@ -268,13 +281,13 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org85a8975" class="outline-2">
-<h2 id="raster"><a id="org85a8975"></a>Raster data</h2>
+<div id="outline-container-org2637ef1" class="outline-2">
+<h2 id="raster">Raster data</h2>
 <div class="outline-text-2" id="text-raster">
 </div>
 
-<div id="outline-container-orge72e435" class="outline-3">
-<h3 id="levelplot"><a id="orge72e435"></a>Level plots</h3>
+<div id="outline-container-org119a9ef" class="outline-3">
+<h3 id="levelplot">Level plots</h3>
 <div class="outline-text-3" id="text-levelplot">
 
 <div class="figure">
@@ -284,8 +297,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org7e93920" class="outline-3">
-<h3 id="eda"><a id="org7e93920"></a>Graphical Exploratory Data Analysis</h3>
+<div id="outline-container-orgc91358b" class="outline-3">
+<h3 id="eda">Graphical Exploratory Data Analysis</h3>
 <div class="outline-text-3" id="text-eda">
 
 <div class="figure">
@@ -307,8 +320,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org4adaad7" class="outline-3">
-<h3 id="spacetimeplot"><a id="org4adaad7"></a>Space-Time and Time Series Plots</h3>
+<div id="outline-container-org2b30741" class="outline-3">
+<h3 id="spacetimeplot">Space-Time and Time Series Plots</h3>
 <div class="outline-text-3" id="text-spacetimeplot">
 
 <div class="figure">
@@ -325,14 +338,14 @@ for the JavaScript code in this tag.
 </div>
 
 
-<div id="outline-container-orgeaefe08" class="outline-3">
-<h3 id="animation_raster"><a id="orgeaefe08"></a>Animation</h3>
+<div id="outline-container-org154d291" class="outline-3">
+<h3 id="animation_raster">Animation</h3>
 <div class="outline-text-3" id="text-animation_raster">
 </div>
 
-<div id="outline-container-orgf8ac93c" class="outline-4">
-<h4 id="orgf8ac93c">CubeView</h4>
-<div class="outline-text-4" id="text-orgf8ac93c">
+<div id="outline-container-org6e5a9af" class="outline-4">
+<h4 id="org6e5a9af">CubeView</h4>
+<div class="outline-text-4" id="text-org6e5a9af">
 
 <div class="figure">
 <p><a href="images/mapview/cubeview.html" class="iframe"><img src="images/thumbs/cubeView.png" alt="cubeView.png" class="iframe" /></a>
@@ -341,9 +354,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org3c5cb1c" class="outline-4">
-<h4 id="org3c5cb1c">WebGL</h4>
-<div class="outline-text-4" id="text-org3c5cb1c">
+<div id="outline-container-orgf855eb0" class="outline-4">
+<h4 id="orgf855eb0">WebGL</h4>
+<div class="outline-text-4" id="text-orgf855eb0">
 <p target="_blank">
 <a href="images/rgl/cft.html" target="_blank">- Forecast of cloud cover</a>
 </p>
@@ -354,9 +367,9 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgc9391ae" class="outline-4">
-<h4 id="orgc9391ae">Videos</h4>
-<div class="outline-text-4" id="text-orgc9391ae">
+<div id="outline-container-orgcdc4501" class="outline-4">
+<h4 id="orgcdc4501">Videos</h4>
+<div class="outline-text-4" id="text-orgcdc4501">
 
 <div class="figure">
 <p><a href="http://player.vimeo.com/video/65227780" class="vimeo"><img src="images/thumbs/cftVideo.png" alt="cftVideo.png" class="vimeo" /></a>                
@@ -374,13 +387,13 @@ for the JavaScript code in this tag.
 </div>
 
 
-<div id="outline-container-org406cf34" class="outline-2">
-<h2 id="points"><a id="org406cf34"></a>Spatial point data</h2>
+<div id="outline-container-org703cc9f" class="outline-2">
+<h2 id="points">Spatial point data</h2>
 <div class="outline-text-2" id="text-points">
 </div>
 
-<div id="outline-container-orgacc5bf0" class="outline-3">
-<h3 id="spacetime"><a id="orgacc5bf0"></a>Graphics with <code>spacetime</code></h3>
+<div id="outline-container-org1072deb" class="outline-3">
+<h3 id="spacetime">Graphics with <code>spacetime</code></h3>
 <div class="outline-text-3" id="text-spacetime">
 
 <div class="figure">
@@ -396,8 +409,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org34d4bbf" class="outline-3">
-<h3 id="animation_points"><a id="org34d4bbf"></a>Animation</h3>
+<div id="outline-container-org2868969" class="outline-3">
+<h3 id="animation_points">Animation</h3>
 <div class="outline-text-3" id="text-animation_points">
 
 <div class="figure">
@@ -414,16 +427,16 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgcbd1e1e" class="outline-2">
-<h2 id="code"><a id="orgcbd1e1e"></a>Code</h2>
+<div id="outline-container-orga0bac7c" class="outline-2">
+<h2 id="code">Code</h2>
 <div class="outline-text-2" id="text-code">
 <p>
 <a href="R/configLattice.R">configLattice.R</a>
 </p>
 </div>
 
-<div id="outline-container-orgd6a2b58" class="outline-3">
-<h3 id="code_rasterst"><a id="orgd6a2b58"></a>Raster data</h3>
+<div id="outline-container-orgca02564" class="outline-3">
+<h3 id="code_rasterst">Raster data</h3>
 <div class="outline-text-3" id="text-code_rasterst">
 <p>
 <a href="R/rasterST.R">Download</a>
@@ -491,8 +504,8 @@ cubeView(SISdm)
 </div>
 </div>
 
-<div id="outline-container-org8103c51" class="outline-3">
-<h3 id="code_pointsst"><a id="org8103c51"></a>Spatial point data</h3>
+<div id="outline-container-org71d93b8" class="outline-3">
+<h3 id="code_pointsst">Spatial point data</h3>
 <div class="outline-text-3" id="text-code_pointsst">
 <p>
 <a href="R/pointsST.R">Download</a>
@@ -573,8 +586,8 @@ stplot(NO2st, mode = <span class="org-string">'ts'</span>,
 </div>
 </div>
 
-<div id="outline-container-orga6d92e5" class="outline-3">
-<h3 id="code_animationst"><a id="orga6d92e5"></a>Animation</h3>
+<div id="outline-container-orgb40ecf7" class="outline-3">
+<h3 id="code_animationst">Animation</h3>
 <div class="outline-text-3" id="text-code_animationst">
 <p>
 <a href="R/animation.R">Download</a>
@@ -640,7 +653,7 @@ levelplot(cft, layout = c(1, 1), par.settings = cloudTheme) +
     layer(sp.lines(boundaries, lwd = 0.6))
 dev.off()
 
-old <span class="org-ess-assignment">&lt;-</span> setwd(tmp)
+old <span class="org-ess-assignment">&lt;-</span> <span class="org-ess-modifiers">setwd</span>(tmp)
 <span class="org-comment-delimiter">## </span><span class="org-comment">Create a movie with ffmpeg ...  </span>
 system2(<span class="org-string">'ffmpeg'</span>,
         c(<span class="org-string">'-r 6'</span>, <span class="org-comment-delimiter">## </span><span class="org-comment">with 6 frames per second</span>
@@ -650,7 +663,7 @@ system2(<span class="org-string">'ffmpeg'</span>,
         )
 file.remove(dir(pattern = <span class="org-string">'Rplot'</span>))
 file.copy(<span class="org-string">'output.mp4'</span>, paste0(old, <span class="org-string">'/figs/cft.mp4'</span>), overwrite = <span class="org-ess-constant">TRUE</span>)
-setwd(old)
+<span class="org-ess-modifiers">setwd</span>(old)
 
 <span class="org-comment-delimiter">##################################################################</span>
 <span class="org-comment-delimiter">## </span><span class="org-comment">Static image</span>
