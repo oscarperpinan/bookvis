@@ -225,9 +225,13 @@ xyplot(GNI.capita ~ CO2.capita|factor(Year), data = CO2data,
        )
 
 library(plotly)
+
 p <- plot_ly(CO2data,
              x = ~CO2.capita,
-             y = ~GNI.capita)
+             y = ~GNI.capita,
+             sizes = c(10, 100),
+             marker = list(opacity = 0.7,
+                           sizemode = 'diameter'))
 
 p <- add_markers(p,
                  size = ~CO2.PPP,
