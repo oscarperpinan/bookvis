@@ -79,7 +79,7 @@ colors <- colors[c(6:1, 12:7)]
 #+end_src
 
 #+begin_src R :results output graphics :exports both :file figs/aranjuezSplom.png :width 4000 :height 4000 :res 600
-splom(~ aranjuezDF, 
+splom(~ aranjuezDF[1:10], 
       groups = aranjuezDF$Month,
       auto.key = list(space = 'right', 
                     title = 'Month', cex.title = 1),

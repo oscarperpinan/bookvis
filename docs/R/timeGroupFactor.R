@@ -28,7 +28,7 @@ colors <- c(brewer.pal(n = 11, 'RdBu'), '#000000')
 ## Rearrange according to months (darkest for summer)
 colors <- colors[c(6:1, 12:7)]
 
-splom(~ aranjuezDF, 
+splom(~ aranjuezDF[1:10], 
       groups = aranjuezDF$Month,
       auto.key = list(space = 'right', 
                     title = 'Month', cex.title = 1),
@@ -56,19 +56,20 @@ library(hexbin)
   
 splom(~as.data.frame(aranjuez),
       panel = panel.hexbinplot,
-      diag.panel = function(x, ...){
+      diag.panel = function(x, ...){                           
           yrng <- current.panel.limits()$ylim
           d <- density(x, na.rm = TRUE)
           d$y <- with(d, yrng[1] + 0.95 * diff(yrng) * y / max(y))
           panel.lines(d)
           diag.panel.splom(x, ...)
       },
-      lower.panel = function(x, y, ...){
+      lower.panel = function(x, y, ...){                      
           panel.hexbinplot(x, y, ...)
           panel.loess(x, y, ..., col = 'red')
       },
       xlab = '',
-      pscale = 0, varname.cex = 0.7)
+      pscale = 0,                                                  
+      varname.cex = 0.7)
 
 library(reshape2)
 
@@ -101,15 +102,19 @@ ggplot(data = aranjuezRshp, aes(Radiation, Temperature)) +
     facet_grid(Statistic ~ Month) +
     geom_point(col = 'skyblue4', pch = 19, cex = 0.5, alpha = 0.3) +
     geom_rug() +
-    stat_smooth(se = FALSE, method = 'loess', col = 'indianred1', lwd = 1.2) +
+    stat_smooth(se = FALSE, method = 'loess',
+                col = 'indianred1', lwd = 1.2) +
     theme_bw()
 
-useOuterStrips(xyplot(Temperature ~ Radiation | Month * Statistic,
-                      data = aranjuezRshp,
-                      between = list(x = 0),
-                      col = 'skyblue4', pch = 19,
-                      cex = 0.5, alpha = 0.3)) +
+useOuterStrips(
+    xyplot(Temperature ~ Radiation | Month * Statistic,
+           data = aranjuezRshp,
+           between = list(x = 0),
+           col = 'skyblue4', pch = 19,
+           cex = 0.5, alpha = 0.3)) +
     layer({
-        panel.rug(..., col.line = 'indianred1', end = 0.05, alpha = 0.6)
-        panel.loess(..., col = 'indianred1', lwd = 1.5, alpha = 1)
+        panel.rug(..., col.line = 'indianred1',
+                  end = 0.05, alpha = 0.6)
+        panel.loess(..., col = 'indianred1',
+                    lwd = 1.5, alpha = 1)
     })
