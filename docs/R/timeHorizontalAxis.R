@@ -156,7 +156,8 @@ horizonplot(navarra - avRad,
             layout = c(1, ncol(navarra)),
             origin = 0, ## Deviations in each panel are calculated
                         ## from this value
-            colorkey = TRUE)
+            colorkey = TRUE, 
+	    col.regions = brewer.pal(6, "RdBu"))
 
 ##################################################################
 ## Time graph of the differences between a time series and a reference
@@ -175,7 +176,9 @@ xyplot(cbind(Ta, longTa, diffTa),
 years <- unique(format(timeIndex, '%Y'))
   
 horizonplot(diffTa, cut = list(n = 8, overlap = 0),
-            colorkey = TRUE, layout = c(1, 8),
+            colorkey = TRUE,
+            col.regions = brewer.pal(6, "RdBu"),
+            layout = c(1, 8),
             scales = list(draw = FALSE, y = list(relation = 'same')),
             origin = 0, strip.left = FALSE) +
     layer(grid.text(years[panel.number()], x  =  0, y  =  0.1, 
