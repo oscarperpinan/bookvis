@@ -22,7 +22,7 @@
 
 This is the accompanying website of the *second edition* of the book
 "/Displaying time series, spatial and space-time data with R/",
-published with [[https://www.crcpress.com/Displaying-Time-Series-Spatial-and-Space-Time-Data-with-R-Second-Edition/Lamigueiro/p/book/9781138089983][Chapman&Hall/CRC]]. 
+published with [[https://www.routledge.com/Displaying-Time-Series-Spatial-and-Space-Time-Data-with-R-Second-Edition/Lamigueiro/p/book/9781138089983][Chapman&Hall/CRC]]. 
 
 Code, data, and figures are available at this [[https://github.com/oscarperpinan/bookvis][GitHub repository]].
 * 
