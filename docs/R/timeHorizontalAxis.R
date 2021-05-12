@@ -372,7 +372,7 @@ library(xts)
 
 aranjuezXTS <- as.xts(aranjuez)
 
-highchart() %>%
+highchart(type = "stock") %>%
     hc_add_series(name = 'TempMax',
                       aranjuezXTS[, "TempMax"]) %>%
     hc_add_series(name = 'TempMin',
