@@ -28,7 +28,7 @@ or to incomplete or spurious data series[fn:1].
 #+BEGIN_EXPORT latex
 \begin{figure}
   \centering
-  \includegraphics[width=\textwidth]{figs/mapaSIAR_crop}
+  \includegraphics[width=\textwidth]{TimeSeries/figs/mapaSIAR_crop}
   \caption{Meteorological stations of the SIAR network. The color key
     indicates the altitude (meters).}
   \label{fig:SIAR_map}
