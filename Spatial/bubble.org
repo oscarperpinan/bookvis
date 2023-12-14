@@ -4,7 +4,7 @@
 
 
 #+begin_src R :exports none :tangle no
-setwd('~/github/bookvis/')
+setwd('~/github/bookvis/Spatial')
 #+end_src
 
 
@@ -41,50 +41,70 @@ add a second perception channel to improve the discrimination
 task. Colors from a sequential palette will complement symbol size to
 encode the groups.
 
-Two alternative are available to import and display the data: 
-
-1. Import the data with the =rgdal= package and the function
-   =readOGR=, and display the information with the =sp= package and
-   the =spplot= function (based on =lattice= graphics).
-2. Import the data with the =sf= package and the function =st_read=,
-   and display the information with the =ggplot2= package and the
-   =geom_sf= function.
-
-* Proportional Symbol Mapping with =spplot=
-#+begin_src R :exports none
-##################################################################
-## Proportional symbol with spplot
-##################################################################
-#+end_src
-
-The =spplot= method provided by the =sp= package, based on =xyplot=
-from the =lattice= package, is able to display
-=SpatialPointsDataFrame= objects, among others classes.
-
-#+INDEX: Packages!rgdal@\texttt{rgdal}
-#+INDEX: Packages!sp@\texttt{sp}
-#+INDEX: Data!Air quality in Madrid
-
-#+begin_src R
-library(sp)
-library(rgdal)
-
-NO2sp <- readOGR(dsn = 'data/', layer = 'NO2sp')
-#+end_src
-
 #+INDEX: Subjects!Sequential palette
-A sequential palette is defined with
-=colorRampPalette=, with colors denoting the value of the variable
-(green for lower values of the contaminant, brown for intermediate
-values, and black for highest values).
+This sequential palette is defined with =colorRampPalette=, with
+colors denoting the value of the variable (green for lower values of
+the contaminant, brown for intermediate values, and black for highest
+values).
 
 #+begin_src R
 airPal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(5)
 #+end_src
 
+# Two alternative are available to import and display the data: 
 
-Both color and size can be combined in a unique graphical output
-because =spplot= accepts both of them (Figure
+# 1. Import the data with the =rgdal= package and the function
+#    =readOGR=, and display the information with the =sp= package and
+#    the =spplot= function (based on =lattice= graphics).
+# 2. Import the data with the =sf= package and the function =st_read=,
+#    and display the information with the =ggplot2= package and the
+#    =geom_sf= function.
+
+* Proportional Symbol Mapping with =ggplot2= and =spplot=
+#+begin_src R :exports none
+##################################################################
+## Proportional symbol with ggplot2 and spplot
+##################################################################
+#+end_src
+
+The =ggplot2= package is able to display spatial point observations
+with the =geom_sf= function. This function understands the classes
+defined by the =sf= package, that provides the function
+=st_read= to read the data:
+
+#+INDEX: Packages!sf@\texttt{sf}
+#+INDEX: Data!Air quality in Madrid
+
+#+begin_src R :eval no-export
+library(sf)
+
+NO2sf <- st_read(dsn = 'data', layer = 'NO2sp')
+## Create a categorical variable
+NO2sf$Mean <- cut(NO2sf$mean, 5)
+#+end_src
+
+Both color and size can be combined in a unique graphical output using =aes= and =scale_fill_manual=:  
+#+begin_src R
+ggplot(data = NO2sf) + 
+    geom_sf(aes(size = Mean, fill = Mean),
+            pch = 21, col = 'black') +
+    scale_fill_manual(values = airPal) +
+    theme_bw()
+#+end_src
+
+#+RESULTS:
+
+The =spplot= method provided by the =sp= package, based on =xyplot=
+from the =lattice= package, is able to display
+=SpatialPointsDataFrame= objects, among others classes.
+
+#+begin_src R
+library(sp)
+
+NO2sp <- as(NO2sf, "Spatial")
+#+end_src
+
+The arguments =col.regions= and =cex= in =spplot= are used for encoding color and size (Figure
 ref:fig:airMadrid_spplot).
 
 #+begin_src R :results output graphics :exports both :file figs/airMadrid_spplot.pdf  
@@ -100,37 +120,6 @@ spplot(NO2sp["mean"],
 #+RESULTS[979e89aa398f2ccf2f32fe340b31dd3124320fe1]:
 [[file:figs/airMadrid_spplot.pdf]]
 
-* Proportional Symbol Mapping with =ggplot=
-#+begin_src R :exports none
-##################################################################
-## Proportional symbol with ggplot
-##################################################################
-#+end_src
-
-The =ggplot2= package is able to display spatial point observations
-with the =geom_sf= function. This function understands the classes
-defined by the =sf= package, that provides the function
-=st_read= to read the data:
-
-#+INDEX: Packages!sf@\texttt{sf}
-
-#+begin_src R :eval no-export
-library(sf)
-
-NO2sf <- st_read(dsn = 'data', layer = 'NO2sp')
-## Create a categorical variable
-NO2sf$Mean <- cut(NO2sf$mean, 5)
-#+end_src
-
-#+begin_src R
-ggplot(data = NO2sf) + 
-    geom_sf(aes(size = Mean, fill = Mean),
-            pch = 21, col = 'black') +
-    scale_fill_manual(values = airPal) +
-    theme_bw()
-#+end_src
-
-#+RESULTS:
 
 * Optimal Classification to Improve Discrimination
 label:sec:classification_bubble
