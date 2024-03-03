@@ -43,7 +43,7 @@ specifying the bounding box with the function =opq=:
 #+INDEX: Packages!osmdata@\texttt{osmdata}
 
 #+begin_src R
-library('osmdata')
+library("osmdata")
 
 ## Bounding box
 ymax <- 43.7
@@ -153,8 +153,8 @@ of the book repository.
 #+INDEX: Data!Geonetwork
 
 #+begin_src R
-library(raster)
-library(rasterVis)
+library("raster")
+library("rasterVis")
 
 projCedeira <- projection(city)
 
@@ -203,7 +203,7 @@ hsTheme <- GrTheme(panel.background = list(col = 'skyblue3'))
   over the hill shade layer.
 
 #+begin_src R
-library(colorspace)
+library("colorspace")
 ## DEM with terrain colors and semitransparency
 terrainTheme <- rasterTheme(region = terrain_hcl(n = 15), 
                             regions = list(alpha = 0.6))
@@ -216,7 +216,7 @@ terrainTheme <- rasterTheme(region = terrain_hcl(n = 15),
   labels without overlaps.
 
 #+begin_src R
-library(maptools)
+library("maptools")
 #+end_src
 
 

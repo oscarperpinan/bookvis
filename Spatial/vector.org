@@ -35,8 +35,8 @@ direction.
 #+INDEX: Data!MeteoGalicia
 
 #+begin_src R 
-library(raster)
-library(rasterVis)
+library("raster")
+library("rasterVis")
 
 ## Local vector direction 
 wDir <- raster('data/wDir')/180*pi

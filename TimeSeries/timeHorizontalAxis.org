@@ -15,11 +15,11 @@ setwd('~/github/bookvis')
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
  
-library(lattice)
+library("lattice")
 library(ggplot2)
 ## latticeExtra must be loaded after ggplot2 to prevent masking of its
 ## `layer` function.
-library(latticeExtra)
+library("latticeExtra")
 
 source('configLattice.R')
 ##################################################################
@@ -53,7 +53,7 @@ multivariate time series can be displayed with the =xyplot= method of
 #+INDEX: Data!Meteorological variables
 
 #+begin_src R
-library(zoo)
+library("zoo")
 load('data/aranjuez.RData')
 #+end_src
 
@@ -218,7 +218,7 @@ under <- scaled[underIdx,]
 #+INDEX: Packages!xts@\texttt{xts}
 
 #+begin_src R
-library(xts)
+library("xts")
 ep <- endpoints(timeIdx, on = 'years')
 ep <- ep[-1]
 N <- length(ep)
@@ -420,7 +420,7 @@ multiple panels with different scales.
 #+INDEX: Packages!latticeExtra@\texttt{latticeExtra}
 
 #+begin_src R :results output graphics :exports both :file figs/navarraHorizonplot.pdf
-library(latticeExtra)
+library("latticeExtra")
   
 horizonplot(navarra - avRad,
             layout = c(1, ncol(navarra)),
@@ -566,7 +566,7 @@ df <- data.frame(Vals = diffTa,
 
 The values (=Vals= column of this =data.frame=) are displayed as a level plot thanks to the =geom_raster= function.
 #+begin_src R :results output graphics :exports both :file figs/diffTa_ggplot.pdf
-library(scales) 
+library("scales") 
 ## The packages scales is needed for the pretty_breaks function.
 
 ggplot(data = df,
@@ -632,7 +632,7 @@ easily obtained with =geom_area= (Figure ref:fig:unemployUSAgeomArea):
 #+INDEX: Subjects!Stacked graph
 
 #+begin_src R :results output graphics :exports both :file "figs/unemployUSAgeomArea.pdf" 
-library(scales) ## scale_x_yearmon needs scales::pretty_breaks
+library("scales") ## scale_x_yearmon needs scales::pretty_breaks
 autoplot(unemployUSA, facets = NULL, geom = 'area') +
     geom_area(aes(fill = Series)) +
     scale_x_yearmon()  
@@ -758,7 +758,7 @@ prepanel.flow <- function(x, y, groups, origin,...)
 #+end_src
 
 #+begin_src R :results output graphics :exports both :file "figs/unemployUSAThemeRiver.pdf" 
-library(colorspace)
+library("colorspace")
 ## We will use a qualitative palette from colorspace
 nCols <- ncol(unemployUSA)
 pal <- rainbow_hcl(nCols, c = 70, l = 75, start = 30, end = 300)
@@ -928,7 +928,7 @@ ref:fig:dygraphs is an snapshot of the interactive graph.
 #+INDEX: Packages!dygraphs@\texttt{dygraphs}
 
 #+begin_src R
-library(dygraphs)
+library("dygraphs")
 
 dyTemp <- dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
                   main = "Temperature in Aranjuez",
@@ -990,8 +990,8 @@ zoom.
 #+INDEX: Packages!xts@\texttt{xts}
 
 #+begin_src R
-library(highcharter)
-library(xts)
+library("highcharter")
+library("xts")
 
 aranjuezXTS <- as.xts(aranjuez)
 
@@ -1053,7 +1053,7 @@ the pipe operator, =%>%=.
 #+INDEX: Packages!plotly@\texttt{plotly}
 
 #+begin_src R
-library(plotly)
+library("plotly")
 
 plot_ly(aranjuezDF) %>%
     add_lines(x = ~ Index,
@@ -1104,7 +1104,7 @@ interactive graphic created with the functions =streamgraph=,
 
 #+begin_src R
 ## remotes::install_github("hrbrmstr/streamgraph")
-library(streamgraph)
+library("streamgraph")
 #+end_src
 
 #+begin_src R

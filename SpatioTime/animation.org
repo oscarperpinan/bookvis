@@ -66,8 +66,8 @@ resolution of 12 kilometers.
 #+INDEX: Subjects!Data processing and cleaning
 
 #+begin_src R
-library(raster)
-library(rasterVis)
+library("raster")
+library("rasterVis")
 
 cft <- brick('data/cft_20130417_0000.nc')
 ## set projection
@@ -96,10 +96,10 @@ and =mapdata= packages.
 #+INDEX: Packages!rgdal@\texttt{rgdal}
 
 #+begin_src R 
-library(maptools)
-library(rgdal)
-library(maps)
-library(mapdata)
+library("maptools")
+library("rgdal")
+library("maps")
+library("mapdata")
 
 ## Project the extent of the cft raster to longitude-latitude, because
 ## the map package works with it.
@@ -222,7 +222,7 @@ evolution over time.
 #+INDEX: Subjects!Animation
 
 #+begin_src R
-library(rgl)
+library("rgl")
 
 clear3d()
 
@@ -276,7 +276,7 @@ starting values and duration.
 #+INDEX: Packages!gridSVG@\texttt{gridSVG}
 
 #+begin_src R 
-library(gridSVG)
+library("gridSVG")
 ## Initial parameters
 start <- NO2st[,1]
 ## values will be encoded as size of circles,
@@ -301,7 +301,7 @@ sizes of the circles according to the =NO2st= object.
 #+INDEX: Packages!grid@\texttt{grid}
 
 #+begin_src R 
-library(grid)
+library("grid")
 
 ## Auxiliary panel function to display circles
 panel.circlesplot <- function(x, y, cex, col = 'gray',
@@ -502,8 +502,8 @@ Firstly, a basic 3D Earth at night is created with the =surface3d= function, usi
 #+INDEX: Data!Night lights
 
 #+begin_src R
-library(rgl)
-library(magick) ## needed to import the texture
+library("rgl")
+library("magick") ## needed to import the texture
 
 ## Opens the OpenGL device with a black background
 open3d()
@@ -564,7 +564,7 @@ through the Nominatim service of OpenStreetMap. An auxiliary function,
 #+INDEX: Data!OpenStreetMap
 
 #+begin_src R
-library(XML)
+library("XML")
 
 geocode <- function(x){
     city <- x[1]
@@ -609,7 +609,7 @@ function for this task:
 #+INDEX: Subjects!Data processing and cleaning
 
 #+begin_src R
-library(geosphere)
+library("geosphere")
 
 ## When arriving or departing include a progressive zoom with 100
 ## frames

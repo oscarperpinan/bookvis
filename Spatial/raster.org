@@ -35,10 +35,10 @@ using the estimates from CM SAF. Read Chapter ref:cha:dataSpatial for
 details about this dataset.
 
 #+begin_src R
-library(raster)
-library(rasterVis)
+library("raster")
+library("rasterVis")
 
-SISav <- raster('data/SISav')
+SISav <- raster("data/Spatial/SISav")
 #+end_src
 
 The =RasterLayer= object of annual averages of solar irradiation
@@ -71,13 +71,13 @@ ref:fig:levelplotCMSAF_boundaries).
 #+INDEX: Subjects!Background map
 
 #+begin_src R 
-library(maps)
-library(mapdata)
-library(maptools)
+library("maps")
+library("mapdata")
+library("maptools")
 ## Extent of the Raster object
 ext <- as.vector(extent(SISav))
 ## Retrieve the boundaries restricted to this extent
-boundaries <- map('worldHires',
+boundaries <- map("worldHires",
                   xlim = ext[1:2], ylim = ext[3:4],
                   plot = FALSE)
 ## Convert the result to a SpatialLines with the projection of the
@@ -395,7 +395,7 @@ displays the result.
 #+INDEX: Subjects!Class Intervals
 
 #+begin_src R 
-library(classInt)
+library("classInt")
 
 cl <- classIntervals(SISav[], style = 'kmeans')
 breaks <- cl$brks
@@ -643,7 +643,7 @@ p <- Reduce('+', pList)
 
 The legend is created with =grid.raster= and =grid.text=, following the same procedure exposed in section ref:sec:multiChoropleth. 
 #+begin_src R
-library(grid)
+library("grid")
 
 legend <- layer(
 {
@@ -749,7 +749,7 @@ writeWebGL(filename = 'docs/images/rgl/DEM.html',
 The package =mapview= is able to work with =Raster*= objects. Thus, the =SISav= object can be easily displayed in a interactive map with next code. However, it must be noted that, unlike with vector data (Sections ref:sec:mapview_bubble and ref:sec:interactive_choropleth), the interactivity of this map is restricted to zoom and movement. The mouse hovering or click does not produce any result.
 
 #+begin_src R
-library(mapview)
+library("mapview")
 
 mvSIS <- mapview(SISav, legend = TRUE)
 #+end_src

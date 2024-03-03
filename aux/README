@@ -1,4 +1,5 @@
-
+Exportar cada fichero org a latex con opción "body only" *activada*
+------------------------------------------------------------------
 Usar \_ en \index{} dentro de \texttt{}.
 ------------------------------------------------------------------
 

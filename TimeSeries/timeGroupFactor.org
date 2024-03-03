@@ -13,11 +13,11 @@ setwd('~/github/bookvis/')
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
  
-library(lattice)
+library("lattice")
 library(ggplot2)
 ## latticeExtra must be loaded after ggplot2 to prevent masking of its
 ## `layer` function.
-library(latticeExtra)
+library("latticeExtra")
 
 source('configLattice.R')
 ##################################################################
@@ -58,7 +58,7 @@ ref:fig:aranjuezSplom).
 #+INDEX: Data!Meteorological variables
 
 #+begin_src R
-library(zoo)
+library("zoo")
 
 load('data/aranjuez.RData')
 aranjuezDF <- as.data.frame(aranjuez)
@@ -112,7 +112,7 @@ thanks to the =ggpairs= function provided by the =GGally= package.
 #+INDEX: Packages!GGally@\texttt{GGally}
 
 #+begin_src R :results silent :exports code :eval no-export
-library(GGally)
+library("GGally")
 
 ggpairs(aranjuezDF,
         columns = 1:10, ## Do not include "Month"
@@ -176,7 +176,7 @@ attempt with =splom= can be improved with several modifications
 #+INDEX: Subjects!Scatterplot matrix
 
 #+begin_src R -n -r :results output graphics :exports both :file figs/aranjuezSplomHexbin.pdf
-library(hexbin)
+library("hexbin")
   
 splom(~as.data.frame(aranjuez),
       panel = panel.hexbinplot,

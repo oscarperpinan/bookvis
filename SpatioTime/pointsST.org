@@ -13,8 +13,8 @@ setwd('~/github/bookvis')
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
 
-library(lattice)
-library(latticeExtra)
+library("lattice")
+library("latticeExtra")
 
 Sys.setlocale("LC_TIME", 'C')
 
@@ -42,7 +42,7 @@ with the =coordinates= method.
 #+INDEX: Subjects!Data processing and cleaning
 
 #+begin_src R 
-library(sp)
+library("sp")
   
 ## Spatial location of stations
 airStations <- read.csv2('data/airStations.csv')
@@ -85,9 +85,9 @@ multivariate time series where each station is a different variable
 #+INDEX: Subjects!Data processing and cleaning
 
 #+begin_src R -n -r
-library(zoo)
-library(reshape2)
-library(spacetime)
+library("zoo")
+library("reshape2")
+library("spacetime")
   
 NO2$time <- as.Date(with(NO2,                                   (ref:timeIndex)
                          ISOdate(year, month, day)))

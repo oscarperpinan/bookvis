@@ -38,12 +38,12 @@ map of this exceptional country using data from several data services.
 #+INDEX: Packages!colorspace@\texttt{colorspace}  
 
 #+begin_src R 
-library(raster)
-library(rasterVis)
-library(rgdal)
-library(rgeos)
-library(latticeExtra)
-library(colorspace)
+library("raster")
+library("rasterVis")
+library("rgdal")
+library("rgeos")
+library("latticeExtra")
+library("colorspace")
 #+end_src
 
 ** Retrieving Data

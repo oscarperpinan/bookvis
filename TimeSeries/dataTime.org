@@ -63,7 +63,7 @@ time index, and =format= defines the date format of this index.
 #+INDEX: Packages!zoo@\texttt{zoo}
 
 #+begin_src R :results output :exports both
-library(zoo)
+library("zoo")
   
 aranjuez <- read.zoo("data/aranjuez.gz",
                      index.column = 3, format = "%d/%m/%Y",
@@ -200,7 +200,7 @@ from the meteorological stations of Navarra, Spain. The names of the
 dataset are the abbreviations of each station name.
 
 #+begin_src R :results output :exports both
-library(zoo)
+library("zoo")
 
 load('data/navarra.RData')
 #+end_src
@@ -355,7 +355,7 @@ vector is the time index of a new =zoo= object.
 #+INDEX: Packages!zoo@\texttt{zoo}
 
 #+begin_src R 
-library(zoo)
+library("zoo")
   
 Sys.setlocale("LC_TIME", 'C')
 idx <- as.yearmon(row.names(unemployUSA), format = '%b.%Y')
@@ -429,7 +429,7 @@ data series.
 #+INDEX: Packages!WDI@\texttt{WDI}
 
 #+begin_src R :results output :exports both
-library(WDI)
+library("WDI")
     
 CO2data <- WDI(indicator = c('EN.ATM.CO2E.PC', 'EN.ATM.CO2E.PP.GD',
                            'NY.GNP.MKTP.PP.CD', 'NY.GNP.PCAP.PP.CD'),

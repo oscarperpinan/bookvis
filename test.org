@@ -1,0 +1,119 @@
+#+TITLE: Displaying Time Series, Spatial, and Space-Time Data with =R=
+
+#+AUTHOR: Oscar Perpiñán Lamigueiro
+
+#+DATE: XXXX 2024
+
+#+SETUPFILE: config.org
+
+\frontmatter
+
+\cleardoublepage
+
+#+TOC: headlines 1
+
+\mainmatter
+
+* COMMENT Time Series
+label:part:Time
+
+** Time on the Horizontal Axis
+ label:cha:timeHorizontalAxis
+
+
+#+INCLUDE: "TimeSeries/timeHorizontalAxis.tex" src latex
+
+** Time as a Conditioning or Grouping Variable
+label:cha:timeGroupFactor
+
+
+#+INCLUDE: "TimeSeries/timeGroupFactor.tex" src latex
+
+** Time as a Complementary Variable
+ label:cha:timeComplementary
+
+
+#+INCLUDE: "TimeSeries/timeComplementary.tex" src latex
+
+** About the Data
+ label:cha:dataTime
+
+#+INCLUDE: "TimeSeries/dataTime.tex" src latex
+
+* Spatial Data
+label:part:Spatial
+
+** Thematic Maps: Proportional Symbol Mapping
+label:cha:bubble
+
+#+INCLUDE: "Spatial/bubble.tex" src latex
+
+** COMMENT Thematic Maps: Choropleth Maps
+label:cha:choropleth
+
+#+INCLUDE: "Spatial/choropleth.tex" src latex
+
+** COMMENT Thematic Maps: Raster Maps
+label:cha:raster
+
+#+INCLUDE: "Spatial/raster.tex" src latex
+
+** COMMENT Vector Fields
+label:cha:vector
+
+
+#+INCLUDE: "Spatial/vector.tex" src latex
+
+** COMMENT Physical and Reference Maps
+ label:cha:refer-phys-maps
+
+
+#+INCLUDE: "Spatial/physical.tex" src latex
+#+INCLUDE: "Spatial/osm.tex" src latex
+
+** COMMENT About the Data
+ label:cha:dataSpatial
+
+#+INCLUDE: "Spatial/dataSpatial.tex" src latex
+
+* COMMENT Space-Time Data
+label:part:SpaceTime
+
+** Spatiotemporal Raster Data
+ label:cha:rasterST
+
+
+#+INCLUDE: "SpatioTime/rasterST.tex" src latex
+
+** Spatiotemporal Point Observations
+ label:cha:pointsST
+
+
+#+INCLUDE: "SpatioTime/pointsST.tex" src latex
+
+** Animation
+ label:cha:animationST
+
+
+#+INCLUDE: "SpatioTime/animation.tex" src latex
+
+* COMMENT Glossary, Bibliography and Index 
+
+\backmatter
+
+\printnomenclature
+
+\clearpage 
+
+\printbibliography
+
+\clearpage
+
+\printindex
+
+
+* COMMENT Local Variables
+# local variables:
+# eval: (add-to-list 'org-latex-listings-langs '(R "myR"))
+# end:
+

@@ -13,11 +13,11 @@ setwd('~/github/bookvis')
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
  
-library(lattice)
-library(ggplot2)
+library("lattice")
+library("ggplot2")
 ## latticeExtra must be loaded after ggplot2 to prevent masking of its
 ## `layer` function.
-library(latticeExtra)
+library("latticeExtra")
 
 source('configLattice.R')
 ##################################################################
@@ -41,7 +41,7 @@ country are connected with polylines to reveal the time evolution
 (Figure ref:fig:CO2-GNI).
 
 #+begin_src R
-library(zoo)
+library("zoo")
 
 load('data/CO2.RData')
 #+end_src
@@ -96,7 +96,7 @@ same color will be displayed at enough distance.
 #+INDEX: Subjects!Visual discrimination
 
 #+begin_src R 
-library(RColorBrewer)
+library("RColorBrewer")
 
 nCountries <- nlevels(CO2data$Country.Name)
 pal <- brewer.pal(n = 5, 'Set1')
@@ -130,7 +130,7 @@ original $\mathrm{CO_2}$ =data.frame=.
 #+INDEX: Packages!reshape2@\texttt{reshape2}
 
 #+begin_src R :results output :exports both
-library(reshape2)
+library("reshape2")
 
 CO2capita <- CO2data[, c('Country.Name',
                          'Year',
@@ -324,7 +324,7 @@ with =extreme.grid= (Figure ref:fig:CO2-GNI-DL).
 #+INDEX: Packages!directlabels@\texttt{directlabels}
 
 #+begin_src R :results output graphics :exports both :file "figs/CO2_capitaDL.pdf"
-library(directlabels)
+library("directlabels")
 
 ## lattice version
 direct.label(pCO2.capita,
@@ -422,7 +422,7 @@ To use this numeric variable as an additional grouping factor, its range must be
 #+INDEX: Subjects!Class Intervals
 
 #+begin_src R 
-library(classInt)
+library("classInt")
 z <- CO2data$CO2.PPP
 intervals <- classIntervals(z, n = 4, style = 'fisher')
 #+end_src
@@ -544,7 +544,7 @@ functions through the =animation_slider= function.
 Variables =CO2.capita= and =GNI.capita= are represented in the x-axis
 and y-axis, respectively.
 #+begin_src R
-library(plotly)
+library("plotly")
 
 p <- plot_ly(CO2data,
              x = ~CO2.capita,
@@ -603,7 +603,7 @@ using a browser with Flash enabled (Figure ref:fig:googleVis).
 #+INDEX: Packages!googleVis@\texttt{googleVis}
 
 #+begin_src R :eval no-export
-library(googleVis)
+library("googleVis")
 
 pgvis <- gvisMotionChart(CO2data,
                          xvar = 'CO2.capita',
@@ -651,8 +651,8 @@ value of =CO2data$CO2.PPP= (line [[(radius)]]).
 #+INDEX: Packages!grid@\texttt{grid}
 
 #+begin_src R -n -r
-library(gridSVG)
-library(grid)
+library("gridSVG")
+library("grid")
 
 xyplot(GNI.capita ~ CO2.capita,
        data = CO2data,

@@ -35,9 +35,9 @@ indexed with =setZ=.
 #+INDEX: Subjects!Data processing and cleaning
 
 #+begin_src R 
-library(raster)
-library(zoo)
-library(rasterVis)
+library("raster")
+library("zoo")
+library("rasterVis")
 
 SISdm <- brick('data/SISgal')
 
@@ -269,7 +269,7 @@ code.
 #+INDEX: Packages!mapview@\texttt{mapview}
 
 #+begin_src R
-library(mapview)
+library("mapview")
 
 cubeView(SISdm)
 #+end_src

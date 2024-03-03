@@ -69,8 +69,8 @@ seconds.
 #+INDEX: Subjects!Data processing and cleaning
 
 #+begin_src R
-  library(XML)
-  library(sp)
+  library("XML")
+  library("sp")
   
   ## Access each webpage, retrieve tables and extract long/lat data
   coords <- lapply(URLs, function(est){
@@ -158,7 +158,7 @@ method.
 #+INDEX: Packages!sp@\texttt{sp}
 
 #+begin_src R 
-  library(sp)
+  library("sp")
   
   ## Spatial location of stations
   airStations <- read.csv2('data/airStations.csv')
@@ -209,8 +209,8 @@ matching against the shared key column (=airStations$Codigo= and
 #+INDEX: Packages!maptools@\texttt{maptools}
 
 #+begin_src R
-library(rgdal)
-library(maptools)
+library("rgdal")
+library("maptools")
 ## Link aggregated data with stations to obtain a SpatialPointsDataFrame.
 ## Codigo and codEst are the stations codes
 idxNO2 <- match(airStations$Codigo, NO2agg$codEst)
@@ -245,7 +245,7 @@ page, and the station photograph is extracted with =getNodeSet= and
 
 
 #+begin_src R :eval no-export
-library(XML)
+library("XML")
 
 old <- setwd('images')
 for (i in 1:nrow(NO2df))
@@ -357,8 +357,8 @@ read as =SpatialPolygonsDataFrame= with =readOGR=.
 #+INDEX: Packages!sp@\texttt{sp}
 
 #+begin_src R
-library(sp)
-library(rgdal)
+library("sp")
+library("rgdal")
 #+end_src
 
 
@@ -506,7 +506,7 @@ of monthly averages produce a =RasterStack= with twelve layers.
 #+INDEX: Packages!raster@\texttt{raster}
 
 #+begin_src R
-  library(raster)
+  library("raster")
   
   tmp <- tempdir()
   unzip('data/SISmm2008_CMSAF.zip', exdir = tmp)
@@ -548,7 +548,7 @@ from their respective webpages as Geo-TIFF files.
 #+INDEX: Data!Land cover
 
 #+begin_src R
-library(raster)
+library("raster")
 ## http://neo.sci.gsfc.nasa.gov/Search.html?group=64
 pop <- raster('875430rgb-167772161.0.FLOAT.TIFF')
 ## http://neo.sci.gsfc.nasa.gov/Search.html?group=20

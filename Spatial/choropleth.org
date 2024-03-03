@@ -14,11 +14,11 @@ setwd('~/github/bookvis/')
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
  
-library(lattice)
-library(ggplot2)
+library("lattice")
+library("ggplot2")
 ## latticeExtra must be loaded after ggplot2 to prevent masking of its
 ## `layer` function.
-library(latticeExtra)
+library("latticeExtra")
 
 source('configLattice.R')
 ##################################################################
@@ -61,8 +61,8 @@ argument.
 
 #+begin_src R 
 ## sp approach
-library(sp)
-library(rgdal)
+library("sp")
+library("rgdal")
 
 spMapVotes <- readOGR("data/spMapVotes.shp", 
                       p4s = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs")
@@ -104,7 +104,7 @@ The =sf= approach reads the files with =st_read=, and sets the coordinate refere
 
 #+begin_src R
 ## sf approach
-library(sf)
+library("sf")
 
 sfMapVotes <- st_read("data/spMapVotes.shp")
 st_crs(sfMapVotes) <- 25830
@@ -184,7 +184,7 @@ cite:Neuwirth2014.
 #+INDEX: Subjects!Sequential palette
 
 #+begin_src R
-library(RColorBrewer)
+library("RColorBrewer")
 
 ## Number of intervals (colors)
 N <- 6
@@ -274,7 +274,7 @@ will be assigned to the same class.
 #+INDEX: Packages!classInt@\texttt{classInt}
 
 #+begin_src R
-library(classInt)
+library("classInt")
 
 ## Compute intervals with the same number of elements
 intQuant <- classIntervals(spMapVotes$pcMax,
@@ -529,7 +529,7 @@ created with =grid.text= (lines [[(gridTextX)]] and [[(gridTextY)]]).
 #+INDEX: Packages!grid@\texttt{grid}
 
 #+begin_src R -n -r
-library(grid)
+library("grid")
 
 legend <- layer(
 {
@@ -598,7 +598,7 @@ produce interactive proportional symbol maps. In this section this package creat
 #+INDEX: Packages!mapview@\texttt{mapview}
 
 #+begin_src R
-library(mapview)
+library("mapview")
 #+end_src
 
 This package is able to work both with =sp= and with =sf=. In this section we use the =sf= package to read the data[fn:5]. 

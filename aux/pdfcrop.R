@@ -1,6 +1,6 @@
 ## para PDFs
 pdfcrop <- function(x){
-  cmd <- paste('pdfcrop', x, x)
+  cmd <- paste('/usr/bin/pdfcrop', x, x)
   system(cmd)
 }
 
