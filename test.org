@@ -20,7 +20,6 @@ label:part:Time
 ** Time on the Horizontal Axis
  label:cha:timeHorizontalAxis
 
-
 #+INCLUDE: "TimeSeries/timeHorizontalAxis.tex" src latex
 
 ** Time as a Conditioning or Grouping Variable

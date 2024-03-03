@@ -1,10 +1,8 @@
-#+PROPERTY: header-args :session *R* :tangle ../docs/R/bubble.R :eval no-export
+#+PROPERTY: header-args :session *R* :tangle ../docs/R/bubble.R :eval yes
 #+OPTIONS: ^:nil
-#+BIND: org-latex-image-default-height "0.45\\textheight"
-
 
 #+begin_src R :exports none :tangle no
-setwd('~/github/bookvis/Spatial')
+setwd("~/github/bookvis/")
 #+end_src
 
 
@@ -15,13 +13,13 @@ setwd('~/github/bookvis/Spatial')
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
  
-library(lattice)
-library(ggplot2)
+library("lattice")
+library("ggplot2")
 ## latticeExtra must be loaded after ggplot2 to prevent masking of its
 ## `layer` function.
-library(latticeExtra)
+library("latticeExtra")
 
-source('configLattice.R')
+source("configLattice.R")
 ##################################################################
 
 #+end_src
@@ -41,24 +39,50 @@ add a second perception channel to improve the discrimination
 task. Colors from a sequential palette will complement symbol size to
 encode the groups.
 
-#+INDEX: Subjects!Sequential palette
-This sequential palette is defined with =colorRampPalette=, with
-colors denoting the value of the variable (green for lower values of
-the contaminant, brown for intermediate values, and black for highest
-values).
+Two alternative are available to display the data: 
+
+1. The =sp= package and the =spplot= function (based on =lattice= graphics).
+2. The =ggplot2= package and the =geom_sf= function.
+
+In both cases, the data is imported with the =sf= package and its
+function =st_read=. This function returns an object of class =sf=.
+
+#+INDEX: Packages!sf@\texttt{sf}
+#+INDEX: Data!Air quality in Madrid
 
 #+begin_src R
-airPal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(5)
+library("sf")
+
+NO2sf <- st_read(dsn = "data/Spatial/", layer = "NO2sp")
 #+end_src
 
-# Two alternative are available to import and display the data: 
+* Proportional Symbol Mapping with =spplot=
+#+begin_src R :exports none
+##################################################################
+## Proportional symbol with spplot
+##################################################################
+#+end_src
 
-# 1. Import the data with the =rgdal= package and the function
-#    =readOGR=, and display the information with the =sp= package and
-#    the =spplot= function (based on =lattice= graphics).
-# 2. Import the data with the =sf= package and the function =st_read=,
-#    and display the information with the =ggplot2= package and the
-#    =geom_sf= function.
+The =spplot= method provided by the =sp= package, based on =xyplot=
+from the =lattice= package, is able to display
+=SpatialPointsDataFrame= objects, among others classes. The =sf=
+object returned by =st_read= has to be converted to a =Spatial= class.
+
+#+INDEX: Packages!sp@\texttt{sp}
+#+begin_src R
+library("sp")
+
+NO2sp <- as(NO2sf, "Spatial")
+#+end_src
+
+#+INDEX: Subjects!Sequential palette
+A sequential palette is defined with =colorRampPalette=, with colors
+denoting the value of the variable (green for lower values of the
+contaminant, brown for intermediate values, and black for highest
+
+#+begin_src R
+airPal <- colorRampPalette(c("springgreen1", "sienna3", "gray5"))(5)
+#+end_src
 
 * Proportional Symbol Mapping with =ggplot2= and =spplot=
 #+begin_src R :exports none
@@ -107,19 +131,42 @@ NO2sp <- as(NO2sf, "Spatial")
 The arguments =col.regions= and =cex= in =spplot= are used for encoding color and size (Figure
 ref:fig:airMadrid_spplot).
 
-#+begin_src R :results output graphics :exports both :file figs/airMadrid_spplot.pdf  
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/airMadrid_spplot.pdf  
 spplot(NO2sp["mean"],
        col.regions = airPal, ## Palette
        cex = sqrt(1:5), ## Size of circles
-       edge.col = 'black', ## Color of border
+       edge.col = "black", ## Color of border
        scales = list(draw = TRUE), ## Draw scales
-       key.space = 'right') ## Put legend on the right
+       key.space = "right") ## Put legend on the right
 #+end_src
 
 #+CAPTION: Annual average of $NO_2$ measurements in Madrid. Values are shown with different symbol sizes and  colors for each class with the =spplot= function. label:fig:airMadrid_spplot
-#+RESULTS[979e89aa398f2ccf2f32fe340b31dd3124320fe1]:
-[[file:figs/airMadrid_spplot.pdf]]
+#+RESULTS:
+[[file:figs/Spatial/airMadrid_spplot.pdf]]
 
+* Proportional Symbol Mapping with =ggplot=
+#+begin_src R :exports none
+##################################################################
+## Proportional symbol with ggplot
+##################################################################
+#+end_src
+
+The =ggplot2= package is able to display spatial point observations
+with the =geom_sf= function. No previous conversion is needed because
+this function understands the =sf= class:
+
+#+begin_src R
+## Create a categorical variable
+NO2sf$Mean <- cut(NO2sf$mean, 5)
+
+ggplot(data = NO2sf) + 
+    geom_sf(aes(size = Mean, fill = Mean),
+            pch = 21, col = "black") +
+    scale_fill_manual(values = airPal) +
+    theme_bw()
+#+end_src
+
+#+RESULTS:
 
 * Optimal Classification to Improve Discrimination
 label:sec:classification_bubble
@@ -129,7 +176,6 @@ label:sec:classification_bubble
 ##################################################################
 #+end_src
 
-#+RESULTS:
 
 Two main improvements can be added to Figure
 ref:fig:airMadrid_spplot:
@@ -145,11 +191,11 @@ ref:fig:airMadrid_spplot:
 #+INDEX: Subjects!Class Intervals
 
 #+begin_src R 
-library(classInt)
+library("classInt")
 ## The number of classes is chosen between the Sturges and the
 ## Scott rules.
 nClasses <- 5
-intervals <- classIntervals(NO2sp$mean, n = nClasses, style = 'fisher')
+intervals <- classIntervals(NO2sp$mean, n = nClasses, style = "fisher")
 ## Number of classes is not always the same as the proposed number
 nClasses <- length(intervals$brks) - 1
 #+end_src
@@ -182,22 +228,23 @@ idx <- findCols(intervals)
 cexNO2 <- dentAQ[idx]
 #+end_src
 
-#+begin_src R :exports results :tangle no :results output graphics :width \\textwidth :file figs/dent.pdf
+#+begin_src R :exports results :tangle no :results output graphics file :width \\textwidth :file figs/Spatial/dent.pdf :eval no-export
 xDent <- sqrt(cumsum(dent[1:7]))
 
 xyplot(rep(1, 7) ~ xDent,
        cex = dent[1:7],
        scales = list(draw = FALSE),
-       xlab = '', ylab = '',
+       xlab = "", ylab = "",
        pch = 21, alpha = 0.6,
-       fill = 'midnightblue', col = 'black',
+       fill = "midnightblue",
+       col = "black",
        aspect = 1/6)
 #+end_src
 
 
 #+CAPTION: Symbol sizes proposed by Borden Dent. label:fig:dent
 #+RESULTS[2d7b458986433b448eb743509896f8e7e8eb4e71]:
-[[file:figs/dent.pdf]]
+[[file:figs/Spatial/dent-crop.pdf]]
 
 These two enhancements are included in Figure
 ref:fig:airMadrid_classes, which displays the categorical variable
@@ -205,7 +252,7 @@ ref:fig:airMadrid_classes, which displays the categorical variable
 previously computed with =classIntervals=. In addition, this figure
 includes an improved legend.
 
-#+begin_src R :results output graphics :exports both :file figs/airMadrid_classes.pdf
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/airMadrid_classes.pdf
 ## spplot version
 NO2sp$classNO2 <- factor(names(tab)[idx])  
 
@@ -213,12 +260,12 @@ NO2sp$classNO2 <- factor(names(tab)[idx])
 NO2key <- list(x = 0.99, y = 0.01, corner = c(1, 0),
                title = expression(NO[2]~~(paste(mu, plain(g))/m^3)),
                cex.title = 0.8, cex = 1,
-               background = 'gray92')
+               background = "gray92")
 
 pNO2 <- spplot(NO2sp["classNO2"],
                col.regions = airPal,
                cex = dentAQ * 0.8,
-               edge.col = 'black',
+               edge.col = "black",
                scales = list(draw = TRUE),
                key.space = NO2key)
 pNO2
@@ -226,21 +273,20 @@ pNO2
 
 #+CAPTION: Annual average of $NO_2$ measurements in Madrid. Enhancement of Figure ref:fig:airMadrid_spplot, using symbol sizes proposed by Borden Dent and an improved legend. label:fig:airMadrid_classes
 #+RESULTS[9f53f6015cd95a3fec85c3619d7aba384e1fa0f2]:
-[[file:figs/airMadrid_classes.pdf]]
+[[file:figs/Spatial/airMadrid_classes.pdf]]
 
 The =ggplot= version uses the same categorical variable, added to the =NO2sf= object.
-#+begin_src R :eval no-export
+#+begin_src R
 ## ggplot2 version
 NO2sf$classNO2 <- factor(names(tab)[idx])  
 
 ggplot(data = NO2sf) +
     geom_sf(aes(size = classNO2, fill = classNO2),
-            pch = 21, col = 'black') +
+            pch = 21, col = "black") +
     scale_fill_manual(values = airPal) +
     scale_size_manual(values = dentAQ * 2)  +
     xlab("") + ylab("") + theme_bw() 
-#+end_src
-
+    #+end_src
 #+RESULTS:
 
 * Spatial Context with Underlying Layers and Labels
@@ -252,191 +298,205 @@ ggplot(data = NO2sf) +
 
 #+RESULTS:
 
-The spatial distribution of the stations is better understood if
-we add underlying layers with information about the spatial
-context. 
-
-** Static Image
-#+begin_src R :exports none
-##################################################################
-## Static image
-##################################################################
-#+end_src
-
-A suitable method is to download data from a provider such as Google
-Maps\textsuperscript{\texttrademark} or OpenStreetMap and transform it
-adequately. There are several packages that provide an interface to
-query several map servers: =RGoogleMaps=, =OpenStreetMaps=, and
-=ggmap= provide raster images from static maps obtained from Google
-Maps, Stamen, OpenStreetMap, etc.
-
-Among these options, I have chosen the Stamen watercolor maps, and the
-=ggmap= package cite:Kahle.Wickham2013. It is worth noting that these
-map tiles are published by Stamen Design under a Creative Commons
-licence CC BY-3.0 (Attribution). They produce these maps with data by
-OpenStreetMap also published under a Creative Commons licence BY-SA
-(Attribution - ShareAlike).
-
-#+INDEX: Packages!ggmap@\texttt{ggmap}
-
-#+begin_src R
-## Bounding box of data
-madridBox <- bbox(NO2sp)
-## Extend the limits to get a slightly larger map
-madridBox <- t(apply(madridBox, 1,
-                   extendrange, f = 0.05))
-#+end_src
-
-#+begin_src R 
-library(ggmap)
-
-madridGG <- get_map(c(madridBox),
-                    maptype = 'watercolor',
-                    source = 'stamen')
-#+end_src
-
-=ggmap= is designed to work with the =ggplot2= package. Unfortunately,
-at the time of writing these pages, it is not able to work with
-=geom_sf=, so the =SpatialPointsDataFrame= object must be converted to
-a =data.frame=.
-
-#+begin_src R :eval no-export
-## ggmap with ggplot
-NO2df <- as.data.frame(NO2sp)
-
-ggmap(madridGG) +
-    geom_point(data = NO2df,
-                aes(coords.x1, coords.x2, 
-                    size = classNO2,
-                    fill = classNO2),
-               pch = 21, col = 'black') +
-    scale_fill_manual(values = airPal) +
-    scale_size_manual(values = dentAQ*2)
-#+end_src
-
-The result of =get_map= is only a =raster= object[fn:9] with
-attributes. It can be added to a =spplot= graphic with the
-=panel.ggmap= function included in the =sp= package. This function is
-based on the =grid.raster= function. Previously, the
-=SpatialPointsDataFrame= must be transformed with =spTransform=
-because the Stamen maps use the Web Mercator projection[fn:7]. The
-result, using the =sp.layout= argument, is shown in Figure
-ref:fig:airMadrid_stamen.
-
 #+INDEX: Subjects!Background map
 
-#+begin_src R :results output graphics :exports both :file figs/airMadrid_stamen.pdf
-## ggmap with spplot
-## Project the data into the web mercator projection
-NO2merc <- spTransform(NO2sp, CRS("+init=epsg:3857"))
+The spatial distribution of the stations is better understood if we
+add underlying layers with information about the spatial context.
 
-## sp.layout definition
-stamen <- list(panel.ggmap, ## Function that displays the object
-               madridGG, ## Object to be displayed
-               first = TRUE) ## This layout item will be drawn before
-                             ## the object displayed by spplot
+A common solution is to add an underlying layer with a static image
+representing a map. Such image can be downloaded from a provider such
+as Google Maps\textsuperscript{\texttrademark} or OpenStreetMap. There
+are packages such as =ggmap= that provide an interface to these map
+servers, providing raster images from static maps.
 
-spplot(NO2merc["classNO2"],
+This approach faces two main problems: the user can neither modify
+the image nor use its content to produce additional information; most
+of the providers require registration and payments, and impose usage
+restrictions due to copyright.
+
+A different approach is to use digital vector data (points, lines, and
+polygons) that can be filtered and transformed. I will illustrate this
+approach with two different solutions: remote data obtained from the
+OpenStreetMap project with the =osmdata= package; local data contained
+in a shapefile (a format commonly used by public and private providers
+to distribute information).
+
+** OpenStreetMap with =osmdata=
+#+begin_src R :exports none
+##################################################################
+## OpenStreetMap
+##################################################################
+#+end_src
+
+#+INDEX: Packages!osmdata@\textttt{osmdata}
+The =osmdata= package is able to access the OpenStreepMap data with
+queries defined with the functions =opq= and =add_osm_feature=. The
+=opq= function defines the base query (region of interest in this
+example), and the =add_osm_feature= filters the features to be
+downloaded. The streets in a city can be retrieved with the key
+"highway" (any kind of road, street or path) and the value
+"residential"[fn:4].
+
+#+begin_src R
+library("osmdata")
+
+madridBox <- st_bbox(NO2sf)
+
+qosm <- opq(madridBox) %>%
+  add_osm_feature(key = "highway",
+                  value = "residential")
+#+end_src
+
+The =qosm= object is only the definition of the query. The data is
+downloaded with a call to the functions =osmdata_sf= (=sf= objects)
+and =osmdata_sp= (=Spatial*= objects).
+#+begin_src R
+qsf <- osmdata_sf(qosm)
+#+end_src
+
+The result includes points, lines and polygons. The next code displays
+the =NO2sf= data using the street lines (=qsf$osm_lines=) as the
+context, and a label for each station with the function
+=geom_text_repel= of the =ggrepel= package (Figure
+ref:fig:airMadrid_osm).
+
+#+INDEX: Packages!ggrepel@\textttt{ggrepel}
+
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/airMadrid_osm.png :width 4000 :height 4000 :res 600
+library(ggrepel)
+
+ggplot()+
+  ## Layers are drawn sequentially, so the NO2sf layer must be in
+  ## the last place to be on top
+  geom_sf(data = qsf$osm_lines["name"],
+          size = 0.3,
+          color = "lightgray") +
+  geom_sf(data = NO2sf,
+          aes(size = classNO2,
+              fill = classNO2),
+          pch = 21, col = "black") +
+  ## Labels for each point, with position according to the circle size
+  ## and the rest of labels
+  geom_text_repel(data = NO2sf,
+                  aes(label = substring(codEst, 7),
+                      geometry = geometry,
+                      point.size = classNO2),
+                  stat = "sf_coordinates") + 
+  scale_fill_manual(values = airPal) +
+  scale_size_manual(values = dentAQ * 2) +
+  labs(x = NULL, y = NULL) + theme_bw()
+#+end_src
+
+#+CAPTION: Annual average of $NO_2$ measurements in Madrid. Enhancement of Figure ref:fig:airMadrid_classes, displaying OpenStreepMap data in an underlying layer. label:fig:airMadrid_osm
+#+RESULTS:
+[[file:figs/Spatial/airMadrid_osm.pdf]]
+
+The =spplot= version needs the data to be downloaded as =Spatial*=
+objects with =osmdata_sp=.
+#+begin_src R
+qsp <- osmdata_sp(qosm)
+#+end_src
+The result can be combined with the =NO2sp= object with the
+=sp.layout= argument of =spplot=, which accepts a call to a function
+defined in a list.
+#+begin_src R :exports none :results none
+qspLines <- list("sp.lines", qsp$osm_lines["name"],
+                 lwd = 0.1)
+
+spplot(NO2sp["classNO2"],
        col.regions = airPal,
-       cex = dentAQ * 0.8,
-       edge.col = 'black',
-       sp.layout = stamen,
+       cex = dentAQ,
+       edge.col = "black",
+       alpha = 0.8,
+       sp.layout = qspLines,
        scales = list(draw = TRUE),
        key.space = NO2key)
 #+end_src
 
-#+CAPTION: Annual average of $NO_2$ measurements in Madrid. Enhancement of Figure ref:fig:airMadrid_classes, using a Stamen map. label:fig:airMadrid_stamen
-#+RESULTS[fea21c22315e2622233bf425bdcf71b27918f9e1]:
-[[file:figs/airMadrid_stamen.pdf]]
-
-** Vector Data
+** Shapefiles
 #+begin_src R :exports none
 ##################################################################
-## Vector data
+## Shapefiles
 ##################################################################
 #+end_src
-A major problem with the previous solution is that the user can
-neither modify the image nor use its content to produce additional
-information.  A different approach is to use digital vector data
-(points, lines, and polygons). A popular format for vectorial data is
-the shapefile, commonly used by public and private providers to
-distribute information. For our example, the Madrid district and
-streets are available as shapefiles from the nomecalles web
-service[fn:1].
-
-A shapefile can be read with =readOGR= from the =rgdal= package, or
-with =st_read= from the =sf= package. 
-
-#+INDEX: Subjects!Background map
-
-*** rgdal and spplot
-#+begin_src R :exports none
-##################################################################
-## rgdal and spplot
-##################################################################
-#+end_src
-
-The =SpatialPolygonsDataFrame= and =SpatialLinesDataFrame= objects
-produced by the =readOGR= function can be displayed with the
-=sp.polygons= and =sp.lines= functions provided by the =sp= package.
 
 #+INDEX: Data!Nomenclator Madrid
-#+INDEX: Packages!rgdal@\texttt{rgdal}
-#+INDEX: Packages!sp@\texttt{sp}
+#+INDEX: Packages!sf@\texttt{sf}
 
-#+begin_src R :eval no-export
-library(rgdal)
-
-## nomecalles http://www.madrid.org/nomecalles/Callejero_madrid.icm
-## Form at http://www.madrid.org/nomecalles/DescargaBDTCorte.icm
-
-## Madrid districts
-unzip('Distritos de Madrid.zip')
-distritosMadrid <- readOGR('Distritos de Madrid/200001331.shp',
-                           p4s = '+proj=utm +zone=30')
-distritosMadrid <- spTransform(distritosMadrid,
-                               CRS = CRS("+proj=longlat +ellps=WGS84"))
-
-## Madrid streets
-unzip('Callejero_ Ejes de viales.zip')
-streets <- readOGR('Callejero_ Ejes de viales/call2011.shp',
-                   p4s = '+proj=utm +zone=30')
-streetsMadrid <- streets[streets$CMUN=='079',]
-streetsMadrid <- spTransform(streetsMadrid,
-                             CRS = CRS("+proj=longlat +ellps=WGS84"))
-#+end_src
-
-#+begin_src R :exports none :tangle no
-library(rgdal)
-
-distritosMadrid <- readOGR('/home/datos/nomecalles/Distritos de Madrid/200001331.shp')
-distritosMadrid <- spTransform(distritosMadrid,
-                               CRS = CRS("+proj=longlat +ellps=WGS84"))
-
-streetsMadrid <- readOGR('/home/datos/nomecalles/Callejero_ Ejes de viales/streetsMadrid.shp',
-                         p4s = '+proj=longlat +ellps=WGS84')
-#+end_src
-
-These shapefiles can be included in the plot with the =sp.layout=
-mechanism accepted by =spplot= or with the =layer= and =+.trellis=
-functions from the =latticeExtra= package. The station codes are
-placed with this same procedure using the =sp.pointLabel= function
-from the =maptools= package. Figure ref:fig:airMadrid displays the
-final result.
-
-#+INDEX: Packages!maptools@\texttt{maptools}
+The geographical information of Madrid is available at the "nomecalles" web service[fn:1]. The =data= folder contains compressed files with several shapefiles downloaded from this service. These shapefiles can be read with the =st_read= function from the =sf= package. 
 
 #+begin_src R
-library(maptools)
+## Madrid districts
+unzip("data/Spatial/distr2022.zip", exdir = tempdir())
+
+distritosMadridSF <- st_read(dsn = tempdir(),
+                             layer = "dist2022")
+## Filter the streets of the Municipality of Madrid
+distritosMadridSF <- distritosMadridSF[distritosMadridSF$CMUN == "079",]
+## Assign the geographical reference
+distritosMadridSF <- st_transform(distritosMadridSF,
+                                  crs = "WGS84")
+
+## Madrid streets
+unzip("data/Spatial/call2022.zip", exdir = tempdir())
+
+streetsMadridSF <- st_read(dsn = tempdir(),
+                           layer = "Gdie_g_calles")                           
+streetsMadridSF <- streetsMadridSF[streetsMadridSF$CDMUNI == "079",]
+streetsMadridSF <- st_transform(streetsMadridSF,
+                                crs = "WGS84")
+#+end_src
+
+The =sf= objects produced with these code can be displayed together
+with the =NO2sf= object with consecutive calls to =geom_sf=. Figure
+ref:fig:airMadrid displays the final result.
+
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/airMadrid.png :width 4000 :height 4000 :res 600
+ggplot()+
+  geom_sf(data = streetsMadridSF,
+          size = 0.1,
+          color = "darkgray") +
+  geom_sf(data = distritosMadridSF,
+          fill = "lightgray",
+          alpha = 0.2,
+          size = 0.15,
+          color = "black") +
+  geom_sf(data = NO2sf,
+          aes(size = classNO2,
+              fill = classNO2),
+          pch = 21, col = "black") + 
+  geom_text_repel(data = NO2sf,
+                  aes(label = substring(codEst, 7),
+                      geometry = geometry,
+                      point.size = classNO2),
+                  size = 2.5,
+                  stat = "sf_coordinates") + 
+  scale_fill_manual(values = airPal) +
+  scale_size_manual(values = dentAQ * 2) +
+  labs(x = NULL, y = NULL) + theme_bw()
+#+end_src
+
+#+CAPTION: Annual average of $NO_2$ measurements in Madrid using shapefiles (lines and polygons) and text as geographical context. label:fig:airMadrid
+#+RESULTS:
+[[file:figs/Spatial/airMadrid.png]]
+
+
+
+
+These shapefiles can also be used with =spplot= (after a class
+conversion) thanks to the =sp.layout= argument of this function or
+with the =layer= and =+.trellis= functions from the =latticeExtra=
+package.
+
+#+begin_src R
+distritosMadridSP <- as(distritosMadridSF, "Spatial")
+streetsMadridSP <- as(streetsMadridSF, "Spatial")
 ## Lists using the structure accepted by sp.layout, with the polygons,
 ## lines, and points, and their graphical parameters
-spDistricts <- list('sp.polygons', distritosMadrid,
-                    fill = 'gray97', lwd = 0.3)
-spStreets <- list('sp.lines', streetsMadrid,
+spDistricts <- list("sp.polygons", distritosMadridSP,
+                    fill = "gray97", lwd = 0.3)
+spStreets <- list("sp.lines", streetsMadridSP,
                   lwd = 0.05)
-spNames <- list(sp.pointLabel, NO2sp,
-                labels = substring(NO2sp$codEst, 7),
-                cex = 0.6, fontfamily = 'Palatino')
 #+end_src
 
 #+begin_src R :eval no-export
@@ -444,103 +504,26 @@ spNames <- list(sp.pointLabel, NO2sp,
 spplot(NO2sp["classNO2"],
        col.regions = airPal,
        cex = dentAQ,
-       edge.col = 'black',
+       edge.col = "black",
        alpha = 0.8,
-       ## Boundaries and labels overlaid
-       sp.layout = list(spDistricts, spStreets, spNames),
+       sp.layout = list(spDistricts, spStreets),
        scales = list(draw = TRUE),
        key.space = NO2key)
 #+end_src
 
-#+begin_src R :results output graphics :exports both :file figs/airMadrid.png :width 4000 :height 4000 :res 600
+#+begin_src R :exports none :results none
 ## lattice with layer version
 pNO2 +
-    ## Labels *over* the original figure
-    layer(sp.pointLabel(NO2sp,
-                        labels = substring(NO2sp$codEst, 7),
-                        cex = 0.8, fontfamily = 'Palatino')
-          ) +
     ## Polygons and lines *below* (layer_) the figure
     layer_(
     {
-        sp.polygons(distritosMadrid,
-                    fill = 'gray97',
+        sp.polygons(distritosMadridSP,
+                    fill = "gray97",
                     lwd = 0.3)
-        sp.lines(streetsMadrid,
+        sp.lines(streetsMadridSP,
                  lwd = 0.05)
     })
 #+end_src
-
-#+CAPTION: Annual average of $NO_2$ measurements in Madrid using shapefiles (lines and polygons) and text as geographical context. label:fig:airMadrid
-#+RESULTS[9a7c3da06d85b8561c35982dc98f313e21205f1a]:
-[[file:figs/airMadrid.png]]
-
-
-*** sf and ggplot
-#+begin_src R :exports none
-##################################################################
-## sf and ggplot
-##################################################################
-#+end_src
-
-The =sf= objects produced by the =st_read= function can be displayed
-with =ggplot= and =geom_sf=.  The =ggplot2= version of this figure
-uses =geom_sf=. The shapefiles must be read with the =st_read=
-function of the =sf= package.
-
-#+INDEX: Packages!sf@\texttt{sf}
-
-#+begin_src R :eval no-export
-library(sf)
-
-## Madrid districts
-distritosMadridSF <- st_read(dsn = 'Distritos de Madrid/',
-                           layer = '200001331')
-distritosMadridSF <- st_transform(distritosMadridSF,
-                               crs = "+proj=longlat +ellps=WGS84")
-
-## Madrid streets
-streetsSF <- st_read(dsn = 'Callejero_ Ejes de viales/',
-                           layer = 'call2011',
-                           crs = '+proj=longlat +ellps=WGS84')
-
-streetsMadridSF <- streetsSF[streetsSF$CMUN=='079',]
-streetsMadridSF <- st_transform(streetsMadridSF,
-                              crs = "+proj=longlat +ellps=WGS84")
-#+end_src
-
-#+begin_src R :exports none :tangle no
-distritosMadridSF <- st_read(dsn = '/home/datos/nomecalles/Distritos de Madrid/',
-                           layer = '200001331')
-distritosMadridSF <- st_transform(distritosMadridSF,
-                               crs = "+proj=longlat +ellps=WGS84")
-
-streetsMadridSF <- st_read(dsn = '/home/datos/nomecalles/Callejero_ Ejes de viales/',
-                         layer = 'streetsMadrid', 
-                         crs = '+proj=longlat +ellps=WGS84')
-#+end_src
-
-#+begin_src R :exports none :results none
-ggplot()+
-    ## Layers are drawn sequentially, so the NO2sf layer must be in
-    ## the last place to be on top
-    geom_sf(data = streetsMadridSF,
-            size = 0.05,
-            color = 'lightgray') +
-    geom_sf(data = distritosMadridSF,
-            fill = 'lightgray',
-            alpha = 0.2,
-            size = 0.3,
-            color = 'black') +
-    geom_sf(data = NO2sf,
-            aes(size = classNO2,
-                fill = classNO2),
-            pch = 21, col = 'black') + 
-    scale_fill_manual(values = airPal) +
-    scale_size_manual(values = dentAQ * 2) +
-    theme_bw()
-#+end_src
-
 
 * Spatial Interpolation
 #+begin_src R :exports none
@@ -563,11 +546,11 @@ weighted (IDW) interpolation with the =gstat= package cite:Pebesma2004
 \nomenclature{IDW}{Inverse Distance Weighted interpolation.}
 
 #+begin_src R
-library(gstat)
+library("gstat")
 
 ## Sample 10^5 points locations within the bounding box of NO2sp using
 ## regular sampling
-airGrid <- spsample(NO2sp, type = 'regular', n = 1e5)
+airGrid <- spsample(NO2sp, type = "regular", n = 1e5)
 ## Convert the SpatialPoints object into a SpatialGrid object
 gridded(airGrid) <- TRUE
 ## Compute the IDW interpolation
@@ -578,26 +561,27 @@ The result is a =SpatialPixelsDataFrame= that can be displayed with
 =spplot= and combined with the previous layers and the measurement
 station points (Figure ref:fig:airMadrid_krige).
 
-#+begin_src R :results output graphics :exports both :file figs/airMadrid_krige.png :width 4000 :height 4000 :res 600
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/airMadrid_krige.png :width 4000 :height 4000 :res 600
 spplot(airKrige["var1.pred"], ## Variable interpolated
        col.regions = colorRampPalette(airPal)) +
-    layer({ ## Overlay boundaries and points
-        sp.polygons(distritosMadrid,
-                    fill = 'transparent',
-                    lwd = 0.3)
-        sp.lines(streetsMadrid,
-                 lwd = 0.07)
-        sp.points(NO2sp,
-                  pch = 21,
-                  alpha = 0.8,
-                  fill = 'gray50',
-                  col = 'black')
-    })
+  layer({ ## Overlay boundaries and points
+    sp.polygons(distritosMadridSP,
+                fill = "transparent",
+                lwd = 0.3)
+    sp.lines(streetsMadridSP,
+             lwd = 0.07)
+    sp.points(NO2sp,
+              pch = 21,
+              alpha = 0.8,
+              fill = "gray50",
+              col = "black")
+  })
 #+end_src
 
 #+CAPTION: Kriging annual average of $NO_2$ measurements in Madrid. label:fig:airMadrid_krige
-#+RESULTS[e7439ec0ee815727d28fb2e1b30578c2484919e2]:
-[[file:figs/airMadrid_krige.png]]
+#+RESULTS:
+[[file:figs/Spatial/airMadrid_krige.png]]
+
 
 * Interactive Graphics
 label:sec:interactive_bubble
@@ -631,17 +615,25 @@ label:sec:mapview_bubble
 ##################################################################
 #+end_src
 
-The syntax of =mapview=[fn:12] resembles the syntax of =spplot=. Its first argument is the spatial object with the information and the variable to be depicted is selected with the argument =zcol=. Moreover, the size of the points can be linked to another variable with the argument =cex=, and their labels extracted from another variable with the argument =label=. 
+The syntax of =mapview=[fn:12] resembles the syntax of =spplot=. Its
+first argument is the spatial object with the information and the
+variable to be depicted is selected with the argument
+=zcol=. Moreover, the size of the points can be linked to another
+variable with the argument =cex=, and their labels extracted from
+another variable with the argument =label=.
 
-The next code produces an HTML page with an interactive graphic inserted in it (Figure ref:fig:mapview_bubble_simple). When the mouse is hovered over a point its label is displayed, and if the point is selected a tooltip with the whole information is deployed.
+The next code produces an HTML page with an interactive graphic
+inserted in it (Figure ref:fig:mapview_bubble_simple). When the mouse
+is hovered over a point its label is displayed, and if the point is
+selected a tooltip with the whole information is deployed.
 
 #+INDEX: Packages!mapview@\texttt{mapview}
 #+INDEX: Subjects!Tooltip
 
 #+begin_src R
-library(mapview)
+library("mapview")
 
-pal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(100)
+pal <- colorRampPalette(c("springgreen1", "sienna3", "gray5"))
 
 mapview(NO2sp,
         zcol = "mean", ## Variable to display
@@ -653,7 +645,7 @@ mapview(NO2sp,
 #+end_src
 
 #+CAPTION: Snapshot of the interactive graphic produced with =mapview= depicting the annual average of $NO_2$ measurements in Madrid. label:fig:mapview_bubble_simple
-[[file:figs/mapview_simple.png]]
+[[file:figs/Spatial/mapview_simple.png]]
 
 *** Tooltips with images and graphs
 #+begin_src R :exports none
@@ -677,20 +669,22 @@ selected with the argument =map.type=.
 #+INDEX: Subjects!Background map
 
 #+begin_src R
-img <- paste('images/', NO2sp$codEst, '.jpg', sep = '')
+library("leafpop")
+
+img <- paste("images/Spatial/", NO2sp$codEst, ".jpg", sep = "")
 
 mapview(NO2sp,
         zcol = "mean",
         cex = "mean",
         col.regions = pal, 
         label = NO2sp$Nombre,
-        popup = popupImage(img, src = "local"),
+        popup = popupImage(img, src = "local", embed = TRUE),
         map.type = "Esri.WorldImagery",
         legend = TRUE)
 #+end_src
 
 #+CAPTION: Snapshot of the interactive graphic produced with =mapview= with tooltips including images. label:fig:mapview_popup_images
-[[file:figs/mapview_popup_images.png]]
+[[file:figs/Spatial/mapview_popup_images.png]]
 
 
 A more sophisticated solution displays a scatterplot when a tooltip is
@@ -704,12 +698,12 @@ along the time period.
 
 #+begin_src R
 ## Read the time series
-airQuality <- read.csv2('data/airQuality.csv')
+airQuality <- read.csv2("data/Spatial/airQuality.csv")
 ## We need only NO2 data (codParam 8)
 NO2 <- subset(airQuality, codParam == 8)
 ## Time index in a new column
 NO2$tt <- with(NO2,
-               as.Date(paste(year, month, day, sep = '-')))
+               as.Date(paste(year, month, day, sep = "-")))
 ## Stations code
 stations <- unique(NO2$codEst)
 ## Loop to create a scatterplot for each station.
@@ -717,8 +711,8 @@ pList <- lapply(stations,
                 function(i)
                     xyplot(dat ~ tt, data = NO2,
                            subset = (codEst == i),
-                           type = 'l',
-                           xlab = '', ylab = '')
+                           type = "l",
+                           xlab = "", ylab = "")
                 )
 #+end_src
 
@@ -739,7 +733,7 @@ mapview(NO2sp,
 #+end_src
 
 #+CAPTION: Snapshot of the interactive graphic produced with =mapview= with tooltips including time series graphics. label:fig:mapview_popup_graphs
-[[file:figs/mapview_popup_graphs.png]]
+[[file:figs/Spatial/mapview_popup_graphs.png]]
 
 
 
@@ -766,27 +760,32 @@ ref:fig:mapview_sync):
 #+INDEX: Subjects!Background map
 
 #+begin_src R
+library("leafsync")
+
 ## Map of the average value
 mapMean <- mapview(NO2sp, zcol = "mean", cex = "mean",
                    col.regions = pal, legend = TRUE,
                    map.types = "OpenStreetMap.Mapnik",
                    label = NO2sp$Nombre)
+
 ## Map of the median
 mapMedian <- mapview(NO2sp, zcol = "median", cex = "median",
                      col.regions = pal, legend = TRUE,
-                     map.type = "Stamen.Watercolor",
+                     #map.type = "NASAGIBS.ViirsEarthAtNight",
                      label = NO2sp$Nombre)
+
 ## Map of the standard deviation
 mapSD <- mapview(NO2sp, zcol = "sd", cex = "sd",
                  col.regions = pal, legend = TRUE,
                  map.type = "Esri.WorldImagery",
                  label = NO2sp$Nombre)
+
 ## All together
 sync(mapMean, mapMedian, mapSD, ncol = 3)
 #+end_src
 
 #+CAPTION: Snapshot of multiple interactive graphics produced with =mapview=. label:fig:mapview_sync
-[[file:figs/mapview_sync.png]]
+[[file:figs/Spatial/mapview_sync.png]]
 
 
 ** Export to Other Formats
@@ -804,27 +803,25 @@ Markup Language (KML) files imported in Google Earth\texttrademark.
 #+end_src
 GeoJSON is an open computer file format for encoding collections of
 simple geographical features along with their nonspatial attributes
-using JavaScript Object Notation (JSON). These files can be easily
-rendered within GitHub repositories. GitHub uses Leaflet[fn:4] to
-represent the data and MapBox[fn:2] with OpenStreetMap[fn:10] for the
-underlying map data. Our =SpatialPointsDataFrame= can be converted to
-a GeoJSON file with =writeOGR= from the =rgdal= package.
-
-#+INDEX: Packages!rgdal@\texttt{rgdal}
+using JavaScript Object Notation (JSON). The =sf= package can produce
+GeoJSON files with the =st_write= function.
+#+INDEX: Packages!sf@\texttt{sf}
 #+INDEX: Subjects!GeoJSON
 #+INDEX: Subjects!KML
 
 #+begin_src R :eval no-export
-library(rgdal)
-writeOGR(NO2sp, 'data/NO2.geojson', 'NO2sp', driver = 'GeoJSON')
+st_write(NO2sf,
+         dsn = "data/Spatial/NO2.geojson",
+         layer = "NO2sp",
+         driver = "GeoJSON")
 #+end_src
 
 Figure ref:fig:geojson shows a snapshot of the rendering of this
-GeoJSON file, available from the GitHub repository. There you can zoom
-on the map and click on the stations to display the data.
+GeoJSON file using the geojson.io[fn:2] service. You can zoom on the
+map and click on the stations to display the data.
 
-#+CAPTION: label:fig:geojson $NO_2$ data in a GeoJSON file rendered within the GitHub repository.
-file:figs/geojson.png
+#+CAPTION: label:fig:geojson $NO_2$ data in a GeoJSON file rendered with the geojson.io service.
+file:figs/Spatial/geojson.png
 
 
 *** Keyhole Markup Language
@@ -843,32 +840,21 @@ in 2008. Google Earth was the first program able to view and
 graphically edit KML files, although Marble, an open-source project,
 also offers KML support.
 
-#+INDEX: Packages!rgdal@\texttt{rgdal}
-#+INDEX: Packages!plotKML@\texttt{plotKML}
+#+INDEX: Packages!sf@\texttt{sf}
 #+INDEX: Subjects!KML
 
 There are several packages able to generate KML files. For example,
-the =writeOGR= function from the =rgdal= package can also write KML
+the =st_write= function from the =sf= package can also write KML
 files:
 
 #+begin_src R :eval no-export
-library(rgdal)
-writeOGR(NO2sp,
-         dsn = 'NO2_mean.kml',
-         layer = 'mean',
-         driver = 'KML')
+st_write(NO2sf,
+         dsn = "data/Spatial/NO2_mean.kml",
+         layer = "mean",
+         driver = "KML")
 #+end_src
 
-However, the =plotKML= package provides a simpler interface and
-includes a wide set of options:
-
-#+begin_src R :eval no-export
-library(plotKML)
-plotKML(NO2sp["mean"], points_names = NO2sp$codEst)
-#+end_src
-
-Both functions produce a file that can be directly opened with Google
-Earth or Marble.
+This file that can be directly opened with Google Earth or Marble.
 
 ** 3D visualization
 #+begin_src R :exports none
@@ -886,7 +872,7 @@ zoom the figure. This solution is available thanks to the =rgl=
 package, which provides functions for 3D interactive graphics.
 
 #+begin_src R
-library(rgl)
+library("rgl")
 #+end_src
 
 Previously, the =SpatialPointsDataFrame= object must be converted to a
@@ -904,7 +890,7 @@ depends on the mean value of the depicted variable.
 
 #+begin_src R
 ## Color of each point according to its class
-airPal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(5)
+airPal <- colorRampPalette(c("springgreen1", "sienna3", "gray5"))(5)
 colorClasses <- airPal[NO2df$classNO2]
 #+end_src
 
@@ -915,27 +901,26 @@ ref:fig:rgl_bubble.
 plot3d(x = NO2df$coords.x1, 
        y = NO2df$coords.x2,
        z = NO2df$alt, 
-       xlab = 'Longitude', 
-       ylab = 'Latitude', 
-       zlab = 'Altitude', 
-       type = 's', 
+       xlab = "Longitude", 
+       ylab = "Latitude", 
+       zlab = "Altitude", 
+       type = "s", 
        col = colorClasses,
        radius = NO2df$mean/10)
 #+end_src
 
 #+CAPTION: Snapshot of the interactive graphic produced with =rgl=. label:fig:rgl_bubble
-[[file:figs/rgl_bubble.png]]
+[[file:figs/Spatial/rgl_bubble.png]]
 
 
 * Footnotes
 
+[fn:4] More details available in https://wiki.openstreetmap.org/wiki/Key:highway.  
+[fn:2] https://geojson.io/ 
+
 [fn:12] The package =mapview= is able to work both with =sp= and =sf= objects. In this section the code works with =sp= objects, but would work without modification with =sf= objects.
 
 [fn:11] The list of provider is available in http://leaflet-extras.github.io/leaflet-providers/preview/
-
-[fn:10] https://www.openstreetmap.org/
-
-[fn:4] [[http://leafletjs.com/]]
 
 [fn:9] Do not confuse a =raster= object with the =Raster*= objects of the =raster= package.
 
@@ -943,12 +928,10 @@ plot3d(x = NO2df$coords.x1,
 
 [fn:5] This classification method will be used in section ref:sec:quantitative_choropleth with a choropleth map.
 
-[fn:1] [[http://www.madrid.org/nomecalles/]]
+[fn:1] https://gestiona.comunidad.madrid/nomecalles_web/
 
 [fn:8] [[http://jquery.com/]]
 
 [fn:6] [[http://jqueryui.com/]]
-
-[fn:2] [[http://www.mapbox.com/]]
 
 [fn:3] [[http://www.openstreetmap.org/]]
