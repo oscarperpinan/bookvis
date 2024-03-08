@@ -421,8 +421,6 @@ writeOGR(spMapVotes0, dsn = 'data/', layer = 'spMapVotes0',
          drive = 'ESRI Shapefile')
 #+end_src
 
-\nomenclature{shapefile}{A spatial data format. It stores geometry and attribute information for the spatial features in a data set.}
-
 Finally, Spanish maps are commonly displayed with the Canarian islands next
 to the peninsula. First we have to extract the polygons of the
 islands and the polygons of the peninsula, and then shift the

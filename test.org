@@ -47,7 +47,7 @@ label:cha:bubble
 
 #+INCLUDE: "Spatial/bubble.tex" src latex
 
-** COMMENT Thematic Maps: Choropleth Maps
+** Thematic Maps: Choropleth Maps
 label:cha:choropleth
 
 #+INCLUDE: "Spatial/choropleth.tex" src latex

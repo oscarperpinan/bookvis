@@ -1,9 +1,8 @@
 #+PROPERTY:  header-args :session *R* :tangle ../docs/R/choropleth.R :eval no-export
 #+OPTIONS: ^:nil
-#+BIND: org-latex-image-default-height  "0.45\\textheight"
 
 #+begin_src R :exports none :tangle no
-setwd('~/github/bookvis/')
+setwd("~/github/bookvis/")
 #+end_src
 
 
@@ -20,7 +19,7 @@ library("ggplot2")
 ## `layer` function.
 library("latticeExtra")
 
-source('configLattice.R')
+source("configLattice.R")
 ##################################################################
 #+end_src
 
@@ -29,19 +28,19 @@ source('configLattice.R')
 
 This chapter details how to create choropleth maps depicting the
 results of the 2016 Spanish general elections. The section
-ref:sec:dataChoropleth describes how to define a
-=SpatialPolygonsDataFrame= combining the data from a =data.frame= and
-the spatial information of the administrative boundaries from a
-shapefile[fn:8]. 
+ref:sec:dataChoropleth describes how to define a shapefile[fn:8]
+combining the data from a =data.frame= and the spatial information of
+the administrative boundaries.
+
+\nomenclature{shapefile}{A geospatial vector data format developed by Esri that can store vector features (points, lines, and polygons), and with attributes that describe these features (name of the location, temperature, etc.).
 
 As exposed in Chapter ref:cha:bubble, two alternatives are available: 
 
-1. Import the data with the =rgdal= package and the function
-   =readOGR=, and display the information with the =sp= package and
-   the =spplot= function (based on =lattice= graphics).
-2. Import the data with the =sf= package and the function =st_read=,
-   and display the information with the =ggplot2= package and the
-   =geom_sf= function.
+1. The =sp= package and the =spplot= function (based on =lattice= graphics).
+2. The =sf= package and the =geom_sf= function (based on =ggplot2= graphics).
+
+In both cases, the data is imported with the =sf= package and its
+function =st_read=, returning an object of class =sf=.
 
 ** Read Data
 
@@ -51,85 +50,50 @@ As exposed in Chapter ref:cha:bubble, two alternatives are available:
 ##################################################################
 #+end_src
 
-The =sp= approach reads the files with =readOGR= to produce
-=SpatialPolygonsDataFrame= object. Because the coordinate reference
-system[fn:4] is not stored in the files, it must be set with the =p4s=
-argument.
+The shapefile is read with the =st_read= to produce a =sf=
+object. Because the coordinate reference system[fn:4] is not stored in
+the files, it must be set with the =crs= argument.
 
 #+INDEX: Data!INE
 #+INDEX: Data!Spanish General Elections
-
-#+begin_src R 
-## sp approach
-library("sp")
-library("rgdal")
-
-spMapVotes <- readOGR("data/spMapVotes.shp", 
-                      p4s = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs")
-#+end_src
-
-This =SpatialPolygonsDataFrame= contains two main variables:
-=whichMax=, the name of the predominant political option, and =pcMax=,
-the percentage of votes obtained by this political option.
-
-#+begin_src R :results output :exports results :tangle no
-summary(spMapVotes)
-#+end_src
-
-#+ATTR_LATEX: :environment results
-#+RESULTS:
-#+begin_example
-Object of class SpatialPolygonsDataFrame
-Coordinates:
-      min     max
-x  -13952 1127057
-y 3903525 4859444
-Is projected: TRUE 
-proj4string :
-[+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs]
-Data attributes:
-    PROVMUN     whichMax         Max               pcMax      
- 01001  :   1   ABS :2812   Min.   :     2.0   Min.   :21.33  
- 01002  :   1   C.s :   3   1st Qu.:    54.0   1st Qu.:31.68  
- 01003  :   1   OTH : 170   Median :   162.0   Median :35.64  
- 01004  :   1   PP  :4212   Mean   :  1395.9   Mean   :37.58  
- 01006  :   1   PSOE: 776   3rd Qu.:   636.5   3rd Qu.:41.27  
- 01008  :   1   UP  : 137   Max.   :696804.0   Max.   :94.74  
- (Other):8104
-#+end_example
-
-The =sf= approach reads the files with =st_read=, and sets the coordinate reference system with =st_crs=, using directly the EPSG code[fn:6].
-
 #+INDEX: Packages!sf@\texttt{sf}
 
-#+begin_src R
-## sf approach
+#+begin_src R 
 library("sf")
 
-sfMapVotes <- st_read("data/spMapVotes.shp")
-st_crs(sfMapVotes) <- 25830
+sfMapVotes <- st_read("data/Spatial/spMapVotes.shp", 
+                      crs = 25830)
 #+end_src
 
+This =object= contains two main variables: =whichMax=, the name of the
+predominant political option, and =pcMax=, the percentage of votes
+obtained by this political option.
+
 #+begin_src R :results output :exports results :tangle no
+sfMapVotes$whichMax <- factor(sfMapVotes$whichMax)
+
 summary(sfMapVotes)
 #+end_src
 
 #+ATTR_LATEX: :environment results
 #+RESULTS:
 #+begin_example
-     SP_ID         PROVMUN     whichMax         Max               pcMax      
- 01001  :   1   01001  :   1   ABS :2812   Min.   :     2.0   Min.   :21.33  
- 01002  :   1   01002  :   1   C.s :   3   1st Qu.:    54.0   1st Qu.:31.68  
- 01003  :   1   01003  :   1   OTH : 170   Median :   162.0   Median :35.64  
- 01004  :   1   01004  :   1   PP  :4212   Mean   :  1395.9   Mean   :37.58  
- 01006  :   1   01006  :   1   PSOE: 776   3rd Qu.:   636.5   3rd Qu.:41.27  
- 01008  :   1   01008  :   1   UP  : 137   Max.   :696804.0   Max.   :94.74  
- (Other):8104   (Other):8104                                                 
-          geometry   
- MULTIPOLYGON :8110  
- epsg:25830   :   0  
- +proj=utm ...:   0
+    SP_ID             PROVMUN            whichMax              Max          
+ Length:8110        Length:8110        Length:8110        Min.   :     2.0  
+ Class :character   Class :character   Class :character   1st Qu.:    54.0  
+ Mode  :character   Mode  :character   Mode  :character   Median :   162.0  
+                                                          Mean   :  1395.9  
+                                                          3rd Qu.:   636.5  
+                                                          Max.   :696804.0  
+     pcMax                geometry   
+ Min.   :21.33   MULTIPOLYGON :8110  
+ 1st Qu.:31.68   epsg:25830   :   0  
+ Median :35.64   +proj=utm ...:   0  
+ Mean   :37.58                       
+ 3rd Qu.:41.27                       
+ Max.   :94.74
 #+end_example
+
 
 ** Province Boundaries
 #+begin_src R :exports none  
@@ -140,25 +104,11 @@ summary(sfMapVotes)
 
 As a visual aid, the subsequent maps will be produced with the
 province boundaries superposed. These boundaries are encoded in the
-=spain_provinces= shapefile. The =spplot= function that will generate
-the maps, offers the argument =sp.layout= to add additional layers to
-the map[fn:2]. This argument should be a list: its first element is the
-function to display the layer, the second element is the object to be
-represented, and the rest of elements are arguments to the function
-defined in the first element.
+=spain_provinces= shapefile. 
 
 #+begin_src R
-## sp
-provinces <- readOGR("data/spain_provinces.shp",
-                     p4s = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs")
-
-provinceLines <- list("sp.polygons", provinces, lwd = 0.1)
-#+end_src
-
-#+begin_src R
-## sf
-sfProvs <- st_read("data/spain_provinces.shp")
-st_crs(sfProvs) <- 25830
+sfProvs <- st_read("data/Spatial/spain_provinces.shp",
+                   crs = 25830)
 #+end_src
 
 #+RESULTS:
@@ -205,6 +155,37 @@ Figure ref:fig:pcMaxUC is an unclassed choropleth depicting the
 =pcMax= variable. It uses a palette created by interpolation with the
 =colorRampPalette= function.
  
+#+begin_src R :results output graphics :exports both :file figs/Spatial/pcMaxUC.pdf
+ggplot(sfMapVotes) +
+  ## Display the pcMax variable...
+  geom_sf(aes(fill = pcMax),
+          ## without drawing municipality boundaries
+          color = "transparent") +
+  scale_fill_gradientn(colours = quantPal) +
+  ## And overlay provinces boundaries
+  geom_sf(data = sfProvs,
+          fill = 'transparent',
+          ## but do not include them in the legend
+          show.legend = FALSE) +
+  theme_bw()
+#+end_src
+#+CAPTION: Quantitative choropleth map displaying the percentage of votes obtained by the predominant political option in each municipality in the 2016 Spanish general elections using a continuous color ramp (unclassed choropleth). label:fig:pcMaxUC
+#+RESULTS:
+[[file:figs/Spatial/pcMaxUC.pdf]]
+
+The =spplot= version requires a conversion from =sf= to a
+=SpatialPolygonsDataFrame= class with =as=.
+#+begin_src R
+library(sp)
+
+spMapVotes <- as(sfMapVotes, "Spatial")
+spProvs <- as(sfProvs, "Spatial")
+#+end_src
+
+The =spMapVotes= object is displayed with =spplot= and the province
+boundaries are superimposed with the argument =sp.layout= (see section
+ref:sec:bubbles_osm for details).
+
 #+begin_src R
 ## Number of cuts
 ucN <- 1000
@@ -212,20 +193,26 @@ ucN <- 1000
 ucQuantPal <- colorRampPalette(quantPal)(ucN)
 #+end_src
 
-#+begin_src R :results output graphics :exports both :file figs/pcMaxUC.pdf
-## The polygons boundaries are not displayed thanks to col = 'transparent' 
+#+begin_src R
+## Province boundaries
+provinceLines <- list("sp.polygons",
+                      spProvs,
+                      lwd = 0.1,
+                      # draw the lines after the data
+                      first = FALSE)
+#+end_src
+
+#+begin_src R :eval no-export
+## Main plot
 spplot(spMapVotes["pcMax"],
        col.regions = ucQuantPal,
        cuts = ucN,
        ## Do not draw municipality boundaries
-       col = 'transparent',
+       col = "transparent",
        ## Overlay province boundaries
        sp.layout = provinceLines)    
 #+end_src
 
-#+CAPTION: Quantitative choropleth map displaying the percentage of votes obtained by the predominant political option in each municipality in the 2016 Spanish general elections using a continuous color ramp (unclassed choropleth). label:fig:pcMaxUC
-#+RESULTS:
-[[file:figs/pcMaxUC.pdf]]
 
 ** Data Classification
 #+begin_src R :exports none  
@@ -241,7 +228,7 @@ political option. This result suggests to use data classification.
 
 #+INDEX: Subjects!Class Intervals
 
-#+begin_src R :results output graphics :exports both :file figs/densityChoropleth.pdf
+#+begin_src R :results output graphics :exports both :file figs/Spatial/densityChoropleth.pdf
 ggplot(as.data.frame(spMapVotes),
        aes(pcMax,
            fill = whichMax,
@@ -252,7 +239,7 @@ ggplot(as.data.frame(spMapVotes),
 
 #+CAPTION: Density estimation of the predominant political option in each municipality in the 2016 Spanish general elections grouping by the political option. label:fig:densityChoropleth
 #+RESULTS:
-[[file:figs/densityChoropleth.pdf]]
+[[file:figs/Spatial/densityChoropleth.pdf]]
 
 The number of data classes is the result of a compromise between
 information amount and map legibility. A general recommendation is to
@@ -277,30 +264,32 @@ will be assigned to the same class.
 library("classInt")
 
 ## Compute intervals with the same number of elements
-intQuant <- classIntervals(spMapVotes$pcMax,
+intQuant <- classIntervals(sfMapVotes$pcMax,
                            n = N, style = "quantile")
 ## Compute intervals with the natural breaks algorithm
-intFisher <- classIntervals(spMapVotes$pcMax,
+intFisher <- classIntervals(sfMapVotes$pcMax,
                             n = N, style = "fisher")
 #+end_src
 
 #+RESULTS:
 
-#+begin_src R :results output graphics :exports both :file figs/quantile_intervals.pdf
+#+begin_src R :results output graphics :exports both :file figs/Spatial/quantile_intervals.pdf
 plot(intQuant, pal = quantPal, main = "")
 #+end_src
 
-#+begin_src R :results output graphics :exports both :file figs/fisher_intervals.pdf
+#+begin_src R :results output graphics :exports both :file figs/Spatial/fisher_intervals.pdf
 plot(intFisher, pal = quantPal, main = "")
 #+end_src
 
 #+CAPTION: Quantile method for setting class intervals label:fig:quantile_intervals
 #+RESULTS:
-[[file:figs/quantile_intervals.pdf]]
+#+ATTR_LATEX: :height 0.4\textheight
+[[file:figs/Spatial/quantile_intervals.pdf]]
 
 #+CAPTION: Natural breaks method for setting class intervals label:fig:fisher_intervals
 #+RESULTS:
-[[file:figs/fisher_intervals.pdf]]
+#+ATTR_LATEX: :height 0.4\textheight
+[[file:figs/Spatial/fisher_intervals.pdf]]
 
 
 Figure ref:fig:pcMax is a classed choropleth with the natural breaks
@@ -308,41 +297,38 @@ classification. It is produced with =spplot= displaying a categorical
 variable created with the function =cut= and the breaks computed with
 =classIntervals=.
 
-#+begin_src R :results output graphics :exports both :file figs/pcMax.pdf
+#+begin_src R :results output graphics :exports both :file figs/Spatial/pcMax.pdf
 ## spplot solution
 
 ## Add a new categorical variable with cut, using the computed breaks
 spMapVotes$pcMaxInt <- cut(spMapVotes$pcMax,
-                            breaks = intFisher$brks)
+                           breaks = intFisher$brks,
+                           include.lowest = TRUE)
 
 spplot(spMapVotes["pcMaxInt"],
-       col = 'transparent',
+       col = "transparent",
        col.regions = quantPal,
        sp.layout = provinceLines)
 #+end_src
 
 #+CAPTION: Quantitative choropleth map displaying the percentage of votes obtained by the predominant political option in each municipality in the 2016 Spanish general elections using a classification (classed choropleth). label:fig:pcMax
 #+RESULTS:
-[[file:figs/pcMax.pdf]]
 
-
+The next code is the version of this figure with =ggplot2=:
 #+begin_src R
 ## sf and geom_sf
 sfMapVotes$pcMaxInt <- cut(sfMapVotes$pcMax,
-                           breaks = intFisher$brks)
+                           breaks = intFisher$brks,
+                           include.lowest = TRUE)
 
 ggplot(sfMapVotes) +
-    ## Display the pcMaxInt variable...
-    geom_sf(aes(fill = pcMaxInt),
-            ## without drawing municipality boundaries
-            color = "transparent") +
-    scale_fill_brewer(palette = "Oranges") +
-    ## And overlay provinces boundaries
-    geom_sf(data = sfProvs,
-            fill = 'transparent',
-            ## but do not include them in the legend
-            show.legend = FALSE) +
-    theme_bw()
+  geom_sf(aes(fill = pcMaxInt),
+          color = "transparent") +
+  scale_fill_brewer(palette = "Oranges") +
+  geom_sf(data = sfProvs,
+          fill = "transparent",
+          show.legend = FALSE) +
+  theme_bw()
 #+end_src
 
 
@@ -358,6 +344,8 @@ the main parties (=PP=, =PSOE=, =UP=, =Cs=), the abstention results
 (=ABS=), and the rest of the parties (=OTH=). 
 
 #+begin_src R :results output :exports results :tangle no
+spMapVotes$whichMax <- factor(spMapVotes$whichMax)
+
 summary(spMapVotes$whichMax)
 #+end_src
 
@@ -371,13 +359,13 @@ Figure ref:fig:whichMax encodes these levels with a qualitative palette from Col
 #+INDEX: Subjects!Qualitative palette
 
 #+begin_src R 
-classes <- levels(factor(spMapVotes$whichMax))
+classes <- levels(spMapVotes$whichMax)
 nClasses <- length(classes)
 
 qualPal <- brewer.pal(nClasses, "Dark2")
 #+end_src
 
-#+begin_src R :results output graphics :exports both :file figs/whichMax.pdf
+#+begin_src R :results output graphics :exports both :file figs/Spatial/whichMax.pdf
 ## spplot solution
 spplot(spMapVotes["whichMax"],
        col.regions = qualPal,
@@ -387,18 +375,19 @@ spplot(spMapVotes["whichMax"],
 
 #+CAPTION: Categorical choropleth map displaying the name of the predominant political option in each municipality in the 2016 Spanish general elections. label:fig:whichMax
 #+RESULTS:
-[[file:figs/whichMax.pdf]]
+[[file:figs/Spatial/whichMax.pdf]]
 
+The next code is the version of this figure with =ggplot2=:
 #+begin_src R
 ## geom_sf solution
 ggplot(sfMapVotes) +
-    geom_sf(aes(fill = whichMax),
-            color = "transparent") +
-    scale_fill_brewer(palette = 'Dark2') +
-    geom_sf(data = sfProvs,
-            fill = 'transparent',
-            show.legend = FALSE) +
-    theme_bw()
+  geom_sf(aes(fill = whichMax),
+          color = "transparent") +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_sf(data = sfProvs,
+          fill = "transparent",
+          show.legend = FALSE) +
+  theme_bw()
 #+end_src
 
 * Small Multiples with Choropleth Maps
@@ -421,23 +410,24 @@ function. The result is displayed in Figure ref:fig:pcMax_panels.
 
 #+INDEX: Subjects!Small multiples
 
-#+begin_src R :results output graphics :exports both :file figs/pcMax_panels.pdf
+#+begin_src R :results output graphics :exports both :file figs/Spatial/pcMax_panels.pdf
 ggplot(sfMapVotes) +
-    geom_sf(aes(fill = pcMaxInt),
-            color = "transparent") +
-    ## Define the faceting using two rows
-    facet_wrap(~whichMax, nrow = 2) +
-    scale_fill_brewer(palette = "Oranges") +
-    geom_sf(data = sfProvs,
-            fill = 'transparent',
-            size = 0.1,
-            show.legend = FALSE) +
-    theme_bw()
+  geom_sf(aes(fill = pcMaxInt),
+          color = "transparent") +
+  ## Define the faceting using two rows
+  facet_wrap(~whichMax, nrow = 2) +
+  scale_fill_brewer(palette = "Oranges") +
+  geom_sf(data = sfProvs,
+          fill = "transparent",
+          size = 0.1,
+          show.legend = FALSE) +
+  theme_bw()
 #+end_src
+
 
 #+CAPTION: Small multiple choropleth maps of the Spanish general elections results. Each map shows the results of a political option in each municipality. label:fig:pcMax_panels
 #+RESULTS:
-[[file:figs/pcMax_panels.pdf]]
+[[file:figs/Spatial/pcMax_panels.pdf]]
 
 * Bivariate Map
 label:sec:multiChoropleth
@@ -447,71 +437,153 @@ label:sec:multiChoropleth
 ##################################################################
 #+end_src
 
-Following the inspiring example of the infographic from the /New York
-Times/, we will combine the choropleth maps of both variables to
-produce a bivariate map[fn:7]: the hue of each polygon will be determined
-by the name of the predominant option (=whichMax=) but the
-transparency will vary according to the percentage of votes (=pcMax=).
+Following the inspiring example of the infographic titled "Immigration
+Explorer" published by the /New York Times/[fn:2], we will combine the
+choropleth maps of both variables to produce a bivariate map[fn:7]:
+the hue of each polygon will be determined by the name of the
+predominant option (=whichMax=) but the transparency will vary
+according to the percentage of votes (=pcMax=).
 
-In previous sections, we use six intervals to represent the quantitative
-variable =pcMax=. However, in this case we must reduce this number: in
-order to improve the map legibility, each ramp has only three
-steps. Thus, the bivariate legend will be composed of eighteen colors.
+In previous sections, we use six intervals to represent the
+quantitative variable =pcMax=. However, in this case we must reduce
+this number: in order to improve the map legibility, each ramp has
+only four steps.
 
-Next code creates a bidimensional palette with a loop that produces a
-color ramp for each member of the qualitative palette. Each ramp
-begins in the original color of the palette, and ends in a lighter
-color with its transparency fixed to 40%. 
+Moreover, the qualitative variable =whichMax= will also be reduced,
+also from six to 4, grouping the political parties into political
+options: 
+
+#+begin_src R
+## PP and Cs -> Right
+## PSOE and UP -> Left
+levels(sfMapVotes$whichMax) <-
+  c("ABS", "Right", "OTH", "Right", "Left", "Left")
+#+end_src
+
+Next code creates a bidimensional palette joining four different
+sequential palettes (one for each level of =whichMax=) with four
+steps. Thus, the bivariate legend will be composed of sixteen colors.
 
 #+INDEX: Subjects!Sequential palette
 #+INDEX: Subjects!Qualitative palette
 
-
 #+begin_src R
-## Number of intervals.
-N <- 3
-## Loop to create a bidimensional palette
-multiPal <- sapply(1:nClasses, function(i)
-{
-    colorAlpha <- adjustcolor(qualPal[i], alpha = 0.4)
-    colorRampPalette(c(qualPal[i], colorAlpha), alpha = TRUE)(N)
-})
+## Number of steps.
+Nint <- 4
+## ABS - Greys, Right - Blues, OTH - Greens, Left - Reds
+multiPal <- lapply(c("Greys", "Blues", "Greens", "Reds"),
+                   function(pal) brewer.pal(Nint, pal))
+multiPal <- do.call(rbind, multiPal)
 #+end_src
 
+
+The =biscale= package contains functions for bivariate mapping with
+=ggplot2=. First, the function =bi_class= returns a =sf= object with a
+new column, =bi_class=, defining the class of each element according
+to the value of =whicMax= and =pcMax=.
+#+begin_src R
+library(biscale)
+
+
+sfClass <- bi_class(sfMapVotes,
+               x = whichMax,
+               y = pcMax,
+               style = "fisher",
+               dim = 4)
+#+end_src
+
+The next step is to create the legend with =bi_legend=. This function
+requires a bivariate palette as a named vector. The next code
+transforms the previous =multiPal= matrix into a vector, adds the
+required names, and produces the legend.
+#+begin_src R
+bipal <- c(multiPal)
+
+nms <- outer(1:4, 1:4, paste, sep = "-")
+names(bipal) <- c(nms)
+
+bilegend <- bi_legend(pal = bipal,
+                      dim = 4,
+                      xlab = "ABS-Right-OTH-Left",
+                      ylab = "% of votes ",
+                      size = 8)
+#+end_src
+
+Finally, the bivariate map is created with =geom_sf= combined with
+=bi_scale_fill=, both of them fed with the last results, =sfClass= and
+=bipal=. However, the legend cannot be added directly.
+#+begin_src R
+bimap <- ggplot() +
+  geom_sf(data = sfClass,
+          aes(fill = bi_class),
+          color = "white",
+          size = 0.1,
+          show.legend = FALSE) +
+  bi_scale_fill(pal = bipal, dim = 4) +
+  bi_theme()
+#+end_src
+
+The complete map is produced with the package =cowplot= and its
+functions =ggdraw= and =draw_plot=. This function displays the map
+(=bimap=) and the legend (=bilegend=) in their respective
+locations. Figure ref:fig:mapLegends displays the result.
+
+#+begin_src R :results output graphics :exports both :file figs/Spatial/mapLegends.pdf
+library(cowplot)
+
+ggdraw() +
+  draw_plot(bimap, 0, 0, 1, 1) +
+  draw_plot(bilegend, 0.05, 0.1,
+            width = 0.2, height = 0.2)
+#+end_src
+
+#+CAPTION: Bidimensional choropleth map of the Spanish general elections results. The map shows the result of the most voted option in each municipality. label:fig:mapLegends
+#+RESULTS:
+[[file:figs/Spatial/mapLegends.pdf]]
+
+There is no package for the =spplot= approach, so the solution must be
+built step by step. First, the classes are defined with
+=classIntervals= and =cut=:
 #+INDEX: Subjects!Class Intervals
 #+INDEX: Packages!classInt@\texttt{classInt}
 
 #+begin_src R
 ## Define the intervals
 intFisher <- classIntervals(spMapVotes$pcMax,
-                            n = N, style = "fisher")
+                            n = Nint, style = "fisher")
 ## ... and create a categorical variable with them
 spMapVotes$pcMaxInt <- cut(spMapVotes$pcMax,
-                            breaks = intFisher$brks)
+                           breaks = intFisher$brks)
 #+end_src
 
-With this multivariate palette we can produce a list of maps
-extracting the polygons according to each class of the qualitative
-variable, and filling with the appropiate color from this palette. The
-resulting list of =trellis= objects can be combined with =Reduce= and
-the =+.trellis= function of the =latticeExtra= and produce a =trellis=
-object.
+Then, we can produce a list of maps extracting the polygons according
+to each class of the qualitative variable, and filling with the
+appropriate color from the =multiPal= palette. The resulting list of
+=trellis= objects can be combined with =Reduce= and the =+.trellis=
+function of the =latticeExtra= and produce a =trellis= object.
 
-#+begin_src R 
-pList <- lapply(1:nClasses, function(i){
-    ## Only those polygons corresponding to a level are selected
-    mapClass <- subset(spMapVotes,
-                       whichMax == classes[i])
-    ## Palette
-    pal <- multiPal[, i]
-    ## Produce the graphic
-    pClass <- spplot(mapClass, "pcMaxInt",
-                     col.regions = pal,
-                     col = 'transparent',
-		     colorkey = FALSE)
+#+begin_src R :eval no-export
+levels(spMapVotes$whichMax) <-
+  c("ABS", "Right", "OTH", "Right", "Left", "Left")
+
+classes <- levels(spMapVotes$whichMax)
+nClasses <- length(classes)
+
+pList <- lapply(1:nClasses, function(i)
+{
+  ## Only those polygons corresponding to a level are selected
+  mapClass <- subset(spMapVotes,
+                     whichMax == classes[i])
+  ## Palette
+  pal <- multiPal[i, ]
+  ## Produce the graphic
+  pClass <- spplot(mapClass, "pcMaxInt",
+                   col.regions = pal,
+                   col = "transparent",
+                   colorkey = FALSE)
 })
 names(pList) <- classes
-p <- Reduce('+', pList)
+p <- Reduce("+", pList)
 #+end_src
 
 #+begin_src R :exports none
@@ -542,45 +614,40 @@ legend <- layer(
     h <- 100000
     ## Colors
     grid.raster(multiPal, interpolate = FALSE,                (ref:gridRaster)
-                      x = unit(x0, "native"),
-                      y = unit(y0, "native"),
+                x = unit(x0, "native"),
+                y = unit(y0, "native"),
                 width = unit(w, "native"),
                 height = unit(h, "native"))
-    ## x-axis (qualitative variable)
-    grid.text(classes,                                        (ref:gridTextX)
-              x = unit(seq(x0 - w * (nClasses -1)/(2*nClasses),
-                           x0 + w * (nClasses -1)/(2*nClasses),
-                           length = nClasses),
-                       "native"),
-              y = unit(y0 + h/2, "native"),
-              just = "bottom",
-              rot = 10,
-              gp = gpar(fontsize = 4))
-    ## y-axis (quantitative variable)
-    Ni <- length(intervals)
-    grid.text(intervals,                                      (ref:gridTextY)
-              x = unit(x0 + w/2, "native"),
-              y = unit(seq(y0 - h * (Ni -1)/(2*Ni),
-                           y0 + h * (Ni -1)/(2*Ni),
+    ## x-axis (quantitative variable)
+    Ni <- length(intervals)                                   (ref:gridTextX)
+    grid.text(intervals,                      
+              y = unit(y0 - 1.25 * h/2, "native"),
+              x = unit(seq(x0 - w * (Ni -1)/(2*Ni),
+                           x0 + w * (Ni -1)/(2*Ni),
                            length = Ni),
                        "native"),
+              just = "top",
+              rot = 45, 
+              gp = gpar(fontsize = 6))
+    ## y-axis (qualitative variable)
+    grid.text(classes,                                        (ref:gridTextY)                        
+              y = unit(seq(y0 + h * (nClasses -1)/(2*nClasses),
+                           y0 - h * (nClasses -1)/(2*nClasses),
+                           length = nClasses),
+                       "native"),
+              x = unit(x0 + w/2, "native"),
               just = "left",
               gp = gpar(fontsize = 6))
 })
+
 #+end_src
 
-#+RESULTS:
-
-Figure ref:fig:mapLegends displays the result.
-
-#+begin_src R :results output graphics :exports both :file figs/mapLegends.pdf
+Last step, the bivariate map and the legend are displayed together:
+#+begin_src R :eval no-export
 ## Main plot
 p + legend
 #+end_src
 
-#+CAPTION: Bidimensional choropleth map of the Spanish general elections results. The map shows the result of the most voted option in each municipality. label:fig:mapLegends
-#+RESULTS:
-[[file:figs/mapLegends.pdf]]
 
 * Interactive Graphics
 label:sec:interactive_choropleth
@@ -604,8 +671,8 @@ library("mapview")
 This package is able to work both with =sp= and with =sf=. In this section we use the =sf= package to read the data[fn:5]. 
 
 #+begin_src R
-sfMapVotes0 <- st_read("data/spMapVotes0.shp")
-st_crs(sfMapVotes0) <- 25830
+sfMapVotes0 <- st_read("data/Spatial/spMapVotes0.shp",
+                       crs = 25830)
 #+end_src
 
 Figures ref:fig:mapview_pcMax and ref:fig:mapview_whichMax show the snapshots of the interactive choropleth maps of =pcMax= and =whichMax=, respectively. These maps are produced with the next code.
@@ -619,7 +686,7 @@ mapView(sfMapVotes0,
 #+end_src
 
 #+CAPTION: Snapshot of the interactive quantitative choropleth map produced with =mapview=. label:fig:mapview_pcMax
-file:figs/mapview_pcMax.png
+file:figs/Spatial/mapview_pcMax.png
 
 #+begin_src R
 ## Qualitative variable, whichMax
@@ -630,28 +697,21 @@ mapView(sfMapVotes0,
 #+end_src
 
 #+CAPTION: Snapshot of the interactive qualitative choropleth map produced with =mapview=. label:fig:mapview_whichMax
-file:figs/mapview_whichMax.png
+file:figs/Spatial/mapview_whichMax.png
 
 * Footnotes
+[fn:2] Available at https://archive.nytimes.com/www.nytimes.com/interactive/2009/03/10/us/20090310-immigration-explorer.html. 
 
-[fn:8] The result is stored in the =data= folder, in a set of files
-named =spMapVotes.*=. You can visit it for details if you are
-interested in this procedure.
+[fn:8] The shapefile format is a geospatial vector data format developed by Esri that can store vector features (points, lines, and polygons), and with attributes that describe these features (name of the location, temperature, etc.).
 
 [fn:7] Although bivariate maps are generally used to display the relationship between two variables, they can also be used to display one variable and its uncertainty. More information about visualizing uncertainty with maps can be found in cite:Lucchesi.Wikle2017 and the package =VizU= (https://github.com/pkuhnert/VizU).
 
-[fn:6] http://spatialreference.org/ref/epsg/etrs89-utm-zone-30n/
-
 [fn:5] In previous sections the spatial object included a modification to the original shapefile in order to display the Canarian islands in the right bottom corner of the maps. This modification is not needed with =mapview=, so =st_read= imports the shapefile =spMapVotes0= (Section ref:sec:dataChoropleth).
 
-[fn:4] The EPSG projection of the data is 25830, whose Proj4 definition is =+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs=. More information in http://spatialreference.org/ref/epsg/etrs89-utm-zone-30n/
-
-
-[fn:2] A similar result is obtained with the function =layer= of the =latticeExtra= package. The section ref:sec:quantitative_raster includes examples of this method.
+[fn:4] The EPSG projection of the data is 25830. More information in http://spatialreference.org/ref/epsg/etrs89-utm-zone-30n/.
 
 [fn:1] http://colorbrewer2.org
 
-[fn:3] http://www.nytimes.com/interactive/2009/03/10/us/20090310-immigration-explorer.html
 
 
 

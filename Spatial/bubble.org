@@ -322,6 +322,7 @@ in a shapefile (a format commonly used by public and private providers
 to distribute information).
 
 ** OpenStreetMap with =osmdata=
+label:sec:bubbles_osm
 #+begin_src R :exports none
 ##################################################################
 ## OpenStreetMap
