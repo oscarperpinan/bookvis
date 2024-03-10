@@ -447,7 +447,7 @@ label:part:Spatial
 *** Packages
   label:sec:spatial-packages
 
- The CRAN Tasks View "Analysis of Spatial Data" [fn:19] summarizes the packages for reading, vizualizing, and analyzing spatial data. This section provides a brief introduction to =sp=, =sf=, =raster=, =rasterVis=, =maptools=, =rgdal=, =gstat=, and =maps=. Most of the information has been extracted from their vignettes, webpages, and help pages. You should read them for detailed information.
+ The CRAN Tasks View "Analysis of Spatial Data" [fn:19] summarizes the packages for reading, vizualizing, and analyzing spatial data. This section provides a brief introduction to =sp=, =sf=, =raster=, =terra=, ==rasterVis=, =gstat=, and =maps=. Most of the information has been extracted from their vignettes, webpages, and help pages. You should read them for detailed information.
 
 **** sp
  label:sec:sp
@@ -479,7 +479,7 @@ label:part:Spatial
 
  -  =proj4string(object)= and =proj4string(object) <- value= retrieve or set projection attributes on spatial classes.
 
- -  =spTransform= transforms from one coordinate reference system (geographic projection) to another (requires package =rgdal=).
+ -  =spTransform= transforms from one coordinate reference system (geographic projection) to another.
 
  -  =spplot= plots attributes combined with spatial data: Points, lines, grids, polygons.
 
@@ -514,12 +514,12 @@ The =sf= package implements =plot= methods for displaying data using =base= grap
 
  The =raster= package cite:Hijmans2017 has functions for creating, reading, manipulating, and writing raster data. The package provides general raster data manipulation functions. The package also implements raster algebra and most functions for raster data manipulation that are common in Geographic Information Systems (GIS).
 
- The raster package can work with raster datasets stored on disk if they are too large to be loaded into memory. The package can work with large files because the objects it creates from these files only contain information about the structure of the data, such as the number of rows and columns, the spatial extent, and the filename, but it does not attempt to read all the cell values in memory. In computations with these objects, the data are processed in chunks.
+ The =raster= package can work with raster datasets stored on disk if they are too large to be loaded into memory. The package can work with large files because the objects it creates from these files only contain information about the structure of the data, such as the number of rows and columns, the spatial extent, and the filename, but it does not attempt to read all the cell values in memory. In computations with these objects, the data are processed in chunks.
 
  The package defines a number of =S4= classes. =RasterLayer=, =RasterBrick=, and =RasterStack= are the most important:
 
  -  A =RasterLayer= object represents single-layer (variable) raster
-    data. It can be created with the function =raster=. This function is able to create a =RasterLayer= from another object, including another =Raster*= object[fn:36], or from a =SpatialPixels*= and =SpatialGrid*= object, or even a matrix. In addition, it can create a =RasterLayer= reading data from a file. The =raster= package can use raster files in several formats, some of them via the =rgdal= package. Supported formats for reading include GeoTIFF, ESRI, ENVI, and ERDAS.
+    data. It can be created with the function =raster=. This function is able to create a =RasterLayer= from another object, including another =Raster*= object[fn:36], or from a =SpatialPixels*= and =SpatialGrid*= object, or even a matrix. In addition, it can create a =RasterLayer= reading data from a file. The =raster= package can use raster files in several formats. Supported formats for reading include GeoTIFF, ESRI, ENVI, and ERDAS.
 
 \nomenclature{RasterLayer}{A class to represent single-layer (variable) raster data.}
 
@@ -550,6 +550,11 @@ The =sf= package implements =plot= methods for displaying data using =base= grap
 
  -  =zonal= computes zonal statistics, that is, summarizes a =Raster*= object using zones (areas with the same integer number) defined by another =RasterLayer=.
 
+**** terra
+ label:sec:terra
+
+#+INDEX: Packages!terra@\texttt{terra}
+
 **** rasterVis
  label:sec:rasterVis
 #+INDEX: Packages!rasterVis@\texttt{rasterVis}
@@ -560,25 +565,6 @@ The =sf= package implements =plot= methods for displaying data using =base= grap
 
  On the other hand, this package is able to display vector fields using arrows, =vectorplot=, or with streamlines cite:Wegenkittl.Groeller1997, =streamplot=. In this last method, for each point, /droplet/, of a jittered regular grid, a short streamline portion, /streamlet/, is calculated by integrating the underlying vector field at that point. The main color of each streamlet indicates local vector magnitude (slope). Streamlets are composed of points whose sizes, positions, and color degradation encode the local vector direction (aspect).
 
-**** rgdal
- label:sec:rgdal
-#+INDEX: Packages!rgdal@\texttt{rgdal}
-
- The =rgdal= package cite:Bivand.Keitt.ea2017 provides bindings to the Geospatial Data Abstraction Library (GDAL) [fn:21]. With =readOGR= and =readGDAL=, both GDAL raster and OGR vector map data can be imported into =R=, and GDAL raster data and OGR vector data can be exported with =writeGDAL= and =writeOGR=.
-
- In addition, this package provides access to projection and transformation operations from the PROJ.4 library [fn:22]. This package implements several =spTransform= methods providing transformation between datums and conversion between projections using PROJ.4 projection arguments.
-
-**** maptools
- label:sec:maptools
-#+INDEX: Packages!maptools@\texttt{maptools}
-
- The =maptools= package cite:Bivand.Lewin-Koh2017 provides a set of tools for manipulating geographic data. The package also provides interface wrappers for exchanging spatial objects with packages such as PBSmapping, spatstat, maps, RArcInfo, Stata tmap, WinBUGS, Mondrian, and others. The main functions in the context of this book are:
-
- -  =map2SpatialPolygons= and =map2SpatialLines= may be used to convert map objects returned by the =map= function in the =maps= package to the classes defined in the =sp= package.
-
- -  =spCbind= provides cbind-like methods for =Spatial*DataFrame= and =data.frame= objects.
-
- The topology operations on geometries performed by this package (for example, =unionSpatialPolygons= ) use the package =rgeos=, an interface to the Geometry Engine Open Source (GEOS) [fn:20].
 
 **** gstat
  label:sec:gstat
@@ -605,7 +591,7 @@ The =sf= package implements =plot= methods for displaying data using =base= grap
 
  -  cite:Slocum.McMaster.ea2005 and cite:Dent.Torguson.ea2008 are comprehensive books on thematic cartography and geovisualization.  They include chapters devoted to data classification, scales, map projections, color theory, typography, and proportional symbol, choropleth, dasymetric, isarithmic, and multivariate mapping. Several resources are available at their accompanying websites [fn:23].
 
- -  cite:Bivand.Pebesma.ea2013 is the essential reference to work with spatial data in =R=. R. Bivand and E. Pebesma are the authors of the fundamental =sp= package, and they are the authors or maintainers of several important packages such as =gstat=, for geostatistical modeling, prediction, and simulation, =rgdal=, =rgeos= and =maptools=. Chapter 3 is devoted to the visualization of spatial data. Code, figures, and data of the book are available at the accompanying website [fn:24].
+ -  cite:Bivand.Pebesma.ea2013 is the essential reference to work with spatial data in =R=. R. Bivand and E. Pebesma are the authors of the fundamental =sp= package, and they are the authors or maintainers of several important packages such as =gstat=, for geostatistical modeling, prediction, and simulation. Chapter 3 is devoted to the visualization of spatial data. Code, figures, and data of the book are available at the accompanying website [fn:24].
 
  -  cite:Hengl2009 is an open-access book with seven spatial data analysis exercises. The author is the creator and maintainer of the Spatial-Analyst webpage [fn:25].
 
@@ -629,11 +615,10 @@ label:cha:bubble
   with a single symbol size.
 
   The most relevant packages used in this chapter are: \texttt{sp} and
-  \texttt{sf}, and \texttt{rgdal} for reading and writing spatial
-  data; \texttt{maptools} for label positioning; \texttt{classInt} for
-  computing class intervals; \texttt{gstat} for spatial interpolation;
-  \texttt{mapview}, \texttt{plotKML}, and \texttt{rgl} for interactive
-  visualization.
+  \texttt{sf} for reading and writing spatial data; \texttt{classInt}
+  for computing class intervals; \texttt{gstat} for spatial
+  interpolation; \texttt{mapview}, \texttt{plotKML}, and \texttt{rgl}
+  for interactive visualization.
   %
 }
 #+END_EXPORT
@@ -655,10 +640,9 @@ label:cha:choropleth
   interactive visualization.
 
   The most relevant packages used in this chapter are: \texttt{sp} and
-  \texttt{sf}, and \texttt{rgdal} for reading and writing spatial
-  data; \texttt{classInt} for computing class intervals;
-  \texttt{RColorBrewer} for color palettes; and \texttt{mapview} for
-  interactive visualization.
+  \texttt{sf} for reading and writing spatial data; \texttt{classInt}
+  for computing class intervals; \texttt{RColorBrewer} for color
+  palettes; and \texttt{mapview} for interactive visualization.
   %
 }
 #+END_EXPORT
@@ -683,9 +667,8 @@ label:cha:raster
 
   The most relevant packages used in this chapter are: \texttt{raster}
   for reading raster data; \texttt{rasterVis} for visualization of
-  raster data; \texttt{maps}, \texttt{mapdata}, and \texttt{maptools}
-  for boundaries lines; \texttt{classInt} for computing class
-  intervals; \texttt{mapview} for interactive maps.
+  raster data; \texttt{classInt} for computing class intervals;
+  \texttt{mapview} for interactive maps.
 %
 }
 #+END_EXPORT
@@ -735,11 +718,9 @@ label:cha:vector
   shading, and map overlaying.
 
   The most relevant packages used in this chapter are: \texttt{raster}
-  for reading raster data; \texttt{rgdal} for reading shapefiles;
-  \texttt{rgeos} for computing intersection between raster and vector
-  data;\texttt{rasterVis} for visualization of raster data;
-  \texttt{maptools} for label positioning; and \texttt{osmdata} for
-  retrieving data from OpenStreetMap.
+  for reading raster data;\texttt{rasterVis} for visualization of
+  raster data; and \texttt{osmdata} for retrieving data from
+  OpenStreetMap.
   %
 }
 #+END_EXPORT
@@ -931,9 +912,8 @@ inspired by the =grid= package.
 
   The most relevant packages in this chapter are: \texttt{raster} for
   reading raster data; \texttt{rasterVis} for visualization of raster
-  data; \texttt{maps}, \texttt{mapdata}, and \texttt{maptools} for
-  boundaries lines; \texttt{rgl} for 3D visualization; and
-  \texttt{gridSVG} for interactive graphics.
+  data; \texttt{rgl} for 3D visualization; and \texttt{gridSVG} for
+  interactive graphics.
   %
 }
 #+END_EXPORT

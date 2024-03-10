@@ -52,7 +52,7 @@ label:cha:choropleth
 
 #+INCLUDE: "Spatial/choropleth.tex" src latex
 
-** COMMENT Thematic Maps: Raster Maps
+** Thematic Maps: Raster Maps
 label:cha:raster
 
 #+INCLUDE: "Spatial/raster.tex" src latex
