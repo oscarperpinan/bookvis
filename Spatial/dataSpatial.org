@@ -504,27 +504,26 @@ of monthly averages produce a =RasterStack= with twelve layers.
 #+INDEX: Packages!raster@\texttt{raster}
 
 #+begin_src R
-  library("raster")
+library("raster")
   
-  tmp <- tempdir()
-  unzip('data/SISmm2008_CMSAF.zip', exdir = tmp)
-  filesCMSAF <- dir(tmp, pattern = 'SISmm')
-  SISmm <- stack(paste(tmp, filesCMSAF, sep = '/'))
-  ## CM-SAF data is average daily irradiance (W/m2). Multiply by 24
-  ## hours to obtain daily irradiation (Wh/m2)
-  SISmm <- SISmm * 24
+tmp <- tempdir()
+unzip("data/Spatial/SISmm2008_CMSAF.zip", exdir = tmp)
+filesCMSAF <- dir(tmp, pattern = "SISmm")
+SISmm <- stack(paste(tmp, filesCMSAF, sep = "/"))
+## CM-SAF data is average daily irradiance (W/m2). Multiply by 24
+## hours to obtain daily irradiation (Wh/m2)
+SISmm <- SISmm * 24
 #+end_src
 
 The =RasterLayer= object with annual averages is computed from the
-monthly means and stored using the native format of the =raster=
-package.
+monthly means and stored as a NetCDF file.
 #+begin_src R 
-  ## Monthly irradiation: each month by the corresponding number of days
-  daysMonth <- c(31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
-  SISm <- SISmm * daysMonth / 1000 ## kWh/m2
-  ## Annual average
-  SISav <- sum(SISm)/sum(daysMonth)
-  writeRaster(SISav, file = 'SISav')
+## Monthly irradiation: each month by the corresponding number of days
+daysMonth <- c(31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+SISm <- SISmm * daysMonth / 1000 ## kWh/m2
+## Annual average
+SISav <- sum(SISm)/sum(daysMonth)
+writeRaster(SISav, file = "data/Spatial/SISav.nc")
 #+end_src
 
 
