@@ -1,6 +1,5 @@
 #+PROPERTY:  header-args :session *R* :tangle ../docs/R/raster.R :eval no-export
 #+OPTIONS: ^:nil
-#+BIND: org-latex-image-default-height "0.45\\textheight"
 
 #+begin_src R :exports none :tangle no
 setwd('~/github/bookvis/')
@@ -55,46 +54,67 @@ value).
 
 #+INDEX: Subjects!Sequential palette
 
-#+begin_src R :results output graphics :exports both :file figs/leveplotSISavOrig.png :width 4000 :height 4000 :res 600
+#+begin_src R :results output graphics :exports both :file figs/Spatial/leveplotSISavOrig.png :width 4000 :height 4000 :res 600
 levelplot(SISavr)
 #+end_src
 
 #+CAPTION: Annual average of solar radiation displayed with a sequential palette. label:fig:levelplotCMSAF
 #+RESULTS:
-[[file:figs/leveplotSISavOrig.png]]
+[[file:figs/Spatial/leveplotSISavOrig.png]]
 
 Although the solar irradiation distribution reveals the physical
 structure of the region, it is recommended to add the geographic
-context with a layer of administrative boundaries (Figure
-ref:fig:levelplotCMSAF_boundaries).
-
+context with a layer of administrative boundaries. These boundaries can be retrieved from the Natural Earth service with the =rnaturalearth= package 
 
 #+INDEX: Subjects!Background map
 #+INDEX: Packages!rnaturalearth@\texttt{rnaturalearth}
+#+INDEX: Packages!sf@\texttt{sf}
 
 #+begin_src R 
 library("rnaturalearth")
 
-boundaries <- ne_countries(country = "spain", scale = 50)
-boundaries <- as(boundaries, "Spatial")
+boundarySF <- ne_countries(country = "spain", scale = 50)
+## Crop to the limits of the raster object
+boundarySF <- st_crop(boundarySF,
+                      xmin = xmin(SISavt), ymin = ymin(SISavt),
+                      xmax = xmax(SISavt), ymax = ymax(SISavt))
+#+end_src
+
+These boundaries are superimposed on the main map with the =layer= and
+=sp.lines= functions in the =lattice= system (Figure
+ref:fig:levelplotCMSAF_boundaries), and with =geom_sf= in the
+=ggplot2= system.
+
+#+begin_src R
+##ggplot2 version
+library(ggplot2)
+
+gplot(SISavt) +
+  geom_sf(data = boundarySF, fill = "transparent") +
+  coord_sf(expand = FALSE) + 
+  xlab("Longitude") + ylab("Latitude")
 #+end_src
 
 #+INDEX: Packages!sp@\texttt{sp}
 #+INDEX: Packages!latticeExtra@\texttt{latticeExtra}
 
-#+begin_src R :results output graphics :exports both :file figs/leveplotSISavBoundaries.png :width 4000 :height 4000 :res 600
+#+begin_src R :results output graphics :exports both :file figs/Spatial/leveplotSISavBoundaries.png :width 4000 :height 4000 :res 600
+## lattice version
 library(latticeExtra)
 
-## Display the raster object ...
+## Convert the sf object to sp
+boundarySP <- as(boundarySF, "Spatial")
+
+## Display the data ...
 levelplot(SISavt) +
   ## ... and overlay the SpatialLines object
-  layer(sp.lines(boundaries,
-                 lwd = 0.5))
+  layer(sp.lines(boundarySP,
+                 lwd = 0.5))     
 #+end_src
 
 #+CAPTION: Annual average of solar radiation with administrative boundaries. label:fig:levelplotCMSAF_boundaries
 #+RESULTS:
-[[file:figs/leveplotSISavBoundaries.png]]
+[[file:figs/Spatial/leveplotSISavBoundaries.png]]
 
 
 ** Hill Shading
@@ -119,18 +139,20 @@ using semitransparency.
 
 The procedure is as follows:
 
-- Download a Digital Elevation Model (DEM) from the DIVA-GIS service with the =geodata= package.
+- Download a Digital Elevation Model (DEM) from the DIVA-GIS service with the =geodata= package, obtaining a =SpatRaster= object.
 
 #+INDEX: Data!DIVA-GIS
+#+INDEX: Packages!geodata@\texttt{geodata}
 
-#+begin_src R :eval no-export
+#+begin_src R
 library(geodata)
 
 DEM <- elevation_30s("ESP", path = tempdir())
 #+end_src
 
-- Compute the hill shade raster with =terrain= and =shade= from
-  =terra= with a certain angle and direction.
+- Compute the hill shade raster with =terrain= and =shade= from the
+  =terra= package, or with =terrain= and =hillShade= from =raster=
+  package, with a certain angle and direction. 
 
 #+begin_src R
 slope <- terrain(DEM, "slope", unit = "radians")
@@ -141,15 +163,15 @@ hs <- shade(slope = slope, aspect = aspect,
 
 #+begin_src R :eval no-export
 DEMr <- raster(DEM)
-sloper <- terrain(DEM, "slope")
-aspectr <- terrain(DEM, "aspect")
+sloper <- terrain(DEMr, "slope")
+aspectr <- terrain(DEMr, "aspect")
 hsr <- hillShade(slope = sloper, aspect = aspectr,
                  angle = 60, direction = 45)
 #+end_src
 
 - Combine the result with the previous map using semitransparency.
 
-#+begin_src R :results output graphics :exports both :width 2000 :height 2000 :res 300 :file figs/hillShading.png
+#+begin_src R :results output graphics :exports both :width 2000 :height 2000 :res 300 :file figs/Spatial/hillShading.png
 ## hillShade theme: gray colors and semitransparency
 hsTheme <- GrTheme(regions = list(alpha = 0.5))
 
@@ -159,12 +181,12 @@ levelplot(SISavt,
   ## Overlay the hill shade raster
   levelplot(hs, par.settings = hsTheme, maxpixels = 1e6) +
   ## and the countries boundaries
-  layer(sp.lines(boundaries, lwd = 0.5))
+  layer(sp.lines(boundarySP, lwd = 0.5))
 #+end_src
 
 #+CAPTION: Hill shading of annual average of solar radiation. label:fig:hillShading
 #+RESULTS:
-[[file:figs/hillShading.png]]
+[[file:figs/Spatial/hillShading.png]]
 
 
 ** Diverging Palettes
@@ -176,8 +198,9 @@ levelplot(SISavt,
 
 Next, instead of displaying the absolute values of each cell, we will
 analyze the differences between each cell and the global average
-value. This average is computed with the =cellStats= function and
-substracted from the original =RasterLayer=. 
+value. This average is computed with the =global= function in the
+=terra= package, and with =cellStats= in the =raster= package, and
+substracted from the original raster.
 
 #+begin_src R
 meanRad <- global(SISavt, "mean")
@@ -198,7 +221,7 @@ relation between irradiation and longitude.
 
 #+INDEX: Packages!viridisLite@\texttt{viridisLite}
 
-#+begin_src R :results output graphics :exports both :width 2000 :height 2000 :res 300 :file figs/xyplotSISav.png 
+#+begin_src R :results output graphics :exports both :width 2000 :height 2000 :res 300 :file figs/Spatial/xyplotSISav.png 
 library(viridisLite)
 
 xyplot(layer ~ y, data = SISavt,
@@ -214,7 +237,7 @@ xyplot(layer ~ y, data = SISavt,
 
 #+CAPTION: Relation between scaled annual average radiation and latitude for several longitude groups. label:fig:xyplotSISav
 #+RESULTS:
-[[file:figs/xyplotSISav.png]]
+[[file:figs/Spatial/xyplotSISav.png]]
 
 #+INDEX: Subjects!Diverging palette
 
@@ -237,7 +260,7 @@ is not symmetrical around zero.
 #+INDEX: Subjects!Visual discrimination
 #+INDEX: Packages!RColorBrewer@\texttt{RColorBrewer}
 
-#+begin_src R :results output graphics :exports both :file figs/showDivPal.pdf
+#+begin_src R :results output graphics :exports both :file figs/Spatial/showDivPal.pdf
 library(RColorBrewer)
 
 divPal <- brewer.pal(n = 9, "PuOr")
@@ -258,10 +281,10 @@ showPal(divPal)
 #+CAPTION: Purple-Orange diverging palette using white as middle color. label:fig:showDivPal
 #+ATTR_LaTeX: :height 0.3\textheight
 #+RESULTS:
-[[file:figs/showDivPal.pdf]]
+[[file:figs/Spatial/showDivPal.pdf]]
 
 
-#+begin_src R :results output graphics :exports both :file figs/divPal_SISav_naive.png :width 4000 :height 4000 :res 600
+#+begin_src R :results output graphics :exports both :file figs/Spatial/divPal_SISav_naive.png :width 4000 :height 4000 :res 600
 divTheme <- rasterTheme(region = divPal)
 
 levelplot(SISavt, contour = TRUE, par.settings = divTheme)
@@ -269,7 +292,7 @@ levelplot(SISavt, contour = TRUE, par.settings = divTheme)
 
 #+CAPTION: Asymmetric raster data (scaled annual average irradiation) displayed with a symmetric diverging palette. label:fig:divPal_SISav_naive
 #+RESULTS:
-[[file:figs/divPal_SISav_naive.png]]
+[[file:figs/Spatial/divPal_SISav_naive.png]]
 
 The solution is to connect the symmetrical color palette with the
 asymmetrical data range. The first step is to create a set of
@@ -322,7 +345,7 @@ The raster map produced with this new palette is displayed in Figure
 ref:fig:divPalSISav. Now zero is clearly associated with the white
 color.
 
-#+begin_src R :results output graphics :exports both :file figs/showBreak2Pal.pdf
+#+begin_src R :results output graphics :exports both :file figs/Spatial/showBreak2Pal.pdf
 break2pal <- function(x, mx, pal){
     ## x = mx gives y = 1
     ## x = 0 gives y = 0.5
@@ -342,10 +365,10 @@ showPal(pal)
 #+CAPTION: Modified diverging palette related with the asymmetrical raster data. label:fig:showBreak2Pal
 #+ATTR_LaTeX: :height 0.3\textheight
 #+RESULTS:
-[[file:figs/showBreak2Pal.pdf]]
+[[file:figs/Spatial/showBreak2Pal.pdf]]
 
 
-#+begin_src R :results output graphics :exports both :file figs/divPalSISav.png :width 4000 :height 4000 :res 600
+#+begin_src R :results output graphics :exports both :file figs/Spatial/divPalSISav.png :width 4000 :height 4000 :res 600
 levelplot(SISavt,
           par.settings = rasterTheme(region = pal),
           at = breaks, contour = TRUE)
@@ -353,7 +376,7 @@ levelplot(SISavt,
 
 #+CAPTION: Asymmetric raster data (scaled annual average irradiation) displayed with a modified diverging palette. label:fig:divPalSISav
 #+RESULTS:
-[[file:figs/divPalSISav.png]]
+[[file:figs/Spatial/divPalSISav.png]]
 
 
 It is interesting to note two operations carried out internally by
@@ -372,7 +395,7 @@ An alternative way for finer control is to fill the =regions$col=
 component of the theme with our palette after it has been created
 (Figure ref:fig:divPal_SISav_regions).
 
-#+begin_src R :results output graphics :exports both :file figs/divPalSISav_regions.png :width 4000 :height 4000 :res 600
+#+begin_src R :results output graphics :exports both :file figs/Spatial/divPalSISav_regions.png :width 4000 :height 4000 :res 600
 divTheme <- rasterTheme(regions = list(col = pal))
 
 levelplot(SISavt,
@@ -383,7 +406,7 @@ levelplot(SISavt,
 
 #+CAPTION: Same as Figure ref:fig:divPalSISav but colors are assigned directly to the =regions$col= component of the theme. label:fig:divPal_SISav_regions
 #+RESULTS:
-[[file:figs/divPalSISav_regions.png]]
+[[file:figs/Spatial/divPalSISav_regions.png]]
 
 A final improvement to this map is to compute the intervals using a
 classification algorithm with the =classInt= package. With this
@@ -419,7 +442,7 @@ pal <- break2pal(mids, mx, divRamp)
 divTheme$regions$col <- pal
 #+end_src
 
-#+begin_src R :results output graphics :exports both :file figs/divPalSISav_classInt.png :width 4000 :height 4000 :res 600
+#+begin_src R :results output graphics :exports both :file figs/Spatial/divPalSISav_classInt.png :width 4000 :height 4000 :res 600
 levelplot(SISavt,
           par.settings = divTheme,
           at = breaks,
@@ -428,7 +451,7 @@ levelplot(SISavt,
 
 #+CAPTION: Same as Figure ref:fig:divPal_SISav_regions but defining intervals with the optimal classification method. label:fig:divPalSISav_classInt
 #+RESULTS:
-[[file:figs/divPalSISav_classInt.png]]
+[[file:figs/Spatial/divPalSISav_classInt.png]]
 
 
 * Categorical Data
@@ -450,32 +473,44 @@ project. Read Chapter ref:cha:dataSpatial for details about these
 datasets.
 
 After the land cover and population density files have been
-downloaded, two =RasterLayers= can be created with the =raster=
-package. Both files are read, their geographical extent reduced to the
-area of India and China, and cleaned (=99999= cells are replaced with
-=NA=).
+downloaded, two =RasterLayer= objects can be created with the =raster=
+package or two =SpatRaster= objects with the =terra package=. Both
+files are read, their geographical extent reduced to the area of India
+and China, and cleaned (=99999= cells are replaced with =NA=).
 
 #+INDEX: Data!NASA EOS
 #+INDEX: Data!Population density
 #+INDEX: Data!Land cover
 
 #+INDEX: Packages!raster@\texttt{raster}
+#+INDEX: Packages!terra@\texttt{terra}
 
 #+begin_src R
-## China and India  
-ext <- extent(65, 135, 5, 55)
+## raster
+myExtR <- extent(65, 135, 5, 55)
 
-pop <- raster("data/Spatial/875430rgb-167772161.0.FLOAT.TIFF")
-pop <- crop(pop, ext)
-pop[pop==99999] <- NA
+popR <- raster("data/Spatial/875430rgb-167772161.0.FLOAT.TIFF")
+popR <- crop(popR, myExtR)
+popR[popR==99999] <- NA
 
-landClass <- raster("data/Spatial/241243rgb-167772161.0.TIFF")
-landClass <- crop(landClass, ext)
+landClassR <- raster("data/Spatial/241243rgb-167772161.0.TIFF")
+landClassR <- crop(landClassR, myExtR)
 #+end_src
 
-#+RESULTS:
+#+begin_src R
+## terra
+myExtT <- ext(65, 135, 5, 55)
 
+popT <- rast("data/Spatial/875430rgb-167772161.0.FLOAT.TIFF")
+names(popT) <- "population"
+popT <- crop(popT, myExtT)
+popT[popT==99999] <- NA
 
+landClassT <- rast("data/Spatial/241243rgb-167772161.0.TIFF")
+names(landClassT) <- "landClass"
+landClassT <- crop(landClassT, myExtT)
+
+#+end_src
 Each land cover type is designated with a different key: the sea is
 labeled with 0; forests with 1 to 5; shrublands, grasslands, and
 wetlands with 6 to 11; agriculture and urban lands with 12 to 14; and
@@ -486,22 +521,32 @@ data, filling it with integer values associated to a Raster Attribute
 Table (RAT).
 
 #+begin_src R
-landClass[landClass %in% c(0, 254)] <- NA
+landClassR[landClassR %in% c(0, 254)] <- NA
 ## Only four groups are needed:
 ## Forests: 1:5
 ## Shrublands, etc: 6:11
 ## Agricultural/Urban: 12:14
 ## Snow: 15:16
-landClass <- cut(landClass, c(0, 5, 11, 14, 16))
+landClassR <- cut(landClassR, c(0, 5, 11, 14, 16))
 ## Add a Raster Attribute Table and define the raster as categorical data
-landClass <- ratify(landClass)
+landClassR <- ratify(landClassR)
 ## Configure the RAT: first create a RAT data.frame using the
 ## levels method; second, set the values for each class (to be
 ## used by levelplot); third, assign this RAT to the raster
 ## using again levels
-rat <- levels(landClass)[[1]]
+rat <- levels(landClassR)[[1]]
 rat$classes <- c("Forest", "Land", "Urban", "Snow")
-levels(landClass) <- rat
+levels(landClassR) <- rat
+#+end_src
+
+#+begin_src R
+landClassT[landClassT %in% c(0, 254)] <- NA
+landClassT <- classify(landClassT, c(0, 5, 11, 14, 16))
+
+rat <- levels(landClassT)[[1]]
+names(rat) <- c("ID", "classes")
+rat$classes <- c("Forest", "Land", "Urban", "Snow")
+levels(landClassT) <- rat
 #+end_src
 
 This categorical raster can be displayed with the =levelplot= method
@@ -521,28 +566,28 @@ qualPal <- c("palegreen4", # Forest
              "snow3")      # Snow
 
 qualTheme <- rasterTheme(region = qualPal,
-                        panel.background = list(col = "lightskyblue1")
-                        )
+                         panel.background = list(col = "lightskyblue1")
+                         )
 #+end_src
 
 #+RESULTS:
 
-#+begin_src R :results output graphics :exports both :file figs/landClass.png :width 4000 :height 4000 :res 600  
-levelplot(landClass, maxpixels = 3.5e5,
+#+begin_src R :results output graphics :exports both :file figs/Spatial/landClass.png :width 4000 :height 4000 :res 600  
+levelplot(landClassT, maxpixels = 3.5e5,
           par.settings = qualTheme)
 
 #+end_src
 
 #+CAPTION: Land cover raster (categorical data). label:fig:landClass
 #+RESULTS:
-[[file:figs/landClass.png]]
+[[file:figs/Spatial/landClass.png]]
 
 Let's explore the relation between the land cover and population
 density rasters. Figure ref:fig:populationNASA displays this
 latter raster using a logarithmic scale, defined with =zscaleLog=. 
 
-#+begin_src R :results output graphics :exports both :file figs/populationNASA.png :width 4000 :height 4000 :res 600
-pPop <- levelplot(pop, zscaleLog = 10,
+#+begin_src R :results output graphics :exports both :file figs/Spatial/populationNASA.png :width 4000 :height 4000 :res 600
+pPop <- levelplot(popT, zscaleLog = 10,
                   par.settings = BTCTheme,
                   maxpixels = 3.5e5)
 pPop
@@ -550,20 +595,26 @@ pPop
 
 #+CAPTION: Population density raster. label:fig:populationNASA
 #+RESULTS:
-[[file:figs/populationNASA.png]]
+[[file:figs/Spatial/populationNASA.png]]
 
-Both rasters can be joined together with the =stack= method to
-create a new =RasterStack= object. Figure
-ref:fig:histogramLandClass displays the distribution of the
-logarithm of the population density associated to each land class. 
+Both rasters can be joined together with the =stack= method to create
+a new =RasterStack= object, or with =c= to create a multilayer
+=SpatStat= object. Figure ref:fig:histogramLandClass displays the
+distribution of the logarithm of the population density associated to
+each land class.
 
 #+begin_src R
 ## Join the RasterLayer objects to create a RasterStack object.
-s <- stack(pop, landClass)
+s <- stack(popR, landClassR)
 names(s) <- c("pop", "landClass")
+
+## Join the SpatRaster objects to create a multilayer object.
+st <- c(popT, landClassT)
+names(st) <- c("pop", "landClass")
+
 #+end_src
 
-#+begin_src R :results output graphics :exports both :file figs/histogramLandClass.pdf
+#+begin_src R :results output graphics :exports both :file figs/Spatial/histogramLandClass.pdf
 densityplot(~log10(pop), ## Represent the population
             groups = landClass, ## grouping by land classes
             data = s,
@@ -573,7 +624,7 @@ densityplot(~log10(pop), ## Represent the population
 
 #+CAPTION: Distribution of the logarithm of the population density associated to each land class. label:fig:histogramLandClass
 #+RESULTS:
-[[file:figs/histogramLandClass.pdf]]
+[[file:figs/Spatial/histogramLandClass.pdf]]
 
 
 * \floweroneleft  Bivariate Legend
@@ -615,11 +666,11 @@ multiPal <- sapply(1:nClasses, function(i)
 
 #+begin_src R 
 pList <- lapply(1:nClasses, function(i){
-    landSub <- landClass
+    landSub <- landClassR
     ## Those cells from a different land class are set to NA...
-    landSub[!(landClass==i)] <- NA
+    landSub[!(landClassR == i)] <- NA
     ## ... and the resulting raster masks the population raster
-    popSub <- mask(pop, landSub)
+    popSub <- mask(popR, landSub)
     ## Palette
     pal <- multiPal[, i]
 
@@ -692,13 +743,13 @@ legend <- layer(
 #+RESULTS:
 
 Figure ref:fig:popLandClass displays the result with the legend.
-#+begin_src R :results output graphics :exports both :width 2000 :height 2000 :res 300 :file figs/popLandClass.png
+#+begin_src R :results output graphics :exports both :width 2000 :height 2000 :res 300 :file figs/Spatial/popLandClass.png
 p + legend
 #+end_src
 
 #+CAPTION: Population density for each land class (multivariate raster). label:fig:popLandClass
 #+RESULTS:
-[[file:figs/popLandClass.png]]
+[[file:figs/Spatial/popLandClass.png]]
 
 * Interactive Graphics
 ** 3D Visualization label:sec:3dvisualization
@@ -711,34 +762,28 @@ An alternative method for a DEM is 3D visualization where the user can
 rotate or zoom the figure. This solution is available thanks to the
 =rgl= package, which provides functions for 3D interactive
 graphics. The =plot3D= function in the =rasterVis= package is a
-wrapper to this package for =RasterLayer= objects.
+wrapper to this package for =RasterLayer= objects (Figure ref:fig:DEM_rgl).
 
 #+INDEX: Packages!rgl@\texttt{rgl}
 #+INDEX: Subjects!3D visualization
-#+INDEX: Subjects!WebGL
 #+INDEX: Subjects!STL
 \nomenclature{STL}{File format that encodes the surface geometry of a 3D object using tessellation.}
-\nomenclature{WebGL}{Web Graphics Library, a JavaScript API for rendering interactive 2D and 3D graphics within any compatible web browser without the use of plugins.}
-
-#+begin_src R
-plot3D(DEM, maxpixels = 5e4)
-#+end_src
-
-The output scene can be exported to several formats such as =STL= with
-=writeSTL=, a format commonly used in 3D printing, or WebGL with
-=writeWebGL= to be rendered in a browser (Figure ref:fig:DEM_web).
 
 #+begin_src R :eval no-export
-## Dimensions of the window in pixels
-par3d(viewport = c(0, 30, ## Coordinates of the lower left corner
-                   250, 250)) ## Width and height
-
-writeWebGL(filename = 'docs/images/rgl/DEM.html',
-           width = 800)
+plot3D(DEMr, maxpixels = 5e4)
 #+end_src
 
-#+CAPTION: 3D visualization of a Digital Elevation Model using the WebGL format. label:fig:DEM_web
-[[file:figs/DEM_WebGL.png]]
+#+CAPTION: 3D visualization of a Digital Elevation Model. label:fig:DEM_rgl
+[[file:figs/Spatial/DEM_rgl.png]]
+
+The output scene can be exported to several formats such as =STL= with
+=writeSTL=, a format commonly used in 3D printing.
+
+#+begin_src R :eval no-export
+library(rgl)
+
+writeSTL("docs/images/rgl/DEM.stl")
+#+end_src
 
 ** Mapview [[label:mapview_raster]]
 #+begin_src R :exports none
@@ -757,22 +802,31 @@ library("mapview")
 mvSIS <- mapview(SISavr, legend = TRUE)
 #+end_src
 
-This map can be improved with another layer of information, the name and location of the meteorological stations of the SIAR network. This information is stored in the file =SIAR.csv=. Next code reads this file and produces a =SpatialPointsDataFrame= object. 
-
+This map can be improved with another layer of information, the name and location of the meteorological stations of the SIAR network. This information is stored in the file =SIAR.csv=. 
 #+INDEX: Data!SIAR
 
 #+begin_src R
 SIAR <- read.csv("data/Spatial/SIAR.csv")
+#+end_src
 
+These points can be encoded as a =SpatialPointsDataFrame= object with the =sp= package:
+#+begin_src R :eval no-export
 spSIAR <- SpatialPointsDataFrame(coords = SIAR[, c("lon", "lat")], 
                                  data = SIAR,
                                  proj4str = CRS(projection(SISavr)))
 #+end_src
-
-This object, as shown in section ref:sec:mapview_bubble, can also be displayed with =mapview=. The resulting map is reactive to mouse hovering and click.
+or a =sf= object:
 #+begin_src R
-mvSIAR <- mapview(spSIAR,
-                  label = spSIAR$Estacion)
+sfSIAR <- st_as_sf(SIAR,
+                   coords = c("lon", "lat"),
+                   crs = crs(SISavt))
+
+#+end_src
+
+Both objects, as shown in section ref:sec:mapview_bubble, can be displayed with =mapview=. The resulting map is reactive to mouse hovering and click.
+#+begin_src R
+mvSIAR <- mapview(sfSIAR,
+                  label = sfSIAR$Estacion)
 #+end_src
 
 Both layers of information can be combined with the =+= operator. Figure ref:fig:mapview_CMSAF_SIAR shows a snapshot of this interactive map.
@@ -781,4 +835,4 @@ mvSIS + mvSIAR
 #+end_src
 
 #+CAPTION: Snapshot of the interactive map produced with =mapview= combining a =RasterLayer= and a =SpatialPointsDataFrame= objects. label:fig:mapview_CMSAF_SIAR
-file:figs/mapview_CMSAF_SIAR.png
+file:figs/Spatial/mapview_CMSAF_SIAR.png
