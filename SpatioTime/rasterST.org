@@ -80,7 +80,7 @@ days of the sequence (Figure ref:fig:SISdm).
 
 #+INDEX: Subjects!Small multiples
 
-#+begin_src R :results output graphics :exports both :file figs/SISdm.pdf
+#+begin_src R :results output graphics file :exports both :file figs/SISdm.pdf
 levelplot(SISdm, layers = 1:12, panel = panel.levelplot.raster)
 #+end_src
 
@@ -121,7 +121,7 @@ max values  :  74.62326, 123.82005, 167.88226, 249.85596, 313.51773, 340.51255, 
 This raster can be completely displayed on one page (Figure
 ref:fig:SISmm), although part of the information of the original data
 is lost in the aggregation procedure.
-#+begin_src R :results output graphics :exports both :file figs/SISmm.pdf
+#+begin_src R :results output graphics file :exports both :file figs/SISmm.pdf
 levelplot(SISmm, panel = panel.levelplot.raster)
 #+end_src
 
@@ -144,7 +144,7 @@ the frame of the Exploratory Data Analysis approach. Some of them were
 previously used with a spatial raster (Chapter ref:cha:raster). In
 this section we will use the histogram (Figure ref:fig:SISdm_hist),
 
-#+begin_src R :results output graphics :exports both :file figs/SISdm_histogram.pdf
+#+begin_src R :results output graphics file :exports both :file figs/SISdm_histogram.pdf
 histogram(SISdm, FUN = as.yearmon)
 #+end_src
 
@@ -154,7 +154,7 @@ histogram(SISdm, FUN = as.yearmon)
 
 the violin plot (a combination of a boxplot and a kernel density plot)
 (Figure ref:fig:SISdm_boxplot),
-#+begin_src R :results output graphics :exports both :file figs/SISdm_boxplot.pdf
+#+begin_src R :results output graphics file :exports both :file figs/SISdm_boxplot.pdf
 bwplot(SISdm, FUN = as.yearmon)
 #+end_src
 
@@ -163,7 +163,7 @@ bwplot(SISdm, FUN = as.yearmon)
 [[file:figs/SISdm_boxplot.pdf]]
 
 and the matrix of scatterplots (section ref:SEC:groupVariable, Figure ref:fig:SISmm_splom).
-#+begin_src R :results output graphics :exports both :file figs/SISmm_splom.png :width 4000 :height 4000 :res 600
+#+begin_src R :results output graphics file :exports both :file figs/SISmm_splom.png :width 4000 :height 4000 :res 600
 splom(SISmm, xlab = '', plot.loess = TRUE)
 #+end_src
 
@@ -205,7 +205,7 @@ displays with colors the averaged value of the raster for each
 latitude zone (using the default value of the argument =dirXY=) with
 time on the vertical axis.
 
-#+begin_src R :results output graphics :exports both :file figs/SISdm_hovmoller_lat.png :width 4000 :height 4000 :res 600
+#+begin_src R :results output graphics file :exports both :file figs/SISdm_hovmoller_lat.png :width 4000 :height 4000 :res 600
 hovmoller(SISdm)
 #+end_src
 
@@ -221,7 +221,7 @@ ref:fig:SISdm_horizonplot) methods, which reproduce the procedures
 described in Chapter ref:cha:timeHorizontalAxis to display
 multivariate time series.
 
-#+begin_src R :results output graphics :exports both :file figs/SISmm_xyplot.pdf
+#+begin_src R :results output graphics file :exports both :file figs/SISmm_xyplot.pdf
 xyplot(SISdm, auto.key = list(space = 'right'))
 #+end_src
 
@@ -231,7 +231,7 @@ xyplot(SISdm, auto.key = list(space = 'right'))
 
 #+INDEX: Subjects!Horizon plot
 #+INDEX: Subjects!Small multiples
-#+begin_src R :results output graphics :exports both :file figs/SISdm_horizonplot.pdf
+#+begin_src R :results output graphics file :exports both :file figs/SISdm_horizonplot.pdf
 horizonplot(SISdm, digits = 1,
             col.regions = rev(brewer.pal(n = 6, 'PuOr')),
             xlab = '', ylab = 'Latitude')

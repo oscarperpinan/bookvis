@@ -47,7 +47,7 @@ load('data/CO2.RData')
 #+end_src
 
 
-#+begin_src R :results output graphics :exports both :file "figs/CO2_GNI.pdf" 
+#+begin_src R :results output graphics file :exports both :file "figs/CO2_GNI.pdf" 
 ## lattice version
 xyplot(GNI.capita  ~ CO2.capita, data = CO2data,
        xlab = "Carbon dioxide emissions (metric tons per capita)",
@@ -178,7 +178,7 @@ Using CO2.capita as value column: use value.var to override.
 #+end_example
 
 
-#+begin_src R :results output graphics :exports both :file "figs/hclust.pdf" 
+#+begin_src R :results output graphics file :exports both :file "figs/hclust.pdf" 
 hCO2 <- hclust(dist(CO2capita[, -1]))
 
 oldpar <- par(mar = c(0, 2, 0, 0) + .1)
@@ -323,7 +323,7 @@ with =extreme.grid= (Figure ref:fig:CO2-GNI-DL).
 
 #+INDEX: Packages!directlabels@\texttt{directlabels}
 
-#+begin_src R :results output graphics :exports both :file "figs/CO2_capitaDL.pdf"
+#+begin_src R :results output graphics file :exports both :file "figs/CO2_capitaDL.pdf"
 library("directlabels")
 
 ## lattice version
@@ -355,7 +355,7 @@ version and =facet_wrap(~ Year)= in the =ggplot2= version.
 
 #+INDEX: Subjects!Small multiples
 
-#+begin_src R :results output graphics :exports both :file "figs/CO2_capita_panel.pdf"
+#+begin_src R :results output graphics file :exports both :file "figs/CO2_capita_panel.pdf"
 ## lattice version
 xyplot(GNI.capita  ~ CO2.capita | factor(Year),
        data = CO2data,
@@ -387,7 +387,7 @@ legend is not very useful. Once again, point labeling is recommended
 
 #+INDEX: Subjects!Label positioning
 
-#+begin_src R :results output graphics :exports both :file "figs/CO2_capita_panel_labels.pdf"
+#+begin_src R :results output graphics file :exports both :file "figs/CO2_capita_panel_labels.pdf"
 ## lattice version
 xyplot(GNI.capita  ~ CO2.capita | factor(Year),
        data = CO2data,
@@ -441,7 +441,7 @@ CO2data$cexPoints <- cex.key[idx]
 
 The graphic will display information on two variables (=GNI.capita= and =CO2.capita= in the vertical and horizontal axes, respectively) with a conditioning variable (=Year=) and two grouping variables (=Country.Name=, and =CO2.PPP= through =cexPoints=) (Figure ref:fig:CO2pointsGG).
 
-#+begin_src R :results output graphics :exports both :file "figs/CO2pointsGG.pdf" 
+#+begin_src R :results output graphics file :exports both :file "figs/CO2pointsGG.pdf" 
 ggplot(data = CO2data,
        aes(x = CO2.capita,
            y = GNI.capita,
@@ -477,7 +477,7 @@ key <- list(space = 'right',
                           alpha = 0.7))
 #+end_src
 
-#+begin_src R :results output graphics :exports both :file "figs/CO2points.pdf" 
+#+begin_src R :results output graphics file :exports both :file "figs/CO2points.pdf" 
 xyplot(GNI.capita ~ CO2.capita|factor(Year), data = CO2data,
        xlab = "Carbon dioxide emissions (metric tons per capita)",
        ylab = "GNI per capita, PPP (current international $)",

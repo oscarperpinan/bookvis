@@ -122,7 +122,7 @@ number of panels can be correctly displayed on one page. In this
 example, we print the first twelve days of the sequence.
 
 #+INDEX: Subjects!Small multiples
-#+begin_src R :results output graphics :exports both :file figs/NO2STxy.pdf
+#+begin_src R :results output graphics file :exports both :file figs/NO2STxy.pdf
 airPal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(5)
   
 stplot(NO2st[, 1:12],
@@ -140,7 +140,7 @@ stplot(NO2st[, 1:12],
 With the mode =xt=, a space-time plot with space on the x-axis and
 time on the y-axis is plotted (Figure [[fig:NO2hovmoller]]).
 
-#+begin_src R :results output graphics :exports both :file figs/NO2hovmoller.pdf
+#+begin_src R :results output graphics file :exports both :file figs/NO2hovmoller.pdf
 stplot(NO2st, mode = 'xt',
        col.regions = colorRampPalette(airPal)(15),
        scales = list(x = list(rot = 45)),
@@ -155,7 +155,7 @@ stplot(NO2st, mode = 'xt',
 Finally, with the mode =ts=, data are coerced to a multivariate time series
 that is displayed in a single plot (Figure [[fig:NO2zoo]]).
 
-#+begin_src R :results output graphics :exports both :file figs/NO2zoo.png :width 2000 :height 2000 :res 300
+#+begin_src R :results output graphics file :exports both :file figs/NO2zoo.png :width 2000 :height 2000 :res 300
 stplot(NO2st, mode = 'ts',
        xlab = '',
        lwd = 0.1, col = 'black', alpha = 0.6,

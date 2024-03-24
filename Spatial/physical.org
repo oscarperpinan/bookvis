@@ -243,7 +243,7 @@ of four layers:
 
   #+INDEX: Subjects!Label positioning
     
-  #+begin_src R :results output graphics :exports both :file figs/brazil.png :width 2000 :height 2000 :res 300
+  #+begin_src R :results output graphics file :exports both :file figs/brazil.png :width 2000 :height 2000 :res 300
   seaPlot + altPlot + layer({
       ## Rivers
       sp.lines(brazilRiv, col = 'darkblue', lwd = 0.2)
@@ -264,7 +264,7 @@ of four layers:
   })
   #+end_src
 
-#+begin_src R :results output graphics :exports results :file figs/rastersBrazil.png :width 2000 :height 2000 :res 300
+#+begin_src R :results output graphics file :exports results :file figs/rastersBrazil.png :width 2000 :height 2000 :res 300
 print(seaPlot, split = c(1, 1, 2, 1), more = TRUE)
 print(altPlot, split = c(2, 1, 2, 1))
 #+end_src

@@ -60,7 +60,7 @@ load('data/aranjuez.RData')
 #+RESULTS:
 : aranjuez
 
-#+begin_src R :results output graphics :exports both :file figs/aranjuez.pdf
+#+begin_src R :results output graphics file :exports both :file figs/aranjuez.pdf
 ## The layout argument arranges panels in rows
 xyplot(aranjuez, layout = c(1, ncol(aranjuez)))
 #+end_src
@@ -75,7 +75,7 @@ automate the display of certain classes with a simple command. The
 package =zoo= provides an =autoplot= method for the =zoo= class with a
 result similar to that obtained with =xyplot= (Figure [[ref:fig:aranjuezNaiveGG]])
 
-#+begin_src R :results output graphics :exports both :file figs/aranjuezGG.pdf
+#+begin_src R :results output graphics file :exports both :file figs/aranjuezGG.pdf
 autoplot(aranjuez) + facet_free()
 #+end_src
 
@@ -125,7 +125,7 @@ layers.
 ## lattice version
 #+end_src
 
-#+begin_src R -n -r :results output graphics :exports both :file figs/aranjuezXblocks.pdf
+#+begin_src R -n -r :results output graphics file :exports both :file figs/aranjuezXblocks.pdf
 ## Auxiliary function to extract the year value of a POSIXct time
 ## index
 Year <- function(x)format(x, "%Y")                           (ref:yearFunction)
@@ -317,7 +317,7 @@ around the time average (=avRad=).
 load('data/navarra.RData')
 #+end_src
 
-#+begin_src R :results output graphics :exports both :file figs/navarra.pdf
+#+begin_src R :results output graphics file :exports both :file figs/navarra.pdf
 avRad <- zoo(rowMeans(navarra, na.rm = 1), index(navarra))
 pNavarra <- xyplot(navarra - avRad,
                    superpose = TRUE, auto.key = FALSE,
@@ -361,7 +361,7 @@ arguments =aspect= and =cut=. The version of Figure
 ref:fig:navarraNaive using banking to $\SI{45}{\degree}$ and the
 cut-and-stack method is produced with (Figure ref:fig:navarraBanking):
 
-#+begin_src R :results output graphics :exports both :file figs/navarraBanking.pdf
+#+begin_src R :results output graphics file :exports both :file figs/navarraBanking.pdf
 xyplot(navarra - avRad,
        aspect = 'xy', cut = list(n = 3, overlap = 0.1),
        strip = FALSE,
@@ -419,7 +419,7 @@ multiple panels with different scales.
 
 #+INDEX: Packages!latticeExtra@\texttt{latticeExtra}
 
-#+begin_src R :results output graphics :exports both :file figs/navarraHorizonplot.pdf
+#+begin_src R :results output graphics file :exports both :file figs/navarraHorizonplot.pdf
 library("latticeExtra")
   
 horizonplot(navarra - avRad,
@@ -476,7 +476,7 @@ The temperature time series, the long-term average and the
 differences between them can be displayed with the =xyplot=
 method, now using =screens= to use a different panel for the
 differences time series (Figure ref:fig:diffTa_xyplot)
-#+begin_src R :results output graphics :exports both :file figs/diffTa_xyplot.pdf
+#+begin_src R :results output graphics file :exports both :file figs/diffTa_xyplot.pdf
 xyplot(cbind(Ta, longTa, diffTa),
        col = c('darkgray', 'red', 'midnightblue'),
        superpose = TRUE, auto.key = list(space = 'right'),
@@ -494,7 +494,7 @@ ref:fig:diffTa_horizon shows that 2004 started clearly above the
 average while 2005 and 2009 did the contrary. Year 2007 was frequently
 below the long-term average but 2011 was more similar to that
 reference.
-#+begin_src R :results output graphics :exports both :file figs/diffTa_horizon.pdf
+#+begin_src R :results output graphics file :exports both :file figs/diffTa_horizon.pdf
 years <- unique(format(timeIndex, '%Y'))
   
 horizonplot(diffTa, cut = list(n = 8, overlap = 0),
@@ -535,7 +535,7 @@ month <- function(x)as.numeric(format(x, '%m'))
 
 #+RESULTS:
 
-#+begin_src R :results output graphics :exports both :file figs/diffTa_levelplot.pdf
+#+begin_src R :results output graphics file :exports both :file figs/diffTa_levelplot.pdf
 myTheme <- modifyList(custom.theme(region = brewer.pal(9, 'RdBu')),
                       list(
                           strip.background = list(col = 'gray'),
@@ -565,7 +565,7 @@ df <- data.frame(Vals = diffTa,
 #+end_src
 
 The values (=Vals= column of this =data.frame=) are displayed as a level plot thanks to the =geom_raster= function.
-#+begin_src R :results output graphics :exports both :file figs/diffTa_ggplot.pdf
+#+begin_src R :results output graphics file :exports both :file figs/diffTa_ggplot.pdf
 library("scales") 
 ## The packages scales is needed for the pretty_breaks function.
 
@@ -606,7 +606,7 @@ load('data/unemployUSA.RData')
 The time series of unemployment can be directly displayed
 with the =xyplot.zoo= method (Figure ref:fig:unemployUSAxyplot).
 
-#+begin_src R :results output graphics :exports both :file "figs/unemployUSAxyplot.pdf" 
+#+begin_src R :results output graphics file :exports both :file "figs/unemployUSAxyplot.pdf" 
 xyplot(unemployUSA,
        superpose = TRUE,
        par.settings = custom.theme,
@@ -631,7 +631,7 @@ easily obtained with =geom_area= (Figure ref:fig:unemployUSAgeomArea):
 
 #+INDEX: Subjects!Stacked graph
 
-#+begin_src R :results output graphics :exports both :file "figs/unemployUSAgeomArea.pdf" 
+#+begin_src R :results output graphics file :exports both :file "figs/unemployUSAgeomArea.pdf" 
 library("scales") ## scale_x_yearmon needs scales::pretty_breaks
 autoplot(unemployUSA, facets = NULL, geom = 'area') +
     geom_area(aes(fill = Series)) +
@@ -757,7 +757,7 @@ prepanel.flow <- function(x, y, groups, origin,...)
 }
 #+end_src
 
-#+begin_src R :results output graphics :exports both :file "figs/unemployUSAThemeRiver.pdf" 
+#+begin_src R :results output graphics file :exports both :file "figs/unemployUSAThemeRiver.pdf" 
 library("colorspace")
 ## We will use a qualitative palette from colorspace
 nCols <- ncol(unemployUSA)
@@ -873,7 +873,7 @@ polygons corresponding to the multivariate time series (Figure
 ref:fig:themeRiverError). However, the graphical window is not
 large enough, and part of the polygons fall out of it. Why?
 
-#+begin_src R :results output graphics :tangle no :exports both :file "figs/ThemeRiverError.pdf" 
+#+begin_src R :results output graphics file :tangle no :exports both :file "figs/ThemeRiverError.pdf" 
 xyplot(unemployUSA, superpose = TRUE, auto.key = FALSE,
        panel = panel.flow, origin = 'themeRiver',
        par.settings = myTheme, cex = 0.4, offset = 0,

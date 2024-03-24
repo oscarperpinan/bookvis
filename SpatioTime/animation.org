@@ -179,7 +179,7 @@ display a matrix of twenty-four panels.
 
 #+INDEX: Subjects!Small multiples
 
-#+begin_src R :results output graphics :exports both :file figs/cft.pdf
+#+begin_src R :results output graphics file :exports both :file figs/cft.pdf
 levelplot(cft,
           layers = 25:48, ## Layers to display (second day)
           layout = c(6, 4), ## Layout of 6 columns and 4 rows

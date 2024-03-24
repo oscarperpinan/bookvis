@@ -155,7 +155,7 @@ Figure ref:fig:pcMaxUC is an unclassed choropleth depicting the
 =pcMax= variable. It uses a palette created by interpolation with the
 =colorRampPalette= function.
  
-#+begin_src R :results output graphics :exports both :file figs/Spatial/pcMaxUC.pdf
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/pcMaxUC.pdf
 ggplot(sfMapVotes) +
   ## Display the pcMax variable...
   geom_sf(aes(fill = pcMax),
@@ -228,7 +228,7 @@ political option. This result suggests to use data classification.
 
 #+INDEX: Subjects!Class Intervals
 
-#+begin_src R :results output graphics :exports both :file figs/Spatial/densityChoropleth.pdf
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/densityChoropleth.pdf
 ggplot(as.data.frame(spMapVotes),
        aes(pcMax,
            fill = whichMax,
@@ -273,11 +273,11 @@ intFisher <- classIntervals(sfMapVotes$pcMax,
 
 #+RESULTS:
 
-#+begin_src R :results output graphics :exports both :file figs/Spatial/quantile_intervals.pdf
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/quantile_intervals.pdf
 plot(intQuant, pal = quantPal, main = "")
 #+end_src
 
-#+begin_src R :results output graphics :exports both :file figs/Spatial/fisher_intervals.pdf
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/fisher_intervals.pdf
 plot(intFisher, pal = quantPal, main = "")
 #+end_src
 
@@ -297,7 +297,7 @@ classification. It is produced with =spplot= displaying a categorical
 variable created with the function =cut= and the breaks computed with
 =classIntervals=.
 
-#+begin_src R :results output graphics :exports both :file figs/Spatial/pcMax.pdf
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/pcMax.pdf
 ## spplot solution
 
 ## Add a new categorical variable with cut, using the computed breaks
@@ -365,7 +365,7 @@ nClasses <- length(classes)
 qualPal <- brewer.pal(nClasses, "Dark2")
 #+end_src
 
-#+begin_src R :results output graphics :exports both :file figs/Spatial/whichMax.pdf
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/whichMax.pdf
 ## spplot solution
 spplot(spMapVotes["whichMax"],
        col.regions = qualPal,
@@ -410,7 +410,7 @@ function. The result is displayed in Figure ref:fig:pcMax_panels.
 
 #+INDEX: Subjects!Small multiples
 
-#+begin_src R :results output graphics :exports both :file figs/Spatial/pcMax_panels.pdf
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/pcMax_panels.pdf
 ggplot(sfMapVotes) +
   geom_sf(aes(fill = pcMaxInt),
           color = "transparent") +
@@ -528,7 +528,7 @@ functions =ggdraw= and =draw_plot=. This function displays the map
 (=bimap=) and the legend (=bilegend=) in their respective
 locations. Figure ref:fig:mapLegends displays the result.
 
-#+begin_src R :results output graphics :exports both :file figs/Spatial/mapLegends.pdf
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/mapLegends.pdf
 library(cowplot)
 
 ggdraw() +

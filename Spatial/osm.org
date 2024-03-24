@@ -240,7 +240,7 @@ sp.road <- function(line, lwd = 6, blwd = 7,
 #+INDEX: Packages!colorspace@\texttt{colorspace}  
 #+INDEX: Subjects!Label positioning
 
-#+begin_src R :results output graphics :exports both :file figs/cedeiraOSM.pdf
+#+begin_src R :results output graphics file :exports both :file figs/cedeiraOSM.pdf
 ## Hill shade and DEM overlaid
 levelplot(hsCedeira, maxpixels = ncell(hsCedeira),
           par.settings = hsTheme,

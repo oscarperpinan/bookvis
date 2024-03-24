@@ -54,7 +54,7 @@ value).
 
 #+INDEX: Subjects!Sequential palette
 
-#+begin_src R :results output graphics :exports both :file figs/Spatial/leveplotSISavOrig.png :width 4000 :height 4000 :res 600
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/leveplotSISavOrig.png :width 4000 :height 4000 :res 600
 levelplot(SISavr)
 #+end_src
 
@@ -98,7 +98,7 @@ gplot(SISavt) +
 #+INDEX: Packages!sp@\texttt{sp}
 #+INDEX: Packages!latticeExtra@\texttt{latticeExtra}
 
-#+begin_src R :results output graphics :exports both :file figs/Spatial/leveplotSISavBoundaries.png :width 4000 :height 4000 :res 600
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/leveplotSISavBoundaries.png :width 4000 :height 4000 :res 600
 ## lattice version
 library(latticeExtra)
 
@@ -171,7 +171,7 @@ hsr <- hillShade(slope = sloper, aspect = aspectr,
 
 - Combine the result with the previous map using semitransparency.
 
-#+begin_src R :results output graphics :exports both :width 2000 :height 2000 :res 300 :file figs/Spatial/hillShading.png
+#+begin_src R :results output graphics file :exports both :width 2000 :height 2000 :res 300 :file figs/Spatial/hillShading.png
 ## hillShade theme: gray colors and semitransparency
 hsTheme <- GrTheme(regions = list(alpha = 0.5))
 
@@ -221,7 +221,7 @@ relation between irradiation and longitude.
 
 #+INDEX: Packages!viridisLite@\texttt{viridisLite}
 
-#+begin_src R :results output graphics :exports both :width 2000 :height 2000 :res 300 :file figs/Spatial/xyplotSISav.png 
+#+begin_src R :results output graphics file :exports both :width 2000 :height 2000 :res 300 :file figs/Spatial/xyplotSISav.png 
 library(viridisLite)
 
 xyplot(layer ~ y, data = SISavt,
@@ -260,7 +260,7 @@ is not symmetrical around zero.
 #+INDEX: Subjects!Visual discrimination
 #+INDEX: Packages!RColorBrewer@\texttt{RColorBrewer}
 
-#+begin_src R :results output graphics :exports both :file figs/Spatial/showDivPal.pdf
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/showDivPal.pdf
 library(RColorBrewer)
 
 divPal <- brewer.pal(n = 9, "PuOr")
@@ -284,7 +284,7 @@ showPal(divPal)
 [[file:figs/Spatial/showDivPal.pdf]]
 
 
-#+begin_src R :results output graphics :exports both :file figs/Spatial/divPal_SISav_naive.png :width 4000 :height 4000 :res 600
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/divPal_SISav_naive.png :width 4000 :height 4000 :res 600
 divTheme <- rasterTheme(region = divPal)
 
 levelplot(SISavt, contour = TRUE, par.settings = divTheme)
@@ -345,7 +345,7 @@ The raster map produced with this new palette is displayed in Figure
 ref:fig:divPalSISav. Now zero is clearly associated with the white
 color.
 
-#+begin_src R :results output graphics :exports both :file figs/Spatial/showBreak2Pal.pdf
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/showBreak2Pal.pdf
 break2pal <- function(x, mx, pal){
     ## x = mx gives y = 1
     ## x = 0 gives y = 0.5
@@ -368,7 +368,7 @@ showPal(pal)
 [[file:figs/Spatial/showBreak2Pal.pdf]]
 
 
-#+begin_src R :results output graphics :exports both :file figs/Spatial/divPalSISav.png :width 4000 :height 4000 :res 600
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/divPalSISav.png :width 4000 :height 4000 :res 600
 levelplot(SISavt,
           par.settings = rasterTheme(region = pal),
           at = breaks, contour = TRUE)
@@ -395,7 +395,7 @@ An alternative way for finer control is to fill the =regions$col=
 component of the theme with our palette after it has been created
 (Figure ref:fig:divPal_SISav_regions).
 
-#+begin_src R :results output graphics :exports both :file figs/Spatial/divPalSISav_regions.png :width 4000 :height 4000 :res 600
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/divPalSISav_regions.png :width 4000 :height 4000 :res 600
 divTheme <- rasterTheme(regions = list(col = pal))
 
 levelplot(SISavt,
@@ -442,7 +442,7 @@ pal <- break2pal(mids, mx, divRamp)
 divTheme$regions$col <- pal
 #+end_src
 
-#+begin_src R :results output graphics :exports both :file figs/Spatial/divPalSISav_classInt.png :width 4000 :height 4000 :res 600
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/divPalSISav_classInt.png :width 4000 :height 4000 :res 600
 levelplot(SISavt,
           par.settings = divTheme,
           at = breaks,
@@ -572,7 +572,7 @@ qualTheme <- rasterTheme(region = qualPal,
 
 #+RESULTS:
 
-#+begin_src R :results output graphics :exports both :file figs/Spatial/landClass.png :width 4000 :height 4000 :res 600  
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/landClass.png :width 4000 :height 4000 :res 600  
 levelplot(landClassT, maxpixels = 3.5e5,
           par.settings = qualTheme)
 
@@ -586,7 +586,7 @@ Let's explore the relation between the land cover and population
 density rasters. Figure ref:fig:populationNASA displays this
 latter raster using a logarithmic scale, defined with =zscaleLog=. 
 
-#+begin_src R :results output graphics :exports both :file figs/Spatial/populationNASA.png :width 4000 :height 4000 :res 600
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/populationNASA.png :width 4000 :height 4000 :res 600
 pPop <- levelplot(popT, zscaleLog = 10,
                   par.settings = BTCTheme,
                   maxpixels = 3.5e5)
@@ -614,7 +614,7 @@ names(st) <- c("pop", "landClass")
 
 #+end_src
 
-#+begin_src R :results output graphics :exports both :file figs/Spatial/histogramLandClass.pdf
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/histogramLandClass.pdf
 densityplot(~log10(pop), ## Represent the population
             groups = landClass, ## grouping by land classes
             data = s,
@@ -743,7 +743,7 @@ legend <- layer(
 #+RESULTS:
 
 Figure ref:fig:popLandClass displays the result with the legend.
-#+begin_src R :results output graphics :exports both :width 2000 :height 2000 :res 300 :file figs/Spatial/popLandClass.png
+#+begin_src R :results output graphics file :exports both :width 2000 :height 2000 :res 300 :file figs/Spatial/popLandClass.png
 p + legend
 #+end_src
 
