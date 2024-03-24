@@ -57,9 +57,8 @@ label:cha:raster
 
 #+INCLUDE: "Spatial/raster.tex" src latex
 
-** COMMENT Vector Fields
+** Vector Fields
 label:cha:vector
-
 
 #+INCLUDE: "Spatial/vector.tex" src latex
 

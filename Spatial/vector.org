@@ -1,6 +1,5 @@
-#+PROPERTY:  header-args :session *R* :tangle ../docs/R/vector.R :eval no-export
+#+PROPERTY:  header-args :session *R* :tangle ../docs/R/vector.R :eval yes
 #+OPTIONS: ^:nil
-#+BIND: org-latex-image-default-height "0.45\\textheight"
 
 #+begin_src R :exports none :tangle no
 setwd('~/github/bookvis/')
@@ -31,17 +30,19 @@ direction.
 
 #+INDEX: Packages!rasterVis@\texttt{rasterVis}
 #+INDEX: Packages!raster@\texttt{raster}
+#+INDEX: Packages!RColorBrewer@\texttt{RColorBrewer}
 #+INDEX: Data!Wind speed
 #+INDEX: Data!MeteoGalicia
 
 #+begin_src R 
 library("raster")
 library("rasterVis")
+library("RColorBrewer")
 
 ## Local vector direction 
-wDir <- raster('data/wDir')/180*pi
+wDir <- raster('data/Spatial/wDir')/180*pi
 ## Local vector magnitude
-wSpeed <- raster('data/wSpeed')
+wSpeed <- raster('data/Spatial/wSpeed')
 ## Vector field encoded in a RasterStack with two layers, magnitude
 ## and direction
 windField <- stack(wSpeed, wDir)
@@ -69,7 +70,7 @@ this function displays =RasterStack= and =RasterBrick= objects with
 two layers encoding a vector field, slope (local vector magnitude) and
 aspect (local vector direction).
 
-#+begin_src R :results output graphics :exports both :file figs/vectorplot.pdf
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/vectorplot.pdf
 vectorTheme <- BTCTheme(regions = list(alpha = 0.7))
 
 vectorplot(windField,
@@ -86,7 +87,7 @@ vectorplot(windField,
 
 #+CAPTION: Arrow plot of the wind vector field. label:fig:vectorplot
 #+RESULTS:
-[[file:figs/vectorplot.pdf]]
+[[file:figs/Spatial/vectorplot.pdf]]
 
 * Streamlines
 #+begin_src R :exports none
@@ -109,7 +110,7 @@ encode the local vector direction (Figure ref:fig:streamplot).
 
 #+INDEX: Subjects!Sequential palette
 
-#+begin_src R :results output graphics :exports both :file figs/streamplot.pdf
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/streamplot.pdf
 myTheme <- streamTheme(
     region = rev(brewer.pal(n = 4, "Greys")),
     symbol = rev(brewer.pal(n = 9, "Blues")))
@@ -125,7 +126,7 @@ streamplot(windField, isField = TRUE,
 
 #+CAPTION: Streamlines of the wind vector field. label:fig:streamplot
 #+RESULTS:
-[[file:figs/streamplot.pdf]]
+[[file:figs/Spatial/streamplot.pdf]]
 
 The magic of Figures ref:fig:vectorplot and ref:fig:streamplot is that
 they show the underlying physical structure of the spatial region only
