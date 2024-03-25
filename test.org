@@ -62,12 +62,12 @@ label:cha:vector
 
 #+INCLUDE: "Spatial/vector.tex" src latex
 
-** COMMENT Physical and Reference Maps
+** Physical and Reference Maps
  label:cha:refer-phys-maps
 
-
 #+INCLUDE: "Spatial/physical.tex" src latex
-#+INCLUDE: "Spatial/osm.tex" src latex
+
+# #+INCLUDE: "Spatial/osm.tex" src latex
 
 ** COMMENT About the Data
  label:cha:dataSpatial
