@@ -90,9 +90,7 @@ ref:fig:levelplotCMSAF_boundaries), and with =geom_sf= in the
 library(ggplot2)
 
 gplot(SISavt) +
-  geom_sf(data = boundarySF, fill = "transparent") +
-  coord_sf(expand = FALSE) + 
-  xlab("Longitude") + ylab("Latitude")
+  geom_sf(data = boundarySF, fill = "transparent")
 #+end_src
 
 #+INDEX: Packages!sp@\texttt{sp}

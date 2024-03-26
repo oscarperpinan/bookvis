@@ -1,6 +1,5 @@
 #+PROPERTY: header-args :session *R* :cache yes :tangle ../docs/R/osm.R :eval no-export
 #+OPTIONS: ^:nil
-#+BIND: org-latex-image-default-height "0.45\\textheight"
 
 #+begin_src R :exports none :tangle no
 setwd('~/github/bookvis/')
@@ -32,26 +31,33 @@ and forests. I will show you a map of these marvelous places.
 The first step is to acquire information from the OpenStreetMap (OSM)
 project. There are several packages to extract data from this service
 but, while most of them only provide already rendered raster images,
-the =osmdata= package[fn:6] enables the use of the raw data with
-classes from the packages =sp= and =sf=.
+the =osmdata= package enables the use of the raw data with
+classes of the packages =sp= and =sf=.
 
-=osmdata= obtains data from the overpass API[fn:2], a read-only API that
-serves up custom selected parts of the OSM map data. The first step is
-specifying the bounding box with the function =opq=:
+The =osmdata= package obtains data from the overpass API[fn:2], a
+read-only API that serves up custom selected parts of the OSM map
+data. The first step is specifying the bounding box with the function
+=opq=:
 
 #+INDEX: Data!OpenStreetMap
 #+INDEX: Packages!osmdata@\texttt{osmdata}
 
 #+begin_src R
 library("osmdata")
+library("sf")
+library("sp")
+
 
 ## Bounding box
-ymax <- 43.7
+xmin <- -8.1
 ymin <- 43.62
 xmax <- -8
-xmin <- -8.1
+ymax <- 43.7 
+cedeiraBB <- c(xmin = xmin, ymin = ymin,
+               xmax = xmax, ymax = ymax) 
+
 ## Overpass query
-cedeira <- opq(c(xmin, ymin, xmax, ymax))
+cedeiraOPQ <- opq(cedeiraBB)
 #+end_src
 
 Next, the query is completed adding the required features with
@@ -64,10 +70,10 @@ object with =osmdata_sf=. The result is a list with three components,
 respective spatial object. 
 
 For example, the next code obtains the residential streets in the
-region.
+region as a list of =Spatial*= objects.
 
 #+begin_src R :results output :exports both
-streetsOSM <- add_osm_feature(cedeira,
+streetsOSM <- add_osm_feature(cedeiraOPQ,
                               key = "highway",
                               value = "residential")
 
@@ -76,14 +82,14 @@ streetsSP <- osmdata_sp(streetsOSM)
 print(streetsSP)
 #+end_src
 
-#+RESULTS[da305a8c6159bf1c3386478d51a20e9e4d3c5c0b]:
+#+RESULTS[d459f4bbe11478d2e301df7172c4154d2b6cf2cf]:
 : Object of class 'osmdata' with:
-:                  $bbox : 43.6181,-8.0808,43.7031,-8.0224
+:                  $bbox : 43.62,-8.1,43.7,-8
 :         $overpass_call : The call submitted to the overpass API
-:             $timestamp : [ sáb 7 ene 2018 20:02:44 ]
-:            $osm_points : 'sp' SpatialPointsDataFrame with 819 points
-:             $osm_lines : 'sp' SpatialLinesDataFrame with 169 lines
-:          $osm_polygons : 'sp' SpatialPolygonsDataFrame with 3 polygons
+:                  $meta : metadata including timestamp and version numbers
+:            $osm_points : 'sp' SpatialPointsDataFrame with 1470 points
+:             $osm_lines : 'sp' SpatialLinesDataFrame with 226 lines
+:          $osm_polygons : 'sp' SpatialPolygonsDataFrame with 7 polygons
 :        $osm_multilines : 'sp' SpatialNADataFrame with 0 multilines
 :     $osm_multipolygons : 'sp' SpatialPolygonsDataFrame with 0 multipolygons
 
@@ -92,7 +98,6 @@ Because this procedure is to be repeated several times, I define a
 wrapper function that provides a =SpatialLinesDataFrame= object or a
 =SpatialPointsDataFrame= object depending on the value of its argument
 =type=:
-
 #+begin_src R
 spFromOSM <- function(source, key, value, type = 'lines')
 {
@@ -103,28 +108,78 @@ spFromOSM <- function(source, key, value, type = 'lines')
            points = spdata$osm_points)
 }
 #+end_src  
+and a function that provides a =sf= object:
+#+begin_src R
+sfFromOSM <- function(bb, key, value, type = 'lines')
+{
+  source <- opq(bb)
+  osm <- add_osm_feature(source, key, value)
+  sfdata <- osmdata_sf(osm)
+  switch(type,
+         lines = st_crop(sfdata$osm_lines, bb),
+         points = sfdata$osm_points)
+  
+}
+#+end_src  
 
-The next code uses this function to obtain the different types of
-roads and streets in the region as =SpatialLinesDataFrame= objects.
+The next code uses these functions to obtain the different types of
+roads and streets in the region as =SpatialLinesDataFrame= objects:
 #+begin_src R 
-streets <- spFromOSM(cedeira, key = "highway", value = "residential")
-primary <- spFromOSM(cedeira, key = "highway", value = "primary")
-secondary <- spFromOSM(cedeira, key = "highway", value = "secondary")
-tertiary <- spFromOSM(cedeira, key = "highway", value = "tertiary")
-unclassified <- spFromOSM(cedeira, key = "highway", value = "unclassified")
-footway <- spFromOSM(cedeira, key = "highway", value = "footway")
-steps <- spFromOSM(cedeira, key = "highway", value = "steps")
+streetsSP <- spFromOSM(cedeiraOPQ,
+                       key = "highway", value = "residential")
+primarySP <- spFromOSM(cedeiraOPQ,
+                       key = "highway", value = "primary")
+secondarySP <- spFromOSM(cedeiraOPQ,
+                         key = "highway", value = "secondary")
+tertiarySP <- spFromOSM(cedeiraOPQ,
+                        key = "highway", value = "tertiary")
+unclassifiedSP <- spFromOSM(cedeiraOPQ,
+                            key = "highway", value = "unclassified")
+footwaySP <- spFromOSM(cedeiraOPQ,
+                       key = "highway", value = "footway")
+stepsSP <- spFromOSM(cedeiraOPQ,
+                     key = "highway", value = "steps")
+#+end_src  
+and =sf= objects:
+#+begin_src R 
+streetsSF <- sfFromOSM(cedeiraBB,
+                       key = "highway", value = "residential")
+primarySF <- sfFromOSM(cedeiraBB,
+                       key = "highway", value = "primary")
+secondarySF <- sfFromOSM(cedeiraBB,
+                         key = "highway", value = "secondary")
+tertiarySF <- sfFromOSM(cedeiraBB,
+                        key = "highway", value = "tertiary")
+unclassifiedSF <- sfFromOSM(cedeiraBB,
+                            key = "highway", value = "unclassified")
+footwaySF <- sfFromOSM(cedeiraBB,
+                       key = "highway", value = "footway")
+stepsSF <- sfFromOSM(cedeiraBB,
+                     key = "highway", value = "steps")
 #+end_src  
 
 A similar procedure can be applied to construct a =SpatialPointsDataFrame=
 object with the collection of places with name:
-
 #+begin_src R 
-city <- spFromOSM(cedeira, key = "place", value = "town", type = "points")
-places <- spFromOSM(cedeira, key = "place", value = "hamlet", type = "points")
+citySP <- spFromOSM(cedeiraOPQ, key = "place",
+                    value = "town", type = "points")
+placesVsp <- spFromOSM(cedeiraOPQ, key = "place",
+                       value = "village", type = "points")
 
-nms <- strsplit(as.character(places$name), split = ' \\(')
-places$name <- sapply(nms, function(x) x[1])
+placesHsp <- spFromOSM(cedeiraOPQ, key = "place",
+                       value = "hamlet", type = "points")
+placesHsp <- subset(placesHsp, as.numeric(population) > 30)
+#+end_src  
+The =sfFromOSM= function retrieves the same information as =sf= objects:
+#+begin_src R 
+citySF <- sfFromOSM(cedeiraBB, key = "place",
+                    value = "town", type = "points")
+placesVsf <- sfFromOSM(cedeiraBB, key = "place",
+                       value = "village", type = "points")
+
+placesHsf <- sfFromOSM(cedeiraBB, key = "place",
+                       value = "hamlet", type = "points")
+placesHsf <- subset(placesHsf, as.numeric(population) > 30)
 #+end_src  
 
 ** Hill Shading
@@ -154,11 +209,10 @@ of the book repository.
 
 #+begin_src R
 library("raster")
-library("rasterVis")
 
 projCedeira <- projection(city)
 
-demCedeira <- raster('data/demCedeira')
+demCedeira <- raster('data/Spatial/demCedeira')
 projection(demCedeira) <- projCedeira
 
 ## Crop the DEM using the bounding box of the OSM data
@@ -188,15 +242,28 @@ hsCedeira <- hillShade(slope = slope, aspect = aspect,
 ##################################################################
 #+end_src
 And finally, the third step is to display the different layers of
-information in correct order (Figure [[ref:fig:cedeiraOSM]]):
+information in correct order:
+
+#+INDEX: Packages!rasterVis@\texttt{rasterVis}  
+#+INDEX: Packages!sp@\texttt{sp}  
+#+INDEX: Packages!sf@\texttt{sf}  
+#+INDEX: Packages!latticeExtra@\texttt{latticeExtra}  
+#+INDEX: Packages!ggplot2@\texttt{ggplot2}  
+#+INDEX: Packages!colorspace@\texttt{colorspace}  
+#+INDEX: Packages!RColorBrewer@\texttt{RColorBrewer}  
+
+#+begin_src R
+library("rasterVis")
+#+end_src
 
 - The hill shade layer is created with the =levelplot= method for
   =Raster= objects defined in the =rasterVis= package. The =GrTheme=
   is modified to display the sea region with blue color.
 
 #+begin_src R
-## The background color of the panel is set to blue to represent the sea
-hsTheme <- GrTheme(panel.background = list(col = 'skyblue3'))
+## The background color of the panel is set to blue to represent the
+## sea
+hsTheme <- GrTheme(panel.background = list(col = "skyblue3"))
 #+end_src
 
 - The DEM raster is printed with terrain colors and semitransparency
@@ -204,81 +271,125 @@ hsTheme <- GrTheme(panel.background = list(col = 'skyblue3'))
 
 #+begin_src R
 library("colorspace")
+
 ## DEM with terrain colors and semitransparency
-terrainTheme <- rasterTheme(region = terrain_hcl(n = 15), 
+terrainPal <- terrain_hcl(n = 15)
+
+terrainTheme <- rasterTheme(region = terrainPal, 
                             regions = list(alpha = 0.6))
 #+end_src
 
-- The places are represented with =sp.points= and labeled with the
-  =sp.pointLabel= method, a modification of the =pointLabel= function
-  for =base= graphics, both defined in the =maptools= package. These
-  functions use optimization routines to find good locations for point
-  labels without overlaps.
+- The roads are displayed with auxiliary functions (=sp.road= and
+  =sf_road=) that produces a colored line over a thicker black line,
+  and the town and villages and their names are displayed with the
+  auxiliary functions =sp.places= and =sf_places=.
 
 #+begin_src R
-library("maptools")
-#+end_src
+## Auxiliary function to display the roads.
 
+## A thicker black line in the background and a
+## thinner one with an appropiate color.
 
-- The roads are displayed with an auxiliary function (=sp.road=)
-  that produces a colored line over a thicker black line. 
-
-#+begin_src R
-##Auxiliary function to display the roads. A thicker black line in
-##the background and a thinner one with an appropiate color.
+## sp version
 sp.road <- function(line, lwd = 6, blwd = 7,
-                    col = 'indianred1', bcol = 'black'){
-    sp.lines(line, lwd = blwd, col = bcol)
-    sp.lines(line, lwd = lwd, col = col)
+                    col = "indianred1", bcol = "black") {
+  sp.lines(line, lwd = blwd, col = bcol)
+  sp.lines(line, lwd = lwd, col = col)
+}
+
+## sf version
+sf_road <- function(line, lwd = 1, blwd = 1.1,
+                    col = "indianred1", bcol = "black") {
+  list(
+    geom_sf(data = line, linewidth = blwd, col = bcol), 
+    geom_sf(data = line, linewidth = lwd, col = col)
+  )
 }
 #+end_src
 
+#+begin_src R
+##Auxiliary function to display the towns and villages. 
 
-#+INDEX: Packages!maptools@\texttt{maptools}  
-#+INDEX: Packages!sp@\texttt{sp}  
-#+INDEX: Packages!latticeExtra@\texttt{latticeExtra}  
-#+INDEX: Packages!colorspace@\texttt{colorspace}  
-#+INDEX: Subjects!Label positioning
+## sp version
+sp.places <- function(places, point.size= 0.4, text.size = 0.8) {
+  sp.points(places, pch = 19, col = "black",
+            cex = point.size, alpha = 0.8)
+  sp.text(coordinates(places), places$name,
+          pos = 3,
+          fontfamily = "Palatino", 
+          cex = text.size, col = "black")
 
-#+begin_src R :results output graphics file :exports both :file figs/cedeiraOSM.pdf
+## sf version
+sf_place <- function(places, text_size, point_size, vjust = -1)
+{
+  list(
+    geom_sf(data = places, size = point_size), 
+    geom_sf_text(aes(label = name), data = places,
+                 size = text_size, vjust = vjust)
+  )
+}
+#+end_src
+
+The final figure is produced superimposing the layers of =sp= objects
+with the =+.trellis= mechanism of the =latticeExtra= package (Figure
+[[ref:fig:cedeiraOSM]]):
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/cedeiraOSM.pdf
+library(latticeExtra)
+
 ## Hill shade and DEM overlaid
 levelplot(hsCedeira, maxpixels = ncell(hsCedeira),
           par.settings = hsTheme,
           margin = FALSE, colorkey = FALSE,
-          xlab = '', ylab = '') +
-    levelplot(demCedeira, maxpixels = ncell(demCedeira),
-              par.settings = terrainTheme) +
-    ## Roads and places
-    layer({
-        ## Street and roads
-        sp.road(streets, lwd = 1, blwd = 1, col = 'white')
-        sp.road(unclassified, lwd = 2, blwd = 2, col = 'white')
-        sp.road(footway, lwd = 2, blwd = 2, col = 'white')
-        sp.road(steps, lwd = 2, blwd = 2, col = 'white')
-        sp.road(tertiary, lwd = 4, blwd = 4, col = 'palegreen')
-        sp.road(secondary, lwd = 6, blwd = 6, col = 'midnightblue')
-        sp.road(primary, lwd = 7, blwd = 8, col = 'indianred1')
-        ## Places except Cedeira town
-        sp.points(places, pch = 19, col = 'black', cex = 0.4, alpha = 0.8)
-        sp.pointLabel(places, labels = places$name,
-                      fontfamily = 'Palatino', 
-                      cex = 0.7, col = 'black')
-        ## Cedeira town
-        sp.points(city, pch = 18, col = 'black', cex = 1)
-        sp.pointLabel(city, labels = 'Cedeira',
-                      fontfamily = 'Palatino', 
-                      cex = 1, col = 'black')
-    })
+          xlab = "", ylab = "") +
+  levelplot(demCedeira, maxpixels = ncell(demCedeira),
+            par.settings = terrainTheme) +
+  ## Roads and places
+  layer({
+    ## Street and roads
+    sp.road(streetsSP, lwd = 1, blwd = 1, col = "white")
+    sp.road(unclassifiedSP, lwd = 2, blwd = 2, col = "white")
+    sp.road(footwaySP, lwd = 2, blwd = 2, col = "white")
+    sp.road(stepsSP, lwd = 2, blwd = 2, col = "white")
+    sp.road(tertiarySP, lwd = 4, blwd = 4, col = "palegreen")
+    sp.road(secondarySP, lwd = 6, blwd = 6, col = "midnightblue")
+    sp.road(primarySP, lwd = 7, blwd = 8, col = "indianred1")
+    ## Places except Cedeira town
+    sp.places(placesHsp, point.size = 0.4, text.size = 0.8)
+    sp.places(placesVsp, point.size = 0.6, text.size = 1)
+    ## Cedeira town
+    sp.places(citySP, point.size = 1.2, text.size = 1.5)
+  })
+#+end_src
+#+CAPTION: Main roads near Cedeira, Galicia. Local topography is displayed with the hill shading technique. Some places are highlighted. label:fig:cedeiraOSM
+#+RESULTS[e4e8733abcc4f9e3d01978c2e88923d5c2a8fe1e]:
+[[file:figs/Spatial/cedeiraOSM.pdf]]
+
+or superimposing the layers of =sf= objects with the =+.gg= mechanism
+of =ggplot2=:
+#+begin_src R 
+library(ggplot2)
+
+## DEM
+gplot(demCedeira,
+      palette = scale_fill_gradientn(colours = terrainPal),
+      show.legend = FALSE) + 
+  ## Street and roads
+  sf_road(streetsSF, lwd = .4, blwd = .5, col = "white") +
+  sf_road(unclassifiedSF, lwd = .4, blwd = .5, col = "white") +
+  sf_road(footwaySF, lwd = .4, blwd = .5, col = "white") +
+  sf_road(stepsSF, lwd = .4, blwd = .5, col = "white") +
+  sf_road(tertiarySF, lwd = .8, blwd = .9, col = "palegreen") +
+  sf_road(secondarySF, lwd = .9, blwd = 1, col = "midnightblue") +
+  sf_road(primarySF, lwd = 1.1, blwd = 1.2, col = "indianred1") +
+  ## Places
+  sf_place(placesHsf, point_size = 1, text_size = 3) +
+  sf_place(placesVsf, point_size = 2, text_size = 4) +
+  sf_place(citySF, point_size = 3, text_size = 5)
 #+end_src
 
-#+CAPTION: Main roads near Cedeira, Galicia. Local topography is displayed with the hill shading technique. Some places are highlighted. label:fig:cedeiraOSM
-#+RESULTS[e56f65b2af52f80027cb6de841cb295e583348f7]:
-[[file:figs/cedeiraOSM.pdf]]
 
 * Footnotes
 
 [fn:2] http://www.overpass-api.de/
-
-[fn:6] In the first edition of this book, this chapter was based on the =osmar= package. However, this package has not been updated since 2013. Moreover, the =osmdata= package provides an easier query syntax. 
 
 [fn:1] http://xeocatalogo.xunta.es/geonetwork/srv/gl/main.home
