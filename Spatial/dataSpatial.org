@@ -389,10 +389,10 @@ from their respective webpages as Geo-TIFF files.
 
 #+begin_src R
 library("raster")
-## http://neo.sci.gsfc.nasa.gov/Search.html?group=64
-pop <- raster('875430rgb-167772161.0.FLOAT.TIFF')
-## http://neo.sci.gsfc.nasa.gov/Search.html?group=20
-landClass <- raster('241243rgb-167772161.0.TIFF')
+## https://neo.gsfc.nasa.gov/view.php?datasetId=SEDAC_POP
+pop <- raster("data/Spatial/875430rgb-167772161.0.FLOAT.TIFF")
+## https://neo.gsfc.nasa.gov/view.php?datasetId=MCD12C1_T1
+landClass <- raster("data/Spatial/241243rgb-167772161.0.TIFF")
 #+end_src
 
 
@@ -413,7 +413,7 @@ landClass <- raster('241243rgb-167772161.0.TIFF')
 
 [fn:5] http://eospso.gsfc.nasa.gov/
 
-[fn:6] http://neo.sci.gsfc.nasa.gov
+[fn:6] https://neo.gsfc.nasa.gov/
 
 [fn:9] https://en.wikipedia.org/wiki/Spanish_general_election,_2016
 
