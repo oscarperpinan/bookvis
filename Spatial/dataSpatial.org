@@ -35,110 +35,31 @@ particles (PM10, PM2.5), which measure pollution in different areas of
 the urban environment. In addition, many of the stations also include
 sensors to provide meteorological data.
 
-The detailed information of each measuring station can be retrieved
-from its own webpage defined by its station code.
-#+begin_src R 
-  ## codeStations.csv is extracted from the document
-  ## http://www.mambiente.munimadrid.es/opencms/export/sites/default/calaire/Anexos/INTPHORA-DIA.pdf,
-  ## table of page 3.
-  
-  codEstaciones <- read.csv2('data/codeStations.csv')
-  codURL <- as.numeric(substr(codEstaciones$Codigo, 7, 8))
-  
-  ## The information of each measuring station is available at its own webpage, defined by codURL
-  URLs <- paste('http://www.mambiente.munimadrid.es/opencms/opencms/calaire/contenidos/estaciones/estacion', codURL, '.html', sep = '')
-#+end_src
 
-** \floweroneleft Data Arrangement
+** Retrieve data
 #+begin_src R :exports none
 ##################################################################
-## Data arrangement
+## Retrieve data
 ##################################################################
 #+end_src
-The station webpage includes several tables that can be extracted with
-the =readHTMLTable= function of the =XML= package.  The longitude and
-latitude are included in the second table. The =ub2dms= function
-cleans this table and converts the strings to the =DMS= class defined
-by the =sp= package to represent degrees, minutes, and decimal
-seconds.
 
-
-#+INDEX: Subjects!Web scraping
-#+INDEX: Packages!XML@\texttt{XML}
-#+INDEX: Packages!sp@\texttt{sp}
-#+INDEX: Subjects!Data processing and cleaning
+The detailed information of the network of measuring stations is
+available at the Open Data portal of Madrid[fn:11]. The book
+repository contains an clean version of this file:
 
 #+begin_src R
-  library("XML")
-  library("sp")
-  
-  ## Access each webpage, retrieve tables and extract long/lat data
-  coords <- lapply(URLs, function(est){
-    tables <- readHTMLTable(est)
-    location <- tables[[2]]
-    ## Clean the table content and convert to dms format
-    ub2dms <- function(x){
-      ch <- as.character(x)
-      ch <- sub(',', '.', ch) 
-      ch <- sub('O', 'W', ch) ## Some stations use "O" instead of "W"
-      as.numeric(char2dms(ch, "º", "'", "'' "))
-    }
-    long <- ub2dms(location[2,1])
-    lat <- ub2dms(location[2,2])
-    alt <- as.numeric(sub(' m.', '', location[2, 3]))
-  
-    coords <- data.frame(long = long, lat = lat, alt = alt)
-  
-    coords
-  })
-  
-  airStations <- cbind(codEstaciones, do.call(rbind, coords))
-  
-  ## The longitude of "El Pardo" station is wrong (positive instead of negative)
-  airStations$long[22] <- -airStations$long[22]
-  
-  write.csv2(airStations, file = 'data/airStations.csv')
+airStations <- read.csv2("data/Spatial/airStations.csv")
+head(airStations)
 #+end_src
 
-The 2011 air pollution data are available from the Madrid City Council
-webpage[fn:2] and at the =data= folder of the book repository. The
-structure of the file is documented in the INTPHORA-DIA
-document[fn:3]. The =readLines= function reads the file and a =lapply=
-loop processes each line. The result is stored in the file
-=airQuality.csv=
+The air pollution data are available from the Madrid City Council
+webpage[fn:2], and the structure of the file is documented in a pdf
+document[fn:3]. The result after cleaning the data for the year 2016
+is stored in the file =airQuality.csv=
 
-
-#+INDEX: Subjects!String manipulation
-
-#+begin_src R 
-rawData <- readLines('data/Datos11.txt')
-## This loop reads each line and extracts fields as defined by the
-## INTPHORA file:
-## http://www.mambiente.munimadrid.es/opencms/export/sites/default/calaire/Anexos/INTPHORA-DIA.pdf
-datos11 <- lapply(rawData, function(x){
-    codEst <- substr(x, 1, 8)
-    codParam <- substr(x, 9, 10)
-    codTec <- substr(x, 11, 12)
-    codPeriod <- substr(x, 13, 14)
-    month <- substr(x, 17, 18)
-    dat <- substr(x, 19, nchar(x))
-    ## "N" used for impossible days (31st April)
-    idxN <- gregexpr('N', dat)[[1]]
-    if (idxN==-1) idxN <- numeric(0)
-    nZeroDays <- length(idxN)
-    day <- seq(1, 31-nZeroDays)
-    ## Substitute V and N with ";" to split data from different days
-    dat <- gsub('[VN]+', ';', dat)
-    dat <- as.numeric(strsplit(dat, ';')[[1]])
-    ## Only data from valid days
-    dat <- dat[day]
-    res <- data.frame(codEst, codParam, ##codTec, codPeriod,
-                      month, day, year = 2016,
-                      dat)
-})
-datos11 <- do.call(rbind, datos11)
-
-write.csv2(datos11, 'data/airQuality.csv')
+#+begin_src R
+airQuality <- read.csv2("data/Spatial/airQuality.csv")
+head(airQuality)
 #+end_src
 
 
@@ -155,117 +76,52 @@ method.
 
 
 #+INDEX: Data!Air quality in Madrid
-#+INDEX: Packages!sp@\texttt{sp}
+#+INDEX: Packages!sf@\texttt{sf}
 
 #+begin_src R 
-  library("sp")
+library("sf")
   
-  ## Spatial location of stations
-  airStations <- read.csv2('data/airStations.csv')
-  coordinates(airStations) <- ~ long + lat
-  ## Geographical projection
-  proj4string(airStations) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
+## Spatial location of stations
+airStations <- st_as_sf(airStations,
+                        coords = c("long", "lat"),
+                        crs = 4326)
 #+end_src
 
 #+RESULTS:
 
 On the other hand, the =airQuality= =data.frame= comprises the air
 quality daily measurements. We will retain only the $NO_2$ time
-series.
+series, and represent each station with aggregated values (mean,
+median, and standard deviation) computed with =aggregate=:
+
 #+begin_src R
-  ## Measurements data
-  airQuality <- read.csv2('data/airQuality.csv')
-  ## Only interested in NO2 
-  NO2 <- airQuality[airQuality$codParam==8, ]
+NO2 <- subset(airQuality, codParam == 8)
+
+NO2agg <- aggregate(dat ~ codEst, data = NO2,
+                    FUN = function(x) {
+                      c(mean = signif(mean(x), 3),
+                        median = median(x),
+                        sd = signif(sd(x), 3))
+                    })
+NO2agg <- do.call(cbind, NO2agg)
+NO2agg <- as.data.frame(NO2agg)
 #+end_src
-
-#+RESULTS:
-
-We will represent each station using aggregated values (mean, median,
-and standard deviation) computed with =aggregate=:
-
-
-#+begin_src R 
-  NO2agg <- aggregate(dat ~ codEst, data = NO2,
-                      FUN = function(x) {
-                          c(mean = signif(mean(x), 3),
-                            median = median(x),
-                            sd = signif(sd(x), 3))
-                          })
-  NO2agg <- do.call(cbind, NO2agg)
-  NO2agg <- as.data.frame(NO2agg)
-#+end_src
-
 
 The aggregated values (a =data.frame=) and the spatial information (a
-=SpatialPointsDataFrame=) are combined with the =spCbind= method from
-the =maptools= package to create a new
-=SpatialPointsDataFrame=. Previously, the =data.frame= is reordered by
-matching against the shared key column (=airStations$Codigo= and
-=NO2agg$codEst=):
-
-
-#+INDEX: Packages!rgdal@\texttt{rgdal}
-#+INDEX: Packages!maptools@\texttt{maptools}
+=sf= object) are combined with the =cbind= method of the =sf=
+package. Previously, the =data.frame= is reordered by matching against
+the shared key column (=airStations$Code= and =NO2agg$codEst=):
 
 #+begin_src R
-library("rgdal")
-library("maptools")
-## Link aggregated data with stations to obtain a SpatialPointsDataFrame.
-## Codigo and codEst are the stations codes
-idxNO2 <- match(airStations$Codigo, NO2agg$codEst)
-NO2sp <- spCbind(airStations[, c('Nombre', 'alt')], NO2agg[idxNO2, ])
+## Link aggregated data with stations to obtain a sf object
+## Code and codEst are the stations codes
+idxNO2 <- match(airStations$Code, NO2agg$codEst)
+NO2sf <- cbind(airStations[, c("Name", "alt")],
+               NO2agg[idxNO2, ])
+
 ## Save the result
-writeOGR(NO2sp, dsn = 'data/', layer = 'NO2sp',
-         driver = 'ESRI Shapefile')
-#+end_src
-
-
-
-** Photographs of the stations
-label:sec:photographs_stations
-
-#+begin_src R :exports none
-##################################################################
-## Photographs of the stations
-##################################################################
-#+end_src
-
-#+INDEX: Packages!XML@\texttt{XML}
-\nomenclature{XML}{Extensible Markup Language, a markup language that defines a set of rules for encoding documents in a format that is both human-readable and machine-readable.}
-
-The photographs of the stations are used for the tooltips of the
-interactive graphics (Section ref:sec:interactive_bubble). These
-photographs are downloaded from the Munimadrid webpage[fn:8] with the
-functions of the =XML= package.
-
-The =htmlParse= function from the =XML= package parses each station
-page, and the station photograph is extracted with =getNodeSet= and
-=xmlAttrs=.
-
-
-#+begin_src R :eval no-export
-library("XML")
-
-old <- setwd('images')
-for (i in 1:nrow(NO2df))
-{
-    codEst <- NO2df[i, "codEst"]
-    ## Webpage of each station
-    codURL <- as.numeric(substr(codEst, 7, 8))
-    rootURL <- 'http://www.mambiente.munimadrid.es'
-    stationURL <- paste(rootURL,
-                        '/opencms/opencms/calaire/contenidos/estaciones/estacion',
-                        codURL, '.html', sep = '')
-    content <- htmlParse(stationURL, encoding = 'utf8')
-    ## Extracted with http://www.selectorgadget.com/
-    xPath <- '//*[contains(concat( " ", @class, " " ), concat( " ", "imagen_1", " " ))]'
-    imageStation <- getNodeSet(content, xPath)[[1]]
-    imageURL <- xmlAttrs(imageStation)[1]
-    imageURL <- paste(rootURL, imageURL, sep = '')
-    download.file(imageURL, destfile = paste(codEst, '.jpg', sep = ''))
-}
-setwd(old)
+st_write(NO2sf, dsn = "data/Spatial/", layer = "NO2sf",
+         driver = "ESRI Shapefile")
 #+end_src
 
 * Spanish General Elections
@@ -277,7 +133,7 @@ label:sec:dataChoropleth
 ##################################################################
 #+end_src
 
-The results from the 2016 Spanish general elections[fn:9] are
+The results of the 2016 Spanish general elections[fn:9] are
 available from the Ministry webpage[fn:10] and at the =data= folder of
 the book repository. Each region of the map will represent the
 percentage of votes (=pcMax=) obtained by the predominant political
@@ -291,7 +147,7 @@ groups are considered: the four main parties (=PP=, =PSOE=, =UP=,
 #+INDEX: Subjects!Data processing and cleaning
 
 #+begin_src R 
-dat2016 <- read.csv('data/GeneralSpanishElections2016.csv')
+dat2016 <- read.csv("data/Spatial/GeneralSpanishElections2016.csv")
 
 census <- dat2016$Total.censo.electoral
 validVotes <- dat2016$Votos.válidos
@@ -308,22 +164,22 @@ whichMax <- apply(votesData,  1, function(x)names(votesData)[which.max(x)])
 ## Results of the winner party at each municipality
 Max <- apply(votesData, 1, max)
 ## OTH for everything but PP, PSOE, UP, Cs, and ABS
-whichMax[!(whichMax %in% c('PP', 'PSOE', 'UP', 'C.s', 'ABS'))] <- 'OTH'
+whichMax[!(whichMax %in% c("PP", "PSOE", "UP", "C.s", "ABS"))] <- "OTH"
 ## Percentage of votes with the electoral census
 pcMax <- Max/census * 100
 
 ## Province-Municipality code. sprintf formats a number with leading zeros.
-PROVMUN <- with(dat2016, paste(sprintf('%02d', Código.de.Provincia),
-                               sprintf('%03d', Código.de.Municipio),
+PROVMUN <- with(dat2016, paste(sprintf("%02d", Código.de.Provincia),
+                               sprintf("%03d", Código.de.Municipio),
                                sep=""))
 
 votes2016 <- data.frame(PROVMUN, whichMax, Max, pcMax)
-write.csv(votes2016, 'data/votes2016.csv', row.names = FALSE)
+write.csv(votes2016, "data/Spatial/votes2016.csv", row.names = FALSE)
 #+end_src
 
 #+begin_src R :results output :exports results :tangle no
-votes2016 <- read.csv('data/votes2016.csv',
-                        colClasses = c('factor', 'factor', 'numeric', 'numeric'))
+votes2016 <- read.csv("data/Spatial/votes2016.csv",
+                      colClasses = c("factor", "factor", "numeric", "numeric"))
 
 summary(votes2016)
 #+end_src
@@ -350,15 +206,13 @@ summary(votes2016)
 The Spanish administrative boundaries are available as shapefiles at
 the INE (Instituto Nacional de Estadística) webpage[fn:7]. Both the
 municipalities, =spMap=, and province boundaries, =provinces=, are
-read as =SpatialPolygonsDataFrame= with =readOGR=.
+read with =st_read= of the =sf= package.
 
 
-#+INDEX: Packages!rgdal@\texttt{rgdal}
-#+INDEX: Packages!sp@\texttt{sp}
+#+INDEX: Packages!sf@\texttt{sf}
 
 #+begin_src R
-library("sp")
-library("rgdal")
+library("sf")
 #+end_src
 
 
@@ -367,22 +221,16 @@ library("rgdal")
 #+begin_src R :eval no-export
 old <- setwd(tempdir())
 
-download.file('ftp://www.ine.es/pcaxis/mapas_completo_municipal.rar',
-              'mapas_completo_municipal.rar')
-system2('unrar', c('e', 'mapas_completo_municipal.rar'))
+download.file("https://www.ine.es/pcaxis/mapas_completo_municipal.zip",
+              "mapas_completo_municipal.zip")
+unzip("mapas_completo_municipal.zip")
 
-spMap <- readOGR("esp_muni_0109.shp",
-                 p4s = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs")
-Encoding(levels(spMap$NOMBRE)) <- "latin1"
+sfMap <- st_read("esp_muni_0109.shp", crs = 25830,
+                 stringsAsFactors = TRUE)
+sfMap <- subset(sfMap, !is.na(sfMap$PROVMUN))
 
 setwd(old)
 #+end_src
-
-#+begin_src R :exports none :tangle no
-spMap <- readOGR("/home/datos/mapas_completo_municipal/esp_muni_0109.shp",
-                 p4s = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs")
-Encoding(levels(spMap$NOMBRE)) <- "latin1"
-#+end_src  
 
 Some of the polygons are repeated and can be dissolved with
 =unionSpatialPolygons= (the =rgeos= package must be installed).
@@ -396,29 +244,26 @@ The main step is to link the data with the polygons. The =ID= slot of
 each polygon is the key to find the correspondent registry in the
 =votes2016= dataset.
 #+begin_src R
-votes2016 <- read.csv('data/votes2016.csv',
-                        colClasses = c('factor', 'factor', 'numeric', 'numeric'))
+votes2016 <- read.csv("data/Spatial/votes2016.csv",
+                      colClasses = c("factor", "factor", "numeric", "numeric"))
 
-## Match polygons and data using ID slot and PROVMUN column
-IDs <- sapply(spPols@polygons, function(x)x@ID)
-idx <- match(IDs, votes2016$PROVMUN)
+## Match polygons and data 
+idx <- match(sfMap$PROVMUN, votes2016$PROVMUN)
   
 ##Places without information
 idxNA <- which(is.na(idx))
 
-##Information to be added to the SpatialPolygons object
-dat2add <- votes2016[idx, ]
+##Information to be added to the sf object
+dat2add <- votes2016[idx, c("whichMax", "Max", "pcMax")]
 
-## SpatialPolygonsDataFrame uses row names to match polygons with data
-row.names(dat2add) <- IDs
-spMapVotes <- SpatialPolygonsDataFrame(spPols, dat2add)
+## Spatial object with votes data
+sfMapVotes <- cbind(sfMap, dat2add)
 
 ## Drop those places without information
-spMapVotes0 <- spMapVotes[-idxNA, ]
+sfMapVotes0 <- sfMapVotes[-idxNA, ]
 
 ## Save the result
-writeOGR(spMapVotes0, dsn = 'data/', layer = 'spMapVotes0',
-         drive = 'ESRI Shapefile')
+st_write(sfMapVotes0, "data/Spatial/sfMapVotes0.shp")
 #+end_src
 
 Finally, Spanish maps are commonly displayed with the Canarian islands next
@@ -429,24 +274,22 @@ coordinates of the islands with =elide=. Finally, a new
 peninsula.
 
 #+begin_src R
-## Extract Canarias islands from the SpatialPolygons object
-canarias <-  sapply(spMapVotes0@polygons, function(x)substr(x@ID, 1, 2) %in% c("35",  "38"))
-peninsula <- spMapVotes0[!canarias,]
-island <- spMapVotes0[canarias,]
+## Extract Canarias islands from the sf object
+canarias <-  substr(sfMapVotes0$PROVMUN, 1, 2) %in% c("35",  "38")
+peninsula <- sfMapVotes0[!canarias,]
+island <- sfMapVotes0[canarias,]
 
 ## Shift the island extent box to position them at the bottom right corner
-dy <- bbox(peninsula)[2,1] - bbox(island)[2,1]
-dx <- bbox(peninsula)[1,2] - bbox(island)[1,2]
-island2 <- elide(island, shift = c(dx, dy))
-bbIslands <- bbox(island2)
-proj4string(island2) <- proj4string(peninsula)
+dbbox <- st_bbox(peninsula) - st_bbox(island)
+dxy <- dbbox[c("xmax", "ymin")]
+island$geometry <- island$geometry + dxy
 
 ## Bind Peninsula (without islands) with shifted islands
-spMapVotes <- rbind(peninsula, island2)
+st_crs(island) <- st_crs(peninsula)
+sfMapVotes <- rbind(peninsula, island)
 
 ## Save the result
-writeOGR(spMapVotes, dsn = 'data/', layer = 'spMapVotes',
-         drive = 'ESRI Shapefile')
+st_write(sfMapVotes, "data/Spatial/sfMapVotes.shp")
 #+end_src
 
 * CM SAF
@@ -554,6 +397,7 @@ landClass <- raster('241243rgb-167772161.0.TIFF')
 
 
 * Footnotes
+[fn:11] The Open Data portal is https://datos.madrid.es/. The information of the measuring stations is available at https://datos.madrid.es/egob/catalogo/212629-1-estaciones-control-aire.csv. 
 
 [fn:8] http://www.mambiente.munimadrid.es/opencms/opencms/calaire/SistemaIntegral/SistVigilancia/Estaciones/
 
@@ -562,9 +406,8 @@ landClass <- raster('241243rgb-167772161.0.TIFF')
 
 [fn:1] http://www.eea.europa.eu/soer/countries/es/
 
-[fn:2] http://www.mambiente.munimadrid.es/opencms/opencms/calaire/consulta/descarga_opendata.html
-
-[fn:3] http://www.mambiente.munimadrid.es/opencms/export/sites/default/calaire/Anexos/INTPHORA-DIA.pdf
+[fn:2] Use the search tool with the text "Calidad del aire. Datos diarios desde 2001".
+[fn:3] https://datos.madrid.es/FWProjects/egob/Catalogo/MedioAmbiente/Aire/Ficheros/Interprete_ficheros_%20calidad_%20del_%20aire_global.pdf
 
 [fn:4] http://www.bsrn.awi.de/en/home/
 
@@ -574,7 +417,7 @@ landClass <- raster('241243rgb-167772161.0.TIFF')
 
 [fn:9] https://en.wikipedia.org/wiki/Spanish_general_election,_2016
 
-[fn:10] http://www.infoelectoral.mir.es/infoelectoral/docxl/02_201606_1.zip
+[fn:10] https://infoelectoral.interior.gob.es/es/elecciones-celebradas/area-de-descargas/
 
 
 

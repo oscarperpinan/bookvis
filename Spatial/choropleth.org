@@ -61,8 +61,7 @@ the files, it must be set with the =crs= argument.
 #+begin_src R 
 library("sf")
 
-sfMapVotes <- st_read("data/Spatial/spMapVotes.shp", 
-                      crs = 25830)
+sfMapVotes <- st_read("data/Spatial/sfMapVotes.shp")
 #+end_src
 
 This =object= contains two main variables: =whichMax=, the name of the
@@ -276,16 +275,14 @@ intFisher <- classIntervals(sfMapVotes$pcMax,
 #+begin_src R :results output graphics file :exports both :file figs/Spatial/quantile_intervals.pdf
 plot(intQuant, pal = quantPal, main = "")
 #+end_src
-
-#+begin_src R :results output graphics file :exports both :file figs/Spatial/fisher_intervals.pdf
-plot(intFisher, pal = quantPal, main = "")
-#+end_src
-
 #+CAPTION: Quantile method for setting class intervals label:fig:quantile_intervals
 #+RESULTS:
 #+ATTR_LATEX: :height 0.4\textheight
 [[file:figs/Spatial/quantile_intervals.pdf]]
 
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/fisher_intervals.pdf
+plot(intFisher, pal = quantPal, main = "")
+#+end_src
 #+CAPTION: Natural breaks method for setting class intervals label:fig:fisher_intervals
 #+RESULTS:
 #+ATTR_LATEX: :height 0.4\textheight
@@ -313,6 +310,7 @@ spplot(spMapVotes["pcMaxInt"],
 
 #+CAPTION: Quantitative choropleth map displaying the percentage of votes obtained by the predominant political option in each municipality in the 2016 Spanish general elections using a classification (classed choropleth). label:fig:pcMax
 #+RESULTS:
+[[file:figs/Spatial/pcMax.pdf]]
 
 The next code is the version of this figure with =ggplot2=:
 #+begin_src R
@@ -671,7 +669,7 @@ library("mapview")
 This package is able to work both with =sp= and with =sf=. In this section we use the =sf= package to read the data[fn:5]. 
 
 #+begin_src R
-sfMapVotes0 <- st_read("data/Spatial/spMapVotes0.shp",
+sfMapVotes0 <- st_read("data/Spatial/sfMapVotes0.shp",
                        crs = 25830)
 #+end_src
 

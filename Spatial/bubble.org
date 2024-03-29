@@ -1,4 +1,4 @@
-#+PROPERTY: header-args :session *R* :tangle ../docs/R/bubble.R :eval yes
+#+PROPERTY: header-args :session *R* :tangle ../docs/R/bubble.R :eval no-export
 #+OPTIONS: ^:nil
 
 #+begin_src R :exports none :tangle no
@@ -660,7 +660,7 @@ displaying a table with information. This tooltip can be improved
 thanks to the =popup= argument and the =popup*= family of
 functions. For example, the next code creates an interactive graphic
 whose tooltips show an image of the station (available in the =images=
-folder of the repository) using the =popupImage= function (Figure
+folder of the repository[fn:10]) using the =popupImage= function (Figure
 ref:fig:mapview_popup_images).
 
 As an additional feature, the provider[fn:11] of the background map is
@@ -915,6 +915,7 @@ plot3d(x = NO2df$coords.x1,
 
 
 * Footnotes
+[fn:10]These images have been obtained from the Air Quality portal of Madrid, https://airedemadrid.madrid.es/, following the path "Actuaciones municipales > Sistema integral de calidad del aire > Vigilancia".
 
 [fn:4] More details available in https://wiki.openstreetmap.org/wiki/Key:highway.  
 [fn:2] https://geojson.io/ 
