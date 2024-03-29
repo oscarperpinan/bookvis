@@ -205,7 +205,7 @@ summary(votes2016)
 
 The Spanish administrative boundaries are available as shapefiles at
 the INE (Instituto Nacional de Estadística) webpage[fn:7]. Both the
-municipalities, =spMap=, and province boundaries, =provinces=, are
+municipalities, =sfMap=, and province boundaries, =provinces=, are
 read with =st_read= of the =sf= package.
 
 
@@ -232,17 +232,11 @@ sfMap <- subset(sfMap, !is.na(sfMap$PROVMUN))
 setwd(old)
 #+end_src
 
-Some of the polygons are repeated and can be dissolved with
-=unionSpatialPolygons= (the =rgeos= package must be installed).
-
-#+begin_src R 
-## dissolve repeated polygons
-spPols <- unionSpatialPolygons(spMap, spMap$PROVMUN) 
-#+end_src
-
-The main step is to link the data with the polygons. The =ID= slot of
-each polygon is the key to find the correspondent registry in the
-=votes2016= dataset.
+The main step is to link the data with the polygons. The =sf= objects
+behaves as a =data.frame= (with an additional column named
+=geometry=), and therefore the conventional methods for merging
+=data.frames= can be used here. Next code joins the =sf= object with
+the =data.frame= using the function =match=.
 #+begin_src R
 votes2016 <- read.csv("data/Spatial/votes2016.csv",
                       colClasses = c("factor", "factor", "numeric", "numeric"))
@@ -266,11 +260,11 @@ sfMapVotes0 <- sfMapVotes[-idxNA, ]
 st_write(sfMapVotes0, "data/Spatial/sfMapVotes0.shp")
 #+end_src
 
-Finally, Spanish maps are commonly displayed with the Canarian islands next
-to the peninsula. First we have to extract the polygons of the
+Finally, Spanish maps are commonly displayed with the Canarian islands
+next to the peninsula. First we have to extract the polygons of the
 islands and the polygons of the peninsula, and then shift the
-coordinates of the islands with =elide=. Finally, a new
-=SpatialPolygons= object binds the shifted islands with the
+coordinates of the islands summing the displacement on the =geometry=
+column. Finally, a new =sf= object binds the shifted islands with the
 peninsula.
 
 #+begin_src R
