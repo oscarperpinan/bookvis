@@ -13,12 +13,7 @@ setwd('~/github/bookvis')
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
 
-library("lattice")
-library("latticeExtra")
-
-Sys.setlocale("LC_TIME", 'C')
-
-source('configLattice.R')
+Sys.setlocale("LC_TIME", "C")
 #+end_src
 
 * Introduction
@@ -45,13 +40,13 @@ with the =coordinates= method.
 library("sp")
   
 ## Spatial location of stations
-airStations <- read.csv2('data/airStations.csv')
+airStationsSP <- read.csv2("data/Spatial/airStations.csv")
 ## rownames are used as the ID of the Spatial object
-rownames(airStations) <- substring(airStations$Codigo, 7)
-coordinates(airStations) <- ~ long + lat
-proj4string(airStations) <- CRS("+proj=longlat +ellps=WGS84")
+rownames(airStationsSP) <- substring(airStationsSP$Code, 7)
+coordinates(airStationsSP) <- ~ long + lat
+proj4string(airStationsSP) <- CRS("+proj=longlat +ellps=WGS84")
 ## Measurements data
-airQuality <- read.csv2('data/airQuality.csv')
+airQuality <- read.csv2("data/Spatial/airQuality.csv")
 ## Only interested in NO2 
 NO2 <- airQuality[airQuality$codParam == 8, ]
 #+end_src
@@ -59,6 +54,16 @@ NO2 <- airQuality[airQuality$codParam == 8, ]
 Each row of the =NO2= =data.frame= corresponds to a measurement at one
 of the stations during a day of the year (long format, following
 the schema proposed in cite:Pebesma2012).
+
+#+begin_src R
+library(sftime)
+
+airStationsDF <- read.csv2("data/Spatial/airStations.csv")
+
+airStationsSF <- st_as_sf(airStationsDF,
+                          coords = c("long", "lat"),
+                          crs = 4326)
+#+end_src
 
 The =spacetime= package defines several classes for spatiotemporal
 data inheriting the classes defined by the =sp= and =xts= packages.
@@ -100,9 +105,20 @@ NO2zoo <- zoo(NO2wide[,-1], NO2wide$time)                             (ref:zoo)
 
 dats <- data.frame(vals = as.vector(t(NO2zoo)))                    (ref:vector)
 
-NO2st <- STFDF(sp = airStations,                                    (ref:stfdf)
+NO2st <- STFDF(sp = airStationsSP,                                    (ref:stfdf)
                time = index(NO2zoo),
                data = dats)
+#+end_src
+
+#+RESULTS:
+
+
+
+#+begin_src R
+idx <- match(NO2$codEst, airStationsSF$Code)
+NO2sft <- st_sftime(dat = NO2$dat, code = NO2$codEst,
+                    geometry = airStationsSF$geometry[idx],
+                    time = NO2$time)
 #+end_src
 
 * Graphics with =spacetime=
@@ -123,13 +139,13 @@ example, we print the first twelve days of the sequence.
 
 #+INDEX: Subjects!Small multiples
 #+begin_src R :results output graphics file :exports both :file figs/NO2STxy.pdf
-airPal <- colorRampPalette(c('springgreen1', 'sienna3', 'gray5'))(5)
+airPal <- colorRampPalette(c("springgreen1", "sienna3", "gray5"))(5)
   
 stplot(NO2st[, 1:12],
        cuts = 5,
        col.regions = airPal,
-       main = '',
-       edge.col = 'black')
+       main = "",
+       edge.col = "black")
 #+end_src
 
 #+CAPTION: Scatterplots of the $NO_2$ values (2011) with a panel for each day of the time series. Each circle represents a different station.
@@ -137,14 +153,23 @@ stplot(NO2st[, 1:12],
 #+RESULTS[7e86d8c75682aa68d66610cb75a9ea14833ff5b9]:
 [[file:figs/NO2STxy.pdf]]
 
+#+begin_src R
+library(ggplot2)
+
+ggplot(NO2sft) + 
+  geom_sf(aes(color = dat)) +
+  facet_wrap(~ cut(time, 12)) +
+  scale_colour_stepsn(n.breaks = 6, colours = airPal)
+#+end_src
+
 With the mode =xt=, a space-time plot with space on the x-axis and
 time on the y-axis is plotted (Figure [[fig:NO2hovmoller]]).
 
 #+begin_src R :results output graphics file :exports both :file figs/NO2hovmoller.pdf
-stplot(NO2st, mode = 'xt',
+stplot(NO2st, mode = "xt",
        col.regions = colorRampPalette(airPal)(15),
        scales = list(x = list(rot = 45)),
-       ylab = '', xlab = '', main = '')
+       ylab = "", xlab = "", main = "")
 #+end_src
 
 #+CAPTION: Space-time graphic of the NO_2 time series. Each column represents a different station (denoted with the last two digits of the code).
@@ -152,13 +177,20 @@ stplot(NO2st, mode = 'xt',
 #+RESULTS[720ac1fb68e202769dfa044473c2f888ab6a0b7a]:
 [[file:figs/NO2hovmoller.pdf]]
 
+#+begin_src R
+ggplot(NO2sft) + 
+  geom_tile(aes(x = as.factor(code),
+                y = time,
+                fill = dat))
+#+end_src
+
 Finally, with the mode =ts=, data are coerced to a multivariate time series
 that is displayed in a single plot (Figure [[fig:NO2zoo]]).
 
 #+begin_src R :results output graphics file :exports both :file figs/NO2zoo.png :width 2000 :height 2000 :res 300
-stplot(NO2st, mode = 'ts',
-       xlab = '',
-       lwd = 0.1, col = 'black', alpha = 0.6,
+stplot(NO2st, mode = "ts",
+       xlab = "",
+       lwd = 0.1, col = "black", alpha = 0.6,
        auto.key = FALSE)
 #+end_src
 
@@ -166,6 +198,15 @@ stplot(NO2st, mode = 'ts',
 #+LABEL: fig:NO2zoo
 #+RESULTS[ea3cfae61f85b1a658256d688e049882c22aaaf8]:
 [[file:figs/NO2zoo.png]]
+
+#+begin_src R
+ggplot(NO2sft) +
+  geom_line(aes(x=time, y = dat),
+            colour = "black",
+            linewidth = 0.25,
+            alpha = 0.6) +
+  theme_bw()
+#+end_src
 
 These three graphics complement each other and together provide a more
 complete view of the behavior of the data. For example in Figure

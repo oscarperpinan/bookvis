@@ -53,7 +53,7 @@ function =st_read=. This function returns an object of class =sf=.
 #+begin_src R
 library("sf")
 
-NO2sf <- st_read(dsn = "data/Spatial/", layer = "NO2sp")
+NO2sf <- st_read(dsn = "data/Spatial/", layer = "NO2sf")
 #+end_src
 
 * Proportional Symbol Mapping with =spplot=
