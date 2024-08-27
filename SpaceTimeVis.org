@@ -432,17 +432,19 @@ label:part:Spatial
  displayed. These examples make use of several datasets (available at
  the book website) described in Chapter ref:cha:dataSpatial.
 
- On the one hand, the Chapters ref:cha:bubble, ref:cha:choropleth, and
- ref:cha:raster focus on thematic maps, that display a specific
- variable commonly using geographic data such as coastlines,
- boundaries, and places as points of reference for the variable being
- mapped. These maps provide specific information about particular
- locations or areas (proportional symbol mapping and choropleth maps)
- and information about spatial patterns (isarithmic and raster maps).
+ On the one hand, the Chapters ref:cha:bubble, ref:cha:choropleth,
+ ref:cha:vector, and ref:cha:raster focus on thematic maps, that
+ display a specific variable commonly using geographic data such as
+ coastlines, boundaries, and places as points of reference for the
+ variable being mapped. These maps provide specific information about
+ particular locations or areas (proportional symbol mapping and
+ choropleth maps) and information about spatial patterns (isarithmic
+ and raster maps).
 
- On the other hand, the Chapter ref:cha:refer-phys-maps focuses on
- reference maps, to show geographic location of features, and on
- physical maps, to show the landscape and features of a place.
+ On the other hand, the Chapter ref:cha:vector is devoted to vector
+ fields, and the Chapter ref:cha:refer-phys-maps focuses on reference
+ maps, to show geographic location of features, and on physical maps,
+ to show the landscape and features of a place.
 
 *** Packages
   label:sec:spatial-packages
@@ -647,6 +649,18 @@ label:cha:choropleth
 }
 #+END_EXPORT
 #+INCLUDE: "Spatial/choropleth.org"
+
+** Thematic Maps: Cartogram Maps
+label:cha:choropleth
+#+BEGIN_EXPORT latex
+\chapterprecishere{%
+  A cartogram map ...
+  The most relevant packages used in this chapter are: \texttt{sf} for reading and writing spatial data; \texttt{cartogram}...
+  %
+}
+#+END_EXPORT
+#+INCLUDE: "Spatial/cartogram.org"
+
 
 ** Thematic Maps: Raster Maps
 label:cha:raster

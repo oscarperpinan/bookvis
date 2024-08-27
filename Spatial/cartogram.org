@@ -1,0 +1,64 @@
+#+PROPERTY:  header-args :session *R* :tangle ../docs/R/cartogram.R :eval no-export
+#+OPTIONS: ^:nil
+
+#+begin_src R :exports none :tangle no
+setwd("~/github/bookvis/")
+#+end_src
+
+
+#+begin_src R :exports none  
+##################################################################
+## Initial configuration
+##################################################################
+## Clone or download the repository and set the working directory
+## with setwd to the folder where the repository is located.
+ 
+library("ggplot2")
+##################################################################
+#+end_src
+
+
+* Introduction
+
+* Cartogram
+
+#+begin_src R
+library("sf")
+library("cartogram")
+#+end_src
+
+#+begin_src R
+sfPopulation <- st_read("data/Spatial/sfPopulation.shp")
+
+ggplot(sfPopulation) +
+  geom_sf(aes(fill = population)) + 
+  scale_fill_gradientn(colours = quantPal) +
+  theme_bw()
+#+end_src
+
+#+begin_src R
+cartPopCont <- cartogram_cont(sfPopulation, weight = "population")
+
+ggplot(cartPopCont) +
+  geom_sf(aes(fill = population)) + 
+  scale_fill_gradientn(colours = quantPal) +
+  theme_bw()
+#+end_src
+
+#+begin_src R
+cartPopNCont <- cartogram_ncont(sfPopulation, weight = "population")
+
+ggplot(cartPopNCont) +
+  geom_sf(aes(fill = population)) + 
+  scale_fill_gradientn(colours = quantPal) +
+  theme_bw()
+#+end_src
+
+#+begin_src R
+cartPopDorl <- cartogram_dorling(sfPopulation, weight = "population")
+
+ggplot(cartPopDorl) +
+  geom_sf(aes(fill = population)) + 
+  scale_fill_gradientn(colours = quantPal) +
+  theme_bw()
+#+end_src

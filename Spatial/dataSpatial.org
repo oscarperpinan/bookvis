@@ -149,6 +149,7 @@ groups are considered: the four main parties (=PP=, =PSOE=, =UP=,
 #+begin_src R 
 dat2016 <- read.csv("data/Spatial/GeneralSpanishElections2016.csv")
 
+population <- dat2016$Población
 census <- dat2016$Total.censo.electoral
 validVotes <- dat2016$Votos.válidos
 ## Election results per political party and municipality
@@ -169,31 +170,16 @@ whichMax[!(whichMax %in% c("PP", "PSOE", "UP", "C.s", "ABS"))] <- "OTH"
 pcMax <- Max/census * 100
 
 ## Province-Municipality code. sprintf formats a number with leading zeros.
-PROVMUN <- with(dat2016, paste(sprintf("%02d", Código.de.Provincia),
-                               sprintf("%03d", Código.de.Municipio),
-                               sep=""))
+PROV <- sprintf("%02d", dat2016$Código.de.Provincia)
+MUN <- sprintf("%03d", dat2016$Código.de.Municipio)
+PROVMUN <- paste0(PROV, MUN)
+                          
+votes2016 <- data.frame(PROV, MUN, PROVMUN,
+                        population, census, validVotes,
+                        whichMax, Max, pcMax)
 
-votes2016 <- data.frame(PROVMUN, whichMax, Max, pcMax)
 write.csv(votes2016, "data/Spatial/votes2016.csv", row.names = FALSE)
 #+end_src
-
-#+begin_src R :results output :exports results :tangle no
-votes2016 <- read.csv("data/Spatial/votes2016.csv",
-                      colClasses = c("factor", "factor", "numeric", "numeric"))
-
-summary(votes2016)
-#+end_src
-
-#+RESULTS:
-:     PROVMUN     whichMax         Max             pcMax      
-:  01001  :   1   ABS :2817   Min.   :     2   Min.   :21.33  
-:  01002  :   1   C.s :   3   1st Qu.:    54   1st Qu.:31.69  
-:  01003  :   1   OTH : 170   Median :   162   Median :35.64  
-:  01004  :   1   PP  :4214   Mean   :  1394   Mean   :37.58  
-:  01006  :   1   PSOE: 783   3rd Qu.:   637   3rd Qu.:41.25  
-:  01008  :   1   UP  : 138   Max.   :696804   Max.   :94.74  
-:  (Other):8119
-
 
 ** Administrative Boundaries
 
@@ -225,9 +211,9 @@ download.file("https://www.ine.es/pcaxis/mapas_completo_municipal.zip",
               "mapas_completo_municipal.zip")
 unzip("mapas_completo_municipal.zip")
 
-sfMap <- st_read("esp_muni_0109.shp", crs = 25830,
+sfMun <- st_read("esp_muni_0109.shp", crs = 25830,
                  stringsAsFactors = TRUE)
-sfMap <- subset(sfMap, !is.na(sfMap$PROVMUN))
+sfMun <- subset(sfMun, !is.na(sfMun$PROVMUN))
 
 setwd(old)
 #+end_src
@@ -239,19 +225,21 @@ behaves as a =data.frame= (with an additional column named
 the =data.frame= using the function =match=.
 #+begin_src R
 votes2016 <- read.csv("data/Spatial/votes2016.csv",
-                      colClasses = c("factor", "factor", "numeric", "numeric"))
-
-## Match polygons and data 
-idx <- match(sfMap$PROVMUN, votes2016$PROVMUN)
+                      colClasses = c("factor", "factor", "factor",
+                                     "numeric", "numeric", "numeric",
+                                     "factor", "numeric", "numeric"))
+## Match polygons and data with the PROVMUN column
+idx <- match(sfMun$PROVMUN, votes2016$PROVMUN)
   
 ##Places without information
 idxNA <- which(is.na(idx))
 
 ##Information to be added to the sf object
-dat2add <- votes2016[idx, c("whichMax", "Max", "pcMax")]
+dat2add <- votes2016[idx, c("PROV", "population", "census", "validVotes",
+                            "whichMax", "Max", "pcMax")]
 
 ## Spatial object with votes data
-sfMapVotes <- cbind(sfMap, dat2add)
+sfMapVotes <- cbind(sfMun, dat2add)
 
 ## Drop those places without information
 sfMapVotes0 <- sfMapVotes[-idxNA, ]
@@ -283,8 +271,50 @@ st_crs(island) <- st_crs(peninsula)
 sfMapVotes <- rbind(peninsula, island)
 
 ## Save the result
-st_write(sfMapVotes, "data/Spatial/sfMapVotes.shp")
+st_write(sfMapVotes, "data/Spatial/sfMapVotes.shp", append = FALSE)
 #+end_src
+
+* Population
+
+#+begin_src R
+library(sf)
+library(dplyr)
+#+end_src
+
+#+begin_src R
+old <- setwd(tempdir())
+sfMun <- st_read("esp_muni_0109.shp", crs = 25830,
+                 stringsAsFactors = TRUE)
+sfMun <- subset(sfMun, !is.na(sfMun$PROVMUN))
+setwd(old)
+#+end_src
+
+#+begin_src R
+## Combine polygons in a province
+sfMun$PROV <- substr(sfMun$PROVMUN, 1, 2)
+sfProv <- sfMun %>% group_by(PROV) %>% summarise()
+#+end_src
+
+#+begin_src R
+## Population of each province
+dat2016 <- read.csv("data/Spatial/GeneralSpanishElections2016.csv")
+
+population <- dat2016$Población
+PROV <- sprintf("%02d", dat2016$Código.de.Provincia)
+
+population2016 <- aggregate(population ~ PROV,
+                            FUN = sum)
+#+end_src
+
+#+begin_src R
+## Merge data with the polygons
+sfPopulation <- merge(sfProv,
+                      population2016,
+                      by = "PROV")
+
+st_write(sfPopulation, "data/Spatial/sfPopulation.shp")
+#+end_src
+
 
 * CM SAF
 \label{sec:CMSAF}

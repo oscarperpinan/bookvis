@@ -70,6 +70,7 @@ obtained by this political option.
 
 #+begin_src R :results output :exports results :tangle no
 sfMapVotes$whichMax <- factor(sfMapVotes$whichMax)
+sfMapVotes$PROV <- factor(sfMapVotes$PROV)
 
 summary(sfMapVotes)
 #+end_src
@@ -696,6 +697,7 @@ mapView(sfMapVotes0,
 
 #+CAPTION: Snapshot of the interactive qualitative choropleth map produced with =mapview=. label:fig:mapview_whichMax
 file:figs/Spatial/mapview_whichMax.png
+
 
 * Footnotes
 [fn:2] Available at https://archive.nytimes.com/www.nytimes.com/interactive/2009/03/10/us/20090310-immigration-explorer.html. 
