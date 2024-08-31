@@ -29,7 +29,7 @@ The starting point is to retrieve the data and combine it with the
 spatial and temporal information. The data are contained in the
 =airQuality= =data.frame=, and the locations are in =airStations=, a
 =data.frame= that is converted to a =SpatialPointsDataFrame= object
-with the =coordinates= method.
+with the =coordinates=  method.
 
 
 #+INDEX: Data!Air quality in Madrid
@@ -181,7 +181,12 @@ stplot(NO2st, mode = "xt",
 ggplot(NO2sft) + 
   geom_tile(aes(x = as.factor(code),
                 y = time,
-                fill = dat))
+                fill = dat)) +
+  scale_fill_stepsn(colours = airPal,
+                    n.breaks = 6) +
+  xlab("Station Code") + ylab("") +
+  guides(x = guide_axis(angle = 45))
+
 #+end_src
 
 Finally, with the mode =ts=, data are coerced to a multivariate time series
@@ -205,7 +210,7 @@ ggplot(NO2sft) +
             colour = "black",
             linewidth = 0.25,
             alpha = 0.6) +
-  theme_bw()
+  theme_bw() + xlab("")
 #+end_src
 
 These three graphics complement each other and together provide a more
