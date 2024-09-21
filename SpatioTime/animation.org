@@ -519,6 +519,151 @@ grid.export("/tmp/vLine.svg")
 #+CAPTION: Animated circles of the $NO_2$ space-time data with a time series as reference. label:fig:vLine
 [[file:figs/SpatioTime/vLine.png]]
 
+* Time Trajectory label:sec:trajectory
+
+A time trajectory is the evolution of the position of a moving
+object. It involves a series of positions usually captured by tracking
+devices such as GPS beacons. It can be represented with a static
+graphic, but the animation is a better solution to show the movement
+of the object.
+
+The data of this section is extracted from the MoveBank
+platform[fn:7], an online database of animal tracking data. It comes
+from a study funded by the "MERCURIO" project which analyses the
+trajectories of 10 lesser kestrels (small falcons) travelling from
+Senegal to Spain[fn:10].
+
+The =move2= package[fn:8] eases the import and handling of the data
+from MoveBank with =R=, and extends the =sf= class with a additional
+functionality such as a time column. We will add spatial context with
+the administrative boundaries retrieved with the =rnaturalearth=
+package. Finally, the =ggplot2= package will produce the static images
+with the =geom_sf= function, and the =gganimate= package[fn:9] will
+create the animation.
+
+#+INDEX: Packages!sf@\texttt{sf}
+#+INDEX: Packages!move2@\texttt{move2}
+#+INDEX: Packages!units@\texttt{units}
+#+INDEX: Packages!rnaturalearth@\texttt{rnaturalearth}
+#+INDEX: Packages!gganimate@\texttt{gganimate}
+
+#+begin_src R
+library("sf")
+library("move2")
+library("units") 
+
+library("rnaturalearth")
+
+library("ggplot2")
+library("gganimate")
+#+end_src
+
+#+begin_src R
+## Movebank data
+birds0 <- movebank_download_study(2398637362,
+                                 "license-md5"="74263192947ce529c335a0ae72d7ead7")
+
+sf_use_s2(FALSE) ## Needed for st_crop to work
+## Natural Earth boundaries
+boundaries <- ne_countries(scale = "large")
+boundaries <- st_crop(boundaries, birds0)
+#+end_src
+
+#+begin_src R
+## Filter the data: speed higher than 2 m/s; remove year 2022 data.
+birds <- subset(birds0,
+                ground_speed > set_units(2L, "m/s") &
+                timestamp >= as.POSIXct("2023-01-01"))
+
+## Add a column with month values
+birds$month <- as.numeric(format(mt_time(birds), "%m"))
+#+end_src
+
+The first attempt to display the trajectories is shown in Figure
+ref:fig:trajectoriesGG. Each individual is represented by a
+differented color, and panels divide the data by months.
+
+#+begin_src R :results output graphics file :exports both :file figs/SpatioTime/trajectoriesGG.pdf
+ggplot() +
+    geom_sf(data = boundaries) +
+    geom_sf(data = birds,
+            aes(color = individual_local_identifier),
+            alpha = 0.1) +
+    guides(colour = guide_legend(override.aes = list(alpha = 1))) + 
+    theme_linedraw() +
+    facet_wrap(~ month, nrow = 2) 
+#+end_src
+
+#+CAPTION: Trajectories of the lesser kestrels in the different months included in the study. Each individual is represented by a different color.
+#+LABEL: fig:trajectoriesGG
+#+RESULTS:
+[[file:figs/SpatioTime/trajectoriesGG.pdf]]
+
+The dataset contains the positions of the birds along with additional
+variables (speed, direction) captured by the tracking devices. As
+shown in Figure ref:fig:trajectoriesPolar, these variables provide
+valuable insights into the trajectory data. This figure is a polar
+representation of the histogram of flight directions, using a
+different color for each speed class.
+
+#+begin_src R :results output graphics file :exports both :file figs/SpatioTime/trajectoriesPolar.pdf
+birds$speed <- cut(birds$ground_speed,
+                   breaks = c(2, 5, 10, 15, 35))
+ggplot() +
+    coord_polar(start = 0) +
+    geom_histogram(data = birds,
+                   aes(x = set_units(heading, "degrees"),
+                       fill = speed),
+                   breaks = set_units(seq(0, 360, by = 10L), "degrees"),
+                   position = position_stack(reverse = TRUE)) +
+    scale_x_units(name = NULL,
+                  limits = set_units(c(0L, 360), "degrees"),
+                  breaks = (0:4) * 90L) +
+    ylab("") +
+    facet_wrap(~ month, nrow = 2) +
+    scale_fill_ordinal("Speed") +
+    theme_linedraw()
+#+end_src
+
+#+CAPTION: Polar representation of the histogram of flight directions, using a different color for each speed class.
+#+LABEL: fig:trajectoriesPolar
+#+RESULTS:
+[[file:figs/SpatioTime/trajectoriesPolar.pdf]]
+
+Based on these previous figures, the animation will be focused on the
+trajectories registered during March. Two functions of the =gganimate=
+package must be noted here:
+- =transition_time= splits the data into multiple states according to
+  the values of the =timestamp= column, and then generate a sequence
+  inserting frames between the states for continuity.
+- =shadow_wake= displays a wake after each position showing previous
+  states of the trajectory. Its numeric argument is the length of the
+  wake as a percentage of the total length of the animation.
+
+The animation is available at the book webpage. Figure
+ref:fig:trajectorySnapshot displays one of its frames.
+
+#+begin_src R
+birdsMarch <- subset(birds,
+                      month == 3)
+p <- ggplot() +
+    geom_sf(data = boundaries) +
+    geom_sf(data = birdsMarch,
+            aes(colour = individual_local_identifier),
+            size = 3) +
+    theme_bw() +
+    xlab("Longitude") + ylab("Latitude") +
+    ggtitle("{format(frame_time, format = '%Y-%m-%d %H:%M:%S')}") +
+    transition_time(timestamp) +
+    shadow_wake(0.8)
+
+
+animate(p, nframes = 300)
+#+end_src
+
+#+CAPTION: Snapshot of the animation of the trajectories.
+#+LABEL: fig:trajectoriesSnapshot
+file:figs/SpatioTime/trajectorySnapshot.png
 
 * Fly-by Animation label:sec:animationST_3d
 
@@ -752,10 +897,17 @@ movie3d(travel,
 
 * Footnotes
 
+[fn:10]https://www.movebank.org/cms/webapp?gwt_fragment=page=studies,path=study2398637362
+
+[fn:9]https://gganimate.com/ 
+
+[fn:8]More information at https://bartk.gitlab.io/move2/. The package needs your username and password information to access the MoveBank data: https://bartk.gitlab.io/move2/articles/movebank.html
+
+[fn:7]More information at: [[https://www.movebank.org/]]. You need an account (free) to download data: https://www.movebank.org/cms/movebank-registration
+
 [fn:1] http://mandeo.meteogalicia.es/thredds/catalogos/WRF_2D/catalog.html
 
 [fn:2] http://www.meteogalicia.es
-
 
 [fn:3] The page "Out of the Blue and Into the Black: New Views of the Earth at Night", https://earthobservatory.nasa.gov/Features/IntotheBlack/, provides detailed information about the Earth at Night maps. 
 
