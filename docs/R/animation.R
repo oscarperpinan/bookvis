@@ -275,6 +275,10 @@ grid.export("figs/SpatioTime/vLine.svg")
 
 grid.export("/tmp/vLine.svg")
 
+##################################################################
+## Time trajectory
+##################################################################
+
 library("sf")
 library("move2")
 library("units") 
@@ -342,6 +346,10 @@ p <- ggplot() +
 
 
 animate(p, nframes = 300)
+
+##################################################################
+## Fly-by animation
+##################################################################
 
 library("rgl")
 library("magick") ## needed to import the texture
@@ -471,3 +479,64 @@ movie3d(travel,
         startTime = 1, fps = 1,
         type = "mp4", clean = FALSE,
         webshot = FALSE)
+
+##################################################################
+## Hill shading animation
+##################################################################
+
+library(rayshader)
+library(parallel)
+library(suntools)
+library(raster)
+library(gifski)
+
+demCedeira <- raster('data/Spatial/demCedeira')
+DEM <- raster_to_matrix(demCedeira)
+
+water <- detect_water(DEM)
+
+lonlat <- matrix(c((xmax(demCedeira) + xmin(demCedeira))/2,
+                   (ymax(demCedeira) + ymin(demCedeira))/2),
+                 nrow = 1)
+
+tt <- seq(as.POSIXct("2024-06-01 07:00:00", tz = "Europe/Madrid"),
+          as.POSIXct("2024-06-01 21:00:00", tz = "Europe/Madrid"),
+          by = "15 min")
+sun <- lapply(tt, function(x) solarpos(lonlat, x))
+
+ncores <- detectCores()
+
+hillshades <- mclapply(sun, function(ang)
+{
+    DEM %>%
+        sphere_shade(texture = "imhof1", sunangle = ang[1]) %>%
+        add_water(water, color = "imhof1") %>%
+        add_shadow(ray_shade(DEM,
+                             sunangle = ang[1],
+                             sunaltitude = ang[2]),
+                   0.75)
+}, mc.cores = ncores)
+
+old <- setwd(tempdir())
+
+idx <- seq_along(hillshades)
+
+for(i in idx)
+{
+    plot_3d(heightmap = DEM,
+            hillshade = hillshades[[i]],
+            zscale = 5,
+            fov = 45,
+            theta = 0,
+            zoom = 0.75,
+            phi = 45,
+            windowsize = c(1000, 800))
+    render_snapshot(filename = paste0(i, ".png"),
+                    title_text = tt[i])
+}
+
+gifski(png_files = paste0(idx, ".png"),
+       gif_file = "cedeira.gif",
+       delay = 1/5)
+  
+setwd(old)

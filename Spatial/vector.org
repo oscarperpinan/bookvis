@@ -1,4 +1,4 @@
-#+PROPERTY:  header-args :session *R* :tangle ../docs/R/vector.R :eval yes
+#+PROPERTY:  header-args :session *R* :tangle ../docs/R/vector.R :eval no-export
 #+OPTIONS: ^:nil
 
 #+begin_src R :exports none :tangle no

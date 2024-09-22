@@ -520,6 +520,11 @@ grid.export("/tmp/vLine.svg")
 [[file:figs/SpatioTime/vLine.png]]
 
 * Time Trajectory label:sec:trajectory
+ #+begin_src R :exports none
+##################################################################
+## Time trajectory
+##################################################################
+ #+end_src
 
 A time trajectory is the evolution of the position of a moving
 object. It involves a series of positions usually captured by tracking
@@ -666,6 +671,11 @@ animate(p, nframes = 300)
 file:figs/SpatioTime/trajectorySnapshot.png
 
 * Fly-by Animation label:sec:animationST_3d
+ #+begin_src R :exports none
+##################################################################
+## Fly-by animation
+##################################################################
+ #+end_src
 
 In this section the =rgl= package is used to generate a fly-by animation over the Earth, as an example of an animation depicting changes of a spatial attribute.
 
@@ -895,7 +905,135 @@ movie3d(travel,
         webshot = FALSE)
 #+end_src
 
+
+* Hill shading animation label:sec:sun3d
+ #+begin_src R :exports none
+##################################################################
+## Hill shading animation
+##################################################################
+ #+end_src
+
+The hill shading technique has been previously explained in sections
+ref:sec:hill-shading-raster and ref:sec:hill-shading-osm. In those
+examples the sun position was fixed. We will use it again changing the
+sun position across the day and tracing the shades with the
+=rayshader= package[fn:11]. The sun coordinates will be computed with
+the =suntools= package and the =gif= animation will be produced with
+the =gifski= package.
+
+#+INDEX: Packages!rayshader@\texttt{rayshader}
+#+INDEX: Packages!parallel@\texttt{parallel}
+#+INDEX: Packages!suntools@\texttt{suntools}
+#+INDEX: Packages!raster@\texttt{raster}
+#+INDEX: Packages!gifski@\texttt{gifski}
+
+#+begin_src R
+library(rayshader)
+library(parallel)
+library(suntools)
+library(raster)
+library(gifski)
+#+end_src
+
+For this section we will work with the same Digital Elevation Model of
+section ref:sec:hill-shading-osm. It is read with =raster= and
+converted to a matrix to be used with =rayshader=.
+
+#+begin_src R
+demCedeira <- raster('data/Spatial/demCedeira')
+DEM <- raster_to_matrix(demCedeira)
+#+end_src
+
+The function =detect_water= of this package can detect areas of water
+in a DEM.
+#+begin_src R
+water <- detect_water(DEM)
+#+end_src
+
+The sun position is computed with the =solarpos= function of the
+=suntools= package. This function requires a location, which is the
+center of the DEM, and a timestamp. The position is computed from the
+sunrise to the sunset, approximately.
+
+#+begin_src R
+lonlat <- matrix(c((xmax(demCedeira) + xmin(demCedeira))/2,
+                   (ymax(demCedeira) + ymin(demCedeira))/2),
+                 nrow = 1)
+
+tt <- seq(as.POSIXct("2024-06-01 07:00:00", tz = "Europe/Madrid"),
+          as.POSIXct("2024-06-01 21:00:00", tz = "Europe/Madrid"),
+          by = "15 min")
+sun <- lapply(tt, function(x) solarpos(lonlat, x))
+#+end_src
+
+Everything is ready for the hill shading computation. Three functions
+are to be noted: =sphere_shade= maps a texture to a hillshade by
+spherical mapping; =ray_shade= uses the specified light directions to
+calculate a global shadow map for the elevation matrix; and
+=add_shadow= combines these shadow maps. The =mclapply= function of
+the =parallel= package is used here for speeding the loop with
+parallel computing.
+
+#+begin_src R :eval no-export
+ncores <- detectCores()
+
+hillshades <- mclapply(sun, function(ang)
+{
+    DEM %>%
+        sphere_shade(texture = "imhof1", sunangle = ang[1]) %>%
+        add_water(water, color = "imhof1") %>%
+        add_shadow(ray_shade(DEM,
+                             sunangle = ang[1],
+                             sunaltitude = ang[2]),
+                   0.75)
+}, mc.cores = ncores)
+#+end_src
+
+#+begin_src R :exports none :tangle no
+load("SpatioTime/hillshades.RData")
+#+end_src
+
+The =hillshades= object is a list of matrices each containing a shade
+map for a certain sun position. The =plot_3d= function can display
+this map over the DEM map, and the =render_snapshot= function captures
+this 3D view to a image file. By iterating through the list and
+running these functions in a loop, you can generate a series of images
+that the =gifski= function can compile into a GIF animation. Figure
+ref:fig:cedeiraSnapshot shows a snapshot of the animation, which is
+available at the book webpage.
+
+#+begin_src R :eval no-export
+old <- setwd(tempdir())
+
+idx <- seq_along(hillshades)
+
+for(i in idx)
+{
+    plot_3d(heightmap = DEM,
+            hillshade = hillshades[[i]],
+            zscale = 5,
+            fov = 45,
+            theta = 0,
+            zoom = 0.75,
+            phi = 45,
+            windowsize = c(1000, 800))
+    render_snapshot(filename = paste0(i, ".png"),
+                    title_text = tt[i])
+}
+
+gifski(png_files = paste0(idx, ".png"),
+       gif_file = "cedeira.gif",
+       delay = 1/5)
+  
+setwd(old)
+#+end_src
+
+#+CAPTION: Snapshot of the hill shade animation. label:fig:cedeiraSnapshot
+[[file:figs/SpatioTime/cedeira23.png]]
+
+
 * Footnotes
+[fn:11]https://www.rayshader.com/ 
 
 [fn:10]https://www.movebank.org/cms/webapp?gwt_fragment=page=studies,path=study2398637362
 

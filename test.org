@@ -39,7 +39,7 @@ label:cha:timeGroupFactor
 
 #+INCLUDE: "TimeSeries/dataTime.tex" src latex
 
-* Spatial Data
+* COMMENT Spatial Data
 label:part:Spatial
 
 ** COMMENT Thematic Maps: Proportional Symbol Mapping
@@ -74,16 +74,16 @@ label:cha:vector
 
 #+INCLUDE: "Spatial/dataSpatial.tex" src latex
 
-* COMMENT Space-Time Data
+* Space-Time Data
 label:part:SpaceTime
 
-** Spatiotemporal Raster Data
+** COMMENT Spatiotemporal Raster Data
  label:cha:rasterST
 
 
 #+INCLUDE: "SpatioTime/rasterST.tex" src latex
 
-** Spatiotemporal Point Observations
+** COMMENT Spatiotemporal Point Observations
  label:cha:pointsST
 
 
