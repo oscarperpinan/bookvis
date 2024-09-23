@@ -454,8 +454,8 @@ the average value of the set of stations, with a point and a
 vertical line to highlight the time position as the animation
 advances (Figure ref:fig:vLine).
 #+begin_src R
-library(lattice)
-library(latticeExtra)
+library("lattice")
+library("latticeExtra")
 
 ## Time series with average value of the set of stations
 NO2mean <- zoo(rowMeans(NO2zoo, na.rm = TRUE), index(NO2zoo))
@@ -928,11 +928,11 @@ the =gifski= package.
 #+INDEX: Packages!gifski@\texttt{gifski}
 
 #+begin_src R
-library(rayshader)
-library(parallel)
-library(suntools)
-library(raster)
-library(gifski)
+library("rayshader")
+library("parallel")
+library("suntools")
+library("raster")
+library("gifski")
 #+end_src
 
 For this section we will work with the same Digital Elevation Model of

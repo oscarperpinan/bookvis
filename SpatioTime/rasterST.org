@@ -65,6 +65,17 @@ max values  :     88.84628,     93.43065,     84.44052,     81.79698,     47.085
 time        : 2011-01-01, 2011-12-31 (min, max)
 #+end_example
 
+The =terra= package is also able to include the timestamp in the objects with the =time= function:
+
+#+begin_src R
+SISdmt <- rast(SISdm)
+time(SISdmt) <- timeIndex
+#+end_src
+
+The code of this chapter works with both the =RasterBrick= and the
+=SpatRaster= objects. For simplicity, only the =RasterBrick= object is
+used from here on.
+
 * Level Plots label:sec:levelplot_st
 
 #+begin_src R :exports none
@@ -232,6 +243,8 @@ xyplot(SISdm, auto.key = list(space = 'right'))
 #+INDEX: Subjects!Horizon plot
 #+INDEX: Subjects!Small multiples
 #+begin_src R :results output graphics file :exports both :file figs/SpatioTime/SISdm_horizonplot.pdf
+library("RColorBrewer")
+
 horizonplot(SISdm, digits = 1,
             col.regions = rev(brewer.pal(n = 6, 'PuOr')),
             xlab = '', ylab = 'Latitude')
@@ -255,8 +268,9 @@ label:sec:cubeView
 
 Figure ref:fig:SISdm_hovmoller_lat reduces the 3D raster to a 2D
 matrix with spatial aggregation following a certain direction. The
-=cubeview= package publishes a function with the same nameto represent
-this 3D raster without prior aggregation, as an interactive cube.
+=cubeview= package[fn:1] publishes a function with the same name to
+represent this 3D raster without prior aggregation, as an interactive
+cube.
 
 This cube can be freely rotated so that different Hövmoller views are
 possible. Visible layers can be selected using arrow keys (left-right
@@ -280,3 +294,7 @@ cubeview(SISdm)
 
 #+CAPTION: Snapshot of an interactive cube displaying a 3D raster. label:fig:cubeView
 file:figs/SpatioTime/cubeView.png
+
+* Footnotes
+
+[fn:1]This package only works with the =raster= package. 

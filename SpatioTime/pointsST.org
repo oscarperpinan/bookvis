@@ -27,52 +27,63 @@ label:sec:intro_pointsST
 
 The starting point is to retrieve the data and combine it with the
 spatial and temporal information. The data are contained in the
-=airQuality= =data.frame=, and the locations are in =airStations=, a
-=data.frame= that is converted to a =SpatialPointsDataFrame= object
-with the =coordinates=  method.
-
+=airQuality= =data.frame=, and the locations are in =airStations=,
+another =data.frame=.
 
 #+INDEX: Data!Air quality in Madrid
-#+INDEX: Packages!sp@\texttt{sp}
-#+INDEX: Subjects!Data processing and cleaning
 
-#+begin_src R 
-library("sp")
-  
+#+begin_src R
 ## Spatial location of stations
-airStationsSP <- read.csv2("data/Spatial/airStations.csv")
-## rownames are used as the ID of the Spatial object
-rownames(airStationsSP) <- substring(airStationsSP$Code, 7)
-coordinates(airStationsSP) <- ~ long + lat
-proj4string(airStationsSP) <- CRS("+proj=longlat +ellps=WGS84")
+airStations <- read.csv2("data/Spatial/airStations.csv")
 ## Measurements data
 airQuality <- read.csv2("data/Spatial/airQuality.csv")
 ## Only interested in NO2 
 NO2 <- airQuality[airQuality$codParam == 8, ]
 #+end_src
 
-Each row of the =NO2= =data.frame= corresponds to a measurement at one
-of the stations during a day of the year (long format, following
-the schema proposed in cite:Pebesma2012).
+There are two different solutions:
+- the =sp= and =spacetime= packages,
+- the =sf= and =sftime= packages.
 
-#+begin_src R
-library(sftime)
 
-airStationsDF <- read.csv2("data/Spatial/airStations.csv")
+* Data processing
 
-airStationsSF <- st_as_sf(airStationsDF,
-                          coords = c("long", "lat"),
-                          crs = 4326)
+#+INDEX: Subjects!Data processing and cleaning
+
+** =sp= and =spacetime=
+
+#+begin_src R :exports none
+##################################################################
+## sp and spacetime
+##################################################################
 #+end_src
 
-The =spacetime= package defines several classes for spatiotemporal
-data inheriting the classes defined by the =sp= and =xts= packages.
-In particular, the =STFDF=, a class for spatiotemporal data with full
-space-time grids with =n= spatial locations and =m= times, requires a
-=data.frame= with =n·m= rows, (spatial index moving faster than
-temporal index).  Thus, we need to transform this structure to build a
-multivariate time series where each station is a different variable
-(space-wide under the schema of cite:Pebesma2012). The procedure is
+#+INDEX: Packages!sp@\texttt{sp}
+
+The =airStations= =data.frame= is converted to a
+=SpatialPointsDataFrame= object with the =coordinates= method.
+
+#+begin_src R 
+library("sp")
+
+airStationsSP <- airStations
+## rownames are used as the ID of the Spatial object
+rownames(airStationsSP) <- substring(airStationsSP$Code, 7)
+coordinates(airStationsSP) <- ~ long + lat
+proj4string(airStationsSP) <- CRS("+proj=longlat +ellps=WGS84")
+#+end_src
+
+Each row of the =NO2= =data.frame= corresponds to a measurement at one
+of the stations during a day of the year (long format, following the
+schema proposed in cite:Pebesma2012).  The =spacetime= package defines
+several classes for spatiotemporal data inheriting the classes defined
+by the =sp= and =xts= packages.  In particular, the =STFDF=, a class
+for spatiotemporal data with full space-time grids with =n= spatial
+locations and =m= times, requires a =data.frame= with =n·m= rows,
+(spatial index moving faster than temporal index).  Thus, we need to
+transform this structure to build a multivariate time series where
+each station is a different variable (space-wide under the schema of
+cite:Pebesma2012). The procedure is:
 
 - Add a column with the =POSIXct= time index (line [[(timeIndex)]])
 - Reshape the =data.frame= from long to wide format with
@@ -110,25 +121,50 @@ NO2st <- STFDF(sp = airStationsSP,                                    (ref:stfdf
                data = dats)
 #+end_src
 
-#+RESULTS:
+** =sf= and =sftime=
 
+#+begin_src R :exports none
+##################################################################
+## sf and sftime
+##################################################################
+#+end_src
 
+#+INDEX: Packages!sftime@\texttt{sftime}
+
+The procedure with the =sf= and =sftime= packages is simpler.
+
+First, the =airStations= =data.frame= is converted to a =sf= object with =st_as_sf=:
+#+begin_src R
+library(sftime)
+
+airStationsSF <- st_as_sf(airStations,
+                          coords = c("long", "lat"),
+                          crs = 4326)
+#+end_src
+
+Then, the time information is added to the =NO2= object, and is
+combined with =airStationsSF= thanks to =st_sftime=.
 
 #+begin_src R
+NO2$time <- as.Date(with(NO2,                       
+                         ISOdate(year, month, day)))
+
 idx <- match(NO2$codEst, airStationsSF$Code)
+
 NO2sft <- st_sftime(dat = NO2$dat, code = NO2$codEst,
                     geometry = airStationsSF$geometry[idx],
                     time = NO2$time)
 #+end_src
 
-* Graphics with =spacetime=
-label:sec:graphs_with_spacetime
+* Graphics
+label:sec:graphs_with_spacetime_and_sftime
 
 #+begin_src R :exports none
 ##################################################################
-## Graphics with spacetime
+## Graphics with spacetime and sftime
 ##################################################################
 #+end_src
+
 The =stplot= function of the =spacetime= package supplies the main
 visualization methods for spatiotemporal data. When the mode =xy= is
 chosen (default) it is mainly a wrapper around =spplot= and displays a
@@ -138,7 +174,7 @@ number of panels can be correctly displayed on one page. In this
 example, we print the first twelve days of the sequence.
 
 #+INDEX: Subjects!Small multiples
-#+begin_src R :results output graphics file :exports both :file figs/NO2STxy.pdf
+#+begin_src R :results output graphics file :exports both :file figs/SpatioTime/NO2STxy.pdf
 airPal <- colorRampPalette(c("springgreen1", "sienna3", "gray5"))(5)
   
 stplot(NO2st[, 1:12],
@@ -151,10 +187,14 @@ stplot(NO2st[, 1:12],
 #+CAPTION: Scatterplots of the $NO_2$ values (2011) with a panel for each day of the time series. Each circle represents a different station.
 #+LABEL: fig:NO2STxy
 #+RESULTS[7e86d8c75682aa68d66610cb75a9ea14833ff5b9]:
-[[file:figs/NO2STxy.pdf]]
+[[file:figs/SpatioTime/NO2STxy.pdf]]
 
-#+begin_src R
+The =ggplot2= version of this figure uses the =geom_sf= function and
+produces a panel for each day with =facet_wrap=.
+#+begin_src R :eval no-export
 library(ggplot2)
+
+airPal <- colorRampPalette(c("springgreen1", "sienna3", "gray5"))(5)
 
 ggplot(NO2sft) + 
   geom_sf(aes(color = dat)) +
@@ -162,10 +202,10 @@ ggplot(NO2sft) +
   scale_colour_stepsn(n.breaks = 6, colours = airPal)
 #+end_src
 
-With the mode =xt=, a space-time plot with space on the x-axis and
-time on the y-axis is plotted (Figure [[fig:NO2hovmoller]]).
+With the mode =xt=, the =stplot= function plots a space-time plot with
+space on the x-axis and time on the y-axis (Figure [[fig:NO2hovmoller]]).
 
-#+begin_src R :results output graphics file :exports both :file figs/NO2hovmoller.pdf
+#+begin_src R :results output graphics file :exports both :file figs/SpatioTime/NO2hovmoller.pdf
 stplot(NO2st, mode = "xt",
        col.regions = colorRampPalette(airPal)(15),
        scales = list(x = list(rot = 45)),
@@ -175,8 +215,10 @@ stplot(NO2st, mode = "xt",
 #+CAPTION: Space-time graphic of the NO_2 time series. Each column represents a different station (denoted with the last two digits of the code).
 #+LABEL: fig:NO2hovmoller
 #+RESULTS[720ac1fb68e202769dfa044473c2f888ab6a0b7a]:
-[[file:figs/NO2hovmoller.pdf]]
+[[file:figs/SpatioTime/NO2hovmoller.pdf]]
 
+The =ggplot2= version of this figure is produced with =geom_tile=,
+with the stations codes on the x-axis, and time on the y-axis:
 #+begin_src R
 ggplot(NO2sft) + 
   geom_tile(aes(x = as.factor(code),
@@ -189,10 +231,10 @@ ggplot(NO2sft) +
 
 #+end_src
 
-Finally, with the mode =ts=, data are coerced to a multivariate time series
+Finally, if =stplot= is called with the mode =ts=, data are coerced to a multivariate time series
 that is displayed in a single plot (Figure [[fig:NO2zoo]]).
 
-#+begin_src R :results output graphics file :exports both :file figs/NO2zoo.png :width 2000 :height 2000 :res 300
+#+begin_src R :results output graphics file :exports both :file figs/SpatioTime/NO2zoo.png :width 2000 :height 2000 :res 300
 stplot(NO2st, mode = "ts",
        xlab = "",
        lwd = 0.1, col = "black", alpha = 0.6,
@@ -202,8 +244,10 @@ stplot(NO2st, mode = "ts",
 #+CAPTION: Time graph of the $NO_2$ time series (2011). Each line represents a different station.
 #+LABEL: fig:NO2zoo
 #+RESULTS[ea3cfae61f85b1a658256d688e049882c22aaaf8]:
-[[file:figs/NO2zoo.png]]
+[[file:figs/SpatioTime/NO2zoo.png]]
 
+This figure can be recreated with =ggplot2= using =geom_line=, with
+time on the x-axis and measurements on the y-axis:
 #+begin_src R
 ggplot(NO2sft) +
   geom_line(aes(x=time, y = dat),

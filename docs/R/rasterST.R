@@ -4,21 +4,20 @@
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
 
-Sys.setlocale("LC_TIME", 'C')
+Sys.setlocale("LC_TIME", "C")
 
-##################################################################
-## CMSAF Data
-##################################################################
+library("raster")
+library("zoo")
+library("rasterVis")
 
-library(raster)
-library(zoo)
-library(rasterVis)
+SISdm <- brick("data/SpatioTime/SISgal")
 
-SISdm <- brick('data/SISgal')
-
-timeIndex <- seq(as.Date('2011-01-01'), by = 'day', length = 365)
+timeIndex <- seq(as.Date("2011-01-01"), by = "day", length = 365)
 SISdm <- setZ(SISdm, timeIndex)
-names(SISdm) <- format(timeIndex, '%a_%Y%m%d')
+names(SISdm) <- format(timeIndex, "%a_%Y%m%d")
+
+SISdmt <- rast(SISdm)
+time(SISdmt) <- timeIndex
 
 ##################################################################
 ## Levelplot
@@ -48,10 +47,16 @@ hovmoller(SISdm)
 
 xyplot(SISdm, auto.key = list(space = 'right'))
 
+library("RColorBrewer")
+
 horizonplot(SISdm, digits = 1,
             col.regions = rev(brewer.pal(n = 6, 'PuOr')),
             xlab = '', ylab = 'Latitude')
 
-library(mapview)
+library("cubeview")
 
-cubeView(SISdm)
+## cubeview has problems if the Raster*
+## is not stored in memory
+SISdm <- readAll(SISdm)
+
+cubeview(SISdm)

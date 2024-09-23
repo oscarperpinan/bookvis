@@ -231,8 +231,8 @@ grid.export("figs/SpatioTime/NO2pb.svg")
 ## Time reference: a time series plot
 ##################################################################
 
-library(lattice)
-library(latticeExtra)
+library("lattice")
+library("latticeExtra")
 
 ## Time series with average value of the set of stations
 NO2mean <- zoo(rowMeans(NO2zoo, na.rm = TRUE), index(NO2zoo))
@@ -484,11 +484,11 @@ movie3d(travel,
 ## Hill shading animation
 ##################################################################
 
-library(rayshader)
-library(parallel)
-library(suntools)
-library(raster)
-library(gifski)
+library("rayshader")
+library("parallel")
+library("suntools")
+library("raster")
+library("gifski")
 
 demCedeira <- raster('data/Spatial/demCedeira')
 DEM <- raster_to_matrix(demCedeira)
