@@ -13,7 +13,6 @@ setwd("~/github/bookvis/")
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
  
-library("ggplot2")
 ##################################################################
 #+end_src
 
@@ -24,6 +23,7 @@ library("ggplot2")
 
 #+begin_src R
 library("sf")
+library("ggplot2")
 library("cartogram")
 #+end_src
 

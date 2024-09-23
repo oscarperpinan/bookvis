@@ -390,7 +390,7 @@ ggplot()+
 
 #+CAPTION: Annual average of $NO_2$ measurements in Madrid. Enhancement of Figure ref:fig:airMadrid_classes, displaying OpenStreepMap data in an underlying layer. label:fig:airMadrid_osm
 #+RESULTS:
-[[file:figs/Spatial/airMadrid_osm.pdf]]
+[[file:figs/Spatial/airMadrid_osm.png]]
 
 The =spplot= version needs the data to be downloaded as =Spatial*=
 objects with =osmdata_sp=.
