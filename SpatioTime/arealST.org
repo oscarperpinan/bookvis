@@ -1,0 +1,175 @@
+#+PROPERTY: header-args :tangle ../docs/R/arealST.R :session *R* :eval no-export
+#+OPTIONS: ^:nil
+#+BIND: org-latex-image-default-height "0.45\\textheight"
+
+#+begin_src R :exports none :tangle no
+setwd('~/github/bookvis')
+#+end_src
+
+#+begin_src R :exports none  
+##################################################################
+## Initial configuration
+##################################################################
+## Clone or download the repository and set the working directory
+## with setwd to the folder where the repository is located.
+
+Sys.setlocale("LC_TIME", "C")
+#+end_src
+
+* Introduction
+label:sec:intro_arealST
+
+#+begin_src R :exports none
+##################################################################
+## Data and spatial information
+##################################################################
+#+end_src
+
+* Choropleth
+
+#+begin_src R
+library("sf")
+library("gganimate")
+library("cartogram")
+#+end_src
+
+#+begin_src R
+sfProv <- st_read("data/Spatial/spain_provinces_2.shp", crs = 25830,
+                 stringsAsFactors = TRUE)
+#+end_src
+
+#+begin_src R
+covidSpain <- read.csv("data/SpatioTime/covid.csv", na.strings = NULL)
+covidSpain$PROV <- sprintf("%02d", covidSpain$PROV)
+covidSpain$fecha <- as.Date(covidSpain$fecha)
+
+covidSpain <- subset(covidSpain,
+                     fecha < as.Date("2022-03-01") &
+                     fecha >= as.Date("2021-12-01"))
+
+#+end_src
+
+#+begin_src R
+## Merge data with the polygons
+sfCovid <- merge(sfProv, covidSpain,
+                      by = "PROV")
+#+end_src
+
+#+begin_src R :results output graphics file :exports both :file figs/SpatioTime/covidDay.pdf
+ggplot(subset(sfCovid, fecha == as.Date("2022-02-01"))) +
+  geom_sf(aes(fill = num_casos)) +
+  scale_fill_distiller(palette = "PuBu", direction = 1) +
+  theme_bw()
+#+end_src
+
+#+RESULTS:
+[[file:figs/SpatioTime/covidDay.pdf]]
+
+
+#+begin_src R :results output graphics file :exports both :file figs/SpatioTime/covidMonth.pdf
+ggplot(subset(sfCovid,
+              fecha >= as.Date("2022-01-24") &
+              fecha <= as.Date("2022-01-31"))) +
+  geom_sf(aes(fill = num_casos)) +
+  scale_fill_distiller(palette = "PuBu", direction = 1) +
+  theme_bw() +
+  facet_wrap(~ fecha, nrow = 1)
+#+end_src
+
+#+RESULTS:
+[[file:figs/SpatioTime/covidMonth.pdf]]
+
+#+begin_src R
+ggCovid <- ggplot(sfCovid) +
+  geom_sf(aes(fill = num_casos)) +
+  scale_fill_gradientn(colours = quantPal) +
+  theme_bw() +
+  ggtitle("{format(frame_time, format = '%Y-%m-%d')}") +
+  transition_time(time = fecha)
+
+animate(ggCovid)
+#+end_src
+
+#+begin_src R
+fday <- as.Date("2022-01-01")
+lday <- as.Date("2022-02-28")
+
+days <- seq(fday, lday, by = "day")
+
+cartCOVIDList <- lapply(days, function(d)
+{
+  x <- subset(sfCovid, fecha == d)
+  cartogram_dorling(x,
+                 weight = "num_casos")
+})
+cartCOVID <- do.call(rbind, cartCOVIDList)
+#+end_src
+
+#+begin_src R
+p <- ggplot(cartCOVID) +
+  geom_sf(data = sfProv) +
+  geom_sf(aes(fill = num_casos)) +
+  scale_fill_distiller("Blues") +
+  ggtitle("{format(frame_time)}") + 
+  transition_time(fecha) +
+  theme_bw()
+
+animate(p)
+#+end_src
+
+* Cartogram
+#+begin_src R
+library(sf)
+#+end_src
+
+#+begin_src R
+sfProv <- st_read("data/Spatial/spain_provinces_2.shp", crs = 25830,
+                 stringsAsFactors = TRUE)
+#+end_src
+
+#+begin_src R
+## Population of each province
+popSpain <- read.csv("data/SpatioTime/PopSpain.csv")
+popSpain$PROV <- substring(popSpain$Province, 1, 2)
+#+end_src
+
+#+begin_src R
+## Merge data with the polygons
+sfPopSpain <- merge(sfProv, popSpain,
+                      by = "PROV")
+
+st_write(sfPopSpain, "data/Spatial/sfPopSpain.shp")
+#+end_src
+
+#+begin_src R
+ggplot(sfPopSpain) +
+  geom_sf(aes(fill = Population)) +
+  facet_wrap(~ Year) +
+  theme_bw()
+#+end_src
+
+#+begin_src R
+years <- seq(min(sfPopSpain$Year), max(sfPopSpain$Year))
+
+cartPopContList <- lapply(years, function(y)
+{
+  x <- subset(sfPopSpain, Year == y)
+  cartogram_cont(x,
+                 weight = "Population")
+})
+cartPopCont <- do.call(rbind, carPopContList)
+#+end_src
+
+#+begin_src R
+library("gganimate")
+
+p <- ggplot(cartPopCont) +
+  geom_sf(aes(fill = Population)) + 
+  scale_fill_distiller("Blues") +
+  ggtitle("{format(frame_time)}") + 
+  transition_time(Year) +
+  theme_bw()
+
+animate(p)
+#+end_src
+<
