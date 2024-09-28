@@ -32,7 +32,7 @@ ref:sec:dataChoropleth describes how to define a shapefile[fn:8]
 combining the data from a =data.frame= and the spatial information of
 the administrative boundaries.
 
-\nomenclature{shapefile}{A geospatial vector data format developed by Esri that can store vector features (points, lines, and polygons), and with attributes that describe these features (name of the location, temperature, etc.).
+\nomenclature{shapefile}{A geospatial vector data format developed by Esri that can store vector features (points, lines, and polygons), and with attributes that describe these features (name of the location, temperature, etc.).}
 
 As exposed in Chapter ref:cha:bubble, two alternatives are available: 
 
@@ -708,42 +708,99 @@ library("cartogram")
 #+end_src
 
 #+begin_src R
-sfPopulation <- st_read("data/Spatial/sfPopulation.shp")
+library("RColorBrewer")
 
-ggplot(sfPopulation) +
-  geom_sf(aes(fill = population)) + 
+## Number of intervals (colors)
+N <- 6
+## Sequential palette
+quantPal <- brewer.pal(n = N, "Blues")
+#+end_src
+
+#+begin_src R
+sfPopGDPSpain <- st_read("data/Spatial/sfPopGDPSpain.shp")
+#+end_src
+
+#+begin_src R
+ggplot(sfPopGDPSpain) +
+  geom_sf(aes(fill = Population)) +
   scale_fill_gradientn(colours = quantPal) +
   theme_bw()
 #+end_src
 
 #+begin_src R
-cartPopCont <- cartogram_cont(sfPopulation, weight = "population")
+ggplot(sfPopGDPSpain) +
+  geom_sf(aes(fill = GDP)) +
+  scale_fill_gradientn(colours = quantPal) +
+  theme_bw()
+#+end_src
+
+#+begin_src R
+ggplot(sfPopGDPSpain) +
+  geom_point(aes(Population, GDP))
+#+end_src
+
+#+begin_src R
+cartPopCont <- cartogram_cont(sfPopGDPSpain,
+                              weight = "Population")
 
 ggplot(cartPopCont) +
-  geom_sf(aes(fill = population)) + 
+  geom_sf(aes(fill = GDP)) + 
   scale_fill_gradientn(colours = quantPal) +
   theme_bw()
 #+end_src
 
 #+begin_src R
-cartPopNCont <- cartogram_ncont(sfPopulation, weight = "population")
+cartGDPCont <- cartogram_cont(sfPopGDPSpain,
+                              weight = "GDP")
+
+ggplot(cartPopCont) +
+  geom_sf(aes(fill = Population)) + 
+  scale_fill_gradientn(colours = quantPal) +
+  theme_bw()
+#+end_src
+
+#+begin_src R
+cartPopNCont <- cartogram_ncont(sfPopGDPSpain, weight = "Population")
 
 ggplot(cartPopNCont) +
-  geom_sf(aes(fill = population)) + 
+  geom_sf(aes(fill = GDP)) + 
   scale_fill_gradientn(colours = quantPal) +
   theme_bw()
 #+end_src
 
 #+begin_src R
-cartPopDorl <- cartogram_dorling(sfPopulation, weight = "population")
+cartGDPNCont <- cartogram_ncont(sfPopGDPSpain, weight = "GDP")
+
+ggplot(cartGDPNCont) +
+  geom_sf(aes(fill = Population)) + 
+  scale_fill_gradientn(colours = quantPal) +
+  theme_bw()
+#+end_src
+
+#+begin_src R
+cartPopDorl <- cartogram_dorling(sfPopGDPSpain, weight = "Population")
 
 ggplot(cartPopDorl) +
-  geom_sf(aes(fill = population)) + 
+  geom_sf(aes(fill = GDP)) + 
+  scale_fill_gradientn(colours = quantPal) +
+  theme_bw()
+#+end_src
+
+#+begin_src R
+cartGDPDorl <- cartogram_dorling(sfPopGDPSpain, weight = "GDP")
+
+ggplot(cartGDPDorl) +
+  geom_sf(aes(fill = Population)) + 
   scale_fill_gradientn(colours = quantPal) +
   theme_bw()
 #+end_src
 
 
+#+begin_src R
+cartPopCont <- cartogram_cont(sfPopGDPSpain,
+                              weight = "Population")
+
+#+end_src
 * Footnotes
 [fn:2] Available at https://archive.nytimes.com/www.nytimes.com/interactive/2009/03/10/us/20090310-immigration-explorer.html. 
 

@@ -282,37 +282,29 @@ library(dplyr)
 #+end_src
 
 #+begin_src R
-old <- setwd(tempdir())
-sfMun <- st_read("esp_muni_0109.shp", crs = 25830,
+sfProv <- st_read("data/Spatial/spain_provinces_2.shp", crs = 25830,
                  stringsAsFactors = TRUE)
-sfMun <- subset(sfMun, !is.na(sfMun$PROVMUN))
-setwd(old)
-#+end_src
-
-#+begin_src R
-## Combine polygons in a province
-sfMun$PROV <- substr(sfMun$PROVMUN, 1, 2)
-sfProv <- sfMun %>% group_by(PROV) %>% summarise()
 #+end_src
 
 #+begin_src R
 ## Population of each province
-dat2016 <- read.csv("data/Spatial/GeneralSpanishElections2016.csv")
+popSpain <- read.csv("data/SpatioTime/PopSpain.csv")
+popSpain2020 <- subset(popSpain, Year == 2020)
+popSpain2020$PROV <- substring(popSpain2020$Province, 1, 2)
 
-population <- dat2016$Población
-PROV <- sprintf("%02d", dat2016$Código.de.Provincia)
+## Population of each province
+GDPSpain2020 <- read.csv("data/Spatial/GDPSpain2020.csv")
+GDPSpain2020$PROV <- substring(GDPSpain2020$Province, 1, 2)
 
-population2016 <- aggregate(population ~ PROV,
-                            FUN = sum)
+popGDPSpain2020 <- merge(popSpain2020, GDPSpain2020[, c("PROV", "GDP")])
 #+end_src
 
 #+begin_src R
 ## Merge data with the polygons
-sfPopulation <- merge(sfProv,
-                      population2016,
+sfPopGDPSpain <- merge(sfProv, popGDPSpain2020,
                       by = "PROV")
 
-st_write(sfPopulation, "data/Spatial/sfPopulation.shp")
+st_write(sfPopGDPSpain, "data/Spatial/sfPopGDPSpain.shp")
 #+end_src
 
 
