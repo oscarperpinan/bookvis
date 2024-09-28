@@ -60,7 +60,7 @@ load('data/aranjuez.RData')
 #+RESULTS:
 : aranjuez
 
-#+begin_src R :results output graphics file :exports both :file figs/aranjuez.pdf
+#+begin_src R :results output graphics file :exports both :file figs/TimeSeries/aranjuez.pdf
 ## The layout argument arranges panels in rows
 xyplot(aranjuez, layout = c(1, ncol(aranjuez)))
 #+end_src
@@ -68,20 +68,20 @@ xyplot(aranjuez, layout = c(1, ncol(aranjuez)))
 
 #+CAPTION: Time plot of the collection of meteorological time series of the Aranjuez station (=lattice= version). label:fig:aranjuezNaive 
 #+RESULTS:
-[[file:figs/aranjuez.pdf]]
+[[file:figs/TimeSeries/aranjuez.pdf]]
 
 The package =ggplot2= provides the generic method =autoplot= to
 automate the display of certain classes with a simple command. The
 package =zoo= provides an =autoplot= method for the =zoo= class with a
 result similar to that obtained with =xyplot= (Figure [[ref:fig:aranjuezNaiveGG]])
 
-#+begin_src R :results output graphics file :exports both :file figs/aranjuezGG.pdf
+#+begin_src R :results output graphics file :exports both :file figs/TimeSeries/aranjuezGG.pdf
 autoplot(aranjuez) + facet_free()
 #+end_src
 
 #+CAPTION: Time plot of the collection of meteorological time series of the Aranjuez station (=ggplot2= version). label:fig:aranjuezNaiveGG 
 #+RESULTS:
-[[file:figs/aranjuezGG.pdf]]
+[[file:figs/TimeSeries/aranjuezGG.pdf]]
 
 
 ** \floweroneleft Annotations to Enhance the Time Graph
@@ -125,7 +125,7 @@ layers.
 ## lattice version
 #+end_src
 
-#+begin_src R -n -r :results output graphics file :exports both :file figs/aranjuezXblocks.pdf
+#+begin_src R -n -r :results output graphics file :exports both :file figs/TimeSeries/aranjuezXblocks.pdf
 ## Auxiliary function to extract the year value of a POSIXct time
 ## index
 Year <- function(x)format(x, "%Y")                           (ref:yearFunction)
@@ -161,7 +161,7 @@ xyplot(aranjuez,
 
 #+CAPTION: Enhanced time plot of the collection of meteorological time series of the Aranjuez station. label:fig:aranjuezEnhanced 
 #+RESULTS:
-[[file:figs/aranjuezXblocks.pdf]]
+[[file:figs/TimeSeries/aranjuezXblocks.pdf]]
 
 #+begin_src R :exports none
 ## ggplot2 version
@@ -317,7 +317,7 @@ around the time average (=avRad=).
 load('data/navarra.RData')
 #+end_src
 
-#+begin_src R :results output graphics file :exports both :file figs/navarra.pdf
+#+begin_src R :results output graphics file :exports both :file figs/TimeSeries/navarra.pdf
 avRad <- zoo(rowMeans(navarra, na.rm = 1), index(navarra))
 pNavarra <- xyplot(navarra - avRad,
                    superpose = TRUE, auto.key = FALSE,
@@ -327,7 +327,7 @@ pNavarra
 
 #+CAPTION: Time plot of the variations around time average of solar radiation measurements from the meteorological stations of Navarra. label:fig:navarraNaive
 #+RESULTS:
-[[file:figs/navarra.pdf]]
+[[file:figs/TimeSeries/navarra.pdf]]
 
 This result can be improved with different methods: the cut-and-stack
 method, and the horizon graph with =horizonplot=.
@@ -361,7 +361,7 @@ arguments =aspect= and =cut=. The version of Figure
 ref:fig:navarraNaive using banking to $\SI{45}{\degree}$ and the
 cut-and-stack method is produced with (Figure ref:fig:navarraBanking):
 
-#+begin_src R :results output graphics file :exports both :file figs/navarraBanking.pdf
+#+begin_src R :results output graphics file :exports both :file figs/TimeSeries/navarraBanking.pdf
 xyplot(navarra - avRad,
        aspect = 'xy', cut = list(n = 3, overlap = 0.1),
        strip = FALSE,
@@ -371,7 +371,7 @@ xyplot(navarra - avRad,
 
 #+CAPTION: Cut-and-stack plot with banking to $\SI{45}{\degree}$. label:fig:navarraBanking
 #+RESULTS:
-[[file:figs/navarraBanking.pdf]]
+[[file:figs/TimeSeries/navarraBanking.pdf]]
 
 ** The Horizon Graph label:sec:horizonplot
 #+begin_src R :exports none
@@ -419,7 +419,7 @@ multiple panels with different scales.
 
 #+INDEX: Packages!latticeExtra@\texttt{latticeExtra}
 
-#+begin_src R :results output graphics file :exports both :file figs/navarraHorizonplot.pdf
+#+begin_src R :results output graphics file :exports both :file figs/TimeSeries/navarraHorizonplot.pdf
 library("latticeExtra")
   
 horizonplot(navarra - avRad,
@@ -432,7 +432,7 @@ horizonplot(navarra - avRad,
 
 #+CAPTION: Horizon plot of variations around time average of solar radiation measurements from the meteorological stations of Navarra. The $\Delta_i$ symbol in the color key represents the deviation in each panel from the origin value. label:fig:navarraHorizonplot
 #+RESULTS:
-[[file:figs/navarraHorizonplot.pdf]]
+[[file:figs/TimeSeries/navarraHorizonplot.pdf]]
 
 Figure ref:fig:navarraHorizonplot allows several questions to be
 answered:
@@ -476,7 +476,7 @@ The temperature time series, the long-term average and the
 differences between them can be displayed with the =xyplot=
 method, now using =screens= to use a different panel for the
 differences time series (Figure ref:fig:diffTa_xyplot)
-#+begin_src R :results output graphics file :exports both :file figs/diffTa_xyplot.pdf
+#+begin_src R :results output graphics file :exports both :file figs/TimeSeries/diffTa_xyplot.pdf
 xyplot(cbind(Ta, longTa, diffTa),
        col = c('darkgray', 'red', 'midnightblue'),
        superpose = TRUE, auto.key = list(space = 'right'),
@@ -485,7 +485,7 @@ xyplot(cbind(Ta, longTa, diffTa),
 
 #+CAPTION: Daily temperature time series, its long-term average and the differences between them. label:fig:diffTa_xyplot
 #+RESULTS:
-[[file:figs/diffTa_xyplot.pdf]]
+[[file:figs/TimeSeries/diffTa_xyplot.pdf]]
 
 The horizon graph is better suited for displaying the differences. The
 next code again uses the cut-and-stack method (Figure
@@ -494,7 +494,7 @@ ref:fig:diffTa_horizon shows that 2004 started clearly above the
 average while 2005 and 2009 did the contrary. Year 2007 was frequently
 below the long-term average but 2011 was more similar to that
 reference.
-#+begin_src R :results output graphics file :exports both :file figs/diffTa_horizon.pdf
+#+begin_src R :results output graphics file :exports both :file figs/TimeSeries/diffTa_horizon.pdf
 years <- unique(format(timeIndex, '%Y'))
   
 horizonplot(diffTa, cut = list(n = 8, overlap = 0),
@@ -510,7 +510,7 @@ horizonplot(diffTa, cut = list(n = 8, overlap = 0),
 
 #+CAPTION: Horizon graph displaying differences between a daily temperature time series and its long-term average. label:fig:diffTa_horizon
 #+RESULTS:
-[[file:figs/diffTa_horizon.pdf]]
+[[file:figs/TimeSeries/diffTa_horizon.pdf]]
 
 A different approach to display this information is to produce a level
 plot displaying the time series using parts of its time index as
@@ -535,7 +535,7 @@ month <- function(x)as.numeric(format(x, '%m'))
 
 #+RESULTS:
 
-#+begin_src R :results output graphics file :exports both :file figs/diffTa_levelplot.pdf
+#+begin_src R :results output graphics file :exports both :file figs/TimeSeries/diffTa_levelplot.pdf
 myTheme <- modifyList(custom.theme(region = brewer.pal(9, 'RdBu')),
                       list(
                           strip.background = list(col = 'gray'),
@@ -554,7 +554,7 @@ levelplot(diffTa ~ day(timeIndex) * year(timeIndex) | factor(month(timeIndex)),
 
 #+CAPTION: Level plot of differences between a daily temperature time series and its long-term average. label:fig:diffTa_level
 #+RESULTS:
-[[file:figs/diffTa_levelplot.pdf]]
+[[file:figs/TimeSeries/diffTa_levelplot.pdf]]
 
 The =ggplot= version of the Figure  ref:fig:diffTa_level requires a =data.frame= with the day, year, and month arranged in different columns.
 #+begin_src R
@@ -565,7 +565,7 @@ df <- data.frame(Vals = diffTa,
 #+end_src
 
 The values (=Vals= column of this =data.frame=) are displayed as a level plot thanks to the =geom_raster= function.
-#+begin_src R :results output graphics file :exports both :file figs/diffTa_ggplot.pdf
+#+begin_src R :results output graphics file :exports both :file figs/TimeSeries/diffTa_ggplot.pdf
 library("scales") 
 ## The packages scales is needed for the pretty_breaks function.
 
@@ -606,7 +606,7 @@ load('data/unemployUSA.RData')
 The time series of unemployment can be directly displayed
 with the =xyplot.zoo= method (Figure ref:fig:unemployUSAxyplot).
 
-#+begin_src R :results output graphics file :exports both :file "figs/unemployUSAxyplot.pdf" 
+#+begin_src R :results output graphics file :exports both :file "figs/TimeSeries/unemployUSAxyplot.pdf" 
 xyplot(unemployUSA,
        superpose = TRUE,
        par.settings = custom.theme,
@@ -615,7 +615,7 @@ xyplot(unemployUSA,
 
 #+CAPTION: Time series of unemployment  with =xyplot= using the default panel function. label:fig:unemployUSAxyplot
 #+RESULTS:
-[[file:figs/unemployUSAxyplot.pdf]]
+[[file:figs/TimeSeries/unemployUSAxyplot.pdf]]
 
 This graphical output is not very useful: the legend includes too many
 items; the vertical scale is dominated by the largest series, with
@@ -631,7 +631,7 @@ easily obtained with =geom_area= (Figure ref:fig:unemployUSAgeomArea):
 
 #+INDEX: Subjects!Stacked graph
 
-#+begin_src R :results output graphics file :exports both :file "figs/unemployUSAgeomArea.pdf" 
+#+begin_src R :results output graphics file :exports both :file "figs/TimeSeries/unemployUSAgeomArea.pdf" 
 library("scales") ## scale_x_yearmon needs scales::pretty_breaks
 autoplot(unemployUSA, facets = NULL, geom = 'area') +
     geom_area(aes(fill = Series)) +
@@ -640,7 +640,7 @@ autoplot(unemployUSA, facets = NULL, geom = 'area') +
 
 #+CAPTION: Time series of unemployment with stacked areas using =geom_area=. label:fig:unemployUSAgeomArea
 #+RESULTS:
-[[file:figs/unemployUSAgeomArea.pdf]]
+[[file:figs/TimeSeries/unemployUSAgeomArea.pdf]]
 
 Traditional stacked graphs have their bottom on the x-axis which makes
 the overall height at each point easy to estimate. On the other hand,
@@ -757,7 +757,7 @@ prepanel.flow <- function(x, y, groups, origin,...)
 }
 #+end_src
 
-#+begin_src R :results output graphics file :exports both :file "figs/unemployUSAThemeRiver.pdf" 
+#+begin_src R :results output graphics file :exports both :file "figs/TimeSeries/unemployUSAThemeRiver.pdf" 
 library("colorspace")
 ## We will use a qualitative palette from colorspace
 nCols <- ncol(unemployUSA)
@@ -775,7 +775,7 @@ xyplot(unemployUSA, superpose = TRUE, auto.key = FALSE,
 
 #+CAPTION: ThemeRiver of unemployment in the United States. label:fig:unemployUSAThemeRiver
 #+RESULTS:
-[[file:figs/unemployUSAThemeRiver.pdf]]
+[[file:figs/TimeSeries/unemployUSAThemeRiver.pdf]]
 
 This figure can help answer several questions. For example:
 - What is the industry or class of worker with the lowest/highest
@@ -873,7 +873,7 @@ polygons corresponding to the multivariate time series (Figure
 ref:fig:themeRiverError). However, the graphical window is not
 large enough, and part of the polygons fall out of it. Why?
 
-#+begin_src R :results output graphics file :tangle no :exports both :file "figs/ThemeRiverError.pdf" 
+#+begin_src R :results output graphics file :tangle no :exports both :file "figs/TimeSeries/ThemeRiverError.pdf" 
 xyplot(unemployUSA, superpose = TRUE, auto.key = FALSE,
        panel = panel.flow, origin = 'themeRiver',
        par.settings = myTheme, cex = 0.4, offset = 0,
@@ -883,7 +883,7 @@ xyplot(unemployUSA, superpose = TRUE, auto.key = FALSE,
 #+CAPTION: First attempt of ThemeRiver. label:fig:themeRiverError
 #+ATTR_LaTeX: :height 0.45\textheight
 #+RESULTS:
-[[file:figs/ThemeRiverError.pdf]]
+[[file:figs/TimeSeries/ThemeRiverError.pdf]]
 
 The problem is that =lattice= makes a preliminary estimate of the
 window size using a default =prepanel= function that is unaware of the
@@ -938,7 +938,7 @@ dyTemp
 #+end_src
 
 #+CAPTION: Snapshot of an interactive graphic produced with \texttt{dygraphs}. label:fig:dygraphs
-[[file:figs/dygraphs_aranjuez.png]]
+[[file:figs/TimeSeries/dygraphs_aranjuez.png]]
 
 You can customize =dygraphs= by piping additional commands onto the
 original graphic.  The function =dyOptions= provides several choices
@@ -955,7 +955,7 @@ dyTemp %>%
 #+end_src
 
 #+CAPTION: Snapshot of a selection in an interactive graphic produced with \texttt{dygraphs}. label:fig:dygraphs_selected
-[[file:figs/dygraphs_aranjuez_selected.png]]
+[[file:figs/TimeSeries/dygraphs_aranjuez_selected.png]]
 
 An alternative approach to depict the upper and lower variables of
 this time series is with a shaded region. The =dySeries= function
@@ -971,7 +971,7 @@ dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
 #+end_src
 
 #+CAPTION: Shaded region between upper and lower values around a time series. label:fig:dygraphs_maxmin
-[[file:figs/dygraphs_aranjuez_maxmin.png]]
+[[file:figs/TimeSeries/dygraphs_aranjuez_maxmin.png]]
 
 ** Highcharter label:sec:highcharter
 
@@ -1005,10 +1005,10 @@ highchart(type = "stock") %>%
 #+end_src
 
 #+CAPTION: Snapshot of an interactive graphic produced with \texttt{highcharter}. label:fig:highcharter
-[[file:figs/highcharter_aranjuez.png]]
+[[file:figs/TimeSeries/highcharter_aranjuez.png]]
 
 #+CAPTION: Snapshot of a zoom in an interactive graphic produced with \texttt{highcharter}. label:fig:highcharter_zoom
-[[file:figs/highcharter_aranjuez_zoom.png]]
+[[file:figs/TimeSeries/highcharter_aranjuez_zoom.png]]
 
 ** plotly label:sec:plotly_horizontal
 
@@ -1063,10 +1063,10 @@ plot_ly(aranjuezDF) %>%
 #+end_src
 
 #+CAPTION: Snapshot of an interactive graphic produced with \texttt{plotly}. label:fig:plotly
-[[file:figs/plotly_aranjuez.png]]
+[[file:figs/TimeSeries/plotly_aranjuez.png]]
 
 #+CAPTION: Snapshot of a zoom in an interactive graphic produced with \texttt{plotly}. label:fig:plotly_zoom
-[[file:figs/plotly_aranjuez_zoom.png]]
+[[file:figs/TimeSeries/plotly_aranjuez_zoom.png]]
 
 
 ** streamgraph label:sec:interactive_streamgraph
@@ -1117,10 +1117,10 @@ streamgraph(unemployDF,
 #+end_src
 
 #+CAPTION: Streamgraph created with the =streamgraph= package, without selection. label:fig:streamgraph_interactive
-[[file:figs/streamgraph_interactive.png]]
+[[file:figs/TimeSeries/streamgraph_interactive.png]]
 
 #+CAPTION: Streamgraph created with the =streamgraph= package, with a selection. label:fig:streamgraph_interactive_selected
-[[file:figs/streamgraph_interactive_selected.png]]
+[[file:figs/TimeSeries/streamgraph_interactive_selected.png]]
 
 * Footnotes
 

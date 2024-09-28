@@ -78,7 +78,7 @@ colors <- c(brewer.pal(n = 11, 'RdBu'), '#000000')
 colors <- colors[c(6:1, 12:7)]
 #+end_src
 
-#+begin_src R :results output graphics file :exports both :file figs/aranjuezSplom.png :width 4000 :height 4000 :res 600
+#+begin_src R :results output graphics file :exports both :file figs/TimeSeries/aranjuezSplom.png :width 4000 :height 4000 :res 600
 splom(~ aranjuezDF[1:10], 
       groups = aranjuezDF$Month,
       auto.key = list(space = 'right', 
@@ -91,7 +91,7 @@ splom(~ aranjuezDF[1:10],
 
 #+CAPTION: Scatter plot matrix of the collection of meteorological time series of the Aranjuez station. label:fig:aranjuezSplom
 #+RESULTS:
-[[file:figs/aranjuezSplom.png]]
+[[file:figs/TimeSeries/aranjuezSplom.png]]
 
 A bit of interactivity can be added to this plot with the
 identification of some points. This task is easy with
@@ -175,7 +175,7 @@ attempt with =splom= can be improved with several modifications
 #+INDEX: Subjects!Small multiples
 #+INDEX: Subjects!Scatterplot matrix
 
-#+begin_src R -n -r :results output graphics file :exports both :file figs/aranjuezSplomHexbin.pdf
+#+begin_src R -n -r :results output graphics file :exports both :file figs/TimeSeries/aranjuezSplomHexbin.pdf
 library("hexbin")
   
 splom(~as.data.frame(aranjuez),
@@ -198,7 +198,7 @@ splom(~as.data.frame(aranjuez),
 
 #+CAPTION: Scatterplot matrix of the collection of meteorological time series of the Aranjuez station using hexagonal binning. label:fig:aranjuezSplomHexbin
 #+RESULTS:
-[[file:figs/aranjuezSplomHexbin.pdf]]
+[[file:figs/TimeSeries/aranjuezSplomHexbin.pdf]]
 
 A drawback of the matrix of scatterplots with hexagonal binning is
 that each panel is drawn independently, so it is impossible to compute
@@ -266,7 +266,7 @@ different panels encode the same value.
 
 #+INDEX: Subjects!Panel function
 
-#+begin_src R :results output graphics file :exports both :file figs/aranjuezHexbinplot.pdf
+#+begin_src R :results output graphics file :exports both :file figs/TimeSeries/aranjuezHexbinplot.pdf
 hexbinplot(Radiation ~ Temperature | Statistic,
            data = aranjuezRshp,
            layout = c(1, 3)) +
@@ -275,7 +275,7 @@ hexbinplot(Radiation ~ Temperature | Statistic,
 
 #+CAPTION: Scatterplot with hexagonal binning of temperature versus solar radiation using data of the Aranjuez station (=lattice= version). label:fig:aranjuezHexbin
 #+RESULTS:
-[[file:figs/aranjuezHexbinplot.pdf]]
+[[file:figs/TimeSeries/aranjuezHexbinplot.pdf]]
 
 The ggplot2 version is based on the =stat_binhex= function.
 #+begin_src R :eval no-export
@@ -309,7 +309,7 @@ a smooth line in each panel.
 
 #+INDEX: Subjects!Small multiples
 
-#+begin_src R :results output graphics file :exports both  :width 2000 :height 2000 :res 300 :file figs/aranjuezFacetGrid.png
+#+begin_src R :results output graphics file :exports both  :width 2000 :height 2000 :res 300 :file figs/TimeSeries/aranjuezFacetGrid.png
 ggplot(data = aranjuezRshp, aes(Radiation, Temperature)) +
     facet_grid(Statistic ~ Month) +
     geom_point(col = 'skyblue4', pch = 19, cex = 0.5, alpha = 0.3) +
@@ -321,7 +321,7 @@ ggplot(data = aranjuezRshp, aes(Radiation, Temperature)) +
 
 #+CAPTION: Scatterplot of temperature versus solar radiation for each month using data of the Aranjuez station (=ggplot2= version). label:fig:aranjuezFacetGrid
 #+RESULTS:
-[[file:figs/aranjuezFacetGrid.png]]
+[[file:figs/TimeSeries/aranjuezFacetGrid.png]]
 
 The version with =lattice= needs the =useOuterStrips= function from
 the =latticeExtra= package, which prints the names of the conditioning
@@ -330,7 +330,7 @@ variables on the top and left outer margins (Figure
 
 #+INDEX: Packages!latticeExtra@\texttt{latticeExtra}
 
-#+begin_src R :results output graphics file :exports both :file figs/aranjuezOuterStrips.pdf
+#+begin_src R :results output graphics file :exports both :file figs/TimeSeries/aranjuezOuterStrips.pdf
 useOuterStrips(
     xyplot(Temperature ~ Radiation | Month * Statistic,
            data = aranjuezRshp,
@@ -347,7 +347,7 @@ useOuterStrips(
 
 #+CAPTION: Scatterplot of temperature versus solar radiation for each month using data of the Aranjuez station (lattice version). label:fig:aranjuezOuterStrips
 #+RESULTS:
-[[file:figs/aranjuezOuterStrips.pdf]]
+[[file:figs/TimeSeries/aranjuezOuterStrips.pdf]]
 
 These figures show the typical seasonal behavior of solar radiation
 and ambient temperature. Additionally, it displays in more detail the
