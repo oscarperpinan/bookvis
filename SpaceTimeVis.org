@@ -336,7 +336,7 @@ label:part:Time
 }
 #+END_EXPORT
 
-#+INCLUDE: "TimeSeries/timeHorizontalAxis.org" 
+#+INCLUDE: "TimeSeries/timeHorizontalAxis.tex" src latex 
 
 ** Time as a Conditioning or Grouping Variable
 label:cha:timeGroupFactor
@@ -367,7 +367,7 @@ label:cha:timeGroupFactor
 }
 #+END_EXPORT
 
-#+INCLUDE: "TimeSeries/timeGroupFactor.org"
+#+INCLUDE: "TimeSeries/timeGroupFactor.tex" src latex 
 
 ** Time as a Complementary Variable
  label:cha:timeComplementary
@@ -399,12 +399,12 @@ label:cha:timeGroupFactor
 }
 #+END_EXPORT
 
-#+INCLUDE: "TimeSeries/timeComplementary.org"
+#+INCLUDE: "TimeSeries/timeComplementary.tex" src latex 
 
 ** About the Data
  label:cha:dataTime
 
-#+INCLUDE: "TimeSeries/dataTime.org"
+#+INCLUDE: "TimeSeries/dataTime.tex" src latex 
 
 * Spatial Data
 label:part:Spatial
@@ -625,7 +625,7 @@ label:cha:bubble
 }
 #+END_EXPORT
 
-#+INCLUDE: "Spatial/bubble.org"
+#+INCLUDE: "Spatial/bubble.tex" src latex 
 
 ** Thematic Maps: Choropleth Maps
 label:cha:choropleth
@@ -648,7 +648,7 @@ label:cha:choropleth
   %
 }
 #+END_EXPORT
-#+INCLUDE: "Spatial/choropleth.org"
+#+INCLUDE: "Spatial/choropleth.tex" src latex 
 
 ** Thematic Maps: Cartogram Maps
 label:cha:choropleth
@@ -659,8 +659,7 @@ label:cha:choropleth
   %
 }
 #+END_EXPORT
-#+INCLUDE: "Spatial/cartogram.org"
-
+#+INCLUDE: "Spatial/cartogram.tex" src latex 
 
 ** Thematic Maps: Raster Maps
 label:cha:raster
@@ -686,7 +685,7 @@ label:cha:raster
 %
 }
 #+END_EXPORT
-#+INCLUDE: "Spatial/raster.org"
+#+INCLUDE: "Spatial/raster.tex" src latex 
 
 ** Vector Fields
 label:cha:vector
@@ -706,7 +705,7 @@ label:cha:vector
 %
 }
 #+END_EXPORT
-#+INCLUDE: "Spatial/vector.org"
+#+INCLUDE: "Spatial/vector.tex" src latex 
 
 ** Physical and Reference Maps
  label:cha:refer-phys-maps
@@ -738,13 +737,13 @@ label:cha:vector
   %
 }
 #+END_EXPORT
-#+INCLUDE: "Spatial/physical.org"
-#+INCLUDE: "Spatial/osm.org"
+#+INCLUDE: "Spatial/physical.tex" src latex 
+#+INCLUDE: "Spatial/osm.tex" src latex 
 
 ** About the Data
  label:cha:dataSpatial
 
-#+INCLUDE: "Spatial/dataSpatial.org"
+#+INCLUDE: "Spatial/dataSpatial.tex" src latex 
 
 * Space-Time Data
 label:part:SpaceTime
@@ -847,31 +846,6 @@ inspired by the =grid= package.
 
  -  The CRAN Tasks View "Handling and Analyzing Spatiotemporal Data" [fn:32] summarizes the packages for reading, vizualizing, and analyzing space-time data. The R-SIG-Geo mailing list [fn:33] is a powerful resource for obtaining help.
 
-** Spatiotemporal Raster Data
- label:cha:rasterST
-
-#+BEGIN_EXPORT latex
-\chapterprecishere{%
-  A space-time raster dataset is a collection of raster layers indexed
-  by time, or in other words, a time series of raster maps. The
-  \texttt{raster} package defines the classes \texttt{RasterStack} and
-  \texttt{RasterBrick} to build multilayer rasters. The index of the
-  collection can be set with the function \texttt{setZ} (which is not
-  restricted to time indexes). The \texttt{rasterVis} package provide
-  several methods to display space-time rasters.
-
-  This chapter covers these subjects: small multiples; scatterplot
-  matrices; horizon graph; and interactive and 3D visualization.
-
-  The most relevant packages in this chapter are: \texttt{raster} for
-  reading raster data; \texttt{zoo} for definition of time series;
-  \texttt{rasterVis} for displaying raster data; \texttt{mapview} for
-  interactive graphics.
-%
-}
-#+END_EXPORT
-#+INCLUDE: "SpatioTime/rasterST.org"
-
 ** Spatiotemporal Point Observations
  label:cha:pointsST
 
@@ -895,7 +869,37 @@ inspired by the =grid= package.
 %
 }
 #+END_EXPORT
-#+INCLUDE: "SpatioTime/pointsST.org"
+#+INCLUDE: "SpatioTime/pointsST.tex" src latex 
+
+** Spatiotemporal Areal Data
+ label:cha:arealST
+
+#+INCLUDE: "SpatioTime/arealST.tex" src latex
+
+** Spatiotemporal Raster Data
+ label:cha:rasterST
+
+#+BEGIN_EXPORT latex
+\chapterprecishere{%
+  A space-time raster dataset is a collection of raster layers indexed
+  by time, or in other words, a time series of raster maps. The
+  \texttt{raster} package defines the classes \texttt{RasterStack} and
+  \texttt{RasterBrick} to build multilayer rasters. The index of the
+  collection can be set with the function \texttt{setZ} (which is not
+  restricted to time indexes). The \texttt{rasterVis} package provide
+  several methods to display space-time rasters.
+
+  This chapter covers these subjects: small multiples; scatterplot
+  matrices; horizon graph; and interactive and 3D visualization.
+
+  The most relevant packages in this chapter are: \texttt{raster} for
+  reading raster data; \texttt{zoo} for definition of time series;
+  \texttt{rasterVis} for displaying raster data; \texttt{mapview} for
+  interactive graphics.
+%
+}
+#+END_EXPORT
+#+INCLUDE: "SpatioTime/rasterST.tex" src latex 
 
 ** Animation
  label:cha:animationST
@@ -931,7 +935,7 @@ inspired by the =grid= package.
   %
 }
 #+END_EXPORT
-#+INCLUDE: "SpatioTime/animation.org"
+#+INCLUDE: "SpatioTime/animation.tex" src latex 
 
 * Glossary, Bibliography and Index 
 
