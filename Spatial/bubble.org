@@ -329,7 +329,7 @@ label:sec:bubbles_osm
 ##################################################################
 #+end_src
 
-#+INDEX: Packages!osmdata@\textttt{osmdata}
+#+INDEX: Packages!osmdata@\texttt{osmdata}
 The =osmdata= package is able to access the OpenStreepMap data with
 queries defined with the functions =opq= and =add_osm_feature=. The
 =opq= function defines the base query (region of interest in this
@@ -361,7 +361,7 @@ context, and a label for each station with the function
 =geom_text_repel= of the =ggrepel= package (Figure
 ref:fig:airMadrid_osm).
 
-#+INDEX: Packages!ggrepel@\textttt{ggrepel}
+#+INDEX: Packages!ggrepel@\texttt{ggrepel}
 
 #+begin_src R :results output graphics file :exports both :file figs/Spatial/airMadrid_osm.png :width 4000 :height 4000 :res 600
 library(ggrepel)
