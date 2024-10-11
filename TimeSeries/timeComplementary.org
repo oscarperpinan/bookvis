@@ -43,11 +43,11 @@ country are connected with polylines to reveal the time evolution
 #+begin_src R
 library("zoo")
 
-load('data/CO2.RData')
+load('data/TimeSeries/CO2.RData')
 #+end_src
 
 
-#+begin_src R :results output graphics file :exports both :file "figs/CO2_GNI.pdf" 
+#+begin_src R :results output graphics file :exports both :file "figs/TimeSeries/CO2_GNI.pdf" 
 ## lattice version
 xyplot(GNI.capita  ~ CO2.capita, data = CO2data,
        xlab = "Carbon dioxide emissions (metric tons per capita)",
@@ -232,7 +232,7 @@ gCO2.capita <- ggplot(data = CO2data,
                           y = GNI.capita,
                           color = Country.Name)) +
     geom_point() + geom_path() +
-    scale_color_manual(values = palOrdered, guide = FALSE) +
+    scale_color_manual(values = palOrdered, guide = "none") +
     xlab('CO2 emissions (metric tons per capita)') +
     ylab('GNI per capita, PPP (current international $)') +
     theme_bw()
@@ -361,7 +361,7 @@ xyplot(GNI.capita  ~ CO2.capita | factor(Year),
        data = CO2data,
        xlab = "Carbon dioxide emissions (metric tons per capita)",
        ylab = "GNI per capita, PPP (current international $)",
-       groups = Country.Name, type = 'b',
+       groups = Country.Name, type = 'p',
        auto.key = list(space = 'right'))
 #+end_src
 
@@ -389,21 +389,40 @@ legend is not very useful. Once again, point labeling is recommended
 
 #+begin_src R :results output graphics file :exports both :file "figs/TimeSeries/CO2_capita_panel_labels.pdf"
 ## lattice version
-xyplot(GNI.capita  ~ CO2.capita | factor(Year),
-       data = CO2data,
-       xlab = "Carbon dioxide emissions (metric tons per capita)",
-       ylab = "GNI per capita, PPP (current international $)",
-       groups = Country.Name, type = 'b',
-       par.settings = myTheme) + 
-    glayer(panel.pointLabel(x, y,
-                            labels = group.value,
-                            col = palOrdered[group.number],
-                            cex = 0.7))
+pl <- xyplot(GNI.capita  ~ CO2.capita | factor(Year),
+            data = CO2data,
+            xlab = "Carbon dioxide emissions (metric tons per capita)",
+            ylab = "GNI per capita, PPP (current international $)",
+            groups = Country.Name, type = 'b',
+            par.settings = myTheme)
+
+## Extracted from the qp.labels help page
+dlmethod <- list("first.points",
+                 cex = 0.5,
+                 "calc.boxes",
+                 "enlarge.box",
+                 qp.labels("y","bottom","top"))
+direct.label(pl, dlmethod)
 #+end_src
 
 #+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita with a panel for each year. label:fig:CO2-GNI-panel-labels
 #+RESULTS:
 [[file:figs/TimeSeries/CO2_capita_panel_labels.pdf]]
+
+#+begin_src R :eval no-export
+## ggplot2 version
+pg <- ggplot(data = CO2data,
+             aes(x = CO2.capita,
+                 y = GNI.capita,
+                 colour = Country.Name)) +
+  facet_wrap(~ Year) + geom_point(pch = 19) + 
+  scale_color_manual(values = palOrdered, guide = "none") +
+  xlab('CO2 emissions (metric tons per capita)') +
+  ylab('GNI per capita, PPP (current international $)') +
+  theme_bw()
+
+direct.label(pg, dlmethod)
+#+end_src
 
 ** \floweroneleft Using Variable Size to Encode an Additional Variable
 #+begin_src R :exports none
@@ -457,7 +476,7 @@ ggplot(data = CO2data,
 #+RESULTS:
 [[file:figs/TimeSeries/CO2pointsGG.pdf]]
 
-The =auto.key= mechanism of the =lattice= version is not able to cope with two grouping variables. Therefore, the legend, whose main componens are the labels (=intervals=) and the point sizes (=cex.key=), should be defined manually (Figure ref:fig:CO2points). 
+The =auto.key= mechanism of the =lattice= version is not able to cope with two grouping variables. Therefore, the legend, whose main componens are the labels (=intervals=) and the point sizes (=cex.key=), must be defined manually (Figure ref:fig:CO2points). 
 #+begin_src R
 op <- options(digits = 2)
 tab <- print(intervals)
@@ -474,25 +493,28 @@ key <- list(space = 'right',
             points = list(col = 'black', 
                           pch = 19,
                           cex = cex.key,
-                          alpha = 0.7))
+                          alpha = 0.7)
+            )
 #+end_src
 
 #+begin_src R :results output graphics file :exports both :file "figs/TimeSeries/CO2points.pdf" 
-xyplot(GNI.capita ~ CO2.capita|factor(Year), data = CO2data,
-       xlab = "Carbon dioxide emissions (metric tons per capita)",
-       ylab = "GNI per capita, PPP (current international $)",
-       groups = Country.Name, key = key, alpha = 0.7,
-       panel  =  panel.superpose,
-       panel.groups  =  function(x, y,
-           subscripts, group.number, group.value, ...){
-           panel.xyplot(x, y,
-                        col  =  palOrdered[group.number],
-                        cex  =  CO2data$cexPoints[subscripts])
-           panel.pointLabel(x, y, labels = group.value,
-                            col = palOrdered[group.number],
-                            cex = 0.7)
-       }
-       ) 
+pl2 <- xyplot(GNI.capita ~ CO2.capita|factor(Year), data = CO2data,
+              xlab = "Carbon dioxide emissions (metric tons per capita)",
+              ylab = "GNI per capita, PPP (current international $)",
+              groups = Country.Name,
+              alpha = 0.7,
+              panel  =  panel.superpose,
+              panel.groups  =  function(x, y,
+                                        subscripts, group.number, group.value, ...){
+                panel.xyplot(x, y,
+                             col  =  palOrdered[group.number],
+                             cex  =  CO2data$cexPoints[subscripts])
+              })
+## Add labels...
+plLabel <- direct.label(pl2, "dlmethod")
+## ... and the key (after the call to direct.labels because this
+## function removes the legend)
+update(plLabel, key = key)
 #+end_src
 
 #+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita for different intervals of the ratio of $\mathrm{CO_2}$ emissions to the GDP PPP estimations. label:fig:CO2points 
@@ -528,7 +550,7 @@ bubbles of different colors and with radius proportional to the values
 of the variable =CO2.PPP=. Previously, you should watch the magistral
 video "200 Countries, 200 Years, 4 Minutes"[fn:4].
 
-Three packages are used here: =googleVis=, =plotly=, and =gridSVG=.
+Three packages are used here: =plotly=, =gganimate=, and =gridSVG=.
 
 #+INDEX: Subjects!Animation
 
@@ -589,52 +611,48 @@ p
 
 #+RESULTS:
 
-** =googleVis= label:sec:googlevis
+** =gganimate= label:sec:gganimate
 #+begin_src R :exports none
 ##################################################################
-## googleVis
+## gganimate
 ##################################################################
 #+end_src
-The =googleVis= package cite:Gesmann.deCastillo2011 is an interface
-between R and the Google Visualisation API. With its =gvisMotionChart=
-function it is easy to produce a Motion Chart that can be displayed
-using a browser with Flash enabled (Figure ref:fig:googleVis).
 
-#+INDEX: Packages!googleVis@\texttt{googleVis}
+#+INDEX: Packages!gganimate@\texttt{gganimate}
+
+#+begin_src R
+library("gganimate")
+#+end_src
+
+#+begin_src R 
+pgvis <- ggplot(data = CO2data,
+                aes(x = CO2.capita,
+                    y = GNI.capita,
+                    size = CO2.PPP,
+                    color = Country.Name)) +
+  geom_point(pch = 19) +
+  scale_size(range = c(1, 12)) +
+  scale_color_viridis_d() +
+  theme_bw() +
+  labs(title = 'Year: {trunc(frame_time)}',
+       x = 'CO2 emissions (metric tons per capita)',
+       y = 'GNI per capita, PPP (current international $)')
+#+end_src
 
 #+begin_src R :eval no-export
-library("googleVis")
-
-pgvis <- gvisMotionChart(CO2data,
-                         xvar = 'CO2.capita',
-                         yvar = 'GNI.capita',
-                         sizevar = 'CO2.PPP',
-                         idvar = 'Country.Name',
-                         timevar = 'Year')
+pgvis +
+  transition_time(Year) +
+  ease_aes("linear") +
+  shadow_wake(wake_length = 0.3)
 #+end_src
 
-
-#+CAPTION: Snapshot of a Motion Chart produced with googleVis. label:fig:googleVis
-[[file:figs/TimeSeries/googleVis.png]]
-
-
-#+begin_src R :exports none :eval no-export
-print(pgvis, 'html', file = 'figs/TimeSeries/googleVis.html')
+#+begin_src R :eval no-export
+anim_save("figs/TimeSeries/CO2_gganimate.gif")
 #+end_src
 
-# plot(pvgis)
-# print(pgvis, 'html', file='figs/TimeSeries/googleVis.html')
-# vignette of googleVis
-# 1. Go to http://www.macromedia.com/support/documentation/en/flashplayer/help/settings_manager04.html
-# 2. Click on the dropbox which says 'Edit location' and choose 'add location'
-# 3. Click 'browse for folder'
-# 4. Choose the folder in which you saved your html file
-# 5. Click OK
+#+CAPTION: Snapshot of a motion chart produced with gganimate. label:fig:gganimate
+[[file:figs/TimeSeries/CO2_gganimate.png]]
 
-Although the =gvisMotionChart= is quite easy to use, the global
-appearance and behavior are completely determined by Google
-API[fn:3]. Moreover, you should carefully read their Terms of Use
-before using it for public distribution.
 
 ** \floweroneleft gridSVG label:sec:gridSVG
 The final solution to create an animation is based on the function
@@ -783,9 +801,6 @@ grid.export("figs/TimeSeries/bubbles.svg")
 * Footnotes
 
 [fn:2] http://colorbrewer2.org/
-
-[fn:3] You should read the Google API Terms of Service before using
-  =googleVis=: https://developers.google.com/terms/
 
 [fn:4] http://www.gapminder.org/videos/200-years-that-changed-the-world-bbc/
 

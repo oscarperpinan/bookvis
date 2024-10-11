@@ -4,11 +4,11 @@
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
  
-library(lattice)
-library(ggplot2)
+library("lattice")
+library("ggplot2")
 ## latticeExtra must be loaded after ggplot2 to prevent masking of its
 ## `layer` function.
-library(latticeExtra)
+library("latticeExtra")
 
 source('configLattice.R')
 ##################################################################
@@ -17,9 +17,9 @@ source('configLattice.R')
 ## Polylines
 ##################################################################
 
-library(zoo)
+library("zoo")
 
-load('data/CO2.RData')
+load('data/TimeSeries/CO2.RData')
 
 ## lattice version
 xyplot(GNI.capita  ~ CO2.capita, data = CO2data,
@@ -38,7 +38,7 @@ ggplot(data = CO2data, aes(x = CO2.capita, y = GNI.capita,
 ## Choosing colors
 ##################################################################
 
-library(RColorBrewer)
+library("RColorBrewer")
 
 nCountries <- nlevels(CO2data$Country.Name)
 pal <- brewer.pal(n = 5, 'Set1')
@@ -49,7 +49,7 @@ CO2mean <- aggregate(CO2.capita ~ Country.Name,
                      data = CO2data, FUN = mean)
 palOrdered <- pal[rank(CO2mean$CO2.capita)]
 
-library(reshape2)
+library("reshape2")
 
 CO2capita <- CO2data[, c('Country.Name',
                          'Year',
@@ -87,7 +87,7 @@ gCO2.capita <- ggplot(data = CO2data,
                           y = GNI.capita,
                           color = Country.Name)) +
     geom_point() + geom_path() +
-    scale_color_manual(values = palOrdered, guide = FALSE) +
+    scale_color_manual(values = palOrdered, guide = "none") +
     xlab('CO2 emissions (metric tons per capita)') +
     ylab('GNI per capita, PPP (current international $)') +
     theme_bw()
@@ -126,7 +126,7 @@ gCO2.capita <- gCO2.capita + geom_text(aes(label = Year),
 ## Country names: positioning labels
 ##################################################################
 
-library(directlabels)
+library("directlabels")
 
 ## lattice version
 direct.label(pCO2.capita,
@@ -144,7 +144,7 @@ xyplot(GNI.capita  ~ CO2.capita | factor(Year),
        data = CO2data,
        xlab = "Carbon dioxide emissions (metric tons per capita)",
        ylab = "GNI per capita, PPP (current international $)",
-       groups = Country.Name, type = 'b',
+       groups = Country.Name, type = 'p',
        auto.key = list(space = 'right'))
 
 ## ggplot2 version
@@ -158,22 +158,39 @@ ggplot(data = CO2data,
     theme_bw()
 
 ## lattice version
-xyplot(GNI.capita  ~ CO2.capita | factor(Year),
-       data = CO2data,
-       xlab = "Carbon dioxide emissions (metric tons per capita)",
-       ylab = "GNI per capita, PPP (current international $)",
-       groups = Country.Name, type = 'b',
-       par.settings = myTheme) + 
-    glayer(panel.pointLabel(x, y,
-                            labels = group.value,
-                            col = palOrdered[group.number],
-                            cex = 0.7))
+pl <- xyplot(GNI.capita  ~ CO2.capita | factor(Year),
+            data = CO2data,
+            xlab = "Carbon dioxide emissions (metric tons per capita)",
+            ylab = "GNI per capita, PPP (current international $)",
+            groups = Country.Name, type = 'b',
+            par.settings = myTheme)
+
+## Extracted from the qp.labels help page
+dlmethod <- list("first.points",
+                 cex = 0.5,
+                 "calc.boxes",
+                 "enlarge.box",
+                 qp.labels("y","bottom","top"))
+direct.label(pl, dlmethod)
+
+## ggplot2 version
+pg <- ggplot(data = CO2data,
+             aes(x = CO2.capita,
+                 y = GNI.capita,
+                 colour = Country.Name)) +
+  facet_wrap(~ Year) + geom_point(pch = 19) + 
+  scale_color_manual(values = palOrdered, guide = "none") +
+  xlab('CO2 emissions (metric tons per capita)') +
+  ylab('GNI per capita, PPP (current international $)') +
+  theme_bw()
+
+direct.label(pg, dlmethod)
 
 ##################################################################
 ## Using variable size to encode an additional variable
 ##################################################################
 
-library(classInt)
+library("classInt")
 z <- CO2data$CO2.PPP
 intervals <- classIntervals(z, n = 4, style = 'fisher')
 
@@ -206,25 +223,28 @@ key <- list(space = 'right',
             points = list(col = 'black', 
                           pch = 19,
                           cex = cex.key,
-                          alpha = 0.7))
+                          alpha = 0.7)
+            )
 
-xyplot(GNI.capita ~ CO2.capita|factor(Year), data = CO2data,
-       xlab = "Carbon dioxide emissions (metric tons per capita)",
-       ylab = "GNI per capita, PPP (current international $)",
-       groups = Country.Name, key = key, alpha = 0.7,
-       panel  =  panel.superpose,
-       panel.groups  =  function(x, y,
-           subscripts, group.number, group.value, ...){
-           panel.xyplot(x, y,
-                        col  =  palOrdered[group.number],
-                        cex  =  CO2data$cexPoints[subscripts])
-           panel.pointLabel(x, y, labels = group.value,
-                            col = palOrdered[group.number],
-                            cex = 0.7)
-       }
-       )
+pl2 <- xyplot(GNI.capita ~ CO2.capita|factor(Year), data = CO2data,
+              xlab = "Carbon dioxide emissions (metric tons per capita)",
+              ylab = "GNI per capita, PPP (current international $)",
+              groups = Country.Name,
+              alpha = 0.7,
+              panel  =  panel.superpose,
+              panel.groups  =  function(x, y,
+                                        subscripts, group.number, group.value, ...){
+                panel.xyplot(x, y,
+                             col  =  palOrdered[group.number],
+                             cex  =  CO2data$cexPoints[subscripts])
+              })
+## Add labels...
+plLabel <- direct.label(pl2, "dlmethod")
+## ... and the key (after the call to direct.labels because this
+## function removes the legend)
+update(plLabel, key = key)
 
-library(plotly)
+library("plotly")
 
 p <- plot_ly(CO2data,
              x = ~CO2.capita,
@@ -252,22 +272,33 @@ p <- animation_slider(p,
 p
 
 ##################################################################
-## googleVis
+## gganimate
 ##################################################################
 
-library(googleVis)
+library("gganimate")
 
-pgvis <- gvisMotionChart(CO2data,
-                         xvar = 'CO2.capita',
-                         yvar = 'GNI.capita',
-                         sizevar = 'CO2.PPP',
-                         idvar = 'Country.Name',
-                         timevar = 'Year')
+pgvis <- ggplot(data = CO2data,
+                aes(x = CO2.capita,
+                    y = GNI.capita,
+                    size = CO2.PPP,
+                    color = Country.Name)) +
+  geom_point(pch = 19) +
+  scale_size(range = c(1, 12)) +
+  scale_color_viridis_d() +
+  theme_bw() +
+  labs(title = 'Year: {trunc(frame_time)}',
+       x = 'CO2 emissions (metric tons per capita)',
+       y = 'GNI per capita, PPP (current international $)')
 
-print(pgvis, 'html', file = 'figs/googleVis.html')
+pgvis +
+  transition_time(Year) +
+  ease_aes("linear") +
+  shadow_wake(wake_length = 0.3)
 
-library(gridSVG)
-library(grid)
+anim_save("figs/TimeSeries/CO2_gganimate.gif")
+
+library("gridSVG")
+library("grid")
 
 xyplot(GNI.capita ~ CO2.capita,
        data = CO2data,
@@ -280,8 +311,8 @@ xyplot(GNI.capita ~ CO2.capita,
        xlim = extendrange(CO2data$CO2.capita),
        ylim = extendrange(CO2data$GNI.capita),
        panel = function(x, y, ..., subscripts, groups) {
-           color <- palOrdered[groups[subscripts]]                  
-           radius <- CO2data$CO2.PPP[subscripts]                   
+           color <- palOrdered[groups[subscripts]]
+           radius <- CO2data$CO2.PPP[subscripts]
            ## Size of labels
            cex <- 1.1*sqrt(radius)
            ## Bubbles
@@ -309,27 +340,27 @@ years <- unique(CO2data$Year)
 nYears <- length(years)
 
 ## Intermediate positions of the bubbles
-x_points <- animUnit(unit(CO2data$CO2.capita, 'native'),       
+x_points <- animUnit(unit(CO2data$CO2.capita, 'native'),
                      id = rep(seq_len(nCountries), each = nYears))
-y_points <- animUnit(unit(CO2data$GNI.capita, 'native'),       
+y_points <- animUnit(unit(CO2data$GNI.capita, 'native'),
                      id = rep(seq_len(nCountries), each = nYears))
 ## Intermediate positions of the labels
-y_labels <- animUnit(unit(CO2data$GNI.capita, 'native') +      
+y_labels <- animUnit(unit(CO2data$GNI.capita, 'native') +
                      1.5 * CO2data$CO2.PPP * unit(.25, 'inch'),
                      id = rep(seq_len(nCountries), each = nYears))
 ## Intermediate sizes of the bubbles
-size <- animUnit(CO2data$CO2.PPP * unit(.25, 'inch'),        
+size <- animUnit(CO2data$CO2.PPP * unit(.25, 'inch'),
                  id = rep(seq_len(nCountries), each = nYears))
 
-grid.animate(trellis.grobname("points", type = "panel",    
+grid.animate(trellis.grobname("points", type = "panel",
                               row = 1, col = 1),
              duration = duration,
              x = x_points,
              y = y_points,
              r = size,
-             rep = TRUE)                                        
+             rep = TRUE)
 
-grid.animate(trellis.grobname("labels", type = "panel",    
+grid.animate(trellis.grobname("labels", type = "panel",
                               row = 1, col = 1),
              duration = duration,
              x = x_points,
@@ -352,4 +383,4 @@ yearText <- animateGrob(garnishGrob(textGrob(years, .9, .15,
                         rep = TRUE)
 grid.draw(yearText)
 
-grid.export("figs/bubbles.svg")
+grid.export("figs/TimeSeries/bubbles.svg")
