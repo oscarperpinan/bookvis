@@ -49,9 +49,8 @@ library("RColorBrewer")
 ## Retrieving data from DIVA-GIS, GADM and Natural Earth Data
 ##################################################################
 #+end_src
-Four types of information are needed: administrative boundaries,
-terrain elevation, rivers and lakes, and sea depth.
-
+Three types of information are needed: administrative boundaries,
+terrain elevation, and rivers and lakes.
 
 #+INDEX: Data!GADM
 #+INDEX: Data!DIVA-GIS
@@ -101,20 +100,6 @@ terrain elevation, rivers and lakes, and sea depth.
      brazilRiv <- st_crop(worldRiv, brazilDEM)
      #+end_src
 
-  4. Finally, the sea depth is also available from Natural Earth
-     Data[fn:5]. The raster covers the whole world so it must be
-     cropped by the extent of the DEM raster. Besides, this raster
-     contains three layers encoding the RGB colorspace. We will take
-     the luminance as the representation of the sea depth. It can be
-     extracted with a conversion to the HSL colorspace with the
-     =colorize= function.
-     #+begin_src R :eval no-export
-     worldSea <- ne_download(type = "OB_LR", category = "raster", scale = 10)
-     brazilSea <- crop(worldSea, brazilDEM)
-     ## Convert to HSL and take the third layer (luminance)
-     brazilSea <- colorize(brazilSea, to = "hsl")[[3]]
-     #+end_src
-
 ** Labels
 #+begin_src R :exports none
 ##################################################################
@@ -161,46 +146,38 @@ admNames <- sapply(admNames,
 #+INDEX: Subjects!Background map
 
 Therefore, the physical map (Figure ref:fig:brazil) is composed
-of four layers: 
+of three layers: 
 
-1. The sea depth raster displayed with the =levelplot= method of the
-   =rasterVis= package. The palette is defined with =brewer.pal=
-   (Figure [[ref:fig:rastersBrazil]]).
-   #+begin_src R
-   blueTheme <- rasterTheme(region = brewer.pal(n = 9, 'Blues'))
-  
-   seaPlot <- levelplot(brazilSea, par.settings = blueTheme,
-                        maxpixels = 1e6, panel = panel.levelplot.raster,
-                        margin = FALSE, colorkey = FALSE)
-   #+end_src
-  
-2. The altitude raster layer uses a terrain colors palette, as the one
+1.The altitude raster layer uses a terrain colors palette, as the one
   produced by the =terrain_hcl= function from the =colorspace= package
-  cite:Ihaka.Murrell.ea2016 (Figure [[ref:fig:rastersBrazil]]).
+  cite:Ihaka.Murrell.ea2016. 
   #+begin_src R
-  terrainTheme <- rasterTheme(region = terrain_hcl(15))
-  
+  terrainTheme <- rasterTheme(region = terrain_hcl(15),
+                              panel.background = list(col = "lightskyblue1"))
+
   altPlot <- levelplot(brazilDEM, par.settings = terrainTheme,
                        maxpixels = 1e6, panel = panel.levelplot.raster,
                        margin = FALSE, colorkey = FALSE)
   #+end_src
   
-3. The rivers defined by the =brazilRiv= object. The map is constructed under the =trellis= framework, with =levelplot= and the =layer= mechanism of the =latticeExtra= package. There is no function defined to plot =sf= objects, so =brazilRiv= must be converted to a =SpatialLines= object that can be displayed with =sp.lines=.
+2. The rivers defined by the =brazilRiv= object. The map is constructed under the =trellis= framework, with =levelplot= and the =layer= mechanism of the =latticeExtra= package. There is no function defined to plot =sf= objects, so =brazilRiv= must be converted to a =SpatialLines= object that can be displayed with =sp.lines=.
    #+begin_src R
-   brazilRiv <- as_Spatial(brazilRiv)
+   brazilRivsp <- as_Spatial(brazilRiv)
    #+end_src
 
-4. The administrative boundaries defined by the =brazilAdm= object and their labels (=admNames= and =centroids=). The =brazilAdm= must be converted to a =SpatialPolygons= object to be displayed with =sp.polygons=.
+3. The administrative boundaries defined by the =brazilAdm= object and their labels (=admNames= and =centroids=). The =brazilAdm= must be converted to a =SpatialPolygons= object to be displayed with =sp.polygons=.
    #+begin_src R
-   brazilAdm <- as_Spatial(brazilAdm)
+   brazilAdmsp <- as_Spatial(brazilAdm)
    #+end_src
-    
-  #+begin_src R :results output graphics file :exports both :file figs/Spatial/brazil.png :width 2000 :height 2000 :res 300
-  seaPlot + altPlot + layer({
+
+The final result is shown in Figure ref:fig:brazilLattice.
+
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/brazilLattice.png :width 2000 :height 2000 :res 300
+  altPlot + layer({
       ## Rivers
-      sp.lines(brazilRiv, col = 'darkblue', lwd = 0.2)
+      sp.lines(brazilRivsp, col = 'darkblue', lwd = 0.2)
       ## Administrative boundaries
-      sp.polygons(brazilAdm, col = 'black', lwd = 0.3)
+      sp.polygons(brazilAdmsp, col = 'black', lwd = 0.3)
       ## Centroids of administrative boundaries ...
       panel.points(centroids, col = 'black')
       ## ... with their labels
@@ -213,19 +190,49 @@ of four layers:
   #+end_src
 
 
-#+begin_src R :results output graphics file :exports results :file figs/Spatial/rastersBrazil.png :width 2000 :height 2000 :res 300
-print(seaPlot, split = c(1, 1, 2, 1), more = TRUE)
-print(altPlot, split = c(2, 1, 2, 1))
+#+CAPTION: Physical map of Brazil (=lattice= version). Main administrative regions and the Amazonas River are labeled. label:fig:brazilLattice
+#+RESULTS:
+[[file:figs/Spatial/brazilLattice.png]]
+
+#+begin_src R
+library("ggplot2")
+library("tidyterra")
+library("ggrepel")
 #+end_src
 
-#+CAPTION: Sea depth and altitude rasters of Brazil. label:fig:rastersBrazil
-#+RESULTS:
-[[file:figs/Spatial/rastersBrazil.png]]
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/brazilGG.png :width 2000 :height 2000 :res 300
+ggplot() +
+  geom_spatraster(data = brazilDEM,
+                  show.legend = FALSE) +
+  scale_fill_whitebox_c("high_relief",
+                        na.value = "aquamarine") +
+  geom_sf(data = brazilAdm,
+          col = "black",
+          linewidth = 0.2,
+          fill = "transparent") +
+  geom_sf(data = brazilRiv,
+          col = "darkblue",
+          linewidth = 0.1) +
+  geom_spatial_point(data = centroids,
+                     aes(x = longitude,
+                         y = latitude)) +
+  geom_text_repel(data = centroids,
+                          aes(x = longitude,
+                              y = latitude,
+                              label = admNames),
+                  family = "Palatino") +
+  geom_text(aes(xyBrazil[1], xyBrazil[2],
+                label = 'B R A Z I L'),
+            size = 7,
+            family = 'Palatino') +
+  theme_bw()
+#+end_src
 
-#+CAPTION: Physical map of Brazil. Main administrative regions and the Amazonas River are labeled. label:fig:brazil
+#+CAPTION: Physical map of Brazil (=ggplot2= version). Main administrative regions and the Amazonas River are labeled. label:fig:brazilGG
 #+RESULTS:
-[[file:figs/Spatial/brazil.png]]
+[[file:figs/Spatial/brazilGG.png]]
 
+#+end_src
 
 * Footnotes
 [fn:1] http://en.wikipedia.org/wiki/Brazil
