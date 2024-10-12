@@ -1,4 +1,4 @@
-#+PROPERTY:  header-args :session *R* :tangle ../docs/R/timeHorizontalAxis.R :eval no-export
+#+PROPERTY:  header-args :session *R* :tangle ../docs/R/timeHorizontalAxis.R :eval export
 #+OPTIONS: ^:nil
 #+BIND: org-export-latex-image-default-option "height=0.45\\textheight"
 
@@ -16,7 +16,7 @@ setwd('~/github/bookvis')
 ## with setwd to the folder where the repository is located.
  
 library("lattice")
-library(ggplot2)
+library("ggplot2")
 ## latticeExtra must be loaded after ggplot2 to prevent masking of its
 ## `layer` function.
 library("latticeExtra")
@@ -54,7 +54,7 @@ multivariate time series can be displayed with the =xyplot= method of
 
 #+begin_src R
 library("zoo")
-load('data/aranjuez.RData')
+load('data/TimeSeries/aranjuez.RData')
 #+end_src
 
 #+RESULTS:
@@ -314,7 +314,7 @@ around the time average (=avRad=).
 #+INDEX: Data!Solar radiation
 
 #+begin_src R
-load('data/navarra.RData')
+load('data/TimeSeries/navarra.RData')
 #+end_src
 
 #+begin_src R :results output graphics file :exports both :file figs/TimeSeries/navarra.pdf
@@ -600,7 +600,7 @@ series.
 #+INDEX: Data!Unemployment in USA
 
 #+begin_src R
-load('data/unemployUSA.RData')
+load('data/TimeSeries/unemployUSA.RData')
 #+end_src
 
 The time series of unemployment can be directly displayed
@@ -633,7 +633,8 @@ easily obtained with =geom_area= (Figure ref:fig:unemployUSAgeomArea):
 
 #+begin_src R :results output graphics file :exports both :file "figs/TimeSeries/unemployUSAgeomArea.pdf" 
 library("scales") ## scale_x_yearmon needs scales::pretty_breaks
-autoplot(unemployUSA, facets = NULL, geom = 'area') +
+
+autoplot(unemployUSA, facets = NULL) +
     geom_area(aes(fill = Series)) +
     scale_x_yearmon()  
 #+end_src
@@ -652,13 +653,54 @@ their center. At a glance, the pattern of the global sum and
 individual variables, their contribution to conform the global sum,
 and the interrelation between variables can be perceived.
 
-I have defined a panel and prepanel functions[fn:4] to implement a
-ThemeRiver with =xyplot=. The result is displayed in Figure
-ref:fig:unemployUSAThemeRiver with a vertical line to indicate
-one of main milestones of the financial crisis, whose effect on
-the overall unemployment results is clearly evident.
+The package =ggstream=[fn:6] provides the =geom_stream= function to
+produce streamgraphs with =ggplot=. Figure
+=ref:fig:unemployUSAStreamGraph= shows the result, including a
+vertical line to indicate one of main milestones of the financial
+crisis, whose effect on the overall unemployment results is clearly
+evident.
+
+#+begin_src R :results output graphics file :exports both :file "figs/TimeSeries/unemployUSAStreamGraph.pdf" 
+library("ggstream")
+
+sep2008 <- as.numeric(as.yearmon('2008-09'))
+
+autoplot(unemployUSA, facets = NULL) +
+  geom_stream(aes(fill = Series),
+              color = "black",
+              lwd = 0.25,
+              bw = 0.5) +
+  scale_x_yearmon() +
+  geom_vline(xintercept = sep2008,
+             lwd = 0.25, color = "gray50") +
+  theme_bw()
+
+#+end_src
+
+#+CAPTION: Streamgraph of unemployment in the United States. label:fig:unemployUSAStreamGraph
+#+RESULTS:
+[[file:figs/TimeSeries/unemployUSAStreamGraph.pdf]]
+
+This figure can help answer several questions. For example:
+- What is the industry or class of worker with the lowest/highest
+  unemployment figures during this time period?
+- What is the industry or class of worker with the lowest/highest
+  unemployment increases due to the financial crisis?
+- There are a number of local maxima and minima of the total
+  unemployment numbers. Are all the classes contributing to the
+  maxima/minima?  Do all the classes exhibit the same fluctuation
+  behavior as the global evolution?
+
+There is no solution available for the =lattice= package. Therefore, I
+have defined a panel and prepanel functions[fn:4] to implement a
+ThemeRiver with =xyplot=. These functions are fully explained in the
+next section. The result is displayed in Figure
+ref:fig:unemployUSAThemeRiver.
+
 #+NAME: panelFlow
 #+begin_src R :exports none
+library(grid)
+
 panel.flow <- function(x, y, groups, origin, ...)
 {
     dat <- data.frame(x = x, y = y, groups = groups)            (ref:dataframe)
@@ -737,6 +779,9 @@ panel.flow <- function(x, y, groups, origin, ...)
   
 #+end_src
 
+#+RESULTS: panelFlow
+
+
 #+NAME: prepanelFlow
 #+begin_src R :exports none
 prepanel.flow <- function(x, y, groups, origin,...)
@@ -757,6 +802,7 @@ prepanel.flow <- function(x, y, groups, origin,...)
 }
 #+end_src
 
+
 #+begin_src R :results output graphics file :exports both :file "figs/TimeSeries/unemployUSAThemeRiver.pdf" 
 library("colorspace")
 ## We will use a qualitative palette from colorspace
@@ -776,18 +822,6 @@ xyplot(unemployUSA, superpose = TRUE, auto.key = FALSE,
 #+CAPTION: ThemeRiver of unemployment in the United States. label:fig:unemployUSAThemeRiver
 #+RESULTS:
 [[file:figs/TimeSeries/unemployUSAThemeRiver.pdf]]
-
-This figure can help answer several questions. For example:
-- What is the industry or class of worker with the lowest/highest
-  unemployment figures during this time period?
-- What is the industry or class of worker with the lowest/highest
-  unemployment increases due to the financial crisis?
-- There are a number of local maxima and minima of the total
-  unemployment numbers. Are all the classes contributing to the
-  maxima/minima?  Do all the classes exhibit the same fluctuation
-  behavior as the global evolution?
-More questions and answers can be found in the "Current Employment
-Statistics" reports from the Bureau of Labor Statistics[fn:2].
 
 
 
@@ -1072,32 +1106,8 @@ plot_ly(aranjuezDF) %>%
 ** streamgraph label:sec:interactive_streamgraph
 
 The =streamgraph= package[fn:1] creates interactive stream graphs based on
-the =htmlwidgets= package and the =D3.js= JavaScript library. Its main
-function, =streamgraph=, requires a =data.frame= as the first
-argument. Besides, its three next arguments, =key=, =value=, and
-=date=, make this function a good candidate to work together with
-=fortify= and =melt=.
+the =htmlwidgets= package and the =D3.js= JavaScript library.
 
-#+begin_src R :results output :exports both
-unemployDF <- fortify(unemployUSA, melt = TRUE)
-
-head(unemployDF)
-#+end_src
-
-#+RESULTS:
-:      Index Series Value
-: 1 ene 2000  32230    19
-: 2 feb 2000  32230    25
-: 3 mar 2000  32230    17
-: 4 abr 2000  32230    20
-: 5 may 2000  32230    27
-: 6 jun 2000  32230    13
-
-Figures ref:fig:streamgraph_interactive and
-ref:fig:streamgraph_interactive_selected are snapshots of the
-interactive graphic created with the functions =streamgraph=,
-=sg_axis=, and =sg_fill_brewer=, connected through the pipe operator,
-=%>%=.
 
 #+INDEX: Packages!streamgraph@\texttt{streamgraph}
 #+INDEX: Subjects!Stacked graph
@@ -1106,6 +1116,34 @@ interactive graphic created with the functions =streamgraph=,
 ## remotes::install_github("hrbrmstr/streamgraph")
 library("streamgraph")
 #+end_src
+
+Its main function, =streamgraph=, requires a =data.frame= as the first
+argument. Besides, its three next arguments, =key=, =value=, and
+=date=, make this function a good candidate to work together with
+=fortify= and =melt=.
+
+#+begin_src R :results output :exports both
+unemployDF <- fortify(unemployUSA, melt = TRUE)
+## streamgraph does not work with the yearmon class
+unemployDF$Index <- as.Date(unemployDF$Index)
+
+head(unemployDF)
+#+end_src
+
+#+RESULTS:
+: Index Series Value
+: 1 2000-01-01  32230    19
+: 2 2000-02-01  32230    25
+: 3 2000-03-01  32230    17
+: 4 2000-04-01  32230    20
+: 5 2000-05-01  32230    27
+: 6 2000-06-01  32230    13
+
+Figures ref:fig:streamgraph_interactive and
+ref:fig:streamgraph_interactive_selected are snapshots of the
+interactive graphic created with the functions =streamgraph=,
+=sg_axis=, and =sg_fill_brewer=, connected through the pipe operator,
+=%>%=.
 
 #+begin_src R
 streamgraph(unemployDF,
@@ -1123,10 +1161,9 @@ streamgraph(unemployDF,
 [[file:figs/TimeSeries/streamgraph_interactive_selected.png]]
 
 * Footnotes
+[fn:6]https://github.com/davidsjoberg/ggstream 
 
 [fn:1] The =streamgraph= package, http://hrbrmstr.github.io/streamgraph/, is not available in CRAN. It can be installed using the =devtools= or the =remotes= package.
-
-[fn:2] The March 2012 highlights report is available at http://www.bls.gov/ces/highlights032012.pdf.
 
 [fn:3] A similar result can be obtained with =autoplot= using =facets=NULL=. 
 

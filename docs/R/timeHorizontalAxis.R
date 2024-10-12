@@ -4,11 +4,11 @@
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
  
-library(lattice)
-library(ggplot2)
+library("lattice")
+library("ggplot2")
 ## latticeExtra must be loaded after ggplot2 to prevent masking of its
 ## `layer` function.
-library(latticeExtra)
+library("latticeExtra")
 
 source('configLattice.R')
 ##################################################################
@@ -17,8 +17,8 @@ source('configLattice.R')
 ## Time graph of variables with different scales
 ##################################################################
 
-library(zoo)
-load('data/aranjuez.RData')
+library("zoo")
+load('data/TimeSeries/aranjuez.RData')
 
 ## The layout argument arranges panels in rows
 xyplot(aranjuez, layout = c(1, ncol(aranjuez)))
@@ -33,7 +33,7 @@ autoplot(aranjuez) + facet_free()
 
 ## Auxiliary function to extract the year value of a POSIXct time
 ## index
-Year <- function(x)format(x, "%Y")                           
+Year <- function(x)format(x, "%Y")
   
 xyplot(aranjuez,
        layout = c(1, ncol(aranjuez)),
@@ -41,24 +41,24 @@ xyplot(aranjuez,
        scales = list(y = list(cex = 0.6, rot = 0)),
        panel = function(x, y, ...){
            ## Alternation of years
-           panel.xblocks(x, Year,                              
+           panel.xblocks(x, Year,
                          col = c("lightgray", "white"),
                          border = "darkgray")
            ## Values under the average highlighted with red regions
-           panel.xblocks(x, y < mean(y, na.rm = TRUE),        
+           panel.xblocks(x, y < mean(y, na.rm = TRUE),
                          col = "indianred1",
                          height = unit(0.1, 'npc'))
            ## Time series
            panel.lines(x, y, col = 'royalblue4', lwd = 0.5, ...)
            ## Label of each time series
-           panel.text(x[1], min(y, na.rm = TRUE),                    
+           panel.text(x[1], min(y, na.rm = TRUE),
                       names(aranjuez)[panel.number()],
                       cex = 0.6, adj = c(0, 0), srt = 90, ...)
            ## Triangles to point the maxima and minima          
-           idxMax <- which.max(y)                              
+           idxMax <- which.max(y)
            panel.points(x[idxMax], y[idxMax],
                         col = 'black', fill = 'lightblue', pch = 24)
-           idxMin <- which.min(y)                            
+           idxMin <- which.min(y)
            panel.points(x[idxMin], y[idxMin],
                         col = 'black', fill = 'lightblue', pch = 25)
        })
@@ -81,7 +81,7 @@ underIdx <- which(scaled$scaled <= 0)
 ## 'under' is the subset of values below the average
 under <- scaled[underIdx,]
 
-library(xts)
+library("xts")
 ep <- endpoints(timeIdx, on = 'years')
 ep <- ep[-1]
 N <- length(ep)
@@ -128,7 +128,7 @@ ggplot(data = aranjuezLong, aes(Index, Value)) +
 ## Time series of variables with the same scale
 ##################################################################
 
-load('data/navarra.RData')
+load('data/TimeSeries/navarra.RData')
 
 avRad <- zoo(rowMeans(navarra, na.rm = 1), index(navarra))
 pNavarra <- xyplot(navarra - avRad,
@@ -150,7 +150,7 @@ xyplot(navarra - avRad,
 ## The horizon graph
 ##################################################################
 
-library(latticeExtra)
+library("latticeExtra")
   
 horizonplot(navarra - avRad,
             layout = c(1, ncol(navarra)),
@@ -208,7 +208,7 @@ df <- data.frame(Vals = diffTa,
                  Year = year(timeIndex),
                  Month = month(timeIndex))
 
-library(scales) 
+library("scales") 
 ## The packages scales is needed for the pretty_breaks function.
 
 ggplot(data = df,
@@ -226,17 +226,34 @@ ggplot(data = df,
 ## Stacked graphs
 ##################################################################
 
-load('data/unemployUSA.RData')
+load('data/TimeSeries/unemployUSA.RData')
 
 xyplot(unemployUSA,
        superpose = TRUE,
        par.settings = custom.theme,
        auto.key = list(space = 'right'))
 
-library(scales) ## scale_x_yearmon needs scales::pretty_breaks
-autoplot(unemployUSA, facets = NULL, geom = 'area') +
+library("scales") ## scale_x_yearmon needs scales::pretty_breaks
+
+autoplot(unemployUSA, facets = NULL) +
     geom_area(aes(fill = Series)) +
     scale_x_yearmon()
+
+library("ggstream")
+
+sep2008 <- as.numeric(as.yearmon('2008-09'))
+
+autoplot(unemployUSA, facets = NULL) +
+  geom_stream(aes(fill = Series),
+              color = "black",
+              lwd = 0.25,
+              bw = 0.5) +
+  scale_x_yearmon() +
+  geom_vline(xintercept = sep2008,
+             lwd = 0.25, color = "gray50") +
+  theme_bw()
+
+library(grid)
 
 panel.flow <- function(x, y, groups, origin, ...)
 {
@@ -331,7 +348,7 @@ prepanel.flow <- function(x, y, groups, origin,...)
          dy = diff(c(yCumSum[,-1])))
 }
 
-library(colorspace)
+library("colorspace")
 ## We will use a qualitative palette from colorspace
 nCols <- ncol(unemployUSA)
 pal <- rainbow_hcl(nCols, c = 70, l = 75, start = 30, end = 300)
@@ -349,7 +366,7 @@ xyplot(unemployUSA, superpose = TRUE, auto.key = FALSE,
 ## Panel and prepanel functions to implement the ThemeRiver with =xyplot=
 ##################################################################
 
-library(dygraphs)
+library("dygraphs")
 
 dyTemp <- dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
                   main = "Temperature in Aranjuez",
@@ -367,8 +384,8 @@ dygraph(aranjuez[, c("TempMin", "TempAvg", "TempMax")],
     dySeries(c("TempMin", "TempAvg", "TempMax"),
              label = "Temperature")
 
-library(highcharter)
-library(xts)
+library("highcharter")
+library("xts")
 
 aranjuezXTS <- as.xts(aranjuez)
 
@@ -388,19 +405,21 @@ aranjuezDF <- fortify(aranjuez[,
 
 summary(aranjuezDF)
 
-library(plotly)
+library("plotly")
 
 plot_ly(aranjuezDF) %>%
     add_lines(x = ~ Index,
               y = ~ Value,
               color = ~ Series)
 
+## remotes::install_github("hrbrmstr/streamgraph")
+library("streamgraph")
+
 unemployDF <- fortify(unemployUSA, melt = TRUE)
+## streamgraph does not work with the yearmon class
+unemployDF$Index <- as.Date(unemployDF$Index)
 
 head(unemployDF)
-
-## remotes::install_github("hrbrmstr/streamgraph")
-library(streamgraph)
 
 streamgraph(unemployDF,
             key = "Series",
