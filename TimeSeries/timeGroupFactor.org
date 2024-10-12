@@ -60,7 +60,7 @@ ref:fig:aranjuezSplom).
 #+begin_src R
 library("zoo")
 
-load('data/aranjuez.RData')
+load('data/TimeSeries/aranjuez.RData')
 aranjuezDF <- as.data.frame(aranjuez)
 aranjuezDF$Month <- format(index(aranjuez), '%m')
 #+end_src
@@ -89,7 +89,7 @@ splom(~ aranjuezDF[1:10],
       cex = 0.3, alpha = 0.1)
 #+end_src
 
-#+CAPTION: Scatter plot matrix of the collection of meteorological time series of the Aranjuez station. label:fig:aranjuezSplom
+#+CAPTION: Scatter plot matrix of the collection of meteorological time series of the Aranjuez station (=lattice= version). label:fig:aranjuezSplom
 #+RESULTS:
 [[file:figs/TimeSeries/aranjuezSplom.png]]
 
@@ -107,20 +107,31 @@ aranjuez[idx,]
 #+end_src
 
 The =ggplot2= version of Figure ref:fig:aranjuezSplom is produced
-thanks to the =ggpairs= function provided by the =GGally= package.
+thanks to the =ggpairs= function provided by the =GGally= package
+(Figure ref:fig:aranjuezGGpairs).
 
 #+INDEX: Packages!GGally@\texttt{GGally}
 
-#+begin_src R :results silent :exports code :eval no-export
+#+begin_src R :results output graphics file :exports both :file figs/TimeSeries/aranjuezGGpairs.png :width 4000 :height 4000 :res 600
 library("GGally")
 
 ggpairs(aranjuezDF,
         columns = 1:10, ## Do not include "Month"
-        upper = list(continuous = "points"),
-        mapping = aes(colour = Month, alpha = 0.1))
+        upper = list(continuous = wrap("points", alpha = 0.7)),
+        lower = list(continuous = wrap("points", alpha = 0.7)),
+        diag = list(continuous = wrap("densityDiag", alpha = 0.7)),
+        mapping = aes(colour = Month),
+        legend = 1) +
+  scale_fill_manual(values = colors) +
+  scale_colour_manual(values = colors)
 #+end_src
 
-Let's explore Figure ref:fig:aranjuezSplom. For example,
+#+CAPTION: Scatter plot matrix of the collection of meteorological time series of the Aranjuez station (=ggplot= version). label:fig:aranjuezGGpairs
+#+RESULTS:
+[[file:figs/TimeSeries/aranjuezGGpairs.png]]
+
+Let's explore Figures ref:fig:aranjuezSplom and
+ref:fig:aranjuezGGpairs. For example,
 - The highest values of ambient temperature (average, maximum, and
   minimum), solar radiation, and evapotranspiration can be found
   during the summer.
@@ -277,15 +288,20 @@ hexbinplot(Radiation ~ Temperature | Statistic,
 #+RESULTS:
 [[file:figs/TimeSeries/aranjuezHexbinplot.pdf]]
 
-The ggplot2 version is based on the =stat_binhex= function.
-#+begin_src R :eval no-export
+The ggplot2 version is based on the =geom_hex= function (Figure ref:fig:aranjuezGGHex).
+#+begin_src R :results output graphics file :exports both :file figs/TimeSeries/aranjuezGGHex.pdf
 ggplot(data = aranjuezRshp,
        aes(Temperature, Radiation)) +
-    stat_binhex(ncol = 1) + 
+    geom_hex() + 
     stat_smooth(se = FALSE, method = 'loess', col = 'red') +
     facet_wrap(~ Statistic, ncol = 1) +
     theme_bw()
 #+end_src
+
+#+CAPTION: Scatterplot with hexagonal binning of temperature versus solar radiation using data of the Aranjuez station (=ggplot2= version). label:fig:aranjuezGGhex
+#+RESULTS:
+[[file:figs/TimeSeries/aranjuezGGHex.pdf]]
+
 
 * Scatterplot with Time as a Conditioning Variable label:SEC:conditionVariable
 

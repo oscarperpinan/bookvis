@@ -4,11 +4,11 @@
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
  
-library(lattice)
+library("lattice")
 library(ggplot2)
 ## latticeExtra must be loaded after ggplot2 to prevent masking of its
 ## `layer` function.
-library(latticeExtra)
+library("latticeExtra")
 
 source('configLattice.R')
 ##################################################################
@@ -17,9 +17,9 @@ source('configLattice.R')
 ## Scatterplot matrix: time as a grouping variable 
 ##################################################################
 
-library(zoo)
+library("zoo")
 
-load('data/aranjuez.RData')
+load('data/TimeSeries/aranjuez.RData')
 aranjuezDF <- as.data.frame(aranjuez)
 aranjuezDF$Month <- format(index(aranjuez), '%m')
 
@@ -41,34 +41,39 @@ trellis.focus('panel', 1, 1)
 idx <- panel.link.splom(pch = 13, cex = 0.6, col = 'green')
 aranjuez[idx,]
 
-library(GGally)
+library("GGally")
 
 ggpairs(aranjuezDF,
         columns = 1:10, ## Do not include "Month"
-        upper = list(continuous = "points"),
-        mapping = aes(colour = Month, alpha = 0.1))
+        upper = list(continuous = wrap("points", alpha = 0.7)),
+        lower = list(continuous = wrap("points", alpha = 0.7)),
+        diag = list(continuous = wrap("densityDiag", alpha = 0.7)),
+        mapping = aes(colour = Month),
+        legend = 1) +
+  scale_fill_manual(values = colors) +
+  scale_colour_manual(values = colors)
 
 ##################################################################
 ## Hexagonal binning
 ##################################################################
 
-library(hexbin)
+library("hexbin")
   
 splom(~as.data.frame(aranjuez),
       panel = panel.hexbinplot,
-      diag.panel = function(x, ...){                           
+      diag.panel = function(x, ...){
           yrng <- current.panel.limits()$ylim
           d <- density(x, na.rm = TRUE)
           d$y <- with(d, yrng[1] + 0.95 * diff(yrng) * y / max(y))
           panel.lines(d)
           diag.panel.splom(x, ...)
       },
-      lower.panel = function(x, y, ...){                      
+      lower.panel = function(x, y, ...){
           panel.hexbinplot(x, y, ...)
           panel.loess(x, y, ..., col = 'red')
       },
       xlab = '',
-      pscale = 0,                                                  
+      pscale = 0,
       varname.cex = 0.7)
 
 library(reshape2)
@@ -89,7 +94,7 @@ hexbinplot(Radiation ~ Temperature | Statistic,
 
 ggplot(data = aranjuezRshp,
        aes(Temperature, Radiation)) +
-    stat_binhex(ncol = 1) + 
+    geom_hex() + 
     stat_smooth(se = FALSE, method = 'loess', col = 'red') +
     facet_wrap(~ Statistic, ncol = 1) +
     theme_bw()
