@@ -844,7 +844,6 @@ route <- rbind(route,
 summary(route)
 #+end_src
 
-#+ATTR_LATEX: :environment results
 #+RESULTS:
 #+begin_example
       lon                lat               zoom            name          

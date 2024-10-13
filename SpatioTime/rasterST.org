@@ -50,7 +50,6 @@ names(SISdm) <- format(timeIndex, "%a_%Y%m%d")
 SISdm
 #+end_src
 
-#+ATTR_LATEX: :environment results
 #+RESULTS:
 #+begin_example
 class       : RasterBrick 
@@ -114,7 +113,6 @@ SISmm <- zApply(SISdm, by = as.yearmon, fun = 'mean')
 SISmm
 #+end_src
 
-#+ATTR_LATEX: :environment results
 #+RESULTS:
 #+begin_example
 class       : RasterBrick 

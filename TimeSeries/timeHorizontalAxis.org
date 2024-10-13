@@ -1,4 +1,4 @@
-#+PROPERTY:  header-args :session *R* :tangle ../docs/R/timeHorizontalAxis.R :eval export
+#+PROPERTY:  header-args :session *R* :tangle ../docs/R/timeHorizontalAxis.R :eval no-export
 #+OPTIONS: ^:nil
 #+BIND: org-export-latex-image-default-option "height=0.45\\textheight"
 
@@ -655,10 +655,9 @@ and the interrelation between variables can be perceived.
 
 The package =ggstream=[fn:6] provides the =geom_stream= function to
 produce streamgraphs with =ggplot=. Figure
-=ref:fig:unemployUSAStreamGraph= shows the result, including a
-vertical line to indicate one of main milestones of the financial
-crisis, whose effect on the overall unemployment results is clearly
-evident.
+ref:fig:unemployUSAStreamGraph shows the result, including a vertical
+line to indicate one of main milestones of the financial crisis, whose
+effect on the overall unemployment results is clearly evident.
 
 #+begin_src R :results output graphics file :exports both :file "figs/TimeSeries/unemployUSAStreamGraph.pdf" 
 library("ggstream")
@@ -674,7 +673,6 @@ autoplot(unemployUSA, facets = NULL) +
   geom_vline(xintercept = sep2008,
              lwd = 0.25, color = "gray50") +
   theme_bw()
-
 #+end_src
 
 #+CAPTION: Streamgraph of unemployment in the United States. label:fig:unemployUSAStreamGraph
@@ -802,19 +800,21 @@ prepanel.flow <- function(x, y, groups, origin,...)
 }
 #+end_src
 
-
-#+begin_src R :results output graphics file :exports both :file "figs/TimeSeries/unemployUSAThemeRiver.pdf" 
+#+begin_src R
 library("colorspace")
 ## We will use a qualitative palette from colorspace
 nCols <- ncol(unemployUSA)
 pal <- rainbow_hcl(nCols, c = 70, l = 75, start = 30, end = 300)
 myTheme <- custom.theme(fill = pal, lwd = 0.2)
+#+end_src
 
+#+begin_src R :results output graphics file :exports both :file "figs/TimeSeries/unemployUSAThemeRiver.pdf" 
 sep2008 <- as.numeric(as.yearmon('2008-09'))
 
 xyplot(unemployUSA, superpose = TRUE, auto.key = FALSE,
        panel = panel.flow, prepanel = prepanel.flow,
-       origin = 'themeRiver', scales = list(y = list(draw = FALSE)),
+       origin = 'themeRiver',
+       scales = list(y = list(draw = FALSE)),
        par.settings = myTheme) +
     layer(panel.abline(v = sep2008, col = 'gray', lwd = 0.7))
 #+end_src

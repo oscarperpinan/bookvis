@@ -358,7 +358,8 @@ sep2008 <- as.numeric(as.yearmon('2008-09'))
 
 xyplot(unemployUSA, superpose = TRUE, auto.key = FALSE,
        panel = panel.flow, prepanel = prepanel.flow,
-       origin = 'themeRiver', scales = list(y = list(draw = FALSE)),
+       origin = 'themeRiver',
+       scales = list(y = list(draw = FALSE)),
        par.settings = myTheme) +
     layer(panel.abline(v = sep2008, col = 'gray', lwd = 0.7))
 

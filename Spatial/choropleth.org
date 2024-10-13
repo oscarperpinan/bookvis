@@ -68,14 +68,13 @@ This =object= contains two main variables: =whichMax=, the name of the
 predominant political option, and =pcMax=, the percentage of votes
 obtained by this political option.
 
-#+begin_src R :results output :exports results :tangle no
+#+begin_src R :results output :exports results
 sfMapVotes$whichMax <- factor(sfMapVotes$whichMax)
 sfMapVotes$PROV <- factor(sfMapVotes$PROV)
 
 summary(sfMapVotes)
 #+end_src
 
-#+ATTR_LATEX: :environment results
 #+RESULTS:
 #+begin_example
     SP_ID             PROVMUN            whichMax              Max          

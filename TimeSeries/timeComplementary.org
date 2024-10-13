@@ -140,7 +140,6 @@ CO2capita <- dcast(CO2capita, Country.Name ~ Year)
 summary(CO2capita)
 #+end_src
 
-#+ATTR_LATEX: :environment results
 #+RESULTS:
 #+begin_example
 Using CO2.capita as value column: use value.var to override.
@@ -639,11 +638,16 @@ pgvis <- ggplot(data = CO2data,
        y = 'GNI per capita, PPP (current international $)')
 #+end_src
 
-#+begin_src R :eval no-export
-pgvis +
+#+begin_src R
+pgAnim <- pgvis +
   transition_time(Year) +
   ease_aes("linear") +
   shadow_wake(wake_length = 0.3)
+
+animate(pgAnim,
+        height = 1080, width = 1080,
+        res = 150,
+        units = "px")
 #+end_src
 
 #+begin_src R :eval no-export

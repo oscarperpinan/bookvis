@@ -145,8 +145,7 @@ admNames <- sapply(admNames,
 
 #+INDEX: Subjects!Background map
 
-Therefore, the physical map (Figure ref:fig:brazil) is composed
-of three layers: 
+Therefore, the physical map is composed of three layers:
 
 1.The altitude raster layer uses a terrain colors palette, as the one
   produced by the =terrain_hcl= function from the =colorspace= package
@@ -190,7 +189,7 @@ The final result is shown in Figure ref:fig:brazilLattice.
   #+end_src
 
 
-#+CAPTION: Physical map of Brazil (=lattice= version). Main administrative regions and the Amazonas River are labeled. label:fig:brazilLattice
+#+CAPTION: Physical map of Brazil (=lattice= version). Main administrative regions are labeled. label:fig:brazilLattice
 #+RESULTS:
 [[file:figs/Spatial/brazilLattice.png]]
 
@@ -228,7 +227,7 @@ ggplot() +
   theme_bw()
 #+end_src
 
-#+CAPTION: Physical map of Brazil (=ggplot2= version). Main administrative regions and the Amazonas River are labeled. label:fig:brazilGG
+#+CAPTION: Physical map of Brazil (=ggplot2= version). Main administrative regions are labeled. label:fig:brazilGG
 #+RESULTS:
 [[file:figs/Spatial/brazilGG.png]]
 

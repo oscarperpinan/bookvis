@@ -14,7 +14,7 @@ setwd('~/github/bookvis/')
 ## with setwd to the folder where the repository is located.
  
 library("lattice")
-library(ggplot2)
+library("ggplot2")
 ## latticeExtra must be loaded after ggplot2 to prevent masking of its
 ## `layer` function.
 library("latticeExtra")
@@ -123,7 +123,10 @@ ggpairs(aranjuezDF,
         mapping = aes(colour = Month),
         legend = 1) +
   scale_fill_manual(values = colors) +
-  scale_colour_manual(values = colors)
+  scale_colour_manual(values = colors) +
+  theme(axis.text = element_text(size = 6),
+        axis.text.x = element_text(angle = 45),
+        strip.text = element_text(size = 7))
 #+end_src
 
 #+CAPTION: Scatter plot matrix of the collection of meteorological time series of the Aranjuez station (=ggplot= version). label:fig:aranjuezGGpairs
@@ -240,7 +243,6 @@ aranjuezRshp <- melt(aranjuezDF,
 summary(aranjuezRshp)
 #+end_src
 
-#+ATTR_LATEX: :environment results
 #+RESULTS:
 #+begin_example
     HumidAvg        HumidMax         WindAvg         WindMax      
@@ -288,7 +290,7 @@ hexbinplot(Radiation ~ Temperature | Statistic,
 #+RESULTS:
 [[file:figs/TimeSeries/aranjuezHexbinplot.pdf]]
 
-The ggplot2 version is based on the =geom_hex= function (Figure ref:fig:aranjuezGGHex).
+The =ggplot2= version is based on the =geom_hex= function (Figure ref:fig:aranjuezGGHex).
 #+begin_src R :results output graphics file :exports both :file figs/TimeSeries/aranjuezGGHex.pdf
 ggplot(data = aranjuezRshp,
        aes(Temperature, Radiation)) +
@@ -298,7 +300,7 @@ ggplot(data = aranjuezRshp,
     theme_bw()
 #+end_src
 
-#+CAPTION: Scatterplot with hexagonal binning of temperature versus solar radiation using data of the Aranjuez station (=ggplot2= version). label:fig:aranjuezGGhex
+#+CAPTION: Scatterplot with hexagonal binning of temperature versus solar radiation using data of the Aranjuez station (=ggplot2= version). label:fig:aranjuezGGHex
 #+RESULTS:
 [[file:figs/TimeSeries/aranjuezGGHex.pdf]]
 
@@ -327,12 +329,13 @@ a smooth line in each panel.
 
 #+begin_src R :results output graphics file :exports both  :width 2000 :height 2000 :res 300 :file figs/TimeSeries/aranjuezFacetGrid.png
 ggplot(data = aranjuezRshp, aes(Radiation, Temperature)) +
-    facet_grid(Statistic ~ Month) +
-    geom_point(col = 'skyblue4', pch = 19, cex = 0.5, alpha = 0.3) +
-    geom_rug() +
-    stat_smooth(se = FALSE, method = 'loess',
-                col = 'indianred1', lwd = 1.2) +
-    theme_bw()
+  facet_grid(Statistic ~ Month) +
+  geom_point(col = 'skyblue4', pch = 19, cex = 0.5, alpha = 0.3) +
+  geom_rug() +
+  stat_smooth(se = FALSE, method = 'loess',
+              col = 'indianred1', lwd = 1.2) +
+  theme_bw() +
+  theme(axis.text.x = element_text(size = 7, angle = 45))
 #+end_src
 
 #+CAPTION: Scatterplot of temperature versus solar radiation for each month using data of the Aranjuez station (=ggplot2= version). label:fig:aranjuezFacetGrid

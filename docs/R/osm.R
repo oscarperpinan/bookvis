@@ -8,17 +8,23 @@
 ## Retrieving data from OpenStreetMap
 ##################################################################
 
-library('osmdata')
+library("osmdata")
+library("sf")
+library("sp")
+
 
 ## Bounding box
-ymax <- 43.7
+xmin <- -8.1
 ymin <- 43.62
 xmax <- -8
-xmin <- -8.1
-## Overpass query
-cedeira <- opq(c(xmin, ymin, xmax, ymax))
+ymax <- 43.7 
+cedeiraBB <- c(xmin = xmin, ymin = ymin,
+               xmax = xmax, ymax = ymax) 
 
-streetsOSM <- add_osm_feature(cedeira,
+## Overpass query
+cedeiraOPQ <- opq(cedeiraBB)
+
+streetsOSM <- add_osm_feature(cedeiraOPQ,
                               key = "highway",
                               value = "residential")
 
@@ -35,30 +41,70 @@ spFromOSM <- function(source, key, value, type = 'lines')
            points = spdata$osm_points)
 }
 
-streets <- spFromOSM(cedeira, key = "highway", value = "residential")
-primary <- spFromOSM(cedeira, key = "highway", value = "primary")
-secondary <- spFromOSM(cedeira, key = "highway", value = "secondary")
-tertiary <- spFromOSM(cedeira, key = "highway", value = "tertiary")
-unclassified <- spFromOSM(cedeira, key = "highway", value = "unclassified")
-footway <- spFromOSM(cedeira, key = "highway", value = "footway")
-steps <- spFromOSM(cedeira, key = "highway", value = "steps")
+sfFromOSM <- function(bb, key, value, type = 'lines')
+{
+  source <- opq(bb)
+  osm <- add_osm_feature(source, key, value)
+  sfdata <- osmdata_sf(osm)
+  switch(type,
+         lines = st_crop(sfdata$osm_lines, bb),
+         points = sfdata$osm_points)
+  
+}
 
-city <- spFromOSM(cedeira, key = "place", value = "town", type = "points")
-places <- spFromOSM(cedeira, key = "place", value = "hamlet", type = "points")
+streetsSP <- spFromOSM(cedeiraOPQ,
+                       key = "highway", value = "residential")
+primarySP <- spFromOSM(cedeiraOPQ,
+                       key = "highway", value = "primary")
+secondarySP <- spFromOSM(cedeiraOPQ,
+                         key = "highway", value = "secondary")
+tertiarySP <- spFromOSM(cedeiraOPQ,
+                        key = "highway", value = "tertiary")
+unclassifiedSP <- spFromOSM(cedeiraOPQ,
+                            key = "highway", value = "unclassified")
+footwaySP <- spFromOSM(cedeiraOPQ,
+                       key = "highway", value = "footway")
+stepsSP <- spFromOSM(cedeiraOPQ,
+                     key = "highway", value = "steps")
 
-nms <- strsplit(as.character(places$name), split = ' \\(')
-places$name <- sapply(nms, function(x) x[1])
+streetsSF <- sfFromOSM(cedeiraBB,
+                       key = "highway", value = "residential")
+primarySF <- sfFromOSM(cedeiraBB,
+                       key = "highway", value = "primary")
+secondarySF <- sfFromOSM(cedeiraBB,
+                         key = "highway", value = "secondary")
+tertiarySF <- sfFromOSM(cedeiraBB,
+                        key = "highway", value = "tertiary")
+unclassifiedSF <- sfFromOSM(cedeiraBB,
+                            key = "highway", value = "unclassified")
+footwaySF <- sfFromOSM(cedeiraBB,
+                       key = "highway", value = "footway")
+stepsSF <- sfFromOSM(cedeiraBB,
+                     key = "highway", value = "steps")
+
+citySP <- spFromOSM(cedeiraOPQ, key = "place",
+                    value = "town", type = "points")
+
+placesHsp <- spFromOSM(cedeiraOPQ, key = "place",
+                       value = "hamlet", type = "points")
+placesHsp <- subset(placesHsp, as.numeric(population) > 30)
+
+citySF <- sfFromOSM(cedeiraBB, key = "place",
+                    value = "town", type = "points")
+
+placesHsf <- sfFromOSM(cedeiraBB, key = "place",
+                       value = "hamlet", type = "points")
+placesHsf <- subset(placesHsf, as.numeric(population) > 30)
 
 ##################################################################
 ## Hill Shading
 ##################################################################
 
-library(raster)
-library(rasterVis)
+library("raster")
 
-projCedeira <- projection(city)
+projCedeira <- projection(citySP)
 
-demCedeira <- raster('data/demCedeira')
+demCedeira <- raster('data/Spatial/demCedeira')
 projection(demCedeira) <- projCedeira
 
 ## Crop the DEM using the bounding box of the OSM data
@@ -78,49 +124,110 @@ hsCedeira <- hillShade(slope = slope, aspect = aspect,
 ## Overlaying layers of information
 ##################################################################
 
-## The background color of the panel is set to blue to represent the sea
-hsTheme <- GrTheme(panel.background = list(col = 'skyblue3'))
+library("rasterVis")
 
-library(colorspace)
+## The background color of the panel is set to blue to represent the
+## sea
+hsTheme <- GrTheme(panel.background = list(col = "skyblue3"))
+
+levelplot(hsCedeira, maxpixels = ncell(hsCedeira),
+          par.settings = hsTheme,
+          margin = FALSE, colorkey = FALSE,
+          xlab = "", ylab = "")
+
+library("colorspace")
+
 ## DEM with terrain colors and semitransparency
-terrainTheme <- rasterTheme(region = terrain_hcl(n = 15), 
+terrainPal <- terrain_hcl(n = 15)
+
+terrainTheme <- rasterTheme(region = terrainPal, 
                             regions = list(alpha = 0.6))
 
-library(maptools)
+levelplot(demCedeira, maxpixels = ncell(demCedeira),
+          par.settings = terrainTheme)
 
-##Auxiliary function to display the roads. A thicker black line in
-##the background and a thinner one with an appropiate color.
+## Auxiliary function to display the roads.
+
+## A thicker black line in the background and a
+## thinner one with an appropiate color.
+
+## sp version
 sp.road <- function(line, lwd = 6, blwd = 7,
-                    col = 'indianred1', bcol = 'black'){
-    sp.lines(line, lwd = blwd, col = bcol)
-    sp.lines(line, lwd = lwd, col = col)
+                    col = "indianred1", bcol = "black") {
+  sp.lines(line, lwd = blwd, col = bcol)
+  sp.lines(line, lwd = lwd, col = col)
 }
+
+## sf version
+sf_road <- function(line, lwd = 1, blwd = 1.1,
+                    col = "indianred1", bcol = "black") {
+  list(
+    geom_sf(data = line, linewidth = blwd, col = bcol), 
+    geom_sf(data = line, linewidth = lwd, col = col)
+  )
+}
+
+##Auxiliary function to display the towns and villages. 
+
+## sp version
+sp.places <- function(places, point.size= 0.4, text.size = 0.8) {
+  sp.points(places, pch = 19, col = "black",
+            cex = point.size, alpha = 0.8)
+  sp.text(coordinates(places), places$name,
+          pos = 3,
+          fontfamily = "Palatino", 
+          cex = text.size, col = "black")
+}
+
+## sf version
+sf_places <- function(places, text_size, point_size, vjust = -1)
+{
+  list(
+    geom_sf(data = places, size = point_size), 
+    geom_sf_text(aes(label = name), data = places,
+                 size = text_size, vjust = vjust)
+  )
+}
+
+library(latticeExtra)
 
 ## Hill shade and DEM overlaid
 levelplot(hsCedeira, maxpixels = ncell(hsCedeira),
           par.settings = hsTheme,
           margin = FALSE, colorkey = FALSE,
-          xlab = '', ylab = '') +
-    levelplot(demCedeira, maxpixels = ncell(demCedeira),
-              par.settings = terrainTheme) +
-    ## Roads and places
-    layer({
-        ## Street and roads
-        sp.road(streets, lwd = 1, blwd = 1, col = 'white')
-        sp.road(unclassified, lwd = 2, blwd = 2, col = 'white')
-        sp.road(footway, lwd = 2, blwd = 2, col = 'white')
-        sp.road(steps, lwd = 2, blwd = 2, col = 'white')
-        sp.road(tertiary, lwd = 4, blwd = 4, col = 'palegreen')
-        sp.road(secondary, lwd = 6, blwd = 6, col = 'midnightblue')
-        sp.road(primary, lwd = 7, blwd = 8, col = 'indianred1')
-        ## Places except Cedeira town
-        sp.points(places, pch = 19, col = 'black', cex = 0.4, alpha = 0.8)
-        sp.pointLabel(places, labels = places$name,
-                      fontfamily = 'Palatino', 
-                      cex = 0.7, col = 'black')
-        ## Cedeira town
-        sp.points(city, pch = 18, col = 'black', cex = 1)
-        sp.pointLabel(city, labels = 'Cedeira',
-                      fontfamily = 'Palatino', 
-                      cex = 1, col = 'black')
-    })
+          xlab = "", ylab = "") +
+  levelplot(demCedeira, maxpixels = ncell(demCedeira),
+            par.settings = terrainTheme) +
+  ## Roads and places
+  layer({
+    ## Street and roads
+    sp.road(streetsSP, lwd = 1, blwd = 1, col = "white")
+    sp.road(unclassifiedSP, lwd = 2, blwd = 2, col = "white")
+    sp.road(footwaySP, lwd = 2, blwd = 2, col = "white")
+    sp.road(stepsSP, lwd = 2, blwd = 2, col = "white")
+    sp.road(tertiarySP, lwd = 4, blwd = 4, col = "palegreen")
+    sp.road(secondarySP, lwd = 6, blwd = 6, col = "midnightblue")
+    sp.road(primarySP, lwd = 7, blwd = 8, col = "indianred1")
+    ## Places except Cedeira town
+    sp.places(placesHsp, point.size = 0.4, text.size = 0.8)
+    ## Cedeira town
+    sp.places(citySP, point.size = 1.2, text.size = 1.5)
+  })
+
+library(ggplot2)
+
+## DEM
+gplot(demCedeira,
+      palette = scale_fill_gradientn(colours = terrainPal),
+      show.legend = FALSE) + 
+  ## Street and roads
+  sf_road(streetsSF, lwd = .4, blwd = .5, col = "white") +
+  sf_road(unclassifiedSF, lwd = .4, blwd = .5, col = "white") +
+  sf_road(footwaySF, lwd = .4, blwd = .5, col = "white") +
+  sf_road(stepsSF, lwd = .4, blwd = .5, col = "white") +
+  sf_road(tertiarySF, lwd = .8, blwd = .9, col = "palegreen") +
+  sf_road(secondarySF, lwd = .9, blwd = 1, col = "midnightblue") +
+  sf_road(primarySF, lwd = 1.1, blwd = 1.2, col = "indianred1") +
+  ## Places
+  sf_places(placesHsf, point_size = 1, text_size = 3) +
+  sf_places(citySF, point_size = 3, text_size = 5)
