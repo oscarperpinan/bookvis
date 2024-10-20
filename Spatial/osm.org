@@ -11,6 +11,22 @@ setwd('~/github/bookvis/')
 ##################################################################
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
+library("lattice")
+library("ggplot2")
+## latticeExtra must be loaded after ggplot2 to prevent masking of its
+## `layer` function.
+library("latticeExtra")
+
+source("configLattice.R")
+
+library("RColorBrewer")
+library("colorspace")
+
+library("raster")
+library("terra")
+
+library("rasterVis")
+library("tidyterra")
 #+end_src
 
 * Reference maps
@@ -200,12 +216,11 @@ have extracted the data corresponding to the region of interest using
 of the book repository.
 
 #+INDEX: Packages!raster@\texttt{raster}
-#+INDEX: Packages!rasterVis@\texttt{rasterVis}
+#+INDEX: Packages!raster@\texttt{terra}
 #+INDEX: Data!Geonetwork
 
 #+begin_src R
 library("raster")
-
 projCedeira <- projection(citySP)
 
 demCedeira <- raster('data/Spatial/demCedeira')
@@ -218,7 +233,6 @@ demCedeira <- crop(demCedeira, OSMextent)
 
 ## Discard values below sea level
 demCedeira[demCedeira <= 0] <- NA
-
 #+end_src
 
 #+begin_src R :results output :exports none :tangle no
@@ -245,6 +259,14 @@ hsCedeira <- hillShade(slope = slope, aspect = aspect,
                        angle = 20, direction = 30)
 #+end_src
 
+As it has been explained in sections [[ref:sec:quantitative_raster]] and ref:sec:hill-shading-raster, this same procedure can be implemented with the =terra= package. It will be not be repeated here. For simplicity, we will use the conversion function:
+#+begin_src R
+library("terra")
+
+demCedeiraT <- rast(demCedeira)
+hsCedeiraT <- rast(hsCedeira)
+#+end_src
+
 ** Overlaying Layers of Information
 #+begin_src R :exports none
 ##################################################################
@@ -254,65 +276,158 @@ hsCedeira <- hillShade(slope = slope, aspect = aspect,
 And finally, the third step is to display the different layers of
 information in correct order:
 
-#+INDEX: Packages!rasterVis@\texttt{rasterVis}  
+#+INDEX: Packages!rasterVis@\texttt{rasterVis}
+#+INDEX: Packages!tidyterra@\texttt{tidyterra}  
 #+INDEX: Packages!sp@\texttt{sp}  
 #+INDEX: Packages!sf@\texttt{sf}  
 #+INDEX: Packages!latticeExtra@\texttt{latticeExtra}  
 #+INDEX: Packages!ggplot2@\texttt{ggplot2}  
-#+INDEX: Packages!colorspace@\texttt{colorspace}  
 #+INDEX: Packages!RColorBrewer@\texttt{RColorBrewer}  
 
-#+begin_src R
-library("rasterVis")
-#+end_src
-
-- The hill shade layer is created with the =levelplot= method for
-  =Raster= objects defined in the =rasterVis= package. The =GrTheme=
-  is modified to display the sea region with blue color. (Figure ref:fig:hsCedeira).
+The =rasterVis= package creates the hill shade layer with the
+=levelplot= method for =Raster= objects. The =GrTheme= is modified to
+display the sea region with blue color. The result is shown in Figure
+ref:fig:cedeiraHSlattice.
 
 #+begin_src R
 ## The background color of the panel is set to blue to represent the
 ## sea
 hsTheme <- GrTheme(panel.background = list(col = "skyblue3"))
+
+hsLattice <- levelplot(hsCedeira, maxpixels = ncell(hsCedeira),
+                       par.settings = hsTheme,
+                       margin = FALSE, colorkey = FALSE,
+                       xlab = "", ylab = "")
 #+end_src
 
-#+begin_src R :results output graphics file :exports both :file figs/Spatial/hsCedeira.pdf
-levelplot(hsCedeira, maxpixels = ncell(hsCedeira),
-          par.settings = hsTheme,
-          margin = FALSE, colorkey = FALSE,
-          xlab = "", ylab = "")
+#+RESULTS:
+
+
+#+begin_src R :results output graphics file :exports results :tangle no :file figs/Spatial/cedeiraHSlattice.pdf
+print(hsLattice)
 #+end_src
 
-#+CAPTION: Local topography of Cedeira (Galicia, Spaint) displayed with the hill shading technique. label:fig:hsCedeira
-#+RESULTS[935cc8f7a546c9855e2496e8e4ea022d0af28cb9]:
-[[file:figs/Spatial/hsCedeira.pdf]]
-
-- The DEM raster is printed with terrain colors and semitransparency
-  over the hill shade layer. (Figure ref:fig:cedeiraDEM)
+The =tidyterra= package displays the hill shade layer with the
+=geom_spatraster= function.
 
 #+begin_src R
-library("colorspace")
+greyPal <- rev(brewer.pal(n = 9, name = "Greys"))
 
+ggplot() +
+  geom_spatraster(data = hsCedeiraT,
+                  show.legend = FALSE) +
+  scale_fill_gradientn(colours = greyPal,
+                       na.value = "skyblue3") +
+  theme_bw()
+#+end_src
+However, this layer cannot be combined with the next graphics layer
+(the DEM layer) because both define the colour scale. This problem can
+be solved thanks to the =fill= argument of the =geom_spatraster=
+function: when we pass a vector of colours to this argument, the
+function will create a layer without mapping to the colour scale of
+the graphic. Therefore, we have to build the scale of this layer. The
+result is shown in Figure ref:fig:cedeiraHSggplot.
+
+#+begin_src R
+## Build a vector of greys based on the Color Brewer pal
+greyRamp <- colorRampPalette(greyPal)
+greys <- greyRamp(255) ##255 colors, 0 to 254
+
+## Classify the values of the raster in 255 classes
+idx <- classify(hsCedeiraT, 255, ## 255 cuts
+                include.lowest = TRUE) 
+idx <- as.vector(idx)
+## Map these classes to the vector of colors
+palGreys <- greys[idx + 1] ## 1:255 for indexing
+
+hsGGplot <- geom_spatraster(data = hsCedeiraT,
+                  fill = palGreys,
+                  ## Plot every cell of the raster
+                  maxcell = Inf)
+#+end_src
+
+#+begin_src R :results output graphics file :exports results :tangle no :file figs/Spatial/cedeiraHSggplot.pdf
+print(ggplot() + hsGGplot)
+#+end_src
+
+#+caption: Local topography of Cedeira (Galicia, Spain) displayed with the hill shading technique. label:fig:cedeiraHS
+#+begin_figure
+#+attr_latex: :options {0.5\textwidth}
+#+CAPTION: =lattice= version. label:fig:cedeiraHSlattice
+#+begin_subfigure
+#+attr_latex: :width 0.8\linewidth 
+#+RESULTS:
+[[file:figs/Spatial/cedeiraHSlattice.pdf]]
+#+end_subfigure
+#+attr_latex: :options {0.5\textwidth}
+#+CAPTION: =ggplot2= version. label:fig:cedeiraHSggplot
+#+begin_subfigure
+#+attr_latex: :width 0.8\linewidth 
+#+RESULTS:
+file:figs/Spatial/cedeiraHSggplot.pdf
+#+end_subfigure
+#+end_figure
+
+The DEM raster is printed with terrain colors and semitransparency over the hill shade layer. The =lattice= version is shown in Figure ref:fig:cedeiraDEMlattice and the =ggplot2= version in Figure ref:fig:cedeiraDEMggplot.
+
+#+INDEX: Packages!colorspace@\texttt{colorspace}  
+
+#+begin_src R
 ## DEM with terrain colors and semitransparency
 terrainPal <- terrain_hcl(n = 15)
+#+end_src
 
+
+#+begin_src R
+## Lattice version
 terrainTheme <- rasterTheme(region = terrainPal, 
                             regions = list(alpha = 0.6))
+
+demLattice <- levelplot(demCedeira, maxpixels = ncell(demCedeira),
+                        par.settings = terrainTheme,
+                        margin = FALSE, colorkey = FALSE)
 #+end_src
 
-#+begin_src R :results output graphics file :exports both :file figs/Spatial/cedeiraDEM.pdf
-levelplot(demCedeira, maxpixels = ncell(demCedeira),
-          par.settings = terrainTheme)
+#+RESULTS:
+
+#+begin_src R :results output graphics file :exports results :file figs/Spatial/cedeiraDEMlattice.pdf
+print(demLattice)
 #+end_src
 
-#+CAPTION: Local topography of Cedeira (Galicia, Spaint). label:fig:cedeiraDEM
-#+RESULTS[18c0023c41c56d6f89ecd0f6c6b1a8006d42eb1f]:
-[[file:figs/Spatial/cedeiraDEM.pdf]]
+#+begin_src R
+## ggplot version
+demGGplot <- geom_spatraster(data = demCedeiraT,
+                             alpha = 0.6,
+                             show.legend = FALSE)
+terrainScale <- scale_fill_gradientn(colours = terrainPal,
+                                     na.value = "skyblue3")
+#+end_src
 
-- The roads are displayed with auxiliary functions (=sp.road= and
-  =sf_road=) that produces a colored line over a thicker black line,
-  and the town and villages and their names are displayed with the
-  auxiliary functions =sp.places= and =sf_places=.
+#+RESULTS:
+
+#+begin_src R :results output graphics file :exports results :file figs/Spatial/cedeiraDEMggplot.pdf
+print(ggplot() + demGGplot + terrainScale)
+#+end_src
+
+#+CAPTION: Local topography of Cedeira (Galicia, Spain). label:fig:cedeiraDEM
+#+begin_figure
+#+CAPTION: =lattice= version. label:fig:cedeiraDEMlattice
+#+attr_latex: :options {0.5\textwidth}
+#+begin_subfigure
+#+attr_latex: :width 0.8\linewidth 
+#+RESULTS:
+[[file:figs/Spatial/cedeiraDEMlattice.pdf]]
+#+end_subfigure
+#+attr_latex: :options {0.5\textwidth}
+#+CAPTION: =ggplot2= version. label:fig:cedeiraDEMggplot
+#+begin_subfigure
+#+attr_latex: :width 0.8\linewidth 
+#+RESULTS:
+file:figs/Spatial/cedeiraDEMggplot.pdf
+#+end_subfigure
+#+end_figure
+
+The roads are displayed with auxiliary functions (=sp.road= and =sf_road=) that produces a colored line over a thicker black line, and the town and villages and their names are displayed with the auxiliary functions =sp.places= and =sf_places=.
 
 #+begin_src R
 ## Auxiliary function to display the roads.
@@ -363,17 +478,12 @@ sf_places <- function(places, text_size, point_size, vjust = -1)
 
 The final figure is produced superimposing the layers of =sp= objects
 with the =+.trellis= mechanism of the =latticeExtra= package (Figure
-[[ref:fig:cedeiraOSMLattice]]):
-#+begin_src R :results output graphics file :exports both :file figs/Spatial/cedeiraOSMLattice.pdf
-library(latticeExtra)
+[[ref:fig:cedeiraOSMlattice]]):
 
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/cedeiraOSMlattice.pdf
 ## Hill shade and DEM overlaid
-levelplot(hsCedeira, maxpixels = ncell(hsCedeira),
-          par.settings = hsTheme,
-          margin = FALSE, colorkey = FALSE,
-          xlab = "", ylab = "") +
-  levelplot(demCedeira, maxpixels = ncell(demCedeira),
-            par.settings = terrainTheme) +
+hsLattice +
+  demLattice +
   ## Roads and places
   layer({
     ## Street and roads
@@ -390,19 +500,13 @@ levelplot(hsCedeira, maxpixels = ncell(hsCedeira),
     sp.places(citySP, point.size = 1.2, text.size = 1.5)
   })
 #+end_src
-#+CAPTION: Main roads near Cedeira, Galicia. Local topography is displayed with the hill shading technique. Some places are highlighted. (=lattice= version) label:fig:cedeiraOSMLattice
-#+RESULTS[600a4ec45253196d85e78c22293f42a7c3c51f10]:
-[[file:figs/Spatial/cedeiraOSMLattice.pdf]]
 
 or superimposing the layers of =sf= objects with the =+.gg= mechanism
-of =ggplot2= (Figure ref:fig:cedeiraOSMGG):
-#+begin_src R :results output graphics file :exports both :file figs/Spatial/cedeiraOSMGG.pdf
-library(ggplot2)
-
-## DEM
-gplot(demCedeira,
-      palette = scale_fill_gradientn(colours = terrainPal),
-      show.legend = FALSE) + 
+of =ggplot2= (Figure ref:fig:cedeiraOSMggplot):
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/cedeiraOSMggplot.pdf
+ggplot() +
+  hsGGplot +
+  demGGplot + terrainScale +
   ## Street and roads
   sf_road(streetsSF, lwd = .4, blwd = .5, col = "white") +
   sf_road(unclassifiedSF, lwd = .4, blwd = .5, col = "white") +
@@ -413,12 +517,28 @@ gplot(demCedeira,
   sf_road(primarySF, lwd = 1.1, blwd = 1.2, col = "indianred1") +
   ## Places
   sf_places(placesHsf, point_size = 1, text_size = 3) +
-  sf_places(citySF, point_size = 3, text_size = 5)
+  sf_places(citySF, point_size = 3, text_size = 5) +
+  theme_bw() + xlab("") + ylab("")
 #+end_src
 
-#+CAPTION: Main roads near Cedeira, Galicia. Local topography is displayed with the hill shading technique. Some places are highlighted. (=ggplot2= version) label:fig:cedeiraOSMLattice
-#+RESULTS[7caae7aec315a0caa74e0ce48c09ec278de267bf]:
-[[file:figs/Spatial/cedeiraOSMGG.pdf]]
+#+CAPTION: Main roads near Cedeira, Galicia. Local topography is displayed with the hill shading technique. Some places are highlighted. label:fig:cedeiraOSM
+#+begin_figure
+#+CAPTION: =lattice= version label:fig:cedeiraOSMlattice
+#+attr_latex: :options {0.5\textwidth}
+#+begin_subfigure
+#+attr_latex: :width 0.8\linewidth 
+#+RESULTS:
+[[file:figs/Spatial/cedeiraOSMlattice.pdf]]
+#+end_subfigure
+
+#+CAPTION: =ggplot2= version label:fig:cedeiraOSMggplot
+#+attr_latex: :options {0.5\textwidth}
+#+begin_subfigure
+#+attr_latex: :width 0.8\linewidth 
+#+RESULTS:
+[[file:figs/Spatial/cedeiraOSMggplot.pdf]]
+#+end_subfigure
+#+end_figure
 
 * Footnotes
 

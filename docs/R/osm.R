@@ -3,6 +3,22 @@
 ##################################################################
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
+library("lattice")
+library("ggplot2")
+## latticeExtra must be loaded after ggplot2 to prevent masking of its
+## `layer` function.
+library("latticeExtra")
+
+source("configLattice.R")
+
+library("RColorBrewer")
+library("colorspace")
+
+library("raster")
+library("terra")
+
+library("rasterVis")
+library("tidyterra")
 
 ##################################################################
 ## Retrieving data from OpenStreetMap
@@ -101,7 +117,6 @@ placesHsf <- subset(placesHsf, as.numeric(population) > 30)
 ##################################################################
 
 library("raster")
-
 projCedeira <- projection(citySP)
 
 demCedeira <- raster('data/Spatial/demCedeira')
@@ -120,31 +135,70 @@ aspect <- terrain(demCedeira, 'aspect')
 hsCedeira <- hillShade(slope = slope, aspect = aspect,
                        angle = 20, direction = 30)
 
+library("terra")
+
+demCedeiraT <- rast(demCedeira)
+hsCedeiraT <- rast(hsCedeira)
+
 ##################################################################
 ## Overlaying layers of information
 ##################################################################
-
-library("rasterVis")
 
 ## The background color of the panel is set to blue to represent the
 ## sea
 hsTheme <- GrTheme(panel.background = list(col = "skyblue3"))
 
-levelplot(hsCedeira, maxpixels = ncell(hsCedeira),
-          par.settings = hsTheme,
-          margin = FALSE, colorkey = FALSE,
-          xlab = "", ylab = "")
+hsLattice <- levelplot(hsCedeira, maxpixels = ncell(hsCedeira),
+                       par.settings = hsTheme,
+                       margin = FALSE, colorkey = FALSE,
+                       xlab = "", ylab = "")
 
-library("colorspace")
+greyPal <- rev(brewer.pal(n = 9, name = "Greys"))
+
+ggplot() +
+  geom_spatraster(data = hsCedeiraT,
+                  show.legend = FALSE) +
+  scale_fill_gradientn(colours = greyPal,
+                       na.value = "skyblue3") +
+  theme_bw()
+
+## Build a vector of greys based on the Color Brewer pal
+greyRamp <- colorRampPalette(greyPal)
+greys <- greyRamp(255) ##255 colors, 0 to 254
+
+## Classify the values of the raster in 255 classes
+idx <- classify(hsCedeiraT, 255, ## 255 cuts
+                include.lowest = TRUE) 
+idx <- as.vector(idx)
+## Map these classes to the vector of colors
+palGreys <- greys[idx + 1] ## 1:255 for indexing
+
+hsGGplot <- geom_spatraster(data = hsCedeiraT,
+                  fill = palGreys,
+                  ## Plot every cell of the raster
+                  maxcell = Inf)
 
 ## DEM with terrain colors and semitransparency
 terrainPal <- terrain_hcl(n = 15)
 
+## Lattice version
 terrainTheme <- rasterTheme(region = terrainPal, 
                             regions = list(alpha = 0.6))
 
-levelplot(demCedeira, maxpixels = ncell(demCedeira),
-          par.settings = terrainTheme)
+demLattice <- levelplot(demCedeira, maxpixels = ncell(demCedeira),
+                        par.settings = terrainTheme,
+                        margin = FALSE, colorkey = FALSE)
+
+print(demLattice)
+
+## ggplot version
+demGGplot <- geom_spatraster(data = demCedeiraT,
+                             alpha = 0.6,
+                             show.legend = FALSE)
+terrainScale <- scale_fill_gradientn(colours = terrainPal,
+                                     na.value = "skyblue3")
+
+print(ggplot() + demGGplot + terrainScale)
 
 ## Auxiliary function to display the roads.
 
@@ -189,15 +243,9 @@ sf_places <- function(places, text_size, point_size, vjust = -1)
   )
 }
 
-library(latticeExtra)
-
 ## Hill shade and DEM overlaid
-levelplot(hsCedeira, maxpixels = ncell(hsCedeira),
-          par.settings = hsTheme,
-          margin = FALSE, colorkey = FALSE,
-          xlab = "", ylab = "") +
-  levelplot(demCedeira, maxpixels = ncell(demCedeira),
-            par.settings = terrainTheme) +
+hsLattice +
+  demLattice +
   ## Roads and places
   layer({
     ## Street and roads
@@ -214,12 +262,9 @@ levelplot(hsCedeira, maxpixels = ncell(hsCedeira),
     sp.places(citySP, point.size = 1.2, text.size = 1.5)
   })
 
-library(ggplot2)
-
-## DEM
-gplot(demCedeira,
-      palette = scale_fill_gradientn(colours = terrainPal),
-      show.legend = FALSE) + 
+ggplot() +
+  hsGGplot +
+  demGGplot + terrainScale +
   ## Street and roads
   sf_road(streetsSF, lwd = .4, blwd = .5, col = "white") +
   sf_road(unclassifiedSF, lwd = .4, blwd = .5, col = "white") +
@@ -230,4 +275,5 @@ gplot(demCedeira,
   sf_road(primarySF, lwd = 1.1, blwd = 1.2, col = "indianred1") +
   ## Places
   sf_places(placesHsf, point_size = 1, text_size = 3) +
-  sf_places(citySF, point_size = 3, text_size = 5)
+  sf_places(citySF, point_size = 3, text_size = 5) +
+  theme_bw() + xlab("") + ylab("")
