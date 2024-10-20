@@ -12,6 +12,10 @@
 
 #+TOC: headlines 1
 
+\cleardoublepage
+
+#+LATEX: \listoffigures
+
 \mainmatter
 
 ** Introduction
@@ -659,7 +663,6 @@ label:cha:choropleth
   %
 }
 #+END_EXPORT
-#+INCLUDE: "Spatial/cartogram.tex" src latex 
 
 ** Thematic Maps: Raster Maps
 label:cha:raster
