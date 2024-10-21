@@ -279,3 +279,7 @@ winter. These maxima are clearly displayed in Figure [[fig:NO2zoo]].
 
 [fn:1] Use Figure ref:fig:airMadrid as reference of the positions and codes of the stations.
 
+* COMMENT Local Variables
+Local Variables:
+ispell-local-dictionary: "british"
+End:

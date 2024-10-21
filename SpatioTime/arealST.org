@@ -172,4 +172,9 @@ p <- ggplot(cartPopCont) +
 
 animate(p)
 #+end_src
-<
+
+* COMMENT Local Variables
+Local Variables:
+ispell-local-dictionary: "british"
+End:
+

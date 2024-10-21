@@ -437,3 +437,7 @@ landClass <- raster("data/Spatial/241243rgb-167772161.0.TIFF")
 
 
 
+* COMMENT Local Variables
+Local Variables:
+ispell-local-dictionary: "british"
+End:

@@ -243,3 +243,8 @@ ggplot() +
 [fn:4] The package =rnaturalearthhires= is not available at CRAN due to its size. More information: https://docs.ropensci.org/rnaturalearthhires/  
 
 [fn:5] https://www.diva-gis.org/
+
+* COMMENT Local Variables
+Local Variables:
+ispell-local-dictionary: "british"
+End:

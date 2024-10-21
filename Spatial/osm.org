@@ -545,3 +545,8 @@ ggplot() +
 [fn:2] http://www.overpass-api.de/
 
 [fn:1] http://xeocatalogo.xunta.es/geonetwork/srv/gl/main.home
+
+* COMMENT Local Variables
+Local Variables:
+ispell-local-dictionary: "british"
+End:

@@ -1174,3 +1174,7 @@ streamgraph(unemployDF,
 =metvurst= package
 https://metvurst.wordpress.com/2013/03/04/visualising-large-amounts-of-hourly-environmental-data-2/
 
+* COMMENT Local Variables
+Local Variables:
+ispell-local-dictionary: "british"
+End:

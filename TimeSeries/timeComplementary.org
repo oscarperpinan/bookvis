@@ -810,3 +810,7 @@ grid.export("figs/TimeSeries/bubbles.svg")
 
 [fn:5] [[http://www.gapminder.org/]]
 
+* COMMENT Local Variables
+Local Variables:
+ispell-local-dictionary: "british"
+End:

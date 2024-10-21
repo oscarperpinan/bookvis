@@ -1031,7 +1031,7 @@ inspired by the =grid= package.
 [fn:1] [[http://learnr.wordpress.com/2009/06/28/]]
 
 * COMMENT Local Variables
-# local variables:
-# eval: (add-to-list 'org-latex-listings-langs '(R "myR"))
-# end:
-
+Local variables:
+eval: (add-to-list 'org-latex-listings-langs '(R "myR"))
+ispell-local-dictionary: "british"
+End:

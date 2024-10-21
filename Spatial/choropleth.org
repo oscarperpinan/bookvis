@@ -816,3 +816,7 @@ cartPopCont <- cartogram_cont(sfPopGDPSpain,
 
 
 
+* COMMENT Local Variables
+Local Variables:
+ispell-local-dictionary: "british"
+End:

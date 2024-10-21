@@ -834,3 +834,8 @@ mvSIS + mvSIAR
 
 #+CAPTION: Snapshot of the interactive map produced with =mapview= combining a =RasterLayer= and a =SpatialPointsDataFrame= objects. label:fig:mapview_CMSAF_SIAR
 file:figs/Spatial/mapview_CMSAF_SIAR.png
+
+* COMMENT Local Variables
+Local Variables:
+ispell-local-dictionary: "british"
+End:

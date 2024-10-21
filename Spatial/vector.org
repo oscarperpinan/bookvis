@@ -149,3 +149,7 @@ river valleys.
 
 
 
+* COMMENT Local Variables
+Local Variables:
+ispell-local-dictionary: "british"
+End:

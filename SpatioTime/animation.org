@@ -1057,3 +1057,7 @@ setwd(old)
     animations from rasterized image files.
 
 
+* COMMENT Local Variables
+Local Variables:
+ispell-local-dictionary: "british"
+End:

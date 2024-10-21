@@ -378,3 +378,7 @@ with Figure ref:fig:aranjuezHexbin.
 
 
 
+* COMMENT Local Variables
+Local Variables:
+ispell-local-dictionary: "british"
+End:

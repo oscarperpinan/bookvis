@@ -519,3 +519,7 @@ save(CO2data, file = 'data/CO2.RData')
 [fn:4] [[http://eportal.magrama.gob.es/websiar]]
 
 
+* COMMENT Local Variables
+Local Variables:
+ispell-local-dictionary: "british"
+End:

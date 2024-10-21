@@ -296,3 +296,8 @@ file:figs/SpatioTime/cubeView.png
 * Footnotes
 
 [fn:1]This package only works with the =raster= package. 
+
+* COMMENT Local Variables
+Local Variables:
+ispell-local-dictionary: "british"
+End:

@@ -937,3 +937,8 @@ plot3d(x = NO2df$coords.x1,
 [fn:6] [[http://jqueryui.com/]]
 
 [fn:3] [[http://www.openstreetmap.org/]]
+
+* COMMENT Local Variables
+Local Variables:
+ispell-local-dictionary: "british"
+End:
