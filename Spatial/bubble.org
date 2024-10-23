@@ -56,38 +56,20 @@ library("sf")
 NO2sf <- st_read(dsn = "data/Spatial/", layer = "NO2sf")
 #+end_src
 
-* Proportional Symbol Mapping with =spplot=
-#+begin_src R :exports none
-##################################################################
-## Proportional symbol with spplot
-##################################################################
-#+end_src
-
-The =spplot= method provided by the =sp= package, based on =xyplot=
-from the =lattice= package, is able to display
-=SpatialPointsDataFrame= objects, among others classes. The =sf=
-object returned by =st_read= has to be converted to a =Spatial= class.
-
-#+INDEX: Packages!sp@\texttt{sp}
-#+begin_src R
-library("sp")
-
-NO2sp <- as(NO2sf, "Spatial")
-#+end_src
-
 #+INDEX: Subjects!Sequential palette
-A sequential palette is defined with =colorRampPalette=, with colors
-denoting the value of the variable (green for lower values of the
-contaminant, brown for intermediate values, and black for highest
+The data will be represented with a sequential palette defined with
+=colorRampPalette=. Colors denote the value of the variable: green for
+lower values of the contaminant, brown for intermediate values, and
+black for highest.
 
 #+begin_src R
 airPal <- colorRampPalette(c("springgreen1", "sienna3", "gray5"))(5)
 #+end_src
 
-* Proportional Symbol Mapping with =ggplot2= and =spplot=
+* Proportional Symbol Mapping
 #+begin_src R :exports none
 ##################################################################
-## Proportional symbol with ggplot2 and spplot
+## Proportional symbol: ggplot
 ##################################################################
 #+end_src
 
@@ -97,12 +79,9 @@ defined by the =sf= package, that provides the function
 =st_read= to read the data:
 
 #+INDEX: Packages!sf@\texttt{sf}
-#+INDEX: Data!Air quality in Madrid
+
 
 #+begin_src R :eval no-export
-library(sf)
-
-NO2sf <- st_read(dsn = 'data', layer = 'NO2sp')
 ## Create a categorical variable
 NO2sf$Mean <- cut(NO2sf$mean, 5)
 #+end_src
@@ -116,15 +95,18 @@ ggplot(data = NO2sf) +
     theme_bw()
 #+end_src
 
-#+RESULTS:
+#+begin_src R :exports none
+##################################################################
+## Proportional symbol: sppplot
+##################################################################
+#+end_src
 
 The =spplot= method provided by the =sp= package, based on =xyplot=
 from the =lattice= package, is able to display
-=SpatialPointsDataFrame= objects, among others classes.
+=SpatialPointsDataFrame= objects, among others classes. The =sf=
+object returned by =st_read= has to be converted to a =Spatial= class.
 
 #+begin_src R
-library(sp)
-
 NO2sp <- as(NO2sf, "Spatial")
 #+end_src
 
@@ -144,29 +126,6 @@ spplot(NO2sp["mean"],
 #+RESULTS:
 [[file:figs/Spatial/airMadrid_spplot.pdf]]
 
-* Proportional Symbol Mapping with =ggplot=
-#+begin_src R :exports none
-##################################################################
-## Proportional symbol with ggplot
-##################################################################
-#+end_src
-
-The =ggplot2= package is able to display spatial point observations
-with the =geom_sf= function. No previous conversion is needed because
-this function understands the =sf= class:
-
-#+begin_src R
-## Create a categorical variable
-NO2sf$Mean <- cut(NO2sf$mean, 5)
-
-ggplot(data = NO2sf) + 
-    geom_sf(aes(size = Mean, fill = Mean),
-            pch = 21, col = "black") +
-    scale_fill_manual(values = airPal) +
-    theme_bw()
-#+end_src
-
-#+RESULTS:
 
 * Optimal Classification to Improve Discrimination
 label:sec:classification_bubble
@@ -175,7 +134,6 @@ label:sec:classification_bubble
 ## Optimal classification and sizes to improve discrimination
 ##################################################################
 #+end_src
-
 
 Two main improvements can be added to Figure
 ref:fig:airMadrid_spplot:
@@ -295,8 +253,6 @@ ggplot(data = NO2sf) +
 ## Spatial context with underlying layers and labels
 ##################################################################
 #+end_src
-
-#+RESULTS:
 
 #+INDEX: Subjects!Background map
 
@@ -480,9 +436,6 @@ ggplot()+
 #+CAPTION: Annual average of $NO_2$ measurements in Madrid using shapefiles (lines and polygons) and text as geographical context. label:fig:airMadrid
 #+RESULTS:
 [[file:figs/Spatial/airMadrid.png]]
-
-
-
 
 These shapefiles can also be used with =spplot= (after a class
 conversion) thanks to the =sp.layout= argument of this function or

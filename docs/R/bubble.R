@@ -15,25 +15,14 @@ source("configLattice.R")
 
 library("sf")
 
-NO2sf <- st_read(dsn = "data/Spatial/", layer = "NO2sp")
-
-##################################################################
-## Proportional symbol with spplot
-##################################################################
-
-library("sp")
-
-NO2sp <- as(NO2sf, "Spatial")
+NO2sf <- st_read(dsn = "data/Spatial/", layer = "NO2sf")
 
 airPal <- colorRampPalette(c("springgreen1", "sienna3", "gray5"))(5)
 
 ##################################################################
-## Proportional symbol with ggplot2 and spplot
+## Proportional symbol: ggplot
 ##################################################################
 
-library(sf)
-
-NO2sf <- st_read(dsn = 'data', layer = 'NO2sp')
 ## Create a categorical variable
 NO2sf$Mean <- cut(NO2sf$mean, 5)
 
@@ -43,7 +32,9 @@ ggplot(data = NO2sf) +
     scale_fill_manual(values = airPal) +
     theme_bw()
 
-library(sp)
+##################################################################
+## Proportional symbol: sppplot
+##################################################################
 
 NO2sp <- as(NO2sf, "Spatial")
 
@@ -53,19 +44,6 @@ spplot(NO2sp["mean"],
        edge.col = "black", ## Color of border
        scales = list(draw = TRUE), ## Draw scales
        key.space = "right") ## Put legend on the right
-
-##################################################################
-## Proportional symbol with ggplot
-##################################################################
-
-## Create a categorical variable
-NO2sf$Mean <- cut(NO2sf$mean, 5)
-
-ggplot(data = NO2sf) + 
-    geom_sf(aes(size = Mean, fill = Mean),
-            pch = 21, col = "black") +
-    scale_fill_manual(values = airPal) +
-    theme_bw()
 
 ##################################################################
 ## Optimal classification and sizes to improve discrimination
