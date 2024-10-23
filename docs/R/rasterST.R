@@ -16,6 +16,7 @@ timeIndex <- seq(as.Date("2011-01-01"), by = "day", length = 365)
 SISdm <- setZ(SISdm, timeIndex)
 names(SISdm) <- format(timeIndex, "%a_%Y%m%d")
 
+library("terra")
 SISdmt <- rast(SISdm)
 time(SISdmt) <- timeIndex
 

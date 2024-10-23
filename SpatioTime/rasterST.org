@@ -1,4 +1,4 @@
-#+PROPERTY:  header-args :session *R* :tangle ../docs/R/rasterST.R :eval no-export
+#+PROPERTY:  header-args :session *R* :tangle ../docs/R/rasterST.R :eval export
 #+OPTIONS: ^:nil
 #+BIND: org-export-latex-image-default-option "height=0.4\\textheight"
 
@@ -67,6 +67,7 @@ time        : 2011-01-01, 2011-12-31 (min, max)
 The =terra= package is also able to include the timestamp in the objects with the =time= function:
 
 #+begin_src R
+library("terra")
 SISdmt <- rast(SISdm)
 time(SISdmt) <- timeIndex
 #+end_src
