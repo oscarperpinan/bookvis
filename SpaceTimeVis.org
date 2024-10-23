@@ -10,7 +10,7 @@
 
 \cleardoublepage
 
-#+TOC: headlines 1
+#+LATEX: \tableofcontents*
 
 \cleardoublepage
 
@@ -710,8 +710,8 @@ label:cha:vector
 #+END_EXPORT
 #+INCLUDE: "Spatial/vector.tex" src latex 
 
-** Physical and Reference Maps
- label:cha:refer-phys-maps
+** Physical Maps
+ label:cha:physical
 
 #+BEGIN_EXPORT latex
 \chapterprecishere{%
@@ -720,14 +720,27 @@ label:cha:vector
   colors and shades to show relief, using green to show lower
   elevations and browns for high elevations.
 
+  This chapter details how to create a physical map of Brazil with
+  data from different sources. Next subjects are covered in this chapter: label positioning, hill shading, and map overlaying.
+
+  The most relevant packages used in this chapter are: \texttt{raster}
+  for reading raster data;\texttt{rasterVis} for visualization of
+  raster data; ....  %
+}
+#+END_EXPORT
+#+INCLUDE: "Spatial/physical.tex" src latex 
+
+** Reference Maps
+ label:cha:reference
+#+BEGIN_EXPORT latex
+\chapterprecishere{%
   A reference map focuses on the geographic location of features. In
   these maps, cities are named and major transport routes are
   identified. In addition, natural features such as rivers and
   mountains are named, and elevation is shown using a simple color
   shading.
 
-  This chapter details how to create a physical map of Brazil with
-  data from different sources, and a reference map of a northern
+  This chapter details how to create a reference map of a northern
   region of Spain using data from OpenStreetMap.
 
   Next subjects are covered in this chapter: label positioning, hill
@@ -740,7 +753,7 @@ label:cha:vector
   %
 }
 #+END_EXPORT
-#+INCLUDE: "Spatial/physical.tex" src latex 
+
 #+INCLUDE: "Spatial/osm.tex" src latex 
 
 ** About the Data

@@ -5,6 +5,16 @@
 setwd('~/github/bookvis/')
 #+end_src
 
+* Introduction
+label:sec:reference
+
+Although I was born in Madrid, Galicia (north of Spain) is a very
+special region for me. More precisely, the Cedeira and Valdoviño
+regions offer a wonderful combination of wild sea, secluded beaches,
+and forests. I will show you a map of these marvelous places.
+
+** Packages
+
 #+begin_src R :exports none  
 ##################################################################
 ## Initial configuration
@@ -18,7 +28,9 @@ library("ggplot2")
 library("latticeExtra")
 
 source("configLattice.R")
+#+end_src
 
+#+begin_src R
 library("RColorBrewer")
 library("colorspace")
 
@@ -29,15 +41,8 @@ library("rasterVis")
 library("tidyterra")
 #+end_src
 
-* Reference maps
-label:sec:reference
 
-Although I was born in Madrid, Galicia (north of Spain) is a very
-special region for me. More precisely, the Cedeira and Valdoviño
-regions offer a wonderful combination of wild sea, secluded beaches,
-and forests. I will show you a map of these marvelous places.
-
-** Retrieving Data from OpenStreetMap
+* Retrieving Data from OpenStreetMap
 #+begin_src R :exports none
 ##################################################################
 ## Retrieving data from OpenStreetMap
@@ -194,7 +199,7 @@ placesHsf <- sfFromOSM(cedeiraBB, key = "place",
 placesHsf <- subset(placesHsf, as.numeric(population) > 30)
 #+end_src  
 
-** Hill Shading
+* Hill Shading
 label:sec:hill-shading-osm
 #+begin_src R :exports none
 ##################################################################
@@ -267,7 +272,7 @@ demCedeiraT <- rast(demCedeira)
 hsCedeiraT <- rast(hsCedeira)
 #+end_src
 
-** Overlaying Layers of Information
+* Overlaying Layers of Information
 #+begin_src R :exports none
 ##################################################################
 ## Overlaying layers of information
@@ -352,17 +357,17 @@ print(ggplot() + hsGGplot)
 
 #+caption: Local topography of Cedeira (Galicia, Spain) displayed with the hill shading technique. label:fig:cedeiraHS
 #+begin_figure
-#+attr_latex: :options {0.5\textwidth}
+#+attr_latex: :options {0.4\textheight}
 #+CAPTION: =lattice= version. label:fig:cedeiraHSlattice
 #+begin_subfigure
-#+attr_latex: :width 0.8\linewidth 
+#+attr_latex: :height 0.4\textheight
 #+RESULTS:
 [[file:figs/Spatial/cedeiraHSlattice.pdf]]
 #+end_subfigure
-#+attr_latex: :options {0.5\textwidth}
+#+attr_latex: :options {0.4\textheight}
 #+CAPTION: =ggplot2= version. label:fig:cedeiraHSggplot
 #+begin_subfigure
-#+attr_latex: :width 0.8\linewidth 
+#+attr_latex: :height 0.4\textheight
 #+RESULTS:
 file:figs/Spatial/cedeiraHSggplot.pdf
 #+end_subfigure
@@ -412,16 +417,16 @@ print(ggplot() + demGGplot + terrainScale)
 #+CAPTION: Local topography of Cedeira (Galicia, Spain). label:fig:cedeiraDEM
 #+begin_figure
 #+CAPTION: =lattice= version. label:fig:cedeiraDEMlattice
-#+attr_latex: :options {0.5\textwidth}
+#+attr_latex: :options {0.4\textheight}
 #+begin_subfigure
-#+attr_latex: :width 0.8\linewidth 
+#+attr_latex: :height 0.4\textheight
 #+RESULTS:
 [[file:figs/Spatial/cedeiraDEMlattice.pdf]]
 #+end_subfigure
-#+attr_latex: :options {0.5\textwidth}
+#+attr_latex: :options {0.4\textheight}
 #+CAPTION: =ggplot2= version. label:fig:cedeiraDEMggplot
 #+begin_subfigure
-#+attr_latex: :width 0.8\linewidth 
+#+attr_latex: :height 0.4\textheight
 #+RESULTS:
 file:figs/Spatial/cedeiraDEMggplot.pdf
 #+end_subfigure
@@ -524,17 +529,17 @@ ggplot() +
 #+CAPTION: Main roads near Cedeira, Galicia. Local topography is displayed with the hill shading technique. Some places are highlighted. label:fig:cedeiraOSM
 #+begin_figure
 #+CAPTION: =lattice= version label:fig:cedeiraOSMlattice
-#+attr_latex: :options {0.5\textwidth}
+#+attr_latex: :options {0.4\textwidth}
 #+begin_subfigure
-#+attr_latex: :width 0.8\linewidth 
+#+attr_latex: :width 0.4\textheight 
 #+RESULTS:
 [[file:figs/Spatial/cedeiraOSMlattice.pdf]]
 #+end_subfigure
 
 #+CAPTION: =ggplot2= version label:fig:cedeiraOSMggplot
-#+attr_latex: :options {0.5\textwidth}
+#+attr_latex: :options {0.4\textwidth}
 #+begin_subfigure
-#+attr_latex: :width 0.8\linewidth 
+#+attr_latex: :width 0.4\textheight 
 #+RESULTS:
 [[file:figs/Spatial/cedeiraOSMggplot.pdf]]
 #+end_subfigure

@@ -14,7 +14,7 @@ setwd('~/github/bookvis')
   
 #+end_src
 
-* Physical Maps
+* Introduction
 label:sec:physical
 
 #+begin_src R :exports none
@@ -29,21 +29,36 @@ natural environments, and extensive natural resources in a variety of
 protected habitats. Throughout this section we will create a physical
 map of this exceptional country using data from several data services.
 
+** Packages
+
 #+INDEX: Packages!raster@\texttt{raster}  
 #+INDEX: Packages!rasterVis@\texttt{rasterVis}  
 #+INDEX: Packages!sp@\texttt{sp}  
 #+INDEX: Packages!colorspace@\texttt{colorspace}  
 
 #+begin_src R 
-library("terra")
-library("sf")
-library("rasterVis")
+library("lattice")
+library("ggplot2")
 library("latticeExtra")
+
+library("terra")
+library("sp")
+library("sf")
+
+library("rnaturalearth")
+library("rnaturalearthhires")
+library("geodata")
+
+library("rasterVis")
+library("tidyterra")
+
 library("colorspace")
 library("RColorBrewer")
+
+library("ggrepel")
 #+end_src
 
-** Retrieving Data
+* Retrieving Data
 #+begin_src R :exports none
 ##################################################################
 ## Retrieving data from DIVA-GIS, GADM and Natural Earth Data
@@ -62,8 +77,6 @@ terrain elevation, and rivers and lakes.
      Earth[fn:3] with the packages =rnaturalearth= and
      =rnaturalearthhires=[fn:4].
      #+begin_src R :eval no-export
-     library("rnaturalearth")
-     library("rnaturalearthhires")
 
      brazilAdm <- ne_states(country = "brazil")
      #+end_src
@@ -72,8 +85,6 @@ terrain elevation, and rivers and lakes.
      available from DIVA-GIS service[fn:5] with the =geodata= package,
      obtaining a =SpatRaster= object.
      #+begin_src R :eval no-export
-     library(geodata)
-
      brazilDEM <- elevation_30s("BRA", mask = FALSE,
                                 path = tempdir())
      #+end_src
@@ -100,7 +111,7 @@ terrain elevation, and rivers and lakes.
      brazilRiv <- st_crop(worldRiv, brazilDEM)
      #+end_src
 
-** Labels
+* Labels
 #+begin_src R :exports none
 ##################################################################
 ## Labels
@@ -136,70 +147,124 @@ admNames <- sapply(admNames,
                    })
 #+end_src
 
-** Overlaying Layers of Information
+* Overlaying Layers of Information
 #+begin_src R :exports none
 ##################################################################
 ## Overlaying layers of information
 ##################################################################
 #+end_src
 
-#+INDEX: Subjects!Background map
+Therefore, the physical map is composed of three layers: the altitude
+raster layer, the rivers defined by the =brazilRiv= object, and the
+administrative boundaries defined by the =brazilAdm= object and their
+labels (=admNames= and =centroids=).
 
-Therefore, the physical map is composed of three layers:
+The altitude raster layer can be displayed with the =levelplot=
+function of the =rasterVis= package (=lattice= version) or with the
+=geom_spatraster= function of the =tidyterra= package (=ggplot2=
+version).
 
-1.The altitude raster layer uses a terrain colors palette, as the one
-  produced by the =terrain_hcl= function from the =colorspace= package
-  cite:Ihaka.Murrell.ea2016. 
-  #+begin_src R
-  terrainTheme <- rasterTheme(region = terrain_hcl(15),
-                              panel.background = list(col = "lightskyblue1"))
-
-  altPlot <- levelplot(brazilDEM, par.settings = terrainTheme,
-                       maxpixels = 1e6, panel = panel.levelplot.raster,
-                       margin = FALSE, colorkey = FALSE)
-  #+end_src
-  
-2. The rivers defined by the =brazilRiv= object. The map is constructed under the =trellis= framework, with =levelplot= and the =layer= mechanism of the =latticeExtra= package. There is no function defined to plot =sf= objects, so =brazilRiv= must be converted to a =SpatialLines= object that can be displayed with =sp.lines=.
-   #+begin_src R
-   brazilRivsp <- as_Spatial(brazilRiv)
-   #+end_src
-
-3. The administrative boundaries defined by the =brazilAdm= object and their labels (=admNames= and =centroids=). The =brazilAdm= must be converted to a =SpatialPolygons= object to be displayed with =sp.polygons=.
-   #+begin_src R
-   brazilAdmsp <- as_Spatial(brazilAdm)
-   #+end_src
-
-The final result is shown in Figure ref:fig:brazilLattice.
-
-#+begin_src R :results output graphics file :exports both :file figs/Spatial/brazilLattice.png :width 2000 :height 2000 :res 300
-  altPlot + layer({
-      ## Rivers
-      sp.lines(brazilRivsp, col = 'darkblue', lwd = 0.2)
-      ## Administrative boundaries
-      sp.polygons(brazilAdmsp, col = 'black', lwd = 0.3)
-      ## Centroids of administrative boundaries ...
-      panel.points(centroids, col = 'black')
-      ## ... with their labels
-      panel.text(centroids, labels = admNames, pos = 3,
-                       cex = 0.7, fontfamily = 'Palatino', lineheight=.8)
-      ## Country name
-      panel.text(xyBrazil[1], xyBrazil[2], label = 'B R A Z I L',
-                 cex = 1.5, fontfamily = 'Palatino', fontface = 2)
-  })
-  #+end_src
-
-
-#+CAPTION: Physical map of Brazil (=lattice= version). Main administrative regions are labeled. label:fig:brazilLattice
-#+RESULTS:
-[[file:figs/Spatial/brazilLattice.png]]
+With =levelplot= we use a terrain colors palette, as the one produced
+by the =terrain_hcl= function from the =colorspace= package
+cite:Ihaka.Murrell.ea2016. The theme for the graphic is configured via
+=rasterTheme= with this palette and setting the background (=NA=
+values) to a light blue (Figure ref:fig:brazilDEMlattice).
 
 #+begin_src R
-library("ggplot2")
-library("tidyterra")
-library("ggrepel")
+terrainTheme <- rasterTheme(region = terrain_hcl(15),
+                            panel.background = list(col = "lightskyblue1"))
+
+altPlot <- levelplot(brazilDEM, par.settings = terrainTheme,
+                     maxpixels = 1e6, panel = panel.levelplot.raster,
+                     margin = FALSE, colorkey = FALSE)
 #+end_src
 
+#+begin_src R :results output graphics file :exports results :file figs/Spatial/brazilDEMlattice.png :width 2000 :height 2000 :res 300
+print(altPlot)
+#+end_src
+
+
+The =tidyterra= package includes multiple palettes[fn:6] that are well
+suited for representation of digital elevation models. For example,
+the =scale_fill_whitebox_c= function encodes palettes from the
+WhiteBox project[fn:7], of which I have chosen the =high_relief= one
+(Figure ref:fig:brazilDEMGG).
+
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/brazilDEMGG.png :width 2000 :height 2000 :res 300
+ggplot() +
+  geom_spatraster(data = brazilDEM,
+                  show.legend = FALSE) +
+  scale_fill_whitebox_c("high_relief",
+                        na.value = "aquamarine") +
+  theme_bw()
+#+end_src
+
+#+CAPTION: Digital elevation model of Brazil. label:fig:brazilDEM
+#+begin_figure
+#+CAPTION: =lattice= version label:fig:brazilDEMlattice
+#+attr_latex: :options {0.4\textheight}
+#+begin_subfigure
+#+attr_latex: :height 0.4\textheight 
+#+RESULTS:
+[[file:figs/Spatial/brazilDEMlattice.png]]
+#+end_subfigure
+
+#+CAPTION: =ggplot2= version label:fig:brazilDEMGG
+#+attr_latex: :options {0.4\textheight}
+#+begin_subfigure
+#+attr_latex: :height 0.4\textheight 
+#+RESULTS:
+[[file:figs/Spatial/brazilDEMGG.png]]
+#+end_subfigure
+#+end_figure
+
+Under the =lattice= framework, the rivers can be represented with the
+=sp.lines= function of the =sp= package and superimposed over the DEM
+map with the =layer= mechanism of the =latticeExtra= package. First,
+=brazilRiv= must be converted to a =SpatialLines= object.
+#+begin_src R
+brazilRivsp <- as_Spatial(brazilRiv)
+#+end_src
+On the =ggplot2= side the =geom_sf= function of the =sf= package
+displays the =brazilRiv= without a previous conversion.
+
+Then, the =brazilAdm= object must be converted to a
+=SpatialPolygons= object to be displayed with =sp.polygons= and
+=lattice=, while the =geom_sf= function can use this object
+directly. 
+
+#+begin_src R
+brazilAdmsp <- as_Spatial(brazilAdm)
+#+end_src
+
+Finally, the labels will be printed with =panel.text= for the
+=lattice= version and with the =geom_text_repel= function of the
+=ggrepel= package[fn:8], to repel overlapping text labels, for the
+=ggplot2= version.
+
+The final result is shown in Figure ref:fig:brazil.
+
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/brazilLattice.png :width 2000 :height 2000 :res 300
+## lattice version
+altPlot + layer({
+  ## Rivers
+  sp.lines(brazilRivsp, col = 'darkblue', lwd = 0.2)
+  ## Administrative boundaries
+  sp.polygons(brazilAdmsp, col = 'black', lwd = 0.2)
+  ## Centroids of administrative boundaries ...
+  panel.points(centroids, col = 'black')
+  ## ... with their labels
+  panel.text(centroids, labels = admNames, pos = 3,
+             cex = 0.7, fontfamily = 'Palatino', lineheight=.8)
+  ## Country name
+  panel.text(xyBrazil[1], xyBrazil[2], label = 'B R A Z I L',
+             cex = 1.5, fontfamily = 'Palatino', fontface = 2)
+  })
+#+end_src
+
+
 #+begin_src R :results output graphics file :exports both :file figs/Spatial/brazilGG.png :width 2000 :height 2000 :res 300
+## ggplot2 version
 ggplot() +
   geom_spatraster(data = brazilDEM,
                   show.legend = FALSE) +
@@ -207,12 +272,12 @@ ggplot() +
                         na.value = "aquamarine") +
   geom_sf(data = brazilAdm,
           col = "black",
-          linewidth = 0.2,
+          linewidth = 0.15,
           fill = "transparent") +
   geom_sf(data = brazilRiv,
           col = "darkblue",
           linewidth = 0.1) +
-  geom_spatial_point(data = centroids,
+  geom_point(data = centroids,
                      aes(x = longitude,
                          y = latitude)) +
   geom_text_repel(data = centroids,
@@ -227,13 +292,30 @@ ggplot() +
   theme_bw()
 #+end_src
 
-#+CAPTION: Physical map of Brazil (=ggplot2= version). Main administrative regions are labeled. label:fig:brazilGG
+#+CAPTION: Physical map of Brazil. Main administrative regions are labeled. label:fig:brazil
+#+begin_figure
+#+CAPTION: =lattice= version label:fig:brazilLattice
+#+attr_latex: :options {0.4\textheight}
+#+begin_subfigure
+#+attr_latex: :height 0.4\textheight 
+#+RESULTS:
+[[file:figs/Spatial/brazilLattice.png]]
+#+end_subfigure
+#+CAPTION: =ggplot2= version label:fig:brazilGG
+#+attr_latex: :options {0.4\textheight}
+#+begin_subfigure
+#+attr_latex: :height 0.4\textheight 
 #+RESULTS:
 [[file:figs/Spatial/brazilGG.png]]
-
-#+end_src
+#+end_subfigure
+#+end_figure
 
 * Footnotes
+
+[fn:8]https://ggrepel.slowkow.com/ 
+[fn:7]https://www.whiteboxgeo.com/ 
+
+[fn:6]https://dieghernan.github.io/tidyterra/articles/palettes.html 
 [fn:1] http://en.wikipedia.org/wiki/Brazil
 
 [fn:2] http://en.wikipedia.org/wiki/Megadiverse_countries

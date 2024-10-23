@@ -10,7 +10,7 @@
 
 \cleardoublepage
 
-#+TOC: headlines 1
+#+LATEX: \tableofcontents*
 
 \mainmatter
 
@@ -39,7 +39,7 @@ label:cha:timeGroupFactor
 
 #+INCLUDE: "TimeSeries/dataTime.tex" src latex
 
-* COMMENT Spatial Data
+* Spatial Data
 label:part:Spatial
 
 ** COMMENT Thematic Maps: Proportional Symbol Mapping
@@ -47,7 +47,7 @@ label:cha:bubble
 
 #+INCLUDE: "Spatial/bubble.tex" src latex
 
-** Thematic Maps: Choropleth Maps
+** COMMENT Thematic Maps: Choropleth Maps
 label:cha:choropleth
 
 #+INCLUDE: "Spatial/choropleth.tex" src latex
@@ -62,19 +62,22 @@ label:cha:vector
 
 #+INCLUDE: "Spatial/vector.tex" src latex
 
-** COMMENT Physical and Reference Maps
- label:cha:refer-phys-maps
+** Physical Maps
+ label:cha:physical
 
 #+INCLUDE: "Spatial/physical.tex" src latex
 
+** Reference Maps
+ label:cha:reference
+
 #+INCLUDE: "Spatial/osm.tex" src latex
 
-** About the Data
+** COMMENT About the Data
  label:cha:dataSpatial
 
 #+INCLUDE: "Spatial/dataSpatial.tex" src latex
 
-* Space-Time Data
+* COMMENT Space-Time Data
 label:part:SpaceTime
 
 ** COMMENT Spatiotemporal Raster Data

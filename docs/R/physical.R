@@ -8,113 +8,131 @@
 ## Physical maps
 ##################################################################
 
-library(raster)
-library(rasterVis)
-library(rgdal)
-library(rgeos)
-library(latticeExtra)
-library(colorspace)
+library("lattice")
+library("ggplot2")
+library("latticeExtra")
+
+library("terra")
+library("sp")
+library("sf")
+
+library("rnaturalearth")
+library("rnaturalearthhires")
+library("geodata")
+
+library("rasterVis")
+library("tidyterra")
+
+library("colorspace")
+library("RColorBrewer")
+
+library("ggrepel")
 
 ##################################################################
 ## Retrieving data from DIVA-GIS, GADM and Natural Earth Data
 ##################################################################
 
-     old <- setwd(tempdir())
+     brazilAdm <- ne_states(country = "brazil")
 
-     download.file('http://biogeo.ucdavis.edu/data/gadm2.8/shp/BRA_adm_shp.zip',
-                   'BRA_adm.zip')
-     unzip('BRA_adm.zip')
-     brazilAdm <- readOGR(dsn = '.', layer = 'BRA_adm1')
-     Encoding(levels(brazilAdm$NAME_1)) <- 'latin1'
+     brazilDEM <- elevation_30s("BRA", mask = FALSE,
+                                path = tempdir())
 
-     download.file('http://biogeo.ucdavis.edu/data/diva/alt/BRA_alt.zip',
-                   'BRA_alt.zip')
-     unzip('BRA_alt.zip')
-     brazilDEM <- raster('BRA_alt')
+     worldRiv <- ne_download(type = "rivers_lake_centerlines",
+                             category = "physical", 
+                             scale = 10)
 
-     ## World Water lines (Natural Earth)
-     download.file('http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/physical/ne_10m_rivers_lake_centerlines.zip',
-                   'neRivers.zip')
-     unzip('neRivers.zip')
-     worldlRiv <- readOGR(dsn = '.', layer = 'ne_10m_rivers_lake_centerlines')
+     ## only those features labeled as "River" are needed
+     worldRiv <- worldRiv[worldRiv$featurecla == "River",]
 
-     download.file('http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/raster/OB_LR.zip',
-                   'neSea.zip')
-     unzip('neSea.zip')
-     worldSea <- raster('OB_LR.tif')
-     brazilSea <- crop(worldSea, brazilDEM)
-     setwd(old)
+     ## Ensure the CRS of brazilDEM matches the CRS of worldRiv
+     crs(brazilDEM) <- crs(worldRiv)
 
-##################################################################
-## Intersection of shapefiles and elevation model
-##################################################################
-
-## only those features labeled as "River" are needed
-worldRiv<- worldRiv[worldRiv$featurecla=='River',]
-
-## Define the extent of Brazil as a SpatialPolygons
-extBrazil <- as(extent(brazilDEM), 'SpatialPolygons')
-proj4string(extBrazil) <- proj4string(worldRiv)
-
-## and intersect it with worldRiv to extract brazilian rivers
-## from the world database
-brazilRiv <- gIntersection(worldRiv, extBrazil, byid=TRUE)
-## and especially the famous Amazonas River
-amazonas <- worldRiv[worldRiv$name=='Amazonas',]
+     ## and intersect it with worldRiv to extract brazilian rivers
+     ## from the world database
+     brazilRiv <- st_crop(worldRiv, brazilDEM)
 
 ##################################################################
 ## Labels
 ##################################################################
 
 ## Locations of labels of each polygon
-centroids <- coordinates(brazilAdm)
-## Location of the "Brazil" label (average of the set of polygons centroids)
+centroids <- brazilAdm[ , c("longitude", "latitude")]
+## Extract the data
+centroids <- st_drop_geometry(centroids)
+## Location of the "Brazil" label (average of the centroids)
 xyBrazil <- apply(centroids, 2, mean)
 
-admNames <- strsplit(as.character(brazilAdm$NAME_1), ' ')
+admNames <- strsplit(as.character(brazilAdm$name), ' ')
   
 admNames <- sapply(admNames,
-                   FUN=function(s){
-                       sep=if (length(s)>2) '\n' else  ' '
-                       paste(s, collapse=sep)
+                   FUN = function(s){
+                       sep = if (length(s)>2) '\n' else  ' '
+                       paste(s, collapse = sep)
                    })
 
 ##################################################################
 ## Overlaying layers of information
 ##################################################################
 
-   blueTheme <- rasterTheme(region=brewer.pal(n=9, 'Blues'))
-  
-   seaPlot <- levelplot(brazilSea, par.settings=blueTheme,
-                        maxpixels=1e6, panel=panel.levelplot.raster,
-                        margin=FALSE, colorkey=FALSE)
+terrainTheme <- rasterTheme(region = terrain_hcl(15),
+                            panel.background = list(col = "lightskyblue1"))
 
-  terrainTheme <- rasterTheme(region=terrain_hcl(15))
-  
-  altPlot <- levelplot(brazilDEM, par.settings=terrainTheme,
-                       maxpixels=1e6, panel=panel.levelplot.raster,
-                       margin=FALSE, colorkey=FALSE)
+altPlot <- levelplot(brazilDEM, par.settings = terrainTheme,
+                     maxpixels = 1e6, panel = panel.levelplot.raster,
+                     margin = FALSE, colorkey = FALSE)
 
-   amazonasLab <- label(amazonas, 'Amazonas')
+print(altPlot)
 
-  seaPlot + altPlot + layer({
-      ## Rivers
-      sp.lines(brazilRiv, col='darkblue', lwd=0.2)
-      ## Amazonas
-      sp.lineLabel(amazonas, amazonasLab, 
-                   lwd=1, col='darkblue', col.line='darkblue',
-                   cex=0.5, fontfamily='Palatino')
-      ## Administrative boundaries
-      sp.polygons(brazilAdm, col='black', lwd=0.2)
-      ## Centroids of administrative boundaries ...
-      panel.points(centroids, col='black')
-      ## ... with their labels
-      panel.pointLabel(centroids, labels=admNames,
-                       cex=0.7, fontfamily='Palatino', lineheight=.8)
-      ## Country name
-      panel.text(xyBrazil[1], xyBrazil[2], labels='B R A Z I L',
-                 cex=1.5, fontfamily = 'Palatino', fontface=2)
+ggplot() +
+  geom_spatraster(data = brazilDEM,
+                  show.legend = FALSE) +
+  scale_fill_whitebox_c("high_relief",
+                        na.value = "aquamarine") +
+  theme_bw()
+
+brazilRivsp <- as_Spatial(brazilRiv)
+
+brazilAdmsp <- as_Spatial(brazilAdm)
+
+## lattice version
+altPlot + layer({
+  ## Rivers
+  sp.lines(brazilRivsp, col = 'darkblue', lwd = 0.2)
+  ## Administrative boundaries
+  sp.polygons(brazilAdmsp, col = 'black', lwd = 0.2)
+  ## Centroids of administrative boundaries ...
+  panel.points(centroids, col = 'black')
+  ## ... with their labels
+  panel.text(centroids, labels = admNames, pos = 3,
+             cex = 0.7, fontfamily = 'Palatino', lineheight=.8)
+  ## Country name
+  panel.text(xyBrazil[1], xyBrazil[2], label = 'B R A Z I L',
+             cex = 1.5, fontfamily = 'Palatino', fontface = 2)
   })
 
-print(seaPlot, split=c(1, 1, 2, 1), more=TRUE)
-print(altPlot, split=c(2, 1, 2, 1))
+## ggplot2 version
+ggplot() +
+  geom_spatraster(data = brazilDEM,
+                  show.legend = FALSE) +
+  scale_fill_whitebox_c("high_relief",
+                        na.value = "aquamarine") +
+  geom_sf(data = brazilAdm,
+          col = "black",
+          linewidth = 0.15,
+          fill = "transparent") +
+  geom_sf(data = brazilRiv,
+          col = "darkblue",
+          linewidth = 0.1) +
+  geom_point(data = centroids,
+                     aes(x = longitude,
+                         y = latitude)) +
+  geom_text_repel(data = centroids,
+                          aes(x = longitude,
+                              y = latitude,
+                              label = admNames),
+                  family = "Palatino") +
+  geom_text(aes(xyBrazil[1], xyBrazil[2],
+                label = 'B R A Z I L'),
+            size = 7,
+            family = 'Palatino') +
+  theme_bw()
