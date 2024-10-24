@@ -100,7 +100,7 @@ library("sp")
 world <- ne_countries(scale = "medium")
 ## Project the extent of the cft raster to longitude-latitude, because
 ## rnaturalearth works with it.
-cftLL <- projectExtent(cft, crs(boundaries))
+cftLL <- projectExtent(cft, crs(world))
 ## Crop...
 boundaries <- st_crop(world, cftLL)
 ## ... and project to the projection of the cft object
@@ -512,8 +512,6 @@ grid.garnish("timePlot", grep = TRUE,
              onmouseout = "document.documentElement.unpauseAnimations()")
 
 grid.export("figs/SpatioTime/vLine.svg")
-
-grid.export("/tmp/vLine.svg")
 #+end_src
 
 #+CAPTION: Animated circles of the $NO_2$ space-time data with a time series as reference. label:fig:vLine
@@ -903,7 +901,6 @@ movie3d(travel,
         type = "mp4", clean = FALSE,
         webshot = FALSE)
 #+end_src
-
 
 * Hill shading animation label:sec:sun3d
  #+begin_src R :exports none
