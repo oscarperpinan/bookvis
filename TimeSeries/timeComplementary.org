@@ -541,9 +541,6 @@ color, and a time variable that may be manipulated with a slider. The
 software uses brushing and linking techniques for displaying the
 numeric value of a highlighted country.
 
-This software was acquired by Google in 2007, and is now available as
-a Motion Chart gadget and as the Public Data Explorer.
-
 We will mimic the Trendalyzer/Motion Chart solution, using traveling
 bubbles of different colors and with radius proportional to the values
 of the variable =CO2.PPP=. Previously, you should watch the magistral
@@ -617,6 +614,10 @@ p
 ##################################################################
 #+end_src
 
+The =gganimate= package expands the ecosystem of =ggplot2=, focused on static graphics, with new grammar classes for animation. In this example we will use three of them: =transition_time=, that defines how the data evolves over time, =ease_aes=, that defines how the aesthetics change with transitions, and =shadow_wake= that defines how to render data from past instants.
+
+The animation is initiated with a conventional call to =ggplot= and the corresponding =geom_*= and =scale_*= functions.
+
 #+INDEX: Packages!gganimate@\texttt{gganimate}
 
 #+begin_src R
@@ -637,6 +638,7 @@ pgvis <- ggplot(data = CO2data,
        x = 'CO2 emissions (metric tons per capita)',
        y = 'GNI per capita, PPP (current international $)')
 #+end_src
+This call produces a static graphic that is transformed in an animation with the adition of =transition_time= based on the =Year= variable. The animation contained in the resulting =gganim= object can be rendered with the =animate= function. Figure ref:fig:gganimate displays a snapshot of this animation.
 
 #+begin_src R
 pgAnim <- pgvis +

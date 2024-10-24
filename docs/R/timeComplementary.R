@@ -290,10 +290,15 @@ pgvis <- ggplot(data = CO2data,
        x = 'CO2 emissions (metric tons per capita)',
        y = 'GNI per capita, PPP (current international $)')
 
-pgvis +
+pgAnim <- pgvis +
   transition_time(Year) +
   ease_aes("linear") +
   shadow_wake(wake_length = 0.3)
+
+animate(pgAnim,
+        height = 1080, width = 1080,
+        res = 150,
+        units = "px")
 
 anim_save("figs/TimeSeries/CO2_gganimate.gif")
 
