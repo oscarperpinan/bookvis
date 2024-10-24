@@ -33,7 +33,7 @@ library("sp")
 world <- ne_countries(scale = "medium")
 ## Project the extent of the cft raster to longitude-latitude, because
 ## rnaturalearth works with it.
-cftLL <- projectExtent(cft, crs(boundaries))
+cftLL <- projectExtent(cft, crs(world))
 ## Crop...
 boundaries <- st_crop(world, cftLL)
 ## ... and project to the projection of the cft object
@@ -272,8 +272,6 @@ grid.garnish("timePlot", grep = TRUE,
              onmouseout = "document.documentElement.unpauseAnimations()")
 
 grid.export("figs/SpatioTime/vLine.svg")
-
-grid.export("/tmp/vLine.svg")
 
 ##################################################################
 ## Time trajectory
