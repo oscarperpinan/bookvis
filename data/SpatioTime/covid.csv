@@ -1,4 +1,4 @@
-"","PROV","fecha","num_def","num_casos","num_hosp","num_uci"
+"","PROV","day","num_death","num_cases","num_hosp","num_uci"
 "1","01","2020-01-01",0,0,0,0
 "2","02","2020-01-01",0,0,0,0
 "3","03","2020-01-01",0,0,0,0
