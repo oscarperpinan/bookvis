@@ -38,13 +38,15 @@ library("cartogram")
 * Choropleth
 
 #+begin_src R
-sfProv <- st_read("data/Spatial/spain_provinces_2.shp", crs = 25830,
-                 stringsAsFactors = TRUE)
+sfProv <- st_read("data/Spatial/spain_provinces_2.shp",
+                  crs = 25830,
+                  stringsAsFactors = TRUE)
 #+end_src
 
 
 #+begin_src R
-covidSpain <- read.csv("data/SpatioTime/covid.csv", na.strings = NULL)
+covidSpain <- read.csv("data/SpatioTime/covid.csv",
+                       na.strings = NULL)
 covidSpain$PROV <- sprintf("%02d", covidSpain$PROV)
 covidSpain$day <- as.Date(covidSpain$day)
 
@@ -68,12 +70,13 @@ popSpain2021 <- subset(popSpain,
 covidSpain <- merge(covidSpain, popSpain2021, by = "PROV")
 
 ## Number of cases per 100.000 population
-covidSpain$cases_rel <- with(covidSpain, num_cases/Population * 1e5)
+covidSpain$cases_rel <- with(covidSpain,
+                             num_cases/Population * 1e5)
 #+end_src
 
 Los códigos de provincias están aquí: https://www.ine.es/daco/daco42/codmun/cod_provincia.htm
 
-#+begin_src R
+#+begin_src R :results output graphics file :exports both :file figs/SpatioTime/covidLevelplot.pdf
 ggplot(covidSpain) +
   geom_raster(aes(x = day,
                   y = PROV,
@@ -83,6 +86,7 @@ ggplot(covidSpain) +
 #+end_src
 
 #+RESULTS:
+[[file:figs/SpatioTime/covidLevelplot.pdf]]
 
 #+begin_src R
 ## Merge data with the polygons
@@ -93,11 +97,11 @@ sfCovid <- merge(sfProv, covidSpain,
 #+begin_src R :results output graphics file :exports both :file figs/SpatioTime/covidMonth.pdf
 ggplot(subset(sfCovid,
               day >= as.Date("2022-01-01") &
-              day <= as.Date("2022-02-01"))) +
+              day <= as.Date("2022-01-09"))) +
   geom_sf(aes(fill = cases_rel)) +
   scale_fill_distiller(palette = "PuBu", direction = 1) +
   theme_bw() +
-  facet_wrap(~ day, nrow = 4)
+  facet_wrap(~ day, nrow = 3)
 #+end_src
 
 #+RESULTS:
@@ -123,6 +127,7 @@ file:figs/SpatioTime/covidMonth_snapshot.png
 
 
 * Cartogram
+
 #+begin_src R
 fday <- as.Date("2022-01-01")
 lday <- as.Date("2022-02-28")
@@ -144,12 +149,12 @@ cartCOVID <- do.call(rbind, cartCOVIDList)
 #+begin_src R :results output graphics file :exports both :file figs/SpatioTime/cartCOVID.pdf
 ggplot(subset(cartCOVID,
               day >= as.Date("2022-01-01") &
-              day <= as.Date("2022-01-04"))) +
+              day <= as.Date("2022-01-09"))) +
   geom_sf(data = sfProv) +
   geom_sf(aes(fill = cases_rel)) +
   scale_fill_distiller(palette = "PuBu", direction = 1) +
   theme_bw() +
-  facet_wrap(~ day, nrow = 2)
+  facet_wrap(~ day, nrow = 3)
 #+end_src
 
 #+RESULTS:
