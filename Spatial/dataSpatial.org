@@ -275,6 +275,7 @@ st_write(sfMapVotes, "data/Spatial/sfMapVotes.shp", append = FALSE)
 #+end_src
 
 * Population
+label:sec:dataCartogram
 
 #+begin_src R
 library(sf)
@@ -286,13 +287,17 @@ sfProv <- st_read("data/Spatial/spain_provinces_2.shp", crs = 25830,
                  stringsAsFactors = TRUE)
 #+end_src
 
+INE:
+Population: https://www.ine.es/jaxiT3/Tabla.htm?t=2852&L=0
+GDP: https://www.ine.es/jaxi/Tabla.htm?tpx=67284&L=0
+
 #+begin_src R
 ## Population of each province
 popSpain <- read.csv("data/SpatioTime/PopSpain.csv")
 popSpain2020 <- subset(popSpain, Year == 2020)
 popSpain2020$PROV <- substring(popSpain2020$Province, 1, 2)
 
-## Population of each province
+## GDP of each province
 GDPSpain2020 <- read.csv("data/Spatial/GDPSpain2020.csv")
 GDPSpain2020$PROV <- substring(GDPSpain2020$Province, 1, 2)
 
@@ -309,7 +314,7 @@ st_write(sfPopGDPSpain, "data/Spatial/sfPopGDPSpain.shp")
 
 
 * CM SAF
-\label{sec:CMSAF}
+label:sec:CMSAF
 
 #+begin_src R :exports none
   ##################################################################

@@ -664,6 +664,8 @@ label:cha:choropleth
 }
 #+END_EXPORT
 
+#+INCLUDE: "Spatial/cartogram.tex" src latex 
+
 ** Thematic Maps: Raster Maps
 label:cha:raster
 #+BEGIN_EXPORT latex

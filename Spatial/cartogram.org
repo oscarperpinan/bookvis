@@ -1,0 +1,208 @@
+#+PROPERTY:  header-args :session *R* :tangle ../docs/R/cartogram.R :eval no-export
+#+OPTIONS: ^:nil
+
+#+begin_src R :exports none :tangle no
+Sys.setlocale("LC_TIME", 'C')
+
+setwd("~/github/bookvis/")
+#+end_src
+
+#+begin_src R :exports none  
+##################################################################
+## Initial configuration
+##################################################################
+## Clone or download the repository and set the working directory
+## with setwd to the folder where the repository is located.
+
+##################################################################
+#+end_src
+
+* Introduction
+
+#+begin_src R
+library("sf")
+library("ggplot2")
+library("cartogram")
+#+end_src
+
+* Data
+
+
+#+begin_src R
+sfPopGDPSpain <- st_read("data/Spatial/sfPopGDPSpain.shp")
+#+end_src
+
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/PopSpain.pdf
+ggplot(sfPopGDPSpain) +
+  geom_point(aes(y = Province, x = Population/1e6)) +
+  xlab("Population (million)") + 
+  theme_bw()
+#+end_src
+
+
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/GDPSpain.pdf
+ggplot(sfPopGDPSpain) +
+  geom_point(aes(y = Province, x = GDP/1e6)) +
+  xlab("GDP (million euros)") + 
+  theme_bw()
+#+end_src
+
+
+
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/PopGDPSpain.pdf
+ggplot(sfPopGDPSpain, aes(y = Population/1e6, x = GDP/1e6)) +
+  geom_point() +
+  geom_smooth() + 
+  xlab("GDP (million euros)") + ylab("Population (million)") +
+  theme_bw()
+#+end_src
+
+#+CAPTION: Population and GDP of the provinces in Spain (2020)
+#+begin_figure
+#+CAPTION: Population. label:fig:popSpain
+#+attr_latex: :options {0.33\textheight}
+#+begin_subfigure
+#+attr_latex: :height 0.33\textheight
+#+RESULTS:
+[[file:figs/Spatial/PopSpain.pdf]]
+#+end_subfigure
+#+attr_latex: :options {0.33\textheight}
+#+CAPTION: GDP. label:fig:GDPSpain
+#+begin_subfigure
+#+attr_latex: :height 0.33\textheight
+#+RESULTS:
+[[file:figs/Spatial/GDPSpain.pdf]]
+#+end_subfigure
+#+attr_latex: :options {0.33\textheight}
+#+CAPTION: GDP vs Population. label:fig:GDPSpain
+#+begin_subfigure
+#+attr_latex: :height 0.33\textheight
+#+RESULTS:
+[[file:figs/Spatial/PopGDPSpain.pdf]]
+#+end_subfigure
+#+end_figure
+
+* Cartograms
+
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/cartContPopSpain.pdf
+cartPopCont <- cartogram_cont(sfPopGDPSpain,
+                              weight = "Population")
+
+ggplot(cartPopCont) +
+  geom_sf(aes(fill = Population)) + 
+  scale_fill_distiller(palette = "Blues", direction = 1) + 
+  theme_bw()
+#+end_src
+
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/cartContGDPSpain.pdf
+cartGDPCont <- cartogram_cont(sfPopGDPSpain,
+                              weight = "GDP")
+
+ggplot(cartPopCont) +
+  geom_sf(aes(fill = GDP)) + 
+  scale_fill_distiller(palette = "Blues", direction = 1) + 
+  theme_bw()
+#+end_src
+
+
+#+CAPTION: Contiguous cartograms of population and GDP of the provinces in Spain (2020)
+#+begin_figure
+#+CAPTION: Population. label:fig:cartContPopSpain
+#+attr_latex: :options {0.4\textheight}
+#+begin_subfigure
+#+attr_latex: :height 0.4\textheight
+#+RESULTS:
+[[file:figs/Spatial/cartContPopSpain.pdf]]
+#+end_subfigure
+#+CAPTION: GDP. label:fig:cartContGDPSpain
+#+attr_latex: :options {0.4\textheight}
+#+begin_subfigure
+#+attr_latex: :height 0.4\textheight
+#+RESULTS:
+[[file:figs/Spatial/cartContGDPSpain.pdf]]
+#+end_subfigure
+#+end_figure
+
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/cartNContPopSpain.pdf
+cartPopNCont <- cartogram_ncont(sfPopGDPSpain, weight = "Population")
+
+ggplot(cartPopNCont) +
+  geom_sf(aes(fill = Population)) + 
+  scale_fill_distiller(palette = "Blues", direction = 1) + 
+  theme_bw()
+#+end_src
+
+
+
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/cartNContGDPSpain.pdf
+cartGDPNCont <- cartogram_ncont(sfPopGDPSpain, weight = "GDP")
+
+ggplot(cartGDPNCont) +
+  geom_sf(aes(fill = GDP)) + 
+  scale_fill_distiller(palette = "Blues", direction = 1) + 
+  theme_bw()
+#+end_src
+
+
+
+#+CAPTION: Non-contiguous cartograms of population and GDP of the provinces in Spain (2020)
+#+begin_figure
+#+CAPTION: Population. label:fig:cartNContPopSpain
+#+attr_latex: :options {0.4\textheight}
+#+begin_subfigure
+#+attr_latex: :height 0.4\textheight
+#+RESULTS:
+[[file:figs/Spatial/cartNContPopSpain.pdf]]
+#+end_subfigure
+#+CAPTION: GDP. label:fig:cartNContGDPSpain
+#+attr_latex: :options {0.4\textheight}
+#+begin_subfigure
+#+attr_latex: :height 0.4\textheight
+#+RESULTS:
+[[file:figs/Spatial/cartNContGDPSpain.pdf]]
+#+end_subfigure
+#+end_figure
+
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/cartDorlPopSpain.pdf
+cartPopDorl <- cartogram_dorling(sfPopGDPSpain, weight = "Population")
+
+ggplot(cartPopDorl) +
+  geom_sf(aes(fill = Population)) + 
+  scale_fill_distiller(palette = "Blues", direction = 1) + 
+  theme_bw()
+#+end_src
+
+
+
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/cartDorlGDPSpain.pdf
+cartGDPDorl <- cartogram_dorling(sfPopGDPSpain, weight = "GDP")
+
+ggplot(cartGDPDorl) +
+  geom_sf(aes(fill = GDP)) + 
+  scale_fill_distiller(palette = "Blues", direction = 1) + 
+  theme_bw()
+#+end_src
+
+
+#+CAPTION: Non-overlapping circles cartograms of population and GDP of the provinces in Spain (2020)
+#+begin_figure
+#+CAPTION: Population. label:fig:cartDorlPopSpain
+#+attr_latex: :options {0.4\textheight}
+#+begin_subfigure
+#+attr_latex: :height 0.4\textheight
+#+RESULTS:
+[[file:figs/Spatial/cartDorlPopSpain.pdf]]
+#+end_subfigure
+#+CAPTION: GDP. label:fig:cartDorlGDPSpain
+#+attr_latex: :options {0.4\textheight}
+#+begin_subfigure
+#+attr_latex: :height 0.4\textheight
+#+RESULTS:
+[[file:figs/Spatial/cartDorlGDPSpain.pdf]]
+#+end_subfigure
+#+end_figure
+
+* COMMENT Local Variables
+Local Variables:
+ispell-local-dictionary: "british"
+End:
