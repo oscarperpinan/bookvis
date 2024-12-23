@@ -25,24 +25,37 @@ label:sec:intro_arealST
 ##################################################################
 #+end_src
 
-COVID bla bla bla
+The graphics presented in this chapter illustrate the progression of
+COVID-19 infections within the provinces of Spain during the period
+comprised between December 2021 and March 2022.
 
-Datos adaptados de los publicados aquí: https://cnecovid.isciii.es/covid19/#documentaci%C3%B3n-y-datos
+Choropleths and cartograms, two visualisation techniques used in
+Chapters ref:cha:choropleth and ref:cha:cartogram, are employed
+here. This chapter features animated versions of these techniques, in
+addition to static graphics based on the Trellis scheme (a rectangular
+array of plots).
+
+This chapter relies on three key packages: =sf=, =cartogram=, and
+=gganimate=.
+
+#+INDEX: Packages!sf@\texttt{sf}
+#+INDEX: Packages!cartogram@\texttt{cartogram}
+#+INDEX: Packages!gganimate@\texttt{gganimate}
 
 #+begin_src R
 library("sf")
-library("gganimate")
+
 library("cartogram")
+
+library("gganimate")
 #+end_src
 
-* Choropleth
 
-#+begin_src R
-sfProv <- st_read("data/Spatial/spain_provinces_2.shp",
-                  crs = 25830,
-                  stringsAsFactors = TRUE)
-#+end_src
+* Data
 
+Data of COVID-19 infections have been adapted from the tables
+available on the website of the Institute of Health Carlos III[fn:1]
+(Chapter ref:sec:dataCartogram):
 
 #+begin_src R
 covidSpain <- read.csv("data/SpatioTime/covid.csv",
@@ -56,17 +69,21 @@ covidSpain <- subset(covidSpain,
 
 #+end_src
 
-
+Infection numbers are usually standardised per 100,000
+population. Population data are obtained from the National Institute
+of Statistics[fn:2].
 #+begin_src R
 ## Population of each province
 popSpain <- read.csv("data/SpatioTime/PopSpain.csv")
 popSpain$PROV <- substring(popSpain$Province, 1, 2)
+#+end_src
+
+This analysis uses 2021 population data for its three-month duration.
+#+begin_src R
 popSpain2021 <- subset(popSpain,
                        Year == 2021,
                        select = c(PROV, Population))
-#+end_src
 
-#+begin_src R
 covidSpain <- merge(covidSpain, popSpain2021, by = "PROV")
 
 ## Number of cases per 100.000 population
@@ -74,7 +91,9 @@ covidSpain$cases_rel <- with(covidSpain,
                              num_cases/Population * 1e5)
 #+end_src
 
-Los códigos de provincias están aquí: https://www.ine.es/daco/daco42/codmun/cod_provincia.htm
+Figure ref:fig:covidLevelplot is a level plot that depicts the
+progression of the COVID-19 infections in Spain[fn:3] from December
+2021 to March 2022.
 
 #+begin_src R :results output graphics file :exports both :file figs/SpatioTime/covidLevelplot.pdf
 ggplot(covidSpain) +
@@ -85,14 +104,35 @@ ggplot(covidSpain) +
   theme_bw()
 #+end_src
 
-#+RESULTS:
+#+CAPTION: Level plot of the COVID-19 infections in Spain from December 2021 to March 2022. The y-axis represents the provinces by its code. label:fig:covidLevelplot
 [[file:figs/SpatioTime/covidLevelplot.pdf]]
 
+
+Finally, the =covidSpain= data frame and the provinces boundaries are merged together:
 #+begin_src R
+sfProv <- st_read("data/Spatial/spain_provinces_2.shp",
+                  crs = 25830,
+                  stringsAsFactors = TRUE)
+
 ## Merge data with the polygons
 sfCovid <- merge(sfProv, covidSpain,
                       by = "PROV")
 #+end_src
+
+
+* Choropleth
+
+Choropleths with quantitative variables were extensively described in
+the section ref:sec:quantitative_choropleth, but not in a
+time-dependent context. The representation of a space-time variable
+requires different approaches.
+
+The static solution is the small multiples technique (section
+ref:SEC:groupVariable): a matrix of level plots where each cell
+depicts the COVID-19 infections rate in each province in a certain
+day. These multiple images displayed together allows the reader to
+compare the inter-frame differences and perceive the time evolution
+(Figure ref::fig:covidMonth).
 
 #+begin_src R :results output graphics file :exports both :file figs/SpatioTime/covidMonth.pdf
 ggplot(subset(sfCovid,
@@ -104,8 +144,15 @@ ggplot(subset(sfCovid,
   facet_wrap(~ day, nrow = 3)
 #+end_src
 
-#+RESULTS:
+#+CAPTION: Matrix of level plots where each cell depicts the COVID-19 infections rate in each province in a certain day label:fig:covidMonth
 [[file:figs/SpatioTime/covidMonth.pdf]]
+
+The animated solution displays sequentially each of these level plots
+as frames of an animation. The =gganimate= package eases this task
+with =transition_time=, that can be added as a component of the
+=ggplot= call, and the =animate= function, which renders the
+animation. Figure ref:fig:covidMonth_snapshot shows a snapshot of the
+result, available at the book website.
 
 #+begin_src R
 ggCovid <- ggplot(sfCovid) +
@@ -122,11 +169,25 @@ animate(ggCovid,
         units = "px")
 #+end_src
 
-#+CAPTION: Snapshot of the animation produced with =gganimate= and =sf=. label:fig:covidMonth_snapshot
+#+CAPTION: Snapshot of the animation of choropleths produced with =gganimate= and =sf=. label:fig:covidMonth_snapshot
 file:figs/SpatioTime/covidMonth_snapshot.png
 
 
 * Cartogram
+
+Chapter ref:cha:cartogram details how to obtain cartograms with the
+=cartogram= package. Three different types are available:
+non-contiguous area, contiguous area and non-overlapping circles
+(Dorling). Contiguous area cartograms are discarded in this context,
+because they are computationally expensive for space-time data due to
+the time required for transformation. On the other hand, the Dorling
+cartograms do not have this drawback but they can be harder to
+understand because they do not preserve the shape. Therefore, this
+section employs non-contiguous area cartograms using the
+=cartogram_ncont= function.
+
+Next code generates a cartogram for each day of the analysis period
+with a =lapply= loop. The result is a list of =sf= objects.
 
 #+begin_src R
 fday <- as.Date("2022-01-01")
@@ -143,8 +204,10 @@ cartCOVIDList <- lapply(days, function(d)
 cartCOVID <- do.call(rbind, cartCOVIDList)
 #+end_src
 
-#+RESULTS:
-
+The collection of cartograms can be displayed together with the small
+multiples approach. The changes in the variable are represented both
+with the hue and with the size of the polygons
+(Figure:ref:fig:cartCOVID).
 
 #+begin_src R :results output graphics file :exports both :file figs/SpatioTime/cartCOVID.pdf
 ggplot(subset(cartCOVID,
@@ -157,8 +220,13 @@ ggplot(subset(cartCOVID,
   facet_wrap(~ day, nrow = 3)
 #+end_src
 
-#+RESULTS:
+#+CAPTION: Matrix of non-contiguous area cartograms where each cell depicts the COVID-19 infections rate in each province in a certain day. label:fig:cartCOVID
 [[file:figs/SpatioTime/cartCOVID.pdf]]
+
+These cartograms can also be displayed as frames of an animation with
+a =ggplot= call completed with =transition_time= and rendered with
+=animate=. Figure ref:fig:cartCOVID_snapshot shows a snapshot of the
+animation, available at the book website.
 
 #+begin_src R
 ggCartCOVID <- ggplot(cartCOVID) +
@@ -176,7 +244,7 @@ animate(ggCartCOVID,
         units = "px")
 #+end_src
 
-#+CAPTION: Snapshot of the animation produced with =gganimate= and =cartogram=. label:fig:cartCOVID_snapshot
+#+CAPTION: Snapshot of the animation of cartograms produced with =gganimate= and =cartogram=. label:fig:cartCOVID_snapshot
 file:figs/SpatioTime/cartCOVID_snapshot.png
 
 * COMMENT Local Variables
@@ -184,3 +252,10 @@ Local Variables:
 ispell-local-dictionary: "british"
 End:
 
+* Footnotes
+
+[fn:3]The relation between the codes of the y-axis an the names of the provinces is available at this webpage: https://www.ine.es/daco/daco42/codmun/cod_provincia.htm
+ 
+[fn:2]https://www.ine.es/jaxiT3/Tabla.htm?t=2852 
+
+[fn:1]https://cnecovid.isciii.es/covid19/#documentaci%C3%B3n-y-datos 

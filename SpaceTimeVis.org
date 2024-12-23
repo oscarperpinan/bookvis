@@ -655,7 +655,7 @@ label:cha:choropleth
 #+INCLUDE: "Spatial/choropleth.tex" src latex 
 
 ** Thematic Maps: Cartogram Maps
-label:cha:choropleth
+label:cha:cartogram
 #+BEGIN_EXPORT latex
 \chapterprecishere{%
   A cartogram map ...
