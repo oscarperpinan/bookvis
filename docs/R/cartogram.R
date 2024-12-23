@@ -6,15 +6,9 @@
 
 ##################################################################
 
-library("sf")
 library("ggplot2")
+library("sf")
 library("cartogram")
-library("RColorBrewer")
-
-## Number of intervals (colors)
-N <- 6
-## Sequential palette
-quantPal <- brewer.pal(n = N, "Blues")
 
 sfPopGDPSpain <- st_read("data/Spatial/sfPopGDPSpain.shp")
 
@@ -31,14 +25,28 @@ ggplot(sfPopGDPSpain) +
 ggplot(sfPopGDPSpain, aes(y = Population/1e6, x = GDP/1e6)) +
   geom_point() +
   geom_smooth() + 
-  xlab("GDP (million €)") + ylab("Population (million)") +
+  xlab("GDP (million euros)") + ylab("Population (million)") +
+  theme_bw()
+
+cartPopNCont <- cartogram_ncont(sfPopGDPSpain, weight = "Population")
+
+ggplot(cartPopNCont) +
+  geom_sf(aes(fill = Population)) + 
+  scale_fill_distiller(palette = "Blues", direction = 1) + 
+  theme_bw()
+
+cartGDPNCont <- cartogram_ncont(sfPopGDPSpain, weight = "GDP")
+
+ggplot(cartGDPNCont) +
+  geom_sf(aes(fill = GDP)) + 
+  scale_fill_distiller(palette = "Blues", direction = 1) + 
   theme_bw()
 
 cartPopCont <- cartogram_cont(sfPopGDPSpain,
                               weight = "Population")
 
 ggplot(cartPopCont) +
-  geom_sf(aes(fill = GDP)) + 
+  geom_sf(aes(fill = Population)) + 
   scale_fill_distiller(palette = "Blues", direction = 1) + 
   theme_bw()
 
@@ -46,34 +54,20 @@ cartGDPCont <- cartogram_cont(sfPopGDPSpain,
                               weight = "GDP")
 
 ggplot(cartPopCont) +
-  geom_sf(aes(fill = Population)) + 
-  scale_fill_distiller(palette = "Blues", direction = 1) + 
-  theme_bw()
-
-cartPopNCont <- cartogram_ncont(sfPopGDPSpain, weight = "Population")
-
-ggplot(cartPopNCont) +
   geom_sf(aes(fill = GDP)) + 
-  scale_fill_distiller(palette = "Blues", direction = 1) + 
-  theme_bw()
-
-cartGDPNCont <- cartogram_ncont(sfPopGDPSpain, weight = "GDP")
-
-ggplot(cartGDPNCont) +
-  geom_sf(aes(fill = Population)) + 
   scale_fill_distiller(palette = "Blues", direction = 1) + 
   theme_bw()
 
 cartPopDorl <- cartogram_dorling(sfPopGDPSpain, weight = "Population")
 
 ggplot(cartPopDorl) +
-  geom_sf(aes(fill = GDP)) + 
+  geom_sf(aes(fill = Population)) + 
   scale_fill_distiller(palette = "Blues", direction = 1) + 
   theme_bw()
 
 cartGDPDorl <- cartogram_dorling(sfPopGDPSpain, weight = "GDP")
 
 ggplot(cartGDPDorl) +
-  geom_sf(aes(fill = Population)) + 
+  geom_sf(aes(fill = GDP)) + 
   scale_fill_distiller(palette = "Blues", direction = 1) + 
   theme_bw()

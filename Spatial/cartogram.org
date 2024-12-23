@@ -19,14 +19,32 @@ setwd("~/github/bookvis/")
 
 * Introduction
 
+The graphics in this chapter display the gross domestic product (GDP)
+and population of each province in Spain with three different types of
+cartograms.
+
+The package =cartogram= implements this type of visual
+representations. It is based on =sf=. Thus, the graphics in this
+chapter will be produced with =ggplot2=:
+
+#+INDEX: Packages!sf@\texttt{sf}
+#+INDEX: Packages!cartogram@\texttt{cartogram}
+
 #+begin_src R
-library("sf")
 library("ggplot2")
+library("sf")
 library("cartogram")
 #+end_src
 
 * Data
 
+The data is available in the shapefile =sfPopGDPSpain= (read Chapter
+ref:cha:dataSpatial for details). Figure
+ref:fig:scatterplotPopGDPSpain contains three scatterplots: GDP for
+each province, population for each province, and GDP versus
+population. It is clear that two provinces, Madrid and Barcelona, have
+a population and a GDP significantly higher than the rest. Besides,
+the relation between these variables is approximately linear.
 
 #+begin_src R
 sfPopGDPSpain <- st_read("data/Spatial/sfPopGDPSpain.shp")
@@ -48,7 +66,6 @@ ggplot(sfPopGDPSpain) +
 #+end_src
 
 
-
 #+begin_src R :results output graphics file :exports both :file figs/Spatial/PopGDPSpain.pdf
 ggplot(sfPopGDPSpain, aes(y = Population/1e6, x = GDP/1e6)) +
   geom_point() +
@@ -57,7 +74,7 @@ ggplot(sfPopGDPSpain, aes(y = Population/1e6, x = GDP/1e6)) +
   theme_bw()
 #+end_src
 
-#+CAPTION: Population and GDP of the provinces in Spain (2020)
+#+CAPTION: Population and GDP of the provinces in Spain (2020) label:fig:scatterplotPopGDPSpain 
 #+begin_figure
 #+CAPTION: Population. label:fig:popSpain
 #+attr_latex: :options {0.33\textheight}
@@ -74,7 +91,7 @@ ggplot(sfPopGDPSpain, aes(y = Population/1e6, x = GDP/1e6)) +
 [[file:figs/Spatial/GDPSpain.pdf]]
 #+end_subfigure
 #+attr_latex: :options {0.33\textheight}
-#+CAPTION: GDP vs Population. label:fig:GDPSpain
+#+CAPTION: GDP vs Population. label:fig:PopGDPSpain
 #+begin_subfigure
 #+attr_latex: :height 0.33\textheight
 #+RESULTS:
@@ -83,6 +100,60 @@ ggplot(sfPopGDPSpain, aes(y = Population/1e6, x = GDP/1e6)) +
 #+end_figure
 
 * Cartograms
+
+The first method is the non-contiguous area cartogram. This solution
+enlarges or reduces each polygon in size according to the variable
+while preserving its shape.
+
+The function =cartogram_ncont= computes the transformation based on
+the variable identified by the argument =weight=, and returns a =sf=
+object. The result is displayed with =geom_sf= (Figure
+ref:fig:cartNContPopGDPSpain).
+
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/cartNContPopSpain.pdf
+cartPopNCont <- cartogram_ncont(sfPopGDPSpain, weight = "Population")
+
+ggplot(cartPopNCont) +
+  geom_sf(aes(fill = Population)) + 
+  scale_fill_distiller(palette = "Blues", direction = 1) + 
+  theme_bw()
+#+end_src
+
+#+begin_src R :results output graphics file :exports both :file figs/Spatial/cartNContGDPSpain.pdf
+cartGDPNCont <- cartogram_ncont(sfPopGDPSpain, weight = "GDP")
+
+ggplot(cartGDPNCont) +
+  geom_sf(aes(fill = GDP)) + 
+  scale_fill_distiller(palette = "Blues", direction = 1) + 
+  theme_bw()
+#+end_src
+
+
+#+CAPTION: Non-contiguous cartograms of population and GDP of the provinces in Spain (2020) label:fig:cartNContPopGDPSpain
+#+begin_figure
+#+CAPTION: Population. label:fig:cartNContPopSpain
+#+attr_latex: :options {0.4\textheight}
+#+begin_subfigure
+#+attr_latex: :height 0.4\textheight
+#+RESULTS:
+[[file:figs/Spatial/cartNContPopSpain.pdf]]
+#+end_subfigure
+#+CAPTION: GDP. label:fig:cartNContGDPSpain
+#+attr_latex: :options {0.4\textheight}
+#+begin_subfigure
+#+attr_latex: :height 0.4\textheight
+#+RESULTS:
+[[file:figs/Spatial/cartNContGDPSpain.pdf]]
+#+end_subfigure
+#+end_figure
+
+The second type is the continuous area cartogram. The polygon of each
+province is both scaled and distorted so that its area is directly
+proportional to the variable being represented while maintaining
+adjacent edges.
+
+The =sf= objects produced by the function =cartogram_cont= are
+displayed in Figure ref:fig:cartContPopGDPSpain.
 
 #+begin_src R :results output graphics file :exports both :file figs/Spatial/cartContPopSpain.pdf
 cartPopCont <- cartogram_cont(sfPopGDPSpain,
@@ -105,7 +176,7 @@ ggplot(cartPopCont) +
 #+end_src
 
 
-#+CAPTION: Contiguous cartograms of population and GDP of the provinces in Spain (2020)
+#+CAPTION: Contiguous cartograms of population and GDP of the provinces in Spain (2020) label:fig:cartContPopGDPSpain
 #+begin_figure
 #+CAPTION: Population. label:fig:cartContPopSpain
 #+attr_latex: :options {0.4\textheight}
@@ -123,45 +194,12 @@ ggplot(cartPopCont) +
 #+end_subfigure
 #+end_figure
 
-#+begin_src R :results output graphics file :exports both :file figs/Spatial/cartNContPopSpain.pdf
-cartPopNCont <- cartogram_ncont(sfPopGDPSpain, weight = "Population")
+Finally, the third method is the Dorling cartogram. Provinces are
+represented by non-overlapping circles, sized proportionally to the
+data, resembling proportional symbol maps (Chapter ref::cha:bubble).
 
-ggplot(cartPopNCont) +
-  geom_sf(aes(fill = Population)) + 
-  scale_fill_distiller(palette = "Blues", direction = 1) + 
-  theme_bw()
-#+end_src
-
-
-
-#+begin_src R :results output graphics file :exports both :file figs/Spatial/cartNContGDPSpain.pdf
-cartGDPNCont <- cartogram_ncont(sfPopGDPSpain, weight = "GDP")
-
-ggplot(cartGDPNCont) +
-  geom_sf(aes(fill = GDP)) + 
-  scale_fill_distiller(palette = "Blues", direction = 1) + 
-  theme_bw()
-#+end_src
-
-
-
-#+CAPTION: Non-contiguous cartograms of population and GDP of the provinces in Spain (2020)
-#+begin_figure
-#+CAPTION: Population. label:fig:cartNContPopSpain
-#+attr_latex: :options {0.4\textheight}
-#+begin_subfigure
-#+attr_latex: :height 0.4\textheight
-#+RESULTS:
-[[file:figs/Spatial/cartNContPopSpain.pdf]]
-#+end_subfigure
-#+CAPTION: GDP. label:fig:cartNContGDPSpain
-#+attr_latex: :options {0.4\textheight}
-#+begin_subfigure
-#+attr_latex: :height 0.4\textheight
-#+RESULTS:
-[[file:figs/Spatial/cartNContGDPSpain.pdf]]
-#+end_subfigure
-#+end_figure
+The function =cartogram_dorling= creates the circles, and the result
+is represented in Figure ref:fig:cartDorlPopGDPSpain.
 
 #+begin_src R :results output graphics file :exports both :file figs/Spatial/cartDorlPopSpain.pdf
 cartPopDorl <- cartogram_dorling(sfPopGDPSpain, weight = "Population")
@@ -171,8 +209,6 @@ ggplot(cartPopDorl) +
   scale_fill_distiller(palette = "Blues", direction = 1) + 
   theme_bw()
 #+end_src
-
-
 
 #+begin_src R :results output graphics file :exports both :file figs/Spatial/cartDorlGDPSpain.pdf
 cartGDPDorl <- cartogram_dorling(sfPopGDPSpain, weight = "GDP")
@@ -184,7 +220,7 @@ ggplot(cartGDPDorl) +
 #+end_src
 
 
-#+CAPTION: Non-overlapping circles cartograms of population and GDP of the provinces in Spain (2020)
+#+CAPTION: Non-overlapping circles cartograms of population and GDP of the provinces in Spain (2020) label:fig:cartDorlPopGDPSpain
 #+begin_figure
 #+CAPTION: Population. label:fig:cartDorlPopSpain
 #+attr_latex: :options {0.4\textheight}
