@@ -10,6 +10,8 @@ library("ggplot2")
 ## `layer` function.
 library("latticeExtra")
 
+library("RColorBrewer")
+
 source("configLattice.R")
 ##################################################################
 

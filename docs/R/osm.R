@@ -9,9 +9,10 @@ library("ggplot2")
 ## `layer` function.
 library("latticeExtra")
 
+library("RColorBrewer")
+
 source("configLattice.R")
 
-library("RColorBrewer")
 library("colorspace")
 
 library("raster")

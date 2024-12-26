@@ -5,10 +5,12 @@
 ## with setwd to the folder where the repository is located.
  
 library("lattice")
-library(ggplot2)
+library("ggplot2")
 ## latticeExtra must be loaded after ggplot2 to prevent masking of its
 ## `layer` function.
 library("latticeExtra")
+
+library("RColorBrewer")
 
 source('configLattice.R')
 ##################################################################
@@ -51,7 +53,10 @@ ggpairs(aranjuezDF,
         mapping = aes(colour = Month),
         legend = 1) +
   scale_fill_manual(values = colors) +
-  scale_colour_manual(values = colors)
+  scale_colour_manual(values = colors) +
+  theme(axis.text = element_text(size = 6),
+        axis.text.x = element_text(angle = 45),
+        strip.text = element_text(size = 7))
 
 ##################################################################
 ## Hexagonal binning
@@ -104,12 +109,13 @@ ggplot(data = aranjuezRshp,
 ##################################################################
 
 ggplot(data = aranjuezRshp, aes(Radiation, Temperature)) +
-    facet_grid(Statistic ~ Month) +
-    geom_point(col = 'skyblue4', pch = 19, cex = 0.5, alpha = 0.3) +
-    geom_rug() +
-    stat_smooth(se = FALSE, method = 'loess',
-                col = 'indianred1', lwd = 1.2) +
-    theme_bw()
+  facet_grid(Statistic ~ Month) +
+  geom_point(col = 'skyblue4', pch = 19, cex = 0.5, alpha = 0.3) +
+  geom_rug() +
+  stat_smooth(se = FALSE, method = 'loess',
+              col = 'indianred1', lwd = 1.2) +
+  theme_bw() +
+  theme(axis.text.x = element_text(size = 7, angle = 45))
 
 useOuterStrips(
     xyplot(Temperature ~ Radiation | Month * Statistic,

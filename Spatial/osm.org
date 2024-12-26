@@ -27,11 +27,12 @@ library("ggplot2")
 ## `layer` function.
 library("latticeExtra")
 
+library("RColorBrewer")
+
 source("configLattice.R")
 #+end_src
 
 #+begin_src R
-library("RColorBrewer")
 library("colorspace")
 
 library("raster")
