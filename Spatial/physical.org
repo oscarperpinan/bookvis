@@ -166,7 +166,7 @@ version).
 
 With =levelplot= we use a terrain colors palette, as the one produced
 by the =terrain_hcl= function from the =colorspace= package
-cite:Ihaka.Murrell.ea2016. The theme for the graphic is configured via
+cite:Ihaka.Murrell.ea2024. The theme for the graphic is configured via
 =rasterTheme= with this palette and setting the background (=NA=
 values) to a light blue (Figure ref:fig:brazilDEMlattice).
 
@@ -324,7 +324,7 @@ ggplot() +
 
 [fn:4] The package =rnaturalearthhires= is not available at CRAN due to its size. More information: https://docs.ropensci.org/rnaturalearthhires/  
 
-[fn:5] https://www.diva-gis.org/
+[fn:5] https://diva-gis.org/
 
 * COMMENT Local Variables
 Local Variables:

@@ -127,7 +127,7 @@ palettes, that communicate the progression from low to high with light
 colors associated to low values, and dark colors linked to high
 values. The well-known service ColorBrewer[fn:1] provides several
 choices, available in =R= via the =RColorBrewer= package
-cite:Neuwirth2014.
+cite:Neuwirth2022.
 
 #+INDEX: Packages!RColorBrewer@\texttt{RColorBrewer}
 #+INDEX: Subjects!Sequential palette
@@ -710,7 +710,7 @@ file:figs/Spatial/mapview_whichMax.png
 
 [fn:5] In previous sections the spatial object included a modification to the original shapefile in order to display the Canarian islands in the right bottom corner of the maps. This modification is not needed with =mapview=, so =st_read= imports the shapefile =spMapVotes0= (Section ref:sec:dataChoropleth).
 
-[fn:4] The EPSG projection of the data is 25830. More information in http://spatialreference.org/ref/epsg/etrs89-utm-zone-30n/.
+[fn:4] The EPSG projection of the data is 25830. More information in https://spatialreference.org/ref/epsg/25830/.
 
 [fn:1] http://colorbrewer2.org
 

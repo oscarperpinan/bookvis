@@ -348,7 +348,7 @@ incoming solar radiation product (SIS) incident over Spain during
 shortwave radiation ($0.2$ to $\SI{4}{\micro\meter}$ wavelength range)
 reaching a horizontal unit Earth surface obtained by processing
 information from geostationary satellites (METEOSAT) and also from
-polar satellites (MetOp and NOAA) \cite{Schulz.Albert.ea2009} and then
+polar satellites (MetOp and NOAA) cite:Schulz.Albert.ea2009 and then
 validated with high-quality on-ground measurements from the Baseline
 Surface Radiation Network (BSRN)[fn:4].
 
@@ -420,17 +420,14 @@ landClass <- raster("data/Spatial/241243rgb-167772161.0.TIFF")
 * Footnotes
 [fn:11] The Open Data portal is https://datos.madrid.es/. The information of the measuring stations is available at https://datos.madrid.es/egob/catalogo/212629-1-estaciones-control-aire.csv. 
 
-[fn:8] http://www.mambiente.munimadrid.es/opencms/opencms/calaire/SistemaIntegral/SistVigilancia/Estaciones/
-
-
 [fn:7] http://www.ine.es/ > Products and services > Publications > Download the PC-Axis program > Municipal maps
 
-[fn:1] http://www.eea.europa.eu/soer/countries/es/
+[fn:1] https://www.eea.europa.eu/soer/2015/countries/spain
 
 [fn:2] Use the search tool with the text "Calidad del aire. Datos diarios desde 2001".
 [fn:3] https://datos.madrid.es/FWProjects/egob/Catalogo/MedioAmbiente/Aire/Ficheros/Interprete_ficheros_%20calidad_%20del_%20aire_global.pdf
 
-[fn:4] http://www.bsrn.awi.de/en/home/
+[fn:4] https://bsrn.awi.de/
 
 [fn:5] http://eospso.gsfc.nasa.gov/
 

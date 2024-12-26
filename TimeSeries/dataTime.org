@@ -15,7 +15,7 @@ setwd('~/github/bookvis/')
 #+INDEX: Data!Meteorological variables
 
 The Agroclimatic Information System for Irrigation (SIAR)
-cite:SIAR2011 is a free-download database operating since 1999,
+cite:SIAR2024 is a free-download database operating since 1999,
 covering the majority of the irrigated area of Spain.  This network
 belongs to the Ministry of Agriculture, Food and Environment of Spain,
 as a tool to predict and study meteorological variables for
@@ -516,7 +516,7 @@ save(CO2data, file = 'data/CO2.RData')
 
 [fn:3] http://databank.worldbank.org/data/reports.aspx?source=world-development-indicators
 
-[fn:4] [[http://eportal.magrama.gob.es/websiar]]
+[fn:4] https://servicio.mapa.gob.es/websiar/
 
 
 * COMMENT Local Variables

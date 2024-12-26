@@ -165,7 +165,7 @@ cite:Carr.Littlefield.ea1987.
 #+INDEX: Packages!hexbin@\texttt{hexbin}
 #+INDEX: Subjects!Hexagonal binning
 
-The =hexbin= package cite:Carr.Lewin-Koh.ea2018 includes several
+The =hexbin= package cite:Carr.Lewin-Koh.ea2024 includes several
 functions for hexagonal binning.  The =panel.hexbinplot= is a good
 substitute for the default panel function. In addition, our first
 attempt with =splom= can be improved with several modifications

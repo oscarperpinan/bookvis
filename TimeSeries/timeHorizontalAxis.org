@@ -1161,7 +1161,7 @@ streamgraph(unemployDF,
 [[file:figs/TimeSeries/streamgraph_interactive_selected.png]]
 
 * Footnotes
-[fn:6]https://github.com/davidsjoberg/ggstream 
+[fn:6] https://github.com/davidsjoberg/ggstream 
 
 [fn:1] The =streamgraph= package, http://hrbrmstr.github.io/streamgraph/, is not available in CRAN. It can be installed using the =devtools= or the =remotes= package.
 
