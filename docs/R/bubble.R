@@ -15,6 +15,7 @@ library("RColorBrewer")
 source("configLattice.R")
 ##################################################################
 
+library("sp")
 library("sf")
 
 NO2sf <- st_read(dsn = "data/Spatial/", layer = "NO2sf")
@@ -117,7 +118,7 @@ qosm <- opq(madridBox) %>%
 
 qsf <- osmdata_sf(qosm)
 
-library(ggrepel)
+library("ggrepel")
 
 ggplot()+
   ## Layers are drawn sequentially, so the NO2sf layer must be in

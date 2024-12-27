@@ -27,7 +27,8 @@ source('configLattice.R')
 
 #+RESULTS:
 
-* Scatterplot Matrix: Time as a Grouping Variable label:SEC:groupVariable
+* Scatterplot Matrix: Time as a Grouping Variable
+label:SEC:groupVariable
 
 #+begin_src R :exports none
 ##################################################################
@@ -233,7 +234,7 @@ is easily accomplished with the =melt= function included in the
 #+INDEX: Packages!reshape2@\texttt{reshape2}
 
 #+begin_src R :results output :exports both
-library(reshape2)
+library("reshape2")
 
 aranjuezRshp <- melt(aranjuezDF,
                      measure.vars = c('TempMax',

@@ -41,6 +41,15 @@ As exposed in Chapter ref:cha:bubble, two alternatives are available:
 1. The =sp= package and the =spplot= function (based on =lattice= graphics).
 2. The =sf= package and the =geom_sf= function (based on =ggplot2= graphics).
 
+#+INDEX: Packages!sf@\texttt{sf}
+#+INDEX: Packages!sp@\texttt{sp}
+
+#+begin_src R
+library("sp")
+
+library("sf")
+#+end_src
+
 In both cases, the data is imported with the =sf= package and its
 function =st_read=, returning an object of class =sf=.
 
@@ -58,11 +67,8 @@ the files, it must be set with the =crs= argument.
 
 #+INDEX: Data!INE
 #+INDEX: Data!Spanish General Elections
-#+INDEX: Packages!sf@\texttt{sf}
 
 #+begin_src R 
-library("sf")
-
 sfMapVotes <- st_read("data/Spatial/sfMapVotes.shp")
 #+end_src
 
@@ -135,8 +141,6 @@ cite:Neuwirth2022.
 #+INDEX: Subjects!Sequential palette
 
 #+begin_src R
-library("RColorBrewer")
-
 ## Number of intervals (colors)
 N <- 6
 ## Sequential palette
@@ -177,8 +181,6 @@ ggplot(sfMapVotes) +
 The =spplot= version requires a conversion from =sf= to a
 =SpatialPolygonsDataFrame= class with =as=.
 #+begin_src R
-library(sp)
-
 spMapVotes <- as(sfMapVotes, "Spatial")
 spProvs <- as(sfProvs, "Spatial")
 #+end_src
@@ -482,7 +484,7 @@ The =biscale= package contains functions for bivariate mapping with
 new column, =bi_class=, defining the class of each element according
 to the value of =whicMax= and =pcMax=.
 #+begin_src R
-library(biscale)
+library("biscale")
 
 
 sfClass <- bi_class(sfMapVotes,
@@ -529,7 +531,7 @@ functions =ggdraw= and =draw_plot=. This function displays the map
 locations. Figure ref:fig:mapLegends displays the result.
 
 #+begin_src R :results output graphics file :exports both :file figs/Spatial/mapLegends.pdf
-library(cowplot)
+library("cowplot")
 
 ggdraw() +
   draw_plot(bimap, 0, 0, 1, 1) +

@@ -152,8 +152,6 @@ xyplot(navarra - avRad,
 ## The horizon graph
 ##################################################################
 
-library("latticeExtra")
-  
 horizonplot(navarra - avRad,
             layout = c(1, ncol(navarra)),
             origin = 0, ## Deviations in each panel are calculated
@@ -211,14 +209,14 @@ df <- data.frame(Vals = diffTa,
                  Month = month(timeIndex))
 
 library("scales") 
-## The packages scales is needed for the pretty_breaks function.
+## The packages scales is needed for the breaks_pretty function.
 
 ggplot(data = df,
        aes(fill = Vals,
            x = Day,
            y = Year)) +
     facet_wrap(~ Month, ncol = 1, strip.position = 'left') +
-    scale_y_continuous(breaks = pretty_breaks()) + 
+    scale_y_continuous(breaks = breaks_pretty()) + 
     scale_fill_distiller(palette = 'RdBu', direction = 1) + 
     geom_raster() +
     theme(panel.grid.major = element_blank(),
@@ -234,8 +232,6 @@ xyplot(unemployUSA,
        superpose = TRUE,
        par.settings = custom.theme,
        auto.key = list(space = 'right'))
-
-library("scales") ## scale_x_yearmon needs scales::pretty_breaks
 
 autoplot(unemployUSA, facets = NULL) +
     geom_area(aes(fill = Series)) +
@@ -255,7 +251,7 @@ autoplot(unemployUSA, facets = NULL) +
              lwd = 0.25, color = "gray50") +
   theme_bw()
 
-library(grid)
+library("grid")
 
 panel.flow <- function(x, y, groups, origin, ...)
 {

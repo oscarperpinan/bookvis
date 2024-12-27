@@ -6,7 +6,7 @@
 ## Daily data of different meteorological variables 
 ##################################################################
 
-library(zoo)
+library("zoo")
   
 aranjuez <- read.zoo("data/aranjuez.gz",
                      index.column = 3, format = "%d/%m/%Y",
@@ -33,7 +33,7 @@ save(aranjuez, file = 'data/aranjuez.RData')
 ## Solar radiation measurements from different locations
 ##################################################################
 
-library(zoo)
+library("zoo")
 
 load('data/navarra.RData')
 
@@ -50,7 +50,7 @@ unemployUSA <- as.data.frame(t(unemployUSA[,-c(1, annualCols)]))
 ## First 7 characters can be suppressed
 names(unemployUSA) <- substring(nms, 7)
 
-library(zoo)
+library("zoo")
   
 Sys.setlocale("LC_TIME", 'C')
 idx <- as.yearmon(row.names(unemployUSA), format = '%b.%Y')
@@ -64,7 +64,7 @@ save(unemployUSA, file = 'data/unemployUSA.RData')
 ## Gross National Income and $CO_2$ emissions
 ##################################################################
 
-library(WDI)
+library("WDI")
     
 CO2data <- WDI(indicator = c('EN.ATM.CO2E.PC', 'EN.ATM.CO2E.PP.GD',
                            'NY.GNP.MKTP.PP.CD', 'NY.GNP.PCAP.PP.CD'),

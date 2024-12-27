@@ -3,6 +3,15 @@
 ##################################################################
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
+library("lattice")
+library("ggplot2")
+## latticeExtra must be loaded after ggplot2 to prevent masking of its
+## `layer` function.
+library("latticeExtra")
+
+library("RColorBrewer")
+
+source('configLattice.R')
 
 Sys.setlocale("LC_TIME", "C")
 
@@ -17,11 +26,18 @@ airQuality <- read.csv2("data/Spatial/airQuality.csv")
 ## Only interested in NO2 
 NO2 <- airQuality[airQuality$codParam == 8, ]
 
+library("zoo")
+library("reshape2")
+
+library("sp")
+library("spacetime")
+
+library("sf")
+library("sftime")
+
 ##################################################################
 ## sp and spacetime
 ##################################################################
-
-library("sp")
 
 airStationsSP <- airStations
 ## rownames are used as the ID of the Spatial object
@@ -29,10 +45,6 @@ rownames(airStationsSP) <- substring(airStationsSP$Code, 7)
 coordinates(airStationsSP) <- ~ long + lat
 proj4string(airStationsSP) <- CRS("+proj=longlat +ellps=WGS84")
 
-library("zoo")
-library("reshape2")
-library("spacetime")
-  
 NO2$time <- as.Date(with(NO2,
                          ISOdate(year, month, day)))
 
@@ -51,8 +63,6 @@ NO2st <- STFDF(sp = airStationsSP,
 ##################################################################
 ## sf and sftime
 ##################################################################
-
-library(sftime)
 
 airStationsSF <- st_as_sf(airStations,
                           coords = c("long", "lat"),
@@ -78,8 +88,6 @@ stplot(NO2st[, 1:12],
        col.regions = airPal,
        main = "",
        edge.col = "black")
-
-library(ggplot2)
 
 airPal <- colorRampPalette(c("springgreen1", "sienna3", "gray5"))(5)
 

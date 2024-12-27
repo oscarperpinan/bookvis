@@ -98,8 +98,6 @@ same color will be displayed at enough distance.
 #+INDEX: Subjects!Visual discrimination
 
 #+begin_src R 
-library("RColorBrewer")
-
 nCountries <- nlevels(CO2data$Country.Name)
 pal <- brewer.pal(n = 5, 'Set1')
 pal <- rep(pal, length = nCountries)

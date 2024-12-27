@@ -15,11 +15,13 @@ library("RColorBrewer")
 source("configLattice.R")
 ##################################################################
 
+library("sp")
+
+library("sf")
+
 ##################################################################
 ## Read data
 ##################################################################
-
-library("sf")
 
 sfMapVotes <- st_read("data/Spatial/sfMapVotes.shp")
 
@@ -39,8 +41,6 @@ sfProvs <- st_read("data/Spatial/spain_provinces.shp",
 ## Quantitative variable
 ##################################################################
 
-library("RColorBrewer")
-
 ## Number of intervals (colors)
 N <- 6
 ## Sequential palette
@@ -58,8 +58,6 @@ ggplot(sfMapVotes) +
           ## but do not include them in the legend
           show.legend = FALSE) +
   theme_bw()
-
-library(sp)
 
 spMapVotes <- as(sfMapVotes, "Spatial")
 spProvs <- as(sfProvs, "Spatial")
@@ -192,7 +190,7 @@ multiPal <- lapply(c("Greys", "Blues", "Greens", "Reds"),
                    function(pal) brewer.pal(Nint, pal))
 multiPal <- do.call(rbind, multiPal)
 
-library(biscale)
+library("biscale")
 
 
 sfClass <- bi_class(sfMapVotes,
@@ -221,7 +219,7 @@ bimap <- ggplot() +
   bi_scale_fill(pal = bipal, dim = 4) +
   bi_theme()
 
-library(cowplot)
+library("cowplot")
 
 ggdraw() +
   draw_plot(bimap, 0, 0, 1, 1) +

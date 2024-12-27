@@ -5,16 +5,6 @@
 setwd('~/github/bookvis/')
 #+end_src
 
-* Introduction
-label:sec:reference
-
-Although I was born in Madrid, Galicia (north of Spain) is a very
-special region for me. More precisely, the Cedeira and Valdoviño
-regions offer a wonderful combination of wild sea, secluded beaches,
-and forests. I will show you a map of these marvelous places.
-
-** Packages
-
 #+begin_src R :exports none  
 ##################################################################
 ## Initial configuration
@@ -32,16 +22,53 @@ library("RColorBrewer")
 source("configLattice.R")
 #+end_src
 
-#+begin_src R
-library("colorspace")
+* Introduction
+label:sec:reference
 
+Although I was born in Madrid, Galicia (north of Spain) is a very
+special region for me. More precisely, the Cedeira and Valdoviño
+regions offer a wonderful combination of wild sea, secluded beaches,
+and forests. I will show you a map of these marvelous places.
+
+** Packages
+
+Several packages are employed to produce the map:
+
+- =raster= and =terra= for reading and manipulating raster data.
+- =sp= and =sf= for reading and manipulating spatial vector data.
+
+#+INDEX: Packages!raster@\texttt{raster}
+#+INDEX: Packages!terra@\texttt{terra}
+#+INDEX: Packages!sf@\texttt{sf}
+#+INDEX: Packages!sp@\texttt{sp}
+
+#+begin_src R
 library("raster")
 library("terra")
 
-library("rasterVis")
-library("tidyterra")
+library("sf")
+library("sp")
 #+end_src
 
+- =rasterVis= and =tidyterra= for creating maps with =lattice= and =ggplot2=, respectively.
+- =RColorBrewer= and =colorspace= for defining the palette of colours.  
+
+#+INDEX: Packages!colorspace@\texttt{colorspace}
+#+INDEX: Packages!rasterVis@\texttt{rasterVis}
+#+INDEX: Packages!tidyterra@\texttt{tidyterra}
+
+#+begin_src R
+library("rasterVis")
+library("tidyterra")
+
+library("colorspace")
+#+end_src
+- =osmdata= for retrieving data from OpenStreetMap.
+#+INDEX: Packages!osmdata@\texttt{osmdata}
+
+#+begin_src R
+library("osmdata")
+#+end_src
 
 * Retrieving Data from OpenStreetMap
 #+begin_src R :exports none
@@ -65,11 +92,6 @@ data. The first step is specifying the bounding box with the function
 #+INDEX: Packages!osmdata@\texttt{osmdata}
 
 #+begin_src R
-library("osmdata")
-library("sf")
-library("sp")
-
-
 ## Bounding box
 xmin <- -8.1
 ymin <- 43.62
@@ -226,7 +248,6 @@ of the book repository.
 #+INDEX: Data!Geonetwork
 
 #+begin_src R
-library("raster")
 projCedeira <- projection(citySP)
 
 demCedeira <- raster('data/Spatial/demCedeira')
@@ -267,8 +288,6 @@ hsCedeira <- hillShade(slope = slope, aspect = aspect,
 
 As it has been explained in sections [[ref:sec:quantitative_raster]] and ref:sec:hill-shading-raster, this same procedure can be implemented with the =terra= package. It will be not be repeated here. For simplicity, we will use the conversion function:
 #+begin_src R
-library("terra")
-
 demCedeiraT <- rast(demCedeira)
 hsCedeiraT <- rast(hsCedeira)
 #+end_src

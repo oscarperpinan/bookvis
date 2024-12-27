@@ -141,7 +141,9 @@ NO2st <- STFDF(sp = airStationsSP,
                time = index(NO2zoo),
                data = dats)
 
+library("grid")
 library("gridSVG")
+
 ## Initial parameters
 start <- NO2st[,1]
 ## values will be encoded as size of circles,
@@ -153,8 +155,6 @@ days <- index(NO2zoo)
 nDays <- length(days)
 ## Duration in seconds of the animation
 duration <- nDays*.3
-
-library("grid")
 
 ## Auxiliary panel function to display circles
 panel.circlesplot <- function(x, y, cex, col = "gray",
@@ -341,7 +341,6 @@ p <- ggplot() +
     ggtitle("{format(frame_time, format = '%Y-%m-%d %H:%M:%S')}") +
     transition_time(timestamp) +
     shadow_wake(0.8)
-
 
 animate(p, nframes = 300)
 

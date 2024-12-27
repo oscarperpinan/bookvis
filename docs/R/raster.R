@@ -3,6 +3,15 @@
 ##################################################################
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
+library("lattice")
+library("ggplot2")
+## latticeExtra must be loaded after ggplot2 to prevent masking of its
+## `layer` function.
+library("latticeExtra")
+
+library("RColorBrewer")
+
+source("configLattice.R")
 
 ##################################################################
 ## Quantitative data
@@ -10,6 +19,13 @@
 
 library("raster")
 library("terra")
+library("sf")
+
+library("rnaturalearth")
+library("geodata")
+
+library("viridisLite")
+
 library("rasterVis")
 
 SISavr <- raster("data/Spatial/SISav.nc")
@@ -18,8 +34,6 @@ SISavt <- rast("data/Spatial/SISav.nc")
 
 levelplot(SISavr)
 
-library("rnaturalearth")
-
 boundarySF <- ne_countries(country = "spain", scale = 50)
 ## Crop to the limits of the raster object
 boundarySF <- st_crop(boundarySF,
@@ -27,14 +41,10 @@ boundarySF <- st_crop(boundarySF,
                       xmax = xmax(SISavt), ymax = ymax(SISavt))
 
 ##ggplot2 version
-library(ggplot2)
-
 gplot(SISavt) +
   geom_sf(data = boundarySF, fill = "transparent")
 
 ## lattice version
-library(latticeExtra)
-
 ## Convert the sf object to sp
 boundarySP <- as(boundarySF, "Spatial")
 
@@ -47,8 +57,6 @@ levelplot(SISavt) +
 ##################################################################
 ## Hill shading
 ##################################################################
-
-library(geodata)
 
 DEM <- elevation_30s("ESP", path = tempdir())
 
@@ -85,8 +93,6 @@ SISavt <- SISavt - meanRad
 meanRad <- cellStats(SISavr, "mean")
 SISavr <- SISavr - meanRad
 
-library(viridisLite)
-
 xyplot(layer ~ y, data = SISavt,
        groups = cut(x, 5),
        par.settings = rasterTheme(symbol = magma(n = 5,
@@ -96,8 +102,6 @@ xyplot(layer ~ y, data = SISavt,
        auto.key = list(space = "right",
                        title = "Longitude",
                        cex.title = 1.3))
-
-library(RColorBrewer)
 
 divPal <- brewer.pal(n = 9, "PuOr")
 divPal[5] <- "#FFFFFF"
@@ -162,8 +166,6 @@ levelplot(SISavt,
           par.settings = divTheme,
           at = breaks,
           contour = TRUE)
-
-library("classInt")
 
 cl <- classIntervals(SISavt[], style = "kmeans")
 breaks <- cl$brks
@@ -354,7 +356,7 @@ p + legend
 
 plot3D(DEMr, maxpixels = 5e4)
 
-library(rgl)
+library("rgl")
 
 writeSTL("docs/images/rgl/DEM.stl")
 

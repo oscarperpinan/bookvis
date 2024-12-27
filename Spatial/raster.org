@@ -12,6 +12,15 @@ setwd('~/github/bookvis/')
 ##################################################################
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
+library("lattice")
+library("ggplot2")
+## latticeExtra must be loaded after ggplot2 to prevent masking of its
+## `layer` function.
+library("latticeExtra")
+
+library("RColorBrewer")
+
+source("configLattice.R")
 #+end_src
 
 * Quantitative Data
@@ -25,20 +34,35 @@ label:sec:quantitative_raster
 #+INDEX: Data!CM SAF
 #+INDEX: Data!Solar radiation
 
-#+INDEX: Packages!raster@\texttt{raster}
-#+INDEX: Packages!terra@\texttt{terra}
-#+INDEX: Packages!rasterVis@\texttt{rasterVis}
-
 As an example of quantitative data, this section displays the
 distribution of annual solar irradiation over the Iberian peninsula
 using the estimates from CM SAF. Read Chapter ref:cha:dataSpatial for
 details about this dataset.
 
+The main packages in this section are: =raster= and =terra= are used for reading and manipulating the raster data, =sf= for reading spatial vector data, =rnaturalearth= and =geodata= for retrieving data from the NaturalEarth and DIVA-GIS services, =viridisLite= and =RColorBrewer= for palettes of colours, and =rasterVis= for producing the graphics.
+
+#+INDEX: Packages!raster@\texttt{raster}
+#+INDEX: Packages!terra@\texttt{terra}
+#+INDEX: Packages!rasterVis@\texttt{rasterVis}
+#+INDEX: Packages!sf@\texttt{sf}
+#+INDEX: Packages!rnaturalearth@\texttt{rnaturalearth}
+#+INDEX: Packages!geodata@\texttt{geodata}
+#+INDEX: Packages!viridisLite@\texttt{viridisLite}
+
 #+begin_src R
 library("raster")
 library("terra")
-library("rasterVis")
+library("sf")
 
+library("rnaturalearth")
+library("geodata")
+
+library("viridisLite")
+
+library("rasterVis")
+#+end_src
+
+#+begin_src R
 SISavr <- raster("data/Spatial/SISav.nc")
 
 SISavt <- rast("data/Spatial/SISav.nc")
@@ -64,15 +88,15 @@ levelplot(SISavr)
 
 Although the solar irradiation distribution reveals the physical
 structure of the region, it is recommended to add the geographic
-context with a layer of administrative boundaries. These boundaries can be retrieved from the Natural Earth service with the =rnaturalearth= package 
+context with a layer of administrative boundaries. These boundaries
+can be retrieved from the Natural Earth service with the
+=rnaturalearth= package.
 
 #+INDEX: Subjects!Background map
 #+INDEX: Packages!rnaturalearth@\texttt{rnaturalearth}
 #+INDEX: Packages!sf@\texttt{sf}
 
 #+begin_src R 
-library("rnaturalearth")
-
 boundarySF <- ne_countries(country = "spain", scale = 50)
 ## Crop to the limits of the raster object
 boundarySF <- st_crop(boundarySF,
@@ -87,8 +111,6 @@ ref:fig:levelplotCMSAF_boundaries), and with =geom_sf= in the
 
 #+begin_src R
 ##ggplot2 version
-library(ggplot2)
-
 gplot(SISavt) +
   geom_sf(data = boundarySF, fill = "transparent")
 #+end_src
@@ -98,8 +120,6 @@ gplot(SISavt) +
 
 #+begin_src R :results output graphics file :exports both :file figs/Spatial/leveplotSISavBoundaries.png :width 4000 :height 4000 :res 600
 ## lattice version
-library(latticeExtra)
-
 ## Convert the sf object to sp
 boundarySP <- as(boundarySF, "Spatial")
 
@@ -143,8 +163,6 @@ The procedure is as follows:
 #+INDEX: Packages!geodata@\texttt{geodata}
 
 #+begin_src R
-library(geodata)
-
 DEM <- elevation_30s("ESP", path = tempdir())
 #+end_src
 
@@ -213,15 +231,14 @@ SISavr <- SISavr - meanRad
 
 Figure ref:fig:xyplotSISav displays the relation between these scaled
 values and latitude (=y=), with five different groups defined by the
-longitude (=cut(x, 5)=). It is evident that larger irradiation values
+longitude (=cut(x, 5)=), using the =magma= palette contained in the
+=viridisLite= package. It is evident that larger irradiation values
 are associated with lower latitudes. However, there is no such clear
 relation between irradiation and longitude.
 
 #+INDEX: Packages!viridisLite@\texttt{viridisLite}
 
 #+begin_src R :results output graphics file :exports both :width 2000 :height 2000 :res 300 :file figs/Spatial/xyplotSISav.png 
-library(viridisLite)
-
 xyplot(layer ~ y, data = SISavt,
        groups = cut(x, 5),
        par.settings = rasterTheme(symbol = magma(n = 5,
@@ -259,8 +276,6 @@ is not symmetrical around zero.
 #+INDEX: Packages!RColorBrewer@\texttt{RColorBrewer}
 
 #+begin_src R :results output graphics file :exports both :file figs/Spatial/showDivPal.pdf
-library(RColorBrewer)
-
 divPal <- brewer.pal(n = 9, "PuOr")
 divPal[5] <- "#FFFFFF"
 
@@ -419,8 +434,6 @@ displays the result.
 #+INDEX: Subjects!Class Intervals
 
 #+begin_src R 
-library("classInt")
-
 cl <- classIntervals(SISavt[], style = "kmeans")
 breaks <- cl$brks
 #+end_src
@@ -469,6 +482,10 @@ This section illustrates how to read and display rasters with
 categorical information using information from the NEO-NASA
 project. Read Chapter ref:cha:dataSpatial for details about these
 datasets.
+
+The main packages in this section are: =raster= and =terra= are used
+for reading and manipulating the raster data, and =rasterVis= for
+producing the graphics.
 
 After the land cover and population density files have been
 downloaded, two =RasterLayer= objects can be created with the =raster=
@@ -750,7 +767,8 @@ p + legend
 [[file:figs/Spatial/popLandClass.png]]
 
 * Interactive Graphics
-** 3D Visualization label:sec:3dvisualization
+** 3D Visualization
+label:sec:3dvisualization
 #+begin_src R :exports none
 ##################################################################
 ## 3D visualization
@@ -778,12 +796,13 @@ The output scene can be exported to several formats such as =STL= with
 =writeSTL=, a format commonly used in 3D printing.
 
 #+begin_src R :eval no-export
-library(rgl)
+library("rgl")
 
 writeSTL("docs/images/rgl/DEM.stl")
 #+end_src
 
-** Mapview [[label:mapview_raster]]
+** Mapview
+[[label:mapview_raster]]
 #+begin_src R :exports none
 ##################################################################
 ## mapview

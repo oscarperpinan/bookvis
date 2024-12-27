@@ -7,7 +7,11 @@
 Sys.setlocale("LC_TIME", "C")
 
 library("raster")
+library("terra")
+
 library("zoo")
+
+library("RColorBrewer")
 library("rasterVis")
 
 SISdm <- brick("data/SpatioTime/SISgal")
@@ -16,7 +20,6 @@ timeIndex <- seq(as.Date("2011-01-01"), by = "day", length = 365)
 SISdm <- setZ(SISdm, timeIndex)
 names(SISdm) <- format(timeIndex, "%a_%Y%m%d")
 
-library("terra")
 SISdmt <- rast(SISdm)
 time(SISdmt) <- timeIndex
 
@@ -47,8 +50,6 @@ splom(SISmm, xlab = '', plot.loess = TRUE)
 hovmoller(SISdm)
 
 xyplot(SISdm, auto.key = list(space = 'right'))
-
-library("RColorBrewer")
 
 horizonplot(SISdm, digits = 1,
             col.regions = rev(brewer.pal(n = 6, 'PuOr')),

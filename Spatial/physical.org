@@ -11,7 +11,15 @@ setwd('~/github/bookvis')
 ##################################################################
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
-  
+library("lattice")
+library("ggplot2")
+## latticeExtra must be loaded after ggplot2 to prevent masking of its
+## `layer` function.
+library("latticeExtra")
+
+library("RColorBrewer")
+
+source("configLattice.R")  
 #+end_src
 
 * Introduction
@@ -31,31 +39,48 @@ map of this exceptional country using data from several data services.
 
 ** Packages
 
-#+INDEX: Packages!raster@\texttt{raster}  
-#+INDEX: Packages!rasterVis@\texttt{rasterVis}  
-#+INDEX: Packages!sp@\texttt{sp}  
-#+INDEX: Packages!colorspace@\texttt{colorspace}  
+Several packages are employed to produce the map:
 
-#+begin_src R 
-library("lattice")
-library("ggplot2")
-library("latticeExtra")
+- =terra= for reading and manipulating raster data.
+- =sp= and =sf= for reading and manipulating spatial vector data.
 
+#+INDEX: Packages!terra@\texttt{terra}
+#+INDEX: Packages!sf@\texttt{sf}
+#+INDEX: Packages!sp@\texttt{sp}
+
+#+begin_src R
 library("terra")
-library("sp")
+
 library("sf")
+library("sp")
+#+end_src
 
-library("rnaturalearth")
-library("rnaturalearthhires")
-library("geodata")
+- =rasterVis= and =tidyterra= for creating maps with =lattice= and =ggplot2=, respectively.
+- =RColorBrewer= and =colorspace= for defining the palette of colours.  
+- =ggrepel= for text labelling.
+#+INDEX: Packages!colorspace@\texttt{colorspace}
+#+INDEX: Packages!rasterVis@\texttt{rasterVis}
+#+INDEX: Packages!tidyterra@\texttt{tidyterra}
+#+INDEX: Packages!ggrepel@\texttt{ggrepel}
 
+#+begin_src R
 library("rasterVis")
 library("tidyterra")
 
 library("colorspace")
-library("RColorBrewer")
 
 library("ggrepel")
+#+end_src
+
+- =rnaturalearth= and =geodata= for retrieving data from the NaturalEarth[fn:3] and the GeoData[fn:5] services, respectively.
+
+#+INDEX: Packages!rnaturalearth@\texttt{rnaturalearth}
+#+INDEX: Packages!geodata@\texttt{geodata}
+
+#+begin_src R 
+library("rnaturalearth")
+library("rnaturalearthhires")
+library("geodata")
 #+end_src
 
 * Retrieving Data
@@ -74,7 +99,7 @@ terrain elevation, and rivers and lakes.
 #+INDEX: Packages!rnaturalearth@\texttt{rnaturalearth}
 
   1. The administrative boundaries are available from Natural
-     Earth[fn:3] with the packages =rnaturalearth= and
+     Earth with the packages =rnaturalearth= and
      =rnaturalearthhires=[fn:4].
      #+begin_src R :eval no-export
 
@@ -82,7 +107,7 @@ terrain elevation, and rivers and lakes.
      #+end_src
 
   2. The terrain elevation or digital elevation model (DEM) is
-     available from DIVA-GIS service[fn:5] with the =geodata= package,
+     available from the DIVA-GIS service with the =geodata= package,
      obtaining a =SpatRaster= object.
      #+begin_src R :eval no-export
      brazilDEM <- elevation_30s("BRA", mask = FALSE,

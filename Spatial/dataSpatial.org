@@ -14,7 +14,7 @@ setwd('~/github/bookvis/')
 #+end_src
 
 * Air Quality in Madrid
-\label{sec:airQualityData}
+label:sec:airQualityData
 
 #+begin_src R :exports none
   ##################################################################
@@ -277,12 +277,11 @@ st_write(sfMapVotes, "data/Spatial/sfMapVotes.shp", append = FALSE)
 * Population
 label:sec:dataCartogram
 
-#+begin_src R
-library(sf)
-library(dplyr)
-#+end_src
+#+INDEX: Packages!sf@\texttt{sf}
 
 #+begin_src R
+library("sf")
+
 sfProv <- st_read("data/Spatial/spain_provinces_2.shp", crs = 25830,
                  stringsAsFactors = TRUE)
 #+end_src

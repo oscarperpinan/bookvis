@@ -291,7 +291,8 @@ Some messages from Figure ref:fig:aranjuezEnhanced:
   not difficult to find days with radiation below the average
   during this season.
   
-* Time Series of Variables with the Same Scale label:SEC:sameScale
+* Time Series of Variables with the Same Scale
+label:SEC:sameScale
 #+begin_src R :exports none
 ##################################################################
 ## Time series of variables with the same scale
@@ -422,8 +423,6 @@ multiple panels with different scales.
 #+INDEX: Packages!latticeExtra@\texttt{latticeExtra}
 
 #+begin_src R :results output graphics file :exports both :file figs/TimeSeries/navarraHorizonplot.pdf
-library("latticeExtra")
-  
 horizonplot(navarra - avRad,
             layout = c(1, ncol(navarra)),
             origin = 0, ## Deviations in each panel are calculated
@@ -569,14 +568,14 @@ df <- data.frame(Vals = diffTa,
 The values (=Vals= column of this =data.frame=) are displayed as a level plot thanks to the =geom_raster= function.
 #+begin_src R :results output graphics file :exports both :file figs/TimeSeries/diffTa_ggplot.pdf
 library("scales") 
-## The packages scales is needed for the pretty_breaks function.
+## The packages scales is needed for the breaks_pretty function.
 
 ggplot(data = df,
        aes(fill = Vals,
            x = Day,
            y = Year)) +
     facet_wrap(~ Month, ncol = 1, strip.position = 'left') +
-    scale_y_continuous(breaks = pretty_breaks()) + 
+    scale_y_continuous(breaks = breaks_pretty()) + 
     scale_fill_distiller(palette = 'RdBu', direction = 1) + 
     geom_raster() +
     theme(panel.grid.major = element_blank(),
@@ -634,8 +633,6 @@ easily obtained with =geom_area= (Figure ref:fig:unemployUSAgeomArea):
 #+INDEX: Subjects!Stacked graph
 
 #+begin_src R :results output graphics file :exports both :file "figs/TimeSeries/unemployUSAgeomArea.pdf" 
-library("scales") ## scale_x_yearmon needs scales::pretty_breaks
-
 autoplot(unemployUSA, facets = NULL) +
     geom_area(aes(fill = Series)) +
     scale_x_yearmon()  
@@ -660,6 +657,8 @@ produce streamgraphs with =ggplot=. Figure
 ref:fig:unemployUSAStreamGraph shows the result, including a vertical
 line to indicate one of main milestones of the financial crisis, whose
 effect on the overall unemployment results is clearly evident.
+
+#+INDEX: Packages!ggstream@\texttt{ggstream}
 
 #+begin_src R :results output graphics file :exports both :file "figs/TimeSeries/unemployUSAStreamGraph.pdf" 
 library("ggstream")
@@ -697,9 +696,11 @@ ThemeRiver with =xyplot=. These functions are fully explained in the
 next section. The result is displayed in Figure
 ref:fig:unemployUSAThemeRiver.
 
+#+INDEX: Packages!grid@\texttt{grid}
+
 #+NAME: panelFlow
 #+begin_src R :exports none
-library(grid)
+library("grid")
 
 panel.flow <- function(x, y, groups, origin, ...)
 {
@@ -801,6 +802,8 @@ prepanel.flow <- function(x, y, groups, origin,...)
          dy = diff(c(yCumSum[,-1])))
 }
 #+end_src
+
+#+INDEX: Packages!colorspace@\texttt{colorspace}
 
 #+begin_src R
 library("colorspace")

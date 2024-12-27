@@ -40,8 +40,6 @@ ggplot(data = CO2data, aes(x = CO2.capita, y = GNI.capita,
 ## Choosing colors
 ##################################################################
 
-library("RColorBrewer")
-
 nCountries <- nlevels(CO2data$Country.Name)
 pal <- brewer.pal(n = 5, 'Set1')
 pal <- rep(pal, length = nCountries)

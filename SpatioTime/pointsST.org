@@ -12,6 +12,15 @@ setwd('~/github/bookvis')
 ##################################################################
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
+library("lattice")
+library("ggplot2")
+## latticeExtra must be loaded after ggplot2 to prevent masking of its
+## `layer` function.
+library("latticeExtra")
+
+library("RColorBrewer")
+
+source('configLattice.R')
 
 Sys.setlocale("LC_TIME", "C")
 #+end_src
@@ -42,9 +51,19 @@ NO2 <- airQuality[airQuality$codParam == 8, ]
 #+end_src
 
 There are two different solutions:
-- the =sp= and =spacetime= packages,
+- the =sp= and =spacetime= packages (with the aid of =zoo= and =reshape2=),
 - the =sf= and =sftime= packages.
 
+#+begin_src R
+library("zoo")
+library("reshape2")
+
+library("sp")
+library("spacetime")
+
+library("sf")
+library("sftime")
+#+end_src
 
 * Data processing
 
@@ -64,8 +83,6 @@ The =airStations= =data.frame= is converted to a
 =SpatialPointsDataFrame= object with the =coordinates= method.
 
 #+begin_src R 
-library("sp")
-
 airStationsSP <- airStations
 ## rownames are used as the ID of the Spatial object
 rownames(airStationsSP) <- substring(airStationsSP$Code, 7)
@@ -100,11 +117,7 @@ cite:Pebesma2012). The procedure is:
 #+INDEX: Packages!spacetime@\texttt{spacetime}
 #+INDEX: Subjects!Data processing and cleaning
 
-#+begin_src R -n -r
-library("zoo")
-library("reshape2")
-library("spacetime")
-  
+#+begin_src R -n -r  
 NO2$time <- as.Date(with(NO2,                                   (ref:timeIndex)
                          ISOdate(year, month, day)))
 
@@ -121,6 +134,7 @@ NO2st <- STFDF(sp = airStationsSP,                                    (ref:stfdf
                data = dats)
 #+end_src
 
+
 ** =sf= and =sftime=
 
 #+begin_src R :exports none
@@ -135,8 +149,6 @@ The procedure with the =sf= and =sftime= packages is simpler.
 
 First, the =airStations= =data.frame= is converted to a =sf= object with =st_as_sf=:
 #+begin_src R
-library(sftime)
-
 airStationsSF <- st_as_sf(airStations,
                           coords = c("long", "lat"),
                           crs = 4326)
@@ -192,8 +204,6 @@ stplot(NO2st[, 1:12],
 The =ggplot2= version of this figure uses the =geom_sf= function and
 produces a panel for each day with =facet_wrap=.
 #+begin_src R :eval no-export
-library(ggplot2)
-
 airPal <- colorRampPalette(c("springgreen1", "sienna3", "gray5"))(5)
 
 ggplot(NO2sft) + 
@@ -219,7 +229,7 @@ stplot(NO2st, mode = "xt",
 
 The =ggplot2= version of this figure is produced with =geom_tile=,
 with the stations codes on the x-axis, and time on the y-axis:
-#+begin_src R
+#+begin_src R :eval no-export
 ggplot(NO2sft) + 
   geom_tile(aes(x = as.factor(code),
                 y = time,
@@ -248,7 +258,7 @@ stplot(NO2st, mode = "ts",
 
 This figure can be recreated with =ggplot2= using =geom_line=, with
 time on the x-axis and measurements on the y-axis:
-#+begin_src R
+#+begin_src R :eval no-export
 ggplot(NO2sft) +
   geom_line(aes(x=time, y = dat),
             colour = "black",

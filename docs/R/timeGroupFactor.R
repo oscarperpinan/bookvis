@@ -81,7 +81,7 @@ splom(~as.data.frame(aranjuez),
       pscale = 0,
       varname.cex = 0.7)
 
-library(reshape2)
+library("reshape2")
 
 aranjuezRshp <- melt(aranjuezDF,
                      measure.vars = c('TempMax',

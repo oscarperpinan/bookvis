@@ -1,4 +1,4 @@
-#+PROPERTY:  header-args :session *R* :tangle ../docs/R/rasterST.R :eval export
+#+PROPERTY:  header-args :session *R* :tangle ../docs/R/rasterST.R :eval no-export
 #+OPTIONS: ^:nil
 #+BIND: org-export-latex-image-default-option "height=0.4\\textheight"
 
@@ -29,16 +29,23 @@ indexed with =setZ=.
 #+INDEX: Packages!raster@\texttt{raster}
 #+INDEX: Packages!zoo@\texttt{zoo}
 #+INDEX: Packages!rasterVis@\texttt{rasterVis}
+#+INDEX: Packages!RColorBrewer@\texttt{RColorBrewer}
 
 #+INDEX: Data!CM SAF
 #+INDEX: Data!Solar radiation
 #+INDEX: Subjects!Data processing and cleaning
 
-#+begin_src R 
+#+begin_src R
 library("raster")
-library("zoo")
-library("rasterVis")
+library("terra")
 
+library("zoo")
+
+library("RColorBrewer")
+library("rasterVis")
+#+end_src
+
+#+begin_src R 
 SISdm <- brick("data/SpatioTime/SISgal")
 
 timeIndex <- seq(as.Date("2011-01-01"), by = "day", length = 365)
@@ -67,7 +74,6 @@ time        : 2011-01-01, 2011-12-31 (min, max)
 The =terra= package is also able to include the timestamp in the objects with the =time= function:
 
 #+begin_src R
-library("terra")
 SISdmt <- rast(SISdm)
 time(SISdmt) <- timeIndex
 #+end_src
@@ -242,8 +248,6 @@ xyplot(SISdm, auto.key = list(space = 'right'))
 #+INDEX: Subjects!Horizon plot
 #+INDEX: Subjects!Small multiples
 #+begin_src R :results output graphics file :exports both :file figs/SpatioTime/SISdm_horizonplot.pdf
-library("RColorBrewer")
-
 horizonplot(SISdm, digits = 1,
             col.regions = rev(brewer.pal(n = 6, 'PuOr')),
             xlab = '', ylab = 'Latitude')
@@ -279,7 +283,7 @@ moved with the right button, and zoom using the mouse wheel. Figure
 ref:fig:cubeView shows a snapshot of the cube produced with the next
 code.
 
-#+INDEX: Packages!mapview@\texttt{mapview}
+#+INDEX: Packages!cubeview@\texttt{cubeview}
 
 #+begin_src R
 library("cubeview")

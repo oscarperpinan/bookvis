@@ -305,8 +305,10 @@ NO2st <- STFDF(sp = airStationsSP,
                data = dats)
 #+end_src
 
-#+begin_src R 
+#+begin_src R
+library("grid")
 library("gridSVG")
+
 ## Initial parameters
 start <- NO2st[,1]
 ## values will be encoded as size of circles,
@@ -331,8 +333,6 @@ sizes of the circles according to the =NO2st= object.
 #+INDEX: Packages!grid@\texttt{grid}
 
 #+begin_src R 
-library("grid")
-
 ## Auxiliary panel function to display circles
 panel.circlesplot <- function(x, y, cex, col = "gray",
                               name = "stationsCircles", ...) {
@@ -659,7 +659,6 @@ p <- ggplot() +
     ggtitle("{format(frame_time, format = '%Y-%m-%d %H:%M:%S')}") +
     transition_time(timestamp) +
     shadow_wake(0.8)
-
 
 animate(p, nframes = 300)
 #+end_src

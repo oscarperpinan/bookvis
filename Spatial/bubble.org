@@ -46,15 +46,20 @@ Two alternative are available to display the data:
 1. The =sp= package and the =spplot= function (based on =lattice= graphics).
 2. The =ggplot2= package and the =geom_sf= function.
 
+#+INDEX: Packages!sf@\texttt{sf}
+#+INDEX: Packages!sp@\texttt{sp}
+
+#+begin_src R
+library("sp")
+library("sf")
+#+end_src
+
 In both cases, the data is imported with the =sf= package and its
 function =st_read=. This function returns an object of class =sf=.
 
-#+INDEX: Packages!sf@\texttt{sf}
 #+INDEX: Data!Air quality in Madrid
 
 #+begin_src R
-library("sf")
-
 NO2sf <- st_read(dsn = "data/Spatial/", layer = "NO2sf")
 #+end_src
 
@@ -81,7 +86,6 @@ defined by the =sf= package, that provides the function
 =st_read= to read the data:
 
 #+INDEX: Packages!sf@\texttt{sf}
-
 
 #+begin_src R :eval no-export
 ## Create a categorical variable
@@ -322,7 +326,7 @@ ref:fig:airMadrid_osm).
 #+INDEX: Packages!ggrepel@\texttt{ggrepel}
 
 #+begin_src R :results output graphics file :exports both :file figs/Spatial/airMadrid_osm.png :width 4000 :height 4000 :res 600
-library(ggrepel)
+library("ggrepel")
 
 ggplot()+
   ## Layers are drawn sequentially, so the NO2sf layer must be in

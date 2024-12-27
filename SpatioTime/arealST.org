@@ -12,7 +12,6 @@ setwd('~/github/bookvis')
 ##################################################################
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
-
 Sys.setlocale("LC_TIME", "C")
 #+end_src
 

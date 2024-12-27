@@ -3,30 +3,35 @@
 ##################################################################
 ## Clone or download the repository and set the working directory
 ## with setwd to the folder where the repository is located.
+library("lattice")
+library("ggplot2")
+## latticeExtra must be loaded after ggplot2 to prevent masking of its
+## `layer` function.
+library("latticeExtra")
+
+library("RColorBrewer")
+
+source("configLattice.R")
 
 ##################################################################
 ## Physical maps
 ##################################################################
 
-library("lattice")
-library("ggplot2")
-library("latticeExtra")
-
 library("terra")
-library("sp")
-library("sf")
 
-library("rnaturalearth")
-library("rnaturalearthhires")
-library("geodata")
+library("sf")
+library("sp")
 
 library("rasterVis")
 library("tidyterra")
 
 library("colorspace")
-library("RColorBrewer")
 
 library("ggrepel")
+
+library("rnaturalearth")
+library("rnaturalearthhires")
+library("geodata")
 
 ##################################################################
 ## Retrieving data from DIVA-GIS, GADM and Natural Earth Data

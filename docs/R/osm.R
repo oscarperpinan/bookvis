@@ -13,22 +13,22 @@ library("RColorBrewer")
 
 source("configLattice.R")
 
-library("colorspace")
-
 library("raster")
 library("terra")
+
+library("sf")
+library("sp")
 
 library("rasterVis")
 library("tidyterra")
 
+library("colorspace")
+
+library("osmdata")
+
 ##################################################################
 ## Retrieving data from OpenStreetMap
 ##################################################################
-
-library("osmdata")
-library("sf")
-library("sp")
-
 
 ## Bounding box
 xmin <- -8.1
@@ -117,7 +117,6 @@ placesHsf <- subset(placesHsf, as.numeric(population) > 30)
 ## Hill Shading
 ##################################################################
 
-library("raster")
 projCedeira <- projection(citySP)
 
 demCedeira <- raster('data/Spatial/demCedeira')
@@ -135,8 +134,6 @@ slope <- terrain(demCedeira, 'slope')
 aspect <- terrain(demCedeira, 'aspect')
 hsCedeira <- hillShade(slope = slope, aspect = aspect,
                        angle = 20, direction = 30)
-
-library("terra")
 
 demCedeiraT <- rast(demCedeira)
 hsCedeiraT <- rast(hsCedeira)
