@@ -2,9 +2,11 @@
 
 #+AUTHOR: Oscar Perpiñán Lamigueiro
 
-#+DATE: XXXX 2024
+#+DATE: December 2024
 
 #+SETUPFILE: config.org
+
+#+LATEX_HEADER: \addbibresource{stBib.bib}
 
 \frontmatter
 
@@ -313,7 +315,7 @@ label:part:Time
 
  -  cite:Harrower.Fabrikant2008 discuss the use of animation for the visualization of data. cite:Few2007 exposes a software tool resembling the Trendalyzer.
 
- -  The =D3= gallery [fn:16] shows several great examples of time-series visualizations using the JavaScript library =D3.js=.
+ -  The =D3= gallery [fn:16] shows several great examples of time-series visualizations using the JavaScript library =D3.js=. 
 
 ** Time on the Horizontal Axis
  label:cha:timeHorizontalAxis
@@ -446,9 +448,10 @@ label:part:Spatial
  information about spatial patterns (isarithmic and raster maps).
 
  On the other hand, the Chapter ref:cha:vector is devoted to vector
- fields, and the Chapter ref:cha:refer-phys-maps focuses on reference
- maps, to show geographic location of features, and on physical maps,
- to show the landscape and features of a place.
+ fields, the Chapter ref:cha:reference focuses on reference maps, to
+ show geographic location of features, and the Chapter
+ ref:cha:physical deals with physical maps, to show the landscape and features
+ of a place.
 
 *** Packages
   label:sec:spatial-packages
