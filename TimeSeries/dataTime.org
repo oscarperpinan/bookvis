@@ -65,7 +65,7 @@ time index, and =format= defines the date format of this index.
 #+begin_src R :results output :exports both
 library("zoo")
   
-aranjuez <- read.zoo("data/aranjuez.gz",
+aranjuez <- read.zoo("data/TimeSeries/aranjuez.gz",
                      index.column = 3, format = "%d/%m/%Y",
                      fileEncoding = 'UTF-16LE',
                      header = TRUE, fill = TRUE,
@@ -78,7 +78,7 @@ names(aranjuez) <- c('TempAvg', 'TempMax', 'TempMin',
                      'Radiation', 'Rain', 'ET')  
 #+end_src
 
-#+begin_src R :exports none :tangle no
+#+begin_src R :results output :exports results :tangle no
 summary(aranjuez)
 #+end_src
 
@@ -123,7 +123,7 @@ aranjuezClean <- within(as.data.frame(aranjuez),{
 aranjuez <- zoo(aranjuezClean, index(aranjuez))
 #+end_src
 
-#+begin_src R :exports none :tangle no
+#+begin_src R :results output :exports results :tangle no
 summary(aranjuez)
 #+end_src
 
@@ -200,10 +200,10 @@ dataset are the abbreviations of each station name.
 #+begin_src R :results output :exports both
 library("zoo")
 
-load('data/navarra.RData')
+load('data/TimeSeries/navarra.RData')
 #+end_src
 
-#+begin_src R :exports none :tangle no
+#+begin_src R :results output :exports results :tangle no
 summary(navarra)
 #+end_src
 
@@ -290,7 +290,7 @@ and transpose the data.
 #+INDEX: Subjects!Data processing and cleaning
 
 #+begin_src R :results output :exports both
-unemployUSA <- read.csv('data/unemployUSA.csv')
+unemployUSA <- read.csv('data/TimeSeries/unemployUSA.csv')
 nms <- unemployUSA$Series.ID
 ##columns of annual summaries
 annualCols <- 14 + 13*(0:12)
@@ -300,7 +300,7 @@ unemployUSA <- as.data.frame(t(unemployUSA[,-c(1, annualCols)]))
 names(unemployUSA) <- substring(nms, 7)
 #+end_src
 
-#+begin_src R :exports none :tangle no
+#+begin_src R :results output :exports results :tangle no
 summary(unemployUSA)
 #+end_src
 
@@ -364,7 +364,7 @@ Finally, those rows with =NA= values are removed.
 unemployUSA <- unemployUSA[complete.cases(unemployUSA), ]
 #+end_src
 
-#+begin_src R :exports none :tangle no
+#+begin_src R :results output :exports results :tangle no
 summary(unemployUSA)
 #+end_src
 
@@ -412,103 +412,148 @@ save(unemployUSA, file = 'data/unemployUSA.RData')
 #+end_src
 
 The catalog data of the World Bank Open Data initiative includes the
-World Development Indicators (WDI)[fn:3]. Among them we will analyze
-the evolution of the relationship between Gross National Income (GNI)
-and $CO_2$ emissions for a set of countries from 2000 to
-2014[fn:5]. The package =WDI= is able to search and download these
-data series.
+World Development Indicators (WDI)[fn:3]. Among them we will analyse
+the Gross National Income (GNI) for a set of countries from 2000
+to 2021.
 
 #+INDEX: Data!World Bank Open Data
-#+INDEX: Data!CO2@$CO_2$
 #+INDEX: Data!Gross National Income
-#+INDEX: Packages!WDI@\texttt{WDI}
 
 #+begin_src R :results output :exports both
 library("WDI")
-    
-CO2data <- WDI(indicator = c('EN.ATM.CO2E.PC', 'EN.ATM.CO2E.PP.GD',
-                           'NY.GNP.MKTP.PP.CD', 'NY.GNP.PCAP.PP.CD'),
-               start = 2000, end = 2014,
-               country = c('BR', 'CN', 'DE',
-                         'ES', 'FI', 'FR',
-                         'GR', 'IN', 'NO',
-                         'US'))
 
-names(CO2data) <- c('iso2c', 'Country.Name', 'Year',
-                    'CO2.capita', 'CO2.PPP',
-                    'GNI.PPP', 'GNI.capita')
+countries <- c('CN', 'DE', 'ES',
+               'FR', 'GR', 'IN',
+               'NO', 'US')
+
+## GNI, PPP (current international $)
+## GNI per capita, PPP (current international $)
+## Population
+WDIdata <- WDI(indicator = c("NY.GNP.MKTP.PP.CD",
+                             "NY.GNP.PCAP.PP.CD",
+                             "SP.POP.TOTL"),
+               start = 2000, end = 2021,
+               country = countries)
+
+names(WDIdata) <- c("Country.Name", "iso2c", "Country.Code",
+                    "Year",
+                    "GNI.PPP", "GNI.capita", "Population")
 #+end_src
 
-
-#+begin_src R :exports none :tangle no
-summary(CO2data)
+#+begin_src R :results output :exports results :tangle no
+summary(WDIdata)
 #+end_src
-
 
 #+RESULTS:
 #+begin_example
-    iso2c           Country.Name            Year        CO2.capita     
- Length:150         Length:150         Min.   :2000   Min.   : 0.9674  
- Class :character   Class :character   1st Qu.:2003   1st Qu.: 4.9937  
- Mode  :character   Mode  :character   Median :2007   Median : 7.6012  
-                                       Mean   :2007   Mean   : 7.7890  
-                                       3rd Qu.:2011   3rd Qu.: 9.9045  
-                                       Max.   :2014   Max.   :20.1788  
-    CO2.PPP          GNI.PPP            GNI.capita   
- Min.   :0.1140   Min.   :1.376e+11   Min.   : 1960  
- 1st Qu.:0.2010   1st Qu.:3.089e+11   1st Qu.:12600  
- Median :0.2880   Median :2.162e+12   Median :29280  
- Mean   :0.3252   Mean   :3.729e+12   Mean   :28212  
- 3rd Qu.:0.3756   3rd Qu.:3.849e+12   3rd Qu.:38542  
- Max.   :0.9194   Max.   :1.832e+13   Max.   :68310
+ Country.Name          iso2c           Country.Code            Year     
+ Length:176         Length:176         Length:176         Min.   :2000  
+ Class :character   Class :character   Class :character   1st Qu.:2005  
+ Mode  :character   Mode  :character   Mode  :character   Median :2010  
+                                                          Mean   :2010  
+                                                          3rd Qu.:2016  
+                                                          Max.   :2021  
+    GNI.PPP            GNI.capita      Population       
+ Min.   :1.638e+11   Min.   : 2070   Min.   :4.491e+06  
+ 1st Qu.:7.724e+11   1st Qu.:20108   1st Qu.:3.321e+07  
+ Median :2.655e+12   Median :31870   Median :7.406e+07  
+ Mean   :5.451e+12   Mean   :33149   Mean   :3.885e+08  
+ 3rd Qu.:7.252e+12   3rd Qu.:47085   3rd Qu.:5.135e+08  
+ Max.   :2.862e+13   Max.   :89010   Max.   :1.414e+09
 #+end_example
+
+#+INDEX: Data!Climate Watch
+#+INDEX: Data!CO2 emissions
+
+On the other hand, the data explorer of the Climate Watch website publishes the historical values of $CO_2$ emissions[fn:5], and can be downloaded as a CSV file.
+#+begin_src R
+
+## Bulk data downloaded from CW 
+## MtCO2e of CO2, Total including LUCF
+CWdata <- read.csv2("data/TimeSeries/CO2_ClimateWatch.csv")
+#+end_src
 
 #+INDEX: Subjects!Data processing and cleaning
 
-Only two minor modifications are needed: Remove rows with missing
-values (using =complete.cases=), and convert the =Country.Name= column
-into a =factor=. This first modification will save problems when
-displaying the time series, and the =factor= conversion will be useful
-for grouping.
+These two =data.frames= are to be merged together. First, we filter =CWdata= to preserve the same countries that are contained in =WDIdata=. 
+#+begin_src R
+## Filter by countries
+countries3 <- unique(WDIdata$Country.Code)
+CWdata <- subset(CWdata,
+                  Country %in% countries3)
+#+end_src
 
-#+begin_src R :results output :exports both
-CO2data <- CO2data[complete.cases(CO2data), ]
+Then, it is transformed from wide to long format with the function =melt= of the package =reshape2=.
 
+#+begin_src R
+library("reshape2")
+
+CWdata <- melt(CWdata,
+                id.vars = "Country",
+                variable.name = "Year",
+                value.name = "CO2")
+
+## Remove the X in year values
+CWdata$Year <- as.numeric(substring(CWdata$Year, 2, 5))
+#+end_src
+
+Now they can be merged together and a new variable is
+calculated, =CO2.capita=.
+#+begin_src R
+CO2data <- merge(WDIdata, CWdata,
+                 by.x = c("Country.Code", "Year"),
+                 by.y = c("Country", "Year"))
+
+CO2data$CO2.capita <- with(CO2data,
+                           CO2 / Population * 1e6)
+#+end_src
+
+Finally, the =Country.Code= and =Country.Name= variables are converted
+to =factors=, which will be useful with some graphics.
+#+begin_src R
+CO2data$Country.Code <- factor(CO2data$Country.Code)
 CO2data$Country.Name <- factor(CO2data$Country.Name)
 #+end_src
 
-#+begin_src R :exports none :tangle no
+#+begin_src R :results output :exports results :tangle no
 summary(CO2data)
 #+end_src
 
 #+RESULTS:
 #+begin_example
-    iso2c            Country.Name      Year        CO2.capita     
- Length:150         Brazil :15    Min.   :2000   Min.   : 0.9674  
- Class :character   China  :15    1st Qu.:2003   1st Qu.: 4.9937  
- Mode  :character   Finland:15    Median :2007   Median : 7.6012  
-                    France :15    Mean   :2007   Mean   : 7.7890  
-                    Germany:15    3rd Qu.:2011   3rd Qu.: 9.9045  
-                    Greece :15    Max.   :2014   Max.   :20.1788  
-                    (Other):60                                    
-    CO2.PPP          GNI.PPP            GNI.capita   
- Min.   :0.1140   Min.   :1.376e+11   Min.   : 1960  
- 1st Qu.:0.2010   1st Qu.:3.089e+11   1st Qu.:12600  
- Median :0.2880   Median :2.162e+12   Median :29280  
- Mean   :0.3252   Mean   :3.729e+12   Mean   :28212  
- 3rd Qu.:0.3756   3rd Qu.:3.849e+12   3rd Qu.:38542  
- Max.   :0.9194   Max.   :1.832e+13   Max.   :68310
+  Country.Code      Year       Country.Name    iso2c              GNI.PPP         
+ CHN    :22    Min.   :2000   China  :22    Length:176         Min.   :1.638e+11  
+ DEU    :22    1st Qu.:2005   France :22    Class :character   1st Qu.:7.724e+11  
+ ESP    :22    Median :2010   Germany:22    Mode  :character   Median :2.655e+12  
+ FRA    :22    Mean   :2010   Greece :22                       Mean   :5.451e+12  
+ GRC    :22    3rd Qu.:2016   India  :22                       3rd Qu.:7.252e+12  
+ IND    :22    Max.   :2021   Norway :22                       Max.   :2.862e+13  
+ (Other):44                   (Other):44                                          
+   GNI.capita      Population             CO2             CO2.capita         CO2.PPP       
+ Min.   : 2070   Min.   :4.491e+06   Min.   :   15.51   Min.   : 0.6762   Min.   :0.04652  
+ 1st Qu.:20108   1st Qu.:3.321e+07   1st Qu.:  167.38   1st Qu.: 4.1302   1st Qu.:0.13574  
+ Median :31870   Median :7.406e+07   Median :  471.87   Median : 5.6616   Median :0.24272  
+ Mean   :33149   Mean   :3.885e+08   Mean   : 1928.00   Mean   : 6.7633   Mean   :0.27305  
+ 3rd Qu.:47085   3rd Qu.:5.135e+08   3rd Qu.: 2566.51   3rd Qu.: 8.9374   3rd Qu.:0.34425  
+ Max.   :89010   Max.   :1.414e+09   Max.   :10849.18   Max.   :19.0211   Max.   :0.83932  
+                                                                                           
+   cexPoints     
+ Min.   :0.5000  
+ 1st Qu.:0.5000  
+ Median :0.9333  
+ Mean   :0.8964  
+ 3rd Qu.:0.9333  
+ Max.   :1.8000
 #+end_example
 
 #+begin_src R :exports none
-save(CO2data, file = 'data/CO2.RData')
+save(CO2data, file = 'data/TimeSeries/CO2.RData')
 #+end_src
 
 #+RESULTS:
 
 * Footnotes
-
-[fn:5] The analysis is restricted until 2014 because the database has several gaps in the range from 2015 to 2017. 
+[fn:5]https://www.climatewatchdata.org/data-explorer/historical-emissions 
 
 [fn:1] The name and location data of these stations are available at the [[https://github.com/oscarperpinan/CMSAF-SIAR/blob/master/data/SIAR.csv][GitHub repository]] of the paper cite:Antonanzas-Torres.Canizares.ea2013.
 

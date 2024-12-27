@@ -41,8 +41,7 @@ ggplot(data = CO2data, aes(x = CO2.capita, y = GNI.capita,
 ##################################################################
 
 nCountries <- nlevels(CO2data$Country.Name)
-pal <- brewer.pal(n = 5, 'Set1')
-pal <- rep(pal, length = nCountries)
+pal <- brewer.pal(n = nCountries, 'Set1')
 
 ## Rank of average values of CO2 per capita
 CO2mean <- aggregate(CO2.capita ~ Country.Name,
@@ -191,8 +190,11 @@ direct.label(pg, dlmethod)
 ##################################################################
 
 library("classInt")
-z <- CO2data$CO2.PPP
-intervals <- classIntervals(z, n = 4, style = 'fisher')
+
+CO2data$CO2.PPP <- with(CO2data, CO2/GNI.PPP * 1e9)
+
+intervals <- classIntervals(CO2data$CO2.PPP,
+                            n = 4, style = 'fisher')
 
 nInt <- length(intervals$brks) - 1
 cex.key <- seq(0.5, 1.8, length = nInt)

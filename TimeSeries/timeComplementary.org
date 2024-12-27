@@ -84,14 +84,8 @@ Three improvements can be added to this graphical result:
  #+end_src
 
 The =Country.Name= categorical variable will be encoded with a
-qualitative palette, namely the first five colors of =Set1=
-palette[fn:2] from the =RColorBrewer= package
-cite:Neuwirth2022. Because there are more countries than colors, we
-have to repeat some colors to complete the number of levels of the
-variable =Country.Name=. The result is a palette with non-unique
-colors, and thus some countries will share the same color. This is not
-a problem because the curves will be labeled, and countries with the
-same color will be displayed at enough distance.
+qualitative palette, namely the first colors of the palette
+=Set1=[fn:2] from the =RColorBrewer= package cite:Neuwirth2022.
 
 #+INDEX: Packages!RColorBrewer@\texttt{RColorBrewer}
 #+INDEX: Subjects!Qualitative palette
@@ -99,10 +93,8 @@ same color will be displayed at enough distance.
 
 #+begin_src R 
 nCountries <- nlevels(CO2data$Country.Name)
-pal <- brewer.pal(n = 5, 'Set1')
-pal <- rep(pal, length = nCountries)
+pal <- brewer.pal(n = nCountries, 'Set1')
 #+end_src
-
 
 Adjacent colors of this palette are chosen to be easily
 distinguishable. Therefore, the connection between colors and
@@ -143,37 +135,45 @@ summary(CO2capita)
 #+RESULTS:
 #+begin_example
 Using CO2.capita as value column: use value.var to override.
-  Country.Name      2000              2001              2002        
- Brazil :1     Min.   : 0.9799   Min.   : 0.9717   Min.   : 0.9674  
- China  :1     1st Qu.: 3.5093   1st Qu.: 3.5949   1st Qu.: 3.7725  
- Finland:1     Median : 7.8681   Median : 7.9634   Median : 7.9849  
- France :1     Mean   : 7.6468   Mean   : 7.7977   Mean   : 7.7982  
- Germany:1     3rd Qu.: 9.7802   3rd Qu.:10.0960   3rd Qu.: 9.6920  
- Greece :1     Max.   :20.1788   Max.   :19.6365   Max.   :19.6134  
- (Other):4                                                          
-      2003              2004             2005             2006       
- Min.   : 0.9924   Min.   : 1.025   Min.   : 1.069   Min.   : 1.122  
- 1st Qu.: 4.1721   1st Qu.: 4.559   1st Qu.: 4.917   1st Qu.: 5.212  
- Median : 8.1860   Median : 8.388   Median : 8.539   Median : 8.356  
- Mean   : 8.1468   Mean   : 8.146   Mean   : 7.948   Mean   : 8.163  
- 3rd Qu.: 9.9536   3rd Qu.: 9.746   3rd Qu.: 9.545   3rd Qu.: 9.808  
- Max.   :19.5641   Max.   :19.658   Max.   :19.592   Max.   :19.094  
-                                                                     
-      2007             2008             2009             2010       
- Min.   : 1.193   Min.   : 1.310   Min.   : 1.432   Min.   : 1.397  
- 1st Qu.: 5.443   1st Qu.: 5.693   1st Qu.: 5.581   1st Qu.: 5.526  
- Median : 8.407   Median : 7.914   Median : 7.247   Median : 7.050  
- Mean   : 8.139   Mean   : 8.082   Mean   : 7.665   Mean   : 7.947  
- 3rd Qu.: 9.553   3rd Qu.:10.354   3rd Qu.: 9.671   3rd Qu.:11.001  
- Max.   :19.218   Max.   :18.462   Max.   :17.158   Max.   :17.442  
-                                                                    
-      2011             2012             2013             2014       
- Min.   : 1.477   Min.   : 1.598   Min.   : 1.591   Min.   : 1.730  
- 1st Qu.: 5.255   1st Qu.: 5.222   1st Qu.: 5.068   1st Qu.: 4.688  
- Median : 7.216   Median : 7.336   Median : 6.947   Median : 6.862  
- Mean   : 7.475   Mean   : 7.387   Mean   : 7.396   Mean   : 7.097  
- 3rd Qu.: 9.125   3rd Qu.: 9.168   3rd Qu.: 9.213   3rd Qu.: 8.832  
- Max.   :16.972   Max.   :16.304   Max.   :16.316   Max.   :16.494
+Country.Name      2000              2001             2002              2003        
+ China  :1     Min.   : 0.6762   Min.   : 0.888   Min.   : 0.9011   Min.   : 0.9092  
+ France :1     1st Qu.: 4.4675   1st Qu.: 3.265   1st Qu.: 3.2402   1st Qu.: 3.8068  
+ Germany:1     Median : 5.9525   Median : 5.908   Median : 6.0131   Median : 6.0474  
+ Greece :1     Mean   : 7.1857   Mean   : 7.076   Mean   : 6.9986   Mean   : 7.1939  
+ India  :1     3rd Qu.: 8.9080   3rd Qu.: 9.161   3rd Qu.: 9.0882   3rd Qu.: 9.3294  
+ Norway :1     Max.   :19.0211   Max.   :18.797   Max.   :18.0839   Max.   :18.1565  
+ (Other):2                                                                           
+      2004              2005              2006             2007             2008       
+ Min.   : 0.9589   Min.   : 0.9873   Min.   : 1.039   Min.   : 1.126   Min.   : 1.182  
+ 1st Qu.: 3.9477   1st Qu.: 4.1101   1st Qu.: 4.481   1st Qu.: 4.488   1st Qu.: 4.449  
+ Median : 6.1737   Median : 6.2871   Median : 6.037   Median : 6.237   Median : 5.913  
+ Mean   : 7.2800   Mean   : 7.3264   Mean   : 7.283   Mean   : 7.358   Mean   : 7.160  
+ 3rd Qu.: 9.2396   3rd Qu.: 9.3081   3rd Qu.: 9.242   3rd Qu.: 9.380   3rd Qu.: 9.119  
+ Max.   :18.2600   Max.   :18.1437   Max.   :17.633   Max.   :17.742   Max.   :16.990  
+                                                                                       
+      2009             2010             2011             2012             2013       
+ Min.   : 1.279   Min.   : 1.337   Min.   : 1.340   Min.   : 1.441   Min.   : 1.470  
+ 1st Qu.: 4.254   1st Qu.: 4.498   1st Qu.: 4.845   1st Qu.: 4.761   1st Qu.: 4.829  
+ Median : 5.676   Median : 5.781   Median : 6.050   Median : 6.066   Median : 5.894  
+ Mean   : 6.747   Mean   : 6.896   Mean   : 6.859   Mean   : 6.738   Mean   : 6.700  
+ 3rd Qu.: 8.558   3rd Qu.: 8.187   3rd Qu.: 8.087   3rd Qu.: 7.853   3rd Qu.: 7.472  
+ Max.   :15.531   Max.   :16.164   Max.   :15.291   Max.   :14.486   Max.   :14.816  
+                                                                                     
+      2014             2015             2016             2017             2018       
+ Min.   : 1.585   Min.   : 1.575   Min.   : 1.607   Min.   : 1.672   Min.   : 1.762  
+ 1st Qu.: 4.655   1st Qu.: 4.748   1st Qu.: 4.617   1st Qu.: 4.550   1st Qu.: 4.420  
+ Median : 5.769   Median : 5.886   Median : 5.682   Median : 5.856   Median : 5.700  
+ Mean   : 6.535   Mean   : 6.506   Mean   : 6.461   Mean   : 6.453   Mean   : 6.437  
+ 3rd Qu.: 7.324   3rd Qu.: 7.210   3rd Qu.: 7.218   3rd Qu.: 7.251   3rd Qu.: 7.398  
+ Max.   :14.755   Max.   :14.283   Max.   :14.463   Max.   :14.140   Max.   :14.544  
+                                                                                     
+      2019             2020             2021       
+ Min.   : 1.719   Min.   : 1.543   Min.   : 1.694  
+ 1st Qu.: 4.201   1st Qu.: 3.749   1st Qu.: 3.978  
+ Median : 5.275   Median : 4.507   Median : 4.732  
+ Mean   : 6.152   Mean   : 5.546   Mean   : 5.900  
+ 3rd Qu.: 7.342   3rd Qu.: 7.183   3rd Qu.: 7.565  
+ Max.   :13.998   Max.   :12.363   Max.   :13.207
 #+end_example
 
 
@@ -187,7 +187,7 @@ par(oldpar)
 #+end_src
 
 #+CAPTION: Hierarchical clustering of the time evolution of $\mathrm{CO_2}$ per capita values. label:fig:hclustCO2
-#+ATTR_LATEX: :height 0.3\textheight
+#+ATTR_LATEX: :height 0.35\textheight
 #+RESULTS:
 [[file:figs/TimeSeries/hclust.pdf]]
 
@@ -224,6 +224,7 @@ pCO2.capita <- xyplot(GNI.capita  ~ CO2.capita,
                       type = 'b')
 #+end_src
 
+
 #+begin_src R 
 ## ggplot2 version
 gCO2.capita <- ggplot(data = CO2data,
@@ -236,6 +237,7 @@ gCO2.capita <- ggplot(data = CO2data,
     ylab('GNI per capita, PPP (current international $)') +
     theme_bw()
 #+end_src
+
 
 ** Labels to Show Time Information
  #+begin_src R :exports none
@@ -332,7 +334,7 @@ direct.label(pCO2.capita,
 
 #+CAPTION: $\mathrm{CO_2}$ emissions versus GNI per capita. Labels are placed with the \texttt{extreme.grid} method of the \texttt{directlabels} package. label:fig:CO2-GNI-DL 
 #+RESULTS:
- [[file:figs/TimeSeries/CO2_capitaDL.pdf]]
+[[file:figs/TimeSeries/CO2_capitaDL.pdf]]
 
 #+begin_src R 
 ## ggplot2 version
@@ -441,8 +443,11 @@ To use this numeric variable as an additional grouping factor, its range must be
 
 #+begin_src R 
 library("classInt")
-z <- CO2data$CO2.PPP
-intervals <- classIntervals(z, n = 4, style = 'fisher')
+
+CO2data$CO2.PPP <- with(CO2data, CO2/GNI.PPP * 1e9)
+
+intervals <- classIntervals(CO2data$CO2.PPP,
+                            n = 4, style = 'fisher')
 #+end_src
 
 #+RESULTS:
@@ -711,6 +716,8 @@ xyplot(GNI.capita ~ CO2.capita,
        })
 #+end_src
 
+#+RESULTS:
+
 From this initial state, =grid.animate= creates a collection of
 animated graphical objects with the result of =animUnit= (lines
 [[(animUnitxp)]], [[(animUnityp)]], [[(animUnityl)]] and [[(animUnitsize)]]). This
@@ -761,6 +768,8 @@ grid.animate(trellis.grobname("labels", type = "panel",    (ref:ganimateLabels)
 
 #+end_src
 
+#+RESULTS:
+
 A bit of interactivity can be added with the =grid.hyperlink=
 function. For example, the following code adds the corresponding
 Wikipedia link to a mouse click on each bubble.
@@ -772,6 +781,8 @@ grid.hyperlink(trellis.grobname('points', type = 'panel', row = 1, col = 1),
                URL, group = FALSE)
   
 #+end_src
+
+#+RESULTS:
 
 Finally, the time information: The year is printed in the lower
 right corner, using the =visibility= attribute of an animated
@@ -788,6 +799,8 @@ yearText <- animateGrob(garnishGrob(textGrob(years, .9, .15,
                         rep = TRUE)
 grid.draw(yearText)
 #+end_src
+
+#+RESULTS:
 
 The SVG file produced with =grid.export= is available at the website
 of the book (Figure ref:fig:bubblesSVG). Because this animation does
