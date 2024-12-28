@@ -39,8 +39,6 @@ distribution of annual solar irradiation over the Iberian peninsula
 using the estimates from CM SAF. Read Chapter ref:cha:dataSpatial for
 details about this dataset.
 
-The main packages in this section are: =raster= and =terra= are used for reading and manipulating the raster data, =sf= for reading spatial vector data, =rnaturalearth= and =geodata= for retrieving data from the NaturalEarth and DIVA-GIS services, =viridisLite= and =RColorBrewer= for palettes of colours, and =rasterVis= for producing the graphics.
-
 #+INDEX: Packages!raster@\texttt{raster}
 #+INDEX: Packages!terra@\texttt{terra}
 #+INDEX: Packages!rasterVis@\texttt{rasterVis}
@@ -813,6 +811,7 @@ writeSTL("docs/images/rgl/DEM.stl")
 #+INDEX: Subjects!Interactive visualization
 The package =mapview= is able to work with =Raster*= objects. Thus, the =SISavr= object can be easily displayed in a interactive map with next code. However, it must be noted that, unlike with vector data (Sections ref:sec:mapview_bubble and ref:sec:interactive_choropleth), the interactivity of this map is restricted to zoom and movement. The mouse hovering or click does not produce any result.
 
+#+INDEX: Packages!mapview@\texttt{mapview}
 #+begin_src R
 library("mapview")
 
