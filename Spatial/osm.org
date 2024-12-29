@@ -375,23 +375,26 @@ hsGGplot <- geom_spatraster(data = hsCedeiraT,
 print(ggplot() + hsGGplot)
 #+end_src
 
-#+caption: Local topography of Cedeira (Galicia, Spain) displayed with the hill shading technique. label:fig:cedeiraHS
-#+begin_figure
-#+attr_latex: :options {0.4\textheight}
-#+CAPTION: =lattice= version. label:fig:cedeiraHSlattice
-#+begin_subfigure
-#+attr_latex: :height 0.4\textheight
-#+RESULTS:
-[[file:figs/Spatial/cedeiraHSlattice.pdf]]
-#+end_subfigure
-#+attr_latex: :options {0.4\textheight}
-#+CAPTION: =ggplot2= version. label:fig:cedeiraHSggplot
-#+begin_subfigure
-#+attr_latex: :height 0.4\textheight
-#+RESULTS:
-file:figs/Spatial/cedeiraHSggplot.pdf
-#+end_subfigure
-#+end_figure
+#+begin_export latex
+\begin{figure}
+  \begin{minipage}{0.4\textheight}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/Spatial/cedeiraHSlattice.pdf}
+    \end{center}
+    \subcaption{\texttt{lattice} version.}
+    \label{fig:cedeiraHSlattice}
+  \end{minipage}
+  \begin{minipage}{0.4\textheight}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/Spatial/cedeiraHSggplot.pdf}
+    \end{center}
+    \subcaption{\texttt{ggplot2} version.}
+    \label{fig:cedeiraHSggplot}
+  \end{minipage}
+  \caption{Local topography of Cedeira (Galicia, Spain) displayed with the hill shading technique.}
+  \label{fig:cedeiraHS}
+\end{figure}
+#+end_export
 
 The DEM raster is printed with terrain colors and semitransparency over the hill shade layer. The =lattice= version is shown in Figure ref:fig:cedeiraDEMlattice and the =ggplot2= version in Figure ref:fig:cedeiraDEMggplot.
 
@@ -434,23 +437,26 @@ terrainScale <- scale_fill_gradientn(colours = terrainPal,
 print(ggplot() + demGGplot + terrainScale)
 #+end_src
 
-#+CAPTION: Local topography of Cedeira (Galicia, Spain). label:fig:cedeiraDEM
-#+begin_figure
-#+CAPTION: =lattice= version. label:fig:cedeiraDEMlattice
-#+attr_latex: :options {0.4\textheight}
-#+begin_subfigure
-#+attr_latex: :height 0.4\textheight
-#+RESULTS:
-[[file:figs/Spatial/cedeiraDEMlattice.pdf]]
-#+end_subfigure
-#+attr_latex: :options {0.4\textheight}
-#+CAPTION: =ggplot2= version. label:fig:cedeiraDEMggplot
-#+begin_subfigure
-#+attr_latex: :height 0.4\textheight
-#+RESULTS:
-file:figs/Spatial/cedeiraDEMggplot.pdf
-#+end_subfigure
-#+end_figure
+#+begin_export latex
+\begin{figure}
+  \begin{minipage}{0.4\textheight}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/Spatial/cedeiraDEMlattice.pdf}
+    \end{center}
+    \subcaption{\texttt{lattice} version.}
+    \label{fig:cedeiraDEMlattice}
+  \end{minipage}
+  \begin{minipage}{0.4\textheight}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/Spatial/cedeiraDEMggplot.pdf}
+    \end{center}
+    \subcaption{\texttt{ggplot2} version.}
+    \label{fig:cedeiraDEMggplot}
+  \end{minipage}
+  \caption{Local topography of Cedeira (Galicia, Spain).}
+  \label{fig:cedeiraDEM}
+\end{figure}
+#+end_export
 
 The roads are displayed with auxiliary functions (=sp.road= and =sf_road=) that produces a colored line over a thicker black line, and the town and villages and their names are displayed with the auxiliary functions =sp.places= and =sf_places=.
 
@@ -546,24 +552,27 @@ ggplot() +
   theme_bw() + xlab("") + ylab("")
 #+end_src
 
-#+CAPTION: Main roads near Cedeira, Galicia. Local topography is displayed with the hill shading technique. Some places are highlighted. label:fig:cedeiraOSM
-#+begin_figure
-#+CAPTION: =lattice= version label:fig:cedeiraOSMlattice
-#+attr_latex: :options {0.4\textwidth}
-#+begin_subfigure
-#+attr_latex: :width 0.4\textheight 
-#+RESULTS:
-[[file:figs/Spatial/cedeiraOSMlattice.pdf]]
-#+end_subfigure
+#+begin_export latex
+\begin{figure}
+  \begin{minipage}{0.4\textheight}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/Spatial/cedeiraOSMlattice.pdf}
+    \end{center}
+    \subcaption{\texttt{lattice} version.}
+    \label{fig:cedeiraOSMlattice}
+  \end{minipage}
+  \begin{minipage}{0.4\textheight}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/Spatial/cedeiraOSMggplot.pdf}
+    \end{center}
+    \subcaption{\texttt{ggplot2} version.}
+    \label{fig:cedeiraOSMggplot}
+  \end{minipage}
+  \caption{Main roads near Cedeira, Galicia. Local topography is displayed with the hill shading technique. Some places are highlighted.}
+  \label{fig:cedeiraOSM}
+\end{figure}
+#+end_export
 
-#+CAPTION: =ggplot2= version label:fig:cedeiraOSMggplot
-#+attr_latex: :options {0.4\textwidth}
-#+begin_subfigure
-#+attr_latex: :width 0.4\textheight 
-#+RESULTS:
-[[file:figs/Spatial/cedeiraOSMggplot.pdf]]
-#+end_subfigure
-#+end_figure
 
 * Footnotes
 

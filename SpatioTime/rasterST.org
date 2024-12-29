@@ -215,7 +215,7 @@ label:sec:spacetime_plot
 
 The level plots of Figures [[ref:fig:SISdm]] and [[ref:fig:SISmm]]
 display the full 3D space-time data using a grid of panels where each layer
-is depicted in a separate panel. In the section ref:sec:animationST_var, this
+is depicted in a separate panel. In the section ref:sec:animationST_raster, this
 collection of layers will be displayed sequentially like frames of a
 movie to build an animation. In this section, the 3D raster is reduced
 to a 2D matrix with spatial aggregation following a certain
@@ -453,7 +453,7 @@ setwd(old)
 ## Static image
 ##################################################################
 #+end_src
-Figure [[fig:cft]] shows a sequence of twenty-four snapshots (second day
+Figure [[ref:fig:cft]] shows a sequence of twenty-four snapshots (second day
 of the forecast series) of the movie. This graphic is also created
 with =levelplot= but now using the argument =layers= to choose a
 subset of the layers, and with a different value for =layout= to
@@ -472,15 +472,14 @@ levelplot(cft,
   layer(sp.lines(boundaries, lwd = 0.6))
 #+end_src
 
-#+CAPTION: Forecast of hourly cloud cover at low and mid levels.
-#+LABEL: fig:cft
+#+CAPTION: Forecast of hourly cloud cover at low and mid levels. label:fig:cft
 #+RESULTS:
 [[file:figs/SpatioTime/cft.pdf]]
 
 The movie and the static image are complementary tools and should be
 used together. Watching the movie you will perceive the cloud transit
 from Galicia to the Pyrenees gradually dissolving over the Cantabrian
-region. On the other hand, with Figure [[fig:cft]] you can locate the
+region. On the other hand, with Figure [[ref:fig:cft]] you can locate the
 position of a group of clouds in a certain hour and simultaneously
 observe the relationship of that position with the evolution during
 that period. With the movie you will concentrate your attention on the

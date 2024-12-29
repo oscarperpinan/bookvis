@@ -106,7 +106,7 @@ cite:Pebesma2012). The procedure is:
 - Reshape the =data.frame= from long to wide format with
   =dcast= (line [[(long2wide)]]).
 - Define a multivariate time series with =zoo= (Figure
-  [[fig:NO2zoo]], line [[(zoo)]])
+  [[ref:fig:NO2zoo]], line [[(zoo)]])
 - Coerce this time series to a vector with =n·m= rows (line [[(vector)]]).
 - Finally, create the =STFDF= object with the previous components
   (line [[(stfdf)]]).
@@ -181,7 +181,7 @@ The =stplot= function of the =spacetime= package supplies the main
 visualization methods for spatiotemporal data. When the mode =xy= is
 chosen (default) it is mainly a wrapper around =spplot= and displays a
 panel with the spatial data for each element of the time index (Figure
-[[fig:NO2STxy]]). The problem with this approach is that only a limited
+[[ref:fig:NO2STxy]]). The problem with this approach is that only a limited
 number of panels can be correctly displayed on one page. In this
 example, we print the first twelve days of the sequence.
 
@@ -196,8 +196,7 @@ stplot(NO2st[, 1:12],
        edge.col = "black")
 #+end_src
 
-#+CAPTION: Scatterplots of the $NO_2$ values (2011) with a panel for each day of the time series. Each circle represents a different station.
-#+LABEL: fig:NO2STxy
+#+CAPTION: Scatterplots of the $NO_2$ values (2011) with a panel for each day of the time series. Each circle represents a different station. label:fig:NO2STxy
 #+RESULTS[7e86d8c75682aa68d66610cb75a9ea14833ff5b9]:
 [[file:figs/SpatioTime/NO2STxy.pdf]]
 
@@ -213,7 +212,7 @@ ggplot(NO2sft) +
 #+end_src
 
 With the mode =xt=, the =stplot= function plots a space-time plot with
-space on the x-axis and time on the y-axis (Figure [[fig:NO2hovmoller]]).
+space on the x-axis and time on the y-axis (Figure [[ref:fig:NO2hovmoller]]).
 
 #+begin_src R :results output graphics file :exports both :file figs/SpatioTime/NO2hovmoller.pdf
 stplot(NO2st, mode = "xt",
@@ -222,8 +221,7 @@ stplot(NO2st, mode = "xt",
        ylab = "", xlab = "", main = "")
 #+end_src
 
-#+CAPTION: Space-time graphic of the NO_2 time series. Each column represents a different station (denoted with the last two digits of the code).
-#+LABEL: fig:NO2hovmoller
+#+CAPTION: Space-time graphic of the NO_2 time series. Each column represents a different station (denoted with the last two digits of the code). label:fig:NO2hovmoller
 #+RESULTS[720ac1fb68e202769dfa044473c2f888ab6a0b7a]:
 [[file:figs/SpatioTime/NO2hovmoller.pdf]]
 
@@ -242,7 +240,7 @@ ggplot(NO2sft) +
 #+end_src
 
 Finally, if =stplot= is called with the mode =ts=, data are coerced to a multivariate time series
-that is displayed in a single plot (Figure [[fig:NO2zoo]]).
+that is displayed in a single plot (Figure [[ref:fig:NO2zoo]]).
 
 #+begin_src R :results output graphics file :exports both :file figs/SpatioTime/NO2zoo.png :width 2000 :height 2000 :res 300
 stplot(NO2st, mode = "ts",
@@ -251,8 +249,7 @@ stplot(NO2st, mode = "ts",
        auto.key = FALSE)
 #+end_src
 
-#+CAPTION: Time graph of the $NO_2$ time series (2011). Each line represents a different station.
-#+LABEL: fig:NO2zoo
+#+CAPTION: Time graph of the $NO_2$ time series (2011). Each line represents a different station. label:fig:NO2zoo
 #+RESULTS[ea3cfae61f85b1a658256d688e049882c22aaaf8]:
 [[file:figs/SpatioTime/NO2zoo.png]]
 
@@ -269,12 +266,12 @@ ggplot(NO2sft) +
 
 These three graphics complement each other and together provide a more
 complete view of the behavior of the data. For example in Figure
-[[fig:NO2STxy]], we can find stations whose levels remain almost constant
+ref:fig:NO2STxy, we can find stations whose levels remain almost constant
 throughout the twelve days period (namely, El Pardo-28079058[fn:1], the
 station at the top-left corner that is far from the city center),
 while others fluctuate notably during this same period (for example,
 Barajas-28079027 and Urb. Embajada-28079055, the two nearby stations
-at the right). On the other hand, Figure [[fig:NO2hovmoller]] loses the
+at the right). On the other hand, Figure ref:fig:NO2hovmoller loses the
 spatial information but gives a more comprehensive view of the
 evolution of the network of stations. The station El Pardo-28079058 is
 significantly below the rest of the stations during the whole year,
@@ -282,7 +279,7 @@ with the station Pza. Fdez Ladreda-28079056 being the opposite. In
 between, the stations could be divided into two or three groups
 according to their levels. Regardless, the network of stations reaches
 maximum values during the first days of autumn and at the end of
-winter. These maxima are clearly displayed in Figure [[fig:NO2zoo]].
+winter. These maxima are clearly displayed in Figure ref:fig:NO2zoo.
 
 * \floweroneleft Animation
 label:sec:animation_st_point
@@ -475,7 +472,6 @@ grid.export("figs/SpatioTime/NO2pb.svg")
 
 #+CAPTION: Animated circles of the $NO_2$ space-time data with a progress bar. label:fig:NO2pb
 file:figs/SpatioTime/NO2pb.png
-
 
 ** Time Reference: A Time Series Plot
 #+begin_src R :exports none

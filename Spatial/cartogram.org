@@ -74,30 +74,32 @@ ggplot(sfPopGDPSpain, aes(y = Population/1e6, x = GDP/1e6)) +
   theme_bw()
 #+end_src
 
-#+CAPTION: Population and GDP of the provinces in Spain (2020) label:fig:scatterplotPopGDPSpain 
-#+begin_figure
-#+CAPTION: Population. label:fig:popSpain
-#+attr_latex: :options {0.33\textheight}
-#+begin_subfigure
-#+attr_latex: :height 0.33\textheight
-#+RESULTS:
-[[file:figs/Spatial/PopSpain.pdf]]
-#+end_subfigure
-#+attr_latex: :options {0.33\textheight}
-#+CAPTION: GDP. label:fig:GDPSpain
-#+begin_subfigure
-#+attr_latex: :height 0.33\textheight
-#+RESULTS:
-[[file:figs/Spatial/GDPSpain.pdf]]
-#+end_subfigure
-#+attr_latex: :options {0.33\textheight}
-#+CAPTION: GDP vs Population. label:fig:PopGDPSpain
-#+begin_subfigure
-#+attr_latex: :height 0.33\textheight
-#+RESULTS:
-[[file:figs/Spatial/PopGDPSpain.pdf]]
-#+end_subfigure
-#+end_figure
+#+begin_export latex
+\begin{figure}
+  \begin{minipage}{0.33\textheight}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/Spatial/PopSpain.pdf}
+    \end{center}
+    \subcaption{Population}
+    \label{fig:popSpain}
+  \end{minipage}
+  \begin{minipage}{0.33\textheight}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/Spatial/GDPSpain.pdf}
+    \end{center}
+    \subcaption{GDP}
+    \label{fig:GDPSpain}
+  \end{minipage}
+  \begin{minipage}{0.33\textheight}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/Spatial/PopGDPSpain.pdf}
+    \end{center}
+    \subcaption{GDP vs Population.}
+    \label{fig:PopGDPSpain}
+  \end{minipage}
+  \caption{Population and GDP of the provinces in Spain (2020)} \label{fig:scatterplotPopGDPSpain}
+\end{figure}
+#+end_export
 
 * Cartograms
 
@@ -128,24 +130,25 @@ ggplot(cartGDPNCont) +
   theme_bw()
 #+end_src
 
-
-#+CAPTION: Non-contiguous cartograms of population and GDP of the provinces in Spain (2020) label:fig:cartNContPopGDPSpain
-#+begin_figure
-#+CAPTION: Population. label:fig:cartNContPopSpain
-#+attr_latex: :options {0.4\textheight}
-#+begin_subfigure
-#+attr_latex: :height 0.4\textheight
-#+RESULTS:
-[[file:figs/Spatial/cartNContPopSpain.pdf]]
-#+end_subfigure
-#+CAPTION: GDP. label:fig:cartNContGDPSpain
-#+attr_latex: :options {0.4\textheight}
-#+begin_subfigure
-#+attr_latex: :height 0.4\textheight
-#+RESULTS:
-[[file:figs/Spatial/cartNContGDPSpain.pdf]]
-#+end_subfigure
-#+end_figure
+#+begin_export latex
+\begin{figure}
+  \begin{minipage}{0.4\textheight}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/Spatial/cartNContPopSpain.pdf}
+    \end{center}
+    \subcaption{Population}
+    \label{fig:cartNContPopSpain}
+  \end{minipage}
+  \begin{minipage}{0.4\textheight}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/Spatial/cartNContGDPSpain.pdf}
+    \end{center}
+    \subcaption{GDP}
+    \label{fig:cartNContGDPSpain}
+  \end{minipage}
+  \caption{Non-contiguous cartograms of population and GDP of the provinces in Spain (2020)} \label{fig:cartNContPopGDPSpain}
+\end{figure}
+#+end_export
 
 The second type is the continuous area cartogram. The polygon of each
 province is both scaled and distorted so that its area is directly
@@ -175,28 +178,31 @@ ggplot(cartPopCont) +
   theme_bw()
 #+end_src
 
+#+begin_export latex
+\begin{figure}
+  \begin{minipage}{0.4\textheight}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/Spatial/cartContPopSpain.pdf}
+    \end{center}
+    \subcaption{Population}
+    \label{fig:cartContpopSpain}
+  \end{minipage}
+  \begin{minipage}{0.4\textheight}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/Spatial/cartContGDPSpain.pdf}
+    \end{center}
+    \subcaption{GDP}
+    \label{fig:cartContGDPSpain}
+  \end{minipage}
+  \caption{Contiguous cartograms of population and GDP of the provinces in Spain (2020)}
+  \label{fig:cartContPopGDPSpain}
+\end{figure}
+#+end_export
 
-#+CAPTION: Contiguous cartograms of population and GDP of the provinces in Spain (2020) label:fig:cartContPopGDPSpain
-#+begin_figure
-#+CAPTION: Population. label:fig:cartContPopSpain
-#+attr_latex: :options {0.4\textheight}
-#+begin_subfigure
-#+attr_latex: :height 0.4\textheight
-#+RESULTS:
-[[file:figs/Spatial/cartContPopSpain.pdf]]
-#+end_subfigure
-#+CAPTION: GDP. label:fig:cartContGDPSpain
-#+attr_latex: :options {0.4\textheight}
-#+begin_subfigure
-#+attr_latex: :height 0.4\textheight
-#+RESULTS:
-[[file:figs/Spatial/cartContGDPSpain.pdf]]
-#+end_subfigure
-#+end_figure
 
 Finally, the third method is the Dorling cartogram. Provinces are
 represented by non-overlapping circles, sized proportionally to the
-data, resembling proportional symbol maps (Chapter ref::cha:bubble).
+data, resembling proportional symbol maps (Chapter ref:cha:bubble).
 
 The function =cartogram_dorling= creates the circles, and the result
 is represented in Figure ref:fig:cartDorlPopGDPSpain.
@@ -219,24 +225,26 @@ ggplot(cartGDPDorl) +
   theme_bw()
 #+end_src
 
-
-#+CAPTION: Non-overlapping circles cartograms of population and GDP of the provinces in Spain (2020) label:fig:cartDorlPopGDPSpain
-#+begin_figure
-#+CAPTION: Population. label:fig:cartDorlPopSpain
-#+attr_latex: :options {0.4\textheight}
-#+begin_subfigure
-#+attr_latex: :height 0.4\textheight
-#+RESULTS:
-[[file:figs/Spatial/cartDorlPopSpain.pdf]]
-#+end_subfigure
-#+CAPTION: GDP. label:fig:cartDorlGDPSpain
-#+attr_latex: :options {0.4\textheight}
-#+begin_subfigure
-#+attr_latex: :height 0.4\textheight
-#+RESULTS:
-[[file:figs/Spatial/cartDorlGDPSpain.pdf]]
-#+end_subfigure
-#+end_figure
+#+begin_export latex
+\begin{figure}
+  \begin{minipage}{0.4\textheight}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/Spatial/cartDorlPopSpain.pdf}
+    \end{center}
+    \subcaption{Population}
+    \label{fig:cartDorlpopSpain}
+  \end{minipage}
+  \begin{minipage}{0.4\textheight}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/Spatial/cartDorlGDPSpain.pdf}
+    \end{center}
+    \subcaption{GDP}
+    \label{fig:cartDorlGDPSpain}
+  \end{minipage}
+  \caption{Non-overlapping circles cartograms of population and GDP of the provinces in Spain (2020).}
+  \label{fig:cartDorlPopGDPSpain}
+\end{figure}
+#+end_export
 
 * COMMENT Local Variables
 Local Variables:

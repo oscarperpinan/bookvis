@@ -436,7 +436,7 @@ different radius to encode a new variable. This new variable is
 =CO2.PPP=, the ratio of $\mathrm{CO_2}$ emissions to the Gross Domestic
 Product with purchasing power parity (PPP) estimations.
 
-To use this numeric variable as an additional grouping factor, its range must be divided into different classes. The typical solution is to use =cut= to coerce the numeric variable into a =factor= whose levels correspond to uniform intervals, which could be unrelated to the data distribution. The =classInt= package cite:Bivand2017 provides several methods to partition data into classes based on natural groups in the data distribution.
+To use this numeric variable as an additional grouping factor, its range must be divided into different classes. The typical solution is to use =cut= to coerce the numeric variable into a =factor= whose levels correspond to uniform intervals, which could be unrelated to the data distribution. The =classInt= package cite:Bivand2023 provides several methods to partition data into classes based on natural groups in the data distribution.
 
 #+INDEX: Packages!classInt@\texttt{classInt}
 #+INDEX: Subjects!Class Intervals

@@ -94,7 +94,7 @@ label:sec:introduction
 
  The repository and the website can be downloaded as a compressed file[fn:13], or if you use =git=, you can clone the repository with:
 
- #+BEGIN_SRC bash
+ #+BEGIN_SRC bash eval: no
 git clone https://github.com/oscarperpinan/bookvis.git
  #+END_SRC
 
@@ -536,12 +536,13 @@ The =sf= package implements =plot= methods for displaying data using =base= grap
  -  A =RasterLayer= object represents single-layer (variable) raster
     data. It can be created with the function =raster=. This function is able to create a =RasterLayer= from another object, including another =Raster*= object[fn:36], or from a =SpatialPixels*= and =SpatialGrid*= object, or even a matrix. In addition, it can create a =RasterLayer= reading data from a file. The =raster= package can use raster files in several formats. Supported formats for reading include GeoTIFF, ESRI, ENVI, and ERDAS.
 
-\nomenclature{RasterLayer}{A class to represent single-layer (variable) raster data with the \texttt{raster} package.}
+\nomenclature{RasterLayer}{A class to represent single-layer (variable) raster data with the raster package.}
 
  -  =RasterBrick= and =RasterStack= are classes for multilayer data. A =RasterStack= is a list of =RasterLayer= objects with the same spatial extent and resolution. A =RasterStack= can be formed with a collection of files in different locations or even mixed with =RasterLayer= objects that only exist in memory. A =RasterBrick= is truly a multilayered object, and processing it can be more efficient than processing a =RasterStack= representing the same data.
 
-\nomenclature{RasterBrick}{A class to represent multilayer (variable) raster data with the \texttt{raster} package.}
-\nomenclature{RasterStack}{A class to represent multilayer (variable) raster data with the \texttt{raster} package.}
+\nomenclature{RasterBrick}{A class to represent multilayer (variable) raster data with the raster package.}
+
+\nomenclature{RasterStack}{A class to represent multilayer (variable) raster data with the raster package.}
 
  The =raster= package defines a number of methods for raster algebra with =Raster*= objects: arithmetic operators, logical operators, and functions such as =abs=, =round=, =ceiling=, =floor=, =trunc=, =sqrt=, =log=, =log10=, =exp=, =cos=, =sin=, =max=, =min=, =range=, =prod=, =sum=, =any=, and =all=. In these functions, =Raster*= objects can be mixed with numbers.
 
@@ -579,8 +580,8 @@ according to the author, "=terra= is simpler, faster and can do more".
 from the =raster= package, that defines three different classes for
 raster data and six classes for spatial data.
 
-\nomenclature{SpatRaster}{A class to represent raster data with the \texttt{terra} package.}
-\nomenclature{SpatVector}{A class to represent spatial vector data with the \texttt{terra} package.}
+\nomenclature{SpatRaster}{A class to represent raster data with the terra package.}
+\nomenclature{SpatVector}{A class to represent spatial vector data with the terra package.}
 
 The main functions and methods in =terra= are the same as in =raster=
 with minor changes in their names[fn:17]. These are the most relevant:
@@ -746,7 +747,7 @@ label:cha:raster
   spatial vector data; \texttt{rnaturalearth}= and \texttt{geodata}
   for retrieving data; \texttt{rasterVis} and \texttt{ggplot2} for
   visualization of raster data; \texttt{viridisLite} and
-  \textttt{RColorBrewer} for palettes of colours; \texttt{classInt}
+  \texttt{RColorBrewer} for palettes of colours; \texttt{classInt}
   for computing class intervals; \texttt{mapview} for interactive
   maps.
 %
@@ -791,8 +792,8 @@ label:cha:vector
   The most relevant packages used in this chapter are: \texttt{raster}
   and \texttt{terra} for reading raster data;\texttt{rasterVis} and
   \texttt{tidyterra} for visualization of raster data;
-  \texttt{colorspace} and \textttt{RColorBrewer} for palettes of
-  colours; \textttt{rnaturalearth} and \textttt{geodata} for
+  \texttt{colorspace} and \texttt{RColorBrewer} for palettes of
+  colours; \texttt{rnaturalearth} and \texttt{geodata} for
   retrieving spatial data.
   %
 }
@@ -818,7 +819,7 @@ label:cha:vector
   The most relevant packages used in this chapter are: \texttt{raster}
   and \texttt{terra} for reading raster data;\texttt{rasterVis} and
   \texttt{tidyterra} for visualization of raster data;
-  \texttt{colorspace} and \textttt{RColorBrewer} for palettes of
+  \texttt{colorspace} and \texttt{RColorBrewer} for palettes of
   colours; and \texttt{osmdata} for retrieving data from
   OpenStreetMap.
   %
@@ -957,7 +958,7 @@ in three dimensions. Moreover, it provides low level functions
 inspired by the =grid= package.
 
 **** gganimate
-label:sec:gganimate
+label:sec:gganimateST
 
 #+INDEX: Packages!rgl@\texttt{rgl}
 The =gganimate= package expands the ecosystem of =ggplot2=, focused on
@@ -1093,7 +1094,7 @@ function renders the animation to a file.
   reading spatial vector data; \texttt{raster} for reading raster
   data; \texttt{rnaturalearth}, \texttt{osmdata} and \texttt{move2}
   for retrieving data; \texttt{rgl} and \texttt{rayshader} for 3D
-  visualization; \textttt{gganimate} for animation with
+  visualization; \texttt{gganimate} for animation with
   \texttt{ggplot2}.
   %
 }

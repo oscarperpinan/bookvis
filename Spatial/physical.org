@@ -224,24 +224,25 @@ ggplot() +
   theme_bw()
 #+end_src
 
-#+CAPTION: Digital elevation model of Brazil. label:fig:brazilDEM
-#+begin_figure
-#+CAPTION: =lattice= version label:fig:brazilDEMlattice
-#+attr_latex: :options {0.4\textheight}
-#+begin_subfigure
-#+attr_latex: :height 0.4\textheight 
-#+RESULTS:
-[[file:figs/Spatial/brazilDEMlattice.png]]
-#+end_subfigure
-
-#+CAPTION: =ggplot2= version label:fig:brazilDEMGG
-#+attr_latex: :options {0.4\textheight}
-#+begin_subfigure
-#+attr_latex: :height 0.4\textheight 
-#+RESULTS:
-[[file:figs/Spatial/brazilDEMGG.png]]
-#+end_subfigure
-#+end_figure
+#+begin_export latex
+\begin{figure}
+  \begin{minipage}{0.4\textheight}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/Spatial/brazilDEMLattice.png}
+    \end{center}
+    \subcaption{\texttt{lattice} version}
+    \label{fig:brazilDEMlattice}
+  \end{minipage}
+  \begin{minipage}{0.4\textheight}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/Spatial/brazilDEMGG.png}
+    \end{center}
+    \subcaption{\texttt{ggplot2} version}
+    \label{fig:brazilDEMGG}
+  \end{minipage}
+  \caption{Digital elevation model of Brazil. \label{fig:brazilDEM}}
+\end{figure}
+#+end_export
 
 Under the =lattice= framework, the rivers can be represented with the
 =sp.lines= function of the =sp= package and superimposed over the DEM
@@ -317,23 +318,23 @@ ggplot() +
   theme_bw()
 #+end_src
 
-#+CAPTION: Physical map of Brazil. Main administrative regions are labeled. label:fig:brazil
-#+begin_figure
-#+CAPTION: =lattice= version label:fig:brazilLattice
-#+attr_latex: :options {0.4\textheight}
-#+begin_subfigure
-#+attr_latex: :height 0.4\textheight 
-#+RESULTS:
-[[file:figs/Spatial/brazilLattice.png]]
-#+end_subfigure
-#+CAPTION: =ggplot2= version label:fig:brazilGG
-#+attr_latex: :options {0.4\textheight}
-#+begin_subfigure
-#+attr_latex: :height 0.4\textheight 
-#+RESULTS:
-[[file:figs/Spatial/brazilGG.png]]
-#+end_subfigure
-#+end_figure
+#+begin_export latex
+\begin{figure}
+  \centering
+  \begin{minipage}{0.4\textheight}
+    \includegraphics[width=\textwidth]{figs/Spatial/brazilLattice.png}
+    \subcaption{\texttt{lattice} version}
+    \label{fig:brazilLattice}
+  \end{minipage}
+  \vfill
+  \begin{minipage}{0.4\textheight}
+    \includegraphics[width=\textwidth]{figs/Spatial/brazilGG.png}
+    \subcaption{\texttt{ggplot2} version}
+    \label{fig:brazilGG}
+  \end{minipage}
+  \caption{Physical map of Brazil. Main administrative regions are labeled.} \label{fig:brazil}
+\end{figure}
+#+end_export
 
 * Footnotes
 

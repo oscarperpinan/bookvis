@@ -131,7 +131,7 @@ ref:SEC:groupVariable): a matrix of level plots where each cell
 depicts the COVID-19 infections rate in each province in a certain
 day. These multiple images displayed together allows the reader to
 compare the inter-frame differences and perceive the time evolution
-(Figure ref::fig:covidMonth).
+(Figure ref:fig:covidMonth).
 
 #+begin_src R :results output graphics file :exports both :file figs/SpatioTime/covidMonth.pdf
 ggplot(subset(sfCovid,

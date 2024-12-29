@@ -95,10 +95,10 @@ ggplot() +
     facet_wrap(~ month, nrow = 2) 
 #+end_src
 
-#+CAPTION: Trajectories of the lesser kestrels in the different months included in the study. Each individual is represented by a different color.
-#+LABEL: fig:trajectoriesGG
+#+CAPTION: Trajectories of the lesser kestrels in the different months included in the study. Each individual is represented by a different color. label:fig:trajectoriesGG
 #+RESULTS:
 [[file:figs/SpatioTime/trajectoriesGG.pdf]]
+
 
 The dataset contains the positions of the birds along with additional
 variables (speed, direction) captured by the tracking devices. As
@@ -126,10 +126,10 @@ ggplot() +
     theme_linedraw()
 #+end_src
 
-#+CAPTION: Polar representation of the histogram of flight directions, using a different color for each speed class.
-#+LABEL: fig:trajectoriesPolar
+#+CAPTION: Polar representation of the histogram of flight directions, using a different color for each speed class. label:fig:trajectoriesPolar
 #+RESULTS:
 [[file:figs/SpatioTime/trajectoriesPolar.pdf]]
+
 
 Based on these previous figures, the animation will be focused on the
 trajectories registered during March. Two functions of the =gganimate=
@@ -141,7 +141,7 @@ package must be noted here:
   states of the trajectory. Its numeric argument is the length of the
   wake as a percentage of the total length of the animation.
 
-The animation is available at the book webpage. Figure
+The animation is available at the book webpage. Figure 
 ref:fig:trajectorySnapshot displays one of its frames.
 
 #+begin_src R
@@ -161,9 +161,9 @@ p <- ggplot() +
 animate(p, nframes = 300)
 #+end_src
 
-#+CAPTION: Snapshot of the animation of the trajectories.
-#+LABEL: fig:trajectoriesSnapshot
+#+CAPTION: Snapshot of the animation of the trajectories. label:fig:trajectorySnapshot
 file:figs/SpatioTime/trajectorySnapshot.png
+
 
 * Fly-by Animation label:sec:animationST_3d
  #+begin_src R :exports none
