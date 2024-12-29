@@ -14,15 +14,15 @@
 
 \mainmatter
 
-* COMMENT Time Series
+* Time Series
 label:part:Time
 
-** Time on the Horizontal Axis
+** COMMENT Time on the Horizontal Axis
  label:cha:timeHorizontalAxis
 
 #+INCLUDE: "TimeSeries/timeHorizontalAxis.tex" src latex
 
-** Time as a Conditioning or Grouping Variable
+** COMMENT Time as a Conditioning or Grouping Variable
 label:cha:timeGroupFactor
 
 
@@ -39,7 +39,7 @@ label:cha:timeGroupFactor
 
 #+INCLUDE: "TimeSeries/dataTime.tex" src latex
 
-* Spatial Data
+* COMMENT Spatial Data
 label:part:Spatial
 
 ** COMMENT Thematic Maps: Proportional Symbol Mapping
@@ -52,6 +52,12 @@ label:cha:choropleth
 
 #+INCLUDE: "Spatial/choropleth.tex" src latex
 
+** Thematic Maps: Cartogram Maps
+label:cha:cartogram
+
+#+INCLUDE: "Spatial/cartogram.tex" src latex
+
+
 ** COMMENT Thematic Maps: Raster Maps
 label:cha:raster
 
@@ -62,12 +68,12 @@ label:cha:vector
 
 #+INCLUDE: "Spatial/vector.tex" src latex
 
-** Physical Maps
+** COMMENT Physical Maps
  label:cha:physical
 
 #+INCLUDE: "Spatial/physical.tex" src latex
 
-** Reference Maps
+** COMMENT Reference Maps
  label:cha:reference
 
 #+INCLUDE: "Spatial/osm.tex" src latex
@@ -92,9 +98,13 @@ label:part:SpaceTime
 
 #+INCLUDE: "SpatioTime/pointsST.tex" src latex
 
-** Animation
- label:cha:animationST
+** Spatiotemporal Areal Data
+ label:cha:arealST
 
+#+INCLUDE: "SpatioTime/arealST.tex" src latex
+
+** COMMENT Animation
+ label:cha:animationST
 
 #+INCLUDE: "SpatioTime/animation.tex" src latex
 

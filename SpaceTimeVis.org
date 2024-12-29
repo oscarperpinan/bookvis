@@ -702,20 +702,22 @@ label:cha:choropleth
 label:cha:cartogram
 #+BEGIN_EXPORT latex
 \chapterprecishere{%
-  A choropleth map shades regions according to the measurement of a
-  variable displayed on the map. The choropleth map is an appropriate
-  tool to visualize a variable uniformly distributed within each
-  region, changing only at the region boundaries. This method performs
-  correctly with homogeneous regions, both in size and shape.
 
-  Next subjects are covered in this chapter: sequential and
-  qualitative palettes; small multiples; class intervals; and
-  interactive visualization.
+  A cartogram is a thematic map that purporsely distorts spatial
+  relationships based on a variable. This chapter works with three
+  forms of cartograms: contiguous area cartograms, where the polygons
+  are scaled and distorted while maintaining adjacent edges;
+  non-contiguous area cartograms, that modify the area of the polygon
+  preserving the shape; Dorling cartograms, that represent the
+  polygons with non-overlapping circles.
 
-  The most relevant packages used in this chapter are: \texttt{sp} and
-  \texttt{sf} for reading and writing spatial data; \texttt{classInt}
-  for computing class intervals; \texttt{RColorBrewer} for color
-  palettes; and \texttt{mapview} for interactive visualization.
+  This chapter presents examples of these forms of cartograms to
+  display the Gross Domestic Product and population variables.
+
+  The most relevant packages used in this chapter are: \texttt{sf} and
+  \texttt{sf} for reading spatial data; \texttt{cartogram} for
+  computing the transformations; \texttt{ggplot2} for creating the
+  maps.
   %
 }
 #+END_EXPORT
@@ -845,7 +847,7 @@ label:part:SpaceTime
 
  Finally, the space-time object can be reduced to a multivariate time series (where each location is a variable or column of the time series) and displayed with the time series visualization techniques described in the Part ref:part:Time. This approach is directly applicable to space-time data sparse in space (for example, point measurements at different times). However, it is mandatory to use aggregation in the case of raster data. In this case, the multivariate time series is composed of the evolution of the raster data averaged along a certain direction.
 
- The next chapters, focused on areal space-time data (Chapter ref:cha:arealST), raster space-time data (Chapters ref:cha:rasterST and ref:cha:animationST) and point space-time data (Chapter ref:cha:pointsST), illustrate with examples how to produce animations, multipanel graphics, hovmöller diagrams, and time-series with =R=.
+The next chapters, focused on areal space-time data (Chapter ref:cha:arealST), raster space-time data (Chapter ref:cha:rasterST) and point space-time data (Chapter ref:cha:pointsST), illustrate with examples how to produce multipanel graphics, hovmöller diagrams, time-series, and animations with =R=. Last, there is the Chapter ref:cha:animationST with additional animations that are not restricted to the evolution of a variable over time.
 
 *** Packages
  label:sec:spacetime-packages
@@ -1000,10 +1002,15 @@ function renders the animation to a file.
   chapter we will work with the whole space-time dataset using the
   tools provided by the \texttt{spacetime} package \cite{Pebesma2012}.
 
+  Additionally, the time evolution of the data is represented with an
+  animation where the radius and color of dynamic bubbles vary over
+  time.
+
   Most relevant packages in this chapter are: \texttt{sp},
-  \texttt{zoo}, \texttt{spacetime}, and \texttt{sftime} for reading and defining point
-  space-time data; \texttt{reshape2} for converting from long to wide
-  format.
+  \texttt{zoo}, \texttt{spacetime}, and \texttt{sftime} for reading
+  and defining point space-time data; \texttt{reshape2} for converting
+  from long to wide format; \texttt{gridSVG} for creating an
+  animation.
 %
 }
 #+END_EXPORT
@@ -1013,9 +1020,21 @@ function renders the animation to a file.
  label:cha:arealST
 
  #+BEGIN_EXPORT latex
-\chapterprecishere{%
-%
-}
+ \chapterprecishere{%
+   
+ Choropleth and cartogram maps were covered in Chapters
+ \ref{cha:choropleth} and \ref{cha:cartogram} without considering the
+ evolution of the variables with time. This chapter employs these
+ thematic maps with space-time variables both with static graphics and
+ with animations.
+
+ Most relevant packages in this chapter are: \texttt{sf} for reading
+ spatial data; \texttt{ggplot2} for producing the static graphics;
+ \texttt{cartogram} for computing the cartograms; \texttt{gganimate}
+ for creating the animations.
+
+ %
+ }
 #+END_EXPORT
 
 #+INCLUDE: "SpatioTime/arealST.tex" src latex
@@ -1025,21 +1044,29 @@ function renders the animation to a file.
 
 #+BEGIN_EXPORT latex
 \chapterprecishere{%
+
   A space-time raster dataset is a collection of raster layers indexed
   by time, or in other words, a time series of raster maps. The
   \texttt{raster} package defines the classes \texttt{RasterStack} and
   \texttt{RasterBrick} to build multilayer rasters. The index of the
   collection can be set with the function \texttt{setZ} (which is not
-  restricted to time indexes). The \texttt{rasterVis} package provide
-  several methods to display space-time rasters.
+  restricted to time indexes). The \texttt{terra} provides the
+  \texttt{time} function that gets or sets time information to the
+  \texttt{SpatRaster} objects. The \texttt{rasterVis} package contains
+  several methods to display space-time rasters with both packages.
+
+  Additionally, this chapter displays the individual layers of the
+  space-time raster sequentially as movie frames to produce an
+  animation.
 
   This chapter covers these subjects: small multiples; scatterplot
-  matrices; horizon graph; and interactive and 3D visualization.
+  matrices; horizon graph; interactive and 3D visualization; animations.
 
-  The most relevant packages in this chapter are: \texttt{raster} and \texttt{terra} for
-  reading raster data; \texttt{zoo} for definition of time series;
-  \texttt{rasterVis} for displaying raster data; \texttt{mapview} for
-  interactive graphics.
+  The most relevant packages in this chapter are: \texttt{raster} and
+  \texttt{terra} for reading raster data; \texttt{zoo} for definition
+  of time series; \texttt{rasterVis} for displaying raster data;
+  \texttt{mapview} for interactive graphics; \texttt{rgl} for a 3D
+  animation.
 %
 }
 #+END_EXPORT
@@ -1050,39 +1077,24 @@ function renders the animation to a file.
 
 #+BEGIN_EXPORT latex
 \chapterprecishere{%
-  In the Chapter \ref{cha:rasterST} a multilayer raster is displayed as
-  a 3D object with a matrix of levelplots using the small-multiple
-  technique (Section \ref{sec:levelplot_st}) and as a 2D object after
-  aggregation following a certain direction (Section
-  \ref{sec:spacetime_plot}). This chapter displays a multilayer raster
-  with a different approach, plotting the individual layers of the
-  space-time raster sequentially as movie frames to produce an
-  animation (Section \ref{sec:animationST_var}).
 
-  On the other hand, in Chapter \ref{cha:pointsST} point space-time
-  data is represented with small multiples, space-time graphics and
-  time graphs. In this chapter the time evolution of the data is
-  represented with dynamic bubbles whose radius and color vary over
-  time.
+  Previous chapters include a section devoted to animations of point,
+  raster and aereal data. Notwithstanding, the animation technique is
+  not restricted to displaying the evolution of a variable over
+  time. Animations can also be constructed from the evolution of the
+  position of a moving object (Section \ref{sec:trajectory}), from the
+  sequence of changes in an attribute of the variable, for example,
+  the user's view of an static variable can be gradually moved to
+  create a fly-by animation (Section \ref{sec:animationST_3d}), and
+  with the hill shading technique changing the sun position over time
+  (Section \ref{sec:sun3d}).
 
-  Notwithstanding, the animation technique is not restricted to
-  displaying the evolution of a variable over time. Animations can
-  also be constructed from the evolution of the position of a moving
-  object (Section \ref{sec:trajectory}), from the sequence of changes
-  in an attribute of the variable, for example, the user's view of an
-  static variable can be gradually moved to create a fly-by animation
-  (Section \ref{sec:animationST_3d}), and with the hill shading
-  technique changing the sun position over time (Section
-  \ref{sec:sun3d}).
-
-  The most relevant packages in this chapter are: \texttt{raster} for
-  reading raster data; \texttt{sf} and \texttt{sp} for reading spatial
-  vector data; \texttt{zoo} for time series data; \texttt{rasterVis}
-  for visualization of raster data; \texttt{rnaturalearth},
-  \texttt{osmdata} and \texttt{move2} for retrieving data;
-  \texttt{rgl} for 3D visualization; \textttt{gganimate} for animation
-  with \texttt{ggplot2}; and \texttt{gridSVG} for interactive
-  graphics.
+  The most relevant packages in this chapter are: \texttt{sf} for
+  reading spatial vector data; \texttt{raster} for reading raster
+  data; \texttt{rnaturalearth}, \texttt{osmdata} and \texttt{move2}
+  for retrieving data; \texttt{rgl} and \texttt{rayshader} for 3D
+  visualization; \textttt{gganimate} for animation with
+  \texttt{ggplot2}.
   %
 }
 #+END_EXPORT
