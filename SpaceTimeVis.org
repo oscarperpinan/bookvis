@@ -205,7 +205,7 @@ highlighted here:
 
 *** About the Author
  label:sec:aboutMe
-During the past 18 years, my main area of expertise has been photovoltaic solar energy systems, with a special interest in solar radiation.
+Throughout my professional career, my main area of expertise has been photovoltaic solar energy systems, with a special interest in solar radiation.
 Initially I worked as an engineer for a private company, and I was involved in several commercial and research projects. The project teams were partly integrated by people with low technical skills who relied on the input from engineers to complete their work. I learned how a good visualization output eased the communication process. 
 
 Now I work as a professor and researcher at the university. Data visualization is one of the most important tools I have available. It helps me embrace and share the steps, methods, and results of my research. With students, it is an inestimable partner in helping them understand complex concepts.
@@ -753,6 +753,7 @@ label:cha:raster
 %
 }
 #+END_EXPORT
+
 #+INCLUDE: "Spatial/raster.tex" src latex 
 
 ** Vector Fields
@@ -773,6 +774,7 @@ label:cha:vector
 %
 }
 #+END_EXPORT
+
 #+INCLUDE: "Spatial/vector.tex" src latex 
 
 ** Physical Maps
@@ -798,6 +800,7 @@ label:cha:vector
   %
 }
 #+END_EXPORT
+
 #+INCLUDE: "Spatial/physical.tex" src latex 
 
 ** Reference Maps
@@ -832,6 +835,7 @@ label:cha:vector
  label:cha:dataSpatial
 
 #+INCLUDE: "Spatial/dataSpatial.tex" src latex 
+
 
 * Space-Time Data
 label:part:SpaceTime
@@ -1015,6 +1019,7 @@ function renders the animation to a file.
 %
 }
 #+END_EXPORT
+
 #+INCLUDE: "SpatioTime/pointsST.tex" src latex 
 
 ** Spatiotemporal Areal Data
@@ -1071,6 +1076,7 @@ function renders the animation to a file.
 %
 }
 #+END_EXPORT
+
 #+INCLUDE: "SpatioTime/rasterST.tex" src latex 
 
 ** Animation
@@ -1099,6 +1105,7 @@ function renders the animation to a file.
   %
 }
 #+END_EXPORT
+
 #+INCLUDE: "SpatioTime/animation.tex" src latex 
 
 * Glossary, Bibliography and Index 

@@ -102,7 +102,6 @@ terrain elevation, and rivers and lakes.
      Earth with the packages =rnaturalearth= and
      =rnaturalearthhires=[fn:4].
      #+begin_src R :eval no-export
-
      brazilAdm <- ne_states(country = "brazil")
      #+end_src
 

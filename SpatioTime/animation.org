@@ -162,6 +162,7 @@ animate(p, nframes = 300)
 #+end_src
 
 #+CAPTION: Snapshot of the animation of the trajectories. label:fig:trajectorySnapshot
+#+ATTR_LaTeX: :height 0.4\textheight
 file:figs/SpatioTime/trajectorySnapshot.png
 
 
@@ -222,6 +223,7 @@ rglwidget()
 #+end_src
 
 #+CAPTION: Snapshot of the WebGL figure created with =rglwidget=. label:fig:WebGL
+#+ATTR_LaTeX: :height 0.4\textheight
 [[file:figs/SpatioTime/nightLights.png]]
 
 *** Define the Locations
@@ -385,6 +387,7 @@ rgl.snapshot("figs/SpatioTime/rgl_travel1200.png")
 #+end_src
 
 #+CAPTION: Example of usage of the =travel= function (frame no.1200). label:fig:travel_example
+#+ATTR_LaTeX: :height 0.4\textheight
 [[file:figs/SpatioTime/rgl_travel1200.png]]
 
 The =movie3d= accepts a function returning a list of parameters,
