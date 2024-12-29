@@ -14,7 +14,7 @@
 
 \mainmatter
 
-* Time Series
+* COMMENT Time Series
 label:part:Time
 
 ** COMMENT Time on the Horizontal Axis
@@ -39,7 +39,7 @@ label:cha:timeGroupFactor
 
 #+INCLUDE: "TimeSeries/dataTime.tex" src latex
 
-* COMMENT Spatial Data
+* Spatial Data
 label:part:Spatial
 
 ** COMMENT Thematic Maps: Proportional Symbol Mapping
@@ -52,7 +52,7 @@ label:cha:choropleth
 
 #+INCLUDE: "Spatial/choropleth.tex" src latex
 
-** Thematic Maps: Cartogram Maps
+** COMMENT Thematic Maps: Cartogram Maps
 label:cha:cartogram
 
 #+INCLUDE: "Spatial/cartogram.tex" src latex
@@ -68,7 +68,7 @@ label:cha:vector
 
 #+INCLUDE: "Spatial/vector.tex" src latex
 
-** COMMENT Physical Maps
+** Physical Maps
  label:cha:physical
 
 #+INCLUDE: "Spatial/physical.tex" src latex
