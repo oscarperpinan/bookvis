@@ -182,7 +182,7 @@ write.csv(votes2016, "data/Spatial/votes2016.csv", row.names = FALSE)
 #+end_src
 
 ** Administrative Boundaries
-
+label:sec:administrative_boundaries
 #+begin_src R :exports none
 ##################################################################
 ## Administrative boundaries
@@ -190,10 +190,8 @@ write.csv(votes2016, "data/Spatial/votes2016.csv", row.names = FALSE)
 #+end_src
 
 The Spanish administrative boundaries are available as shapefiles at
-the INE (Instituto Nacional de Estadística) webpage[fn:7]. Both the
-municipalities, =sfMap=, and province boundaries, =provinces=, are
-read with =st_read= of the =sf= package.
-
+the National Statistics Institute (INE) of Spain webpage[fn:7]. The
+municipalities, =sfMun=, are read with =st_read= of the =sf= package.
 
 #+INDEX: Packages!sf@\texttt{sf}
 
@@ -274,21 +272,26 @@ sfMapVotes <- rbind(peninsula, island)
 st_write(sfMapVotes, "data/Spatial/sfMapVotes.shp", append = FALSE)
 #+end_src
 
-* Population
+* Gross Domestic Product and Population
 label:sec:dataCartogram
 
-#+INDEX: Packages!sf@\texttt{sf}
-
 #+begin_src R
-library("sf")
-
-sfProv <- st_read("data/Spatial/spain_provinces_2.shp", crs = 25830,
-                 stringsAsFactors = TRUE)
+##################################################################
+##   GDP and Population
+##################################################################
 #+end_src
 
-INE:
-Population: https://www.ine.es/jaxiT3/Tabla.htm?t=2852&L=0
-GDP: https://www.ine.es/jaxi/Tabla.htm?tpx=67284&L=0
+The INE also publishes data on population[fn:8] and Gross Domestic
+Product (GDP)[fn:12] for the provinces of Spain. The result after
+cleaning the data of population is stored in the file =PopSpain.csv=
+and after filtering the data of GDP for the year 2020 is stored in the
+file =GDPSpain2020.csv=.
+
+#+INDEX: Data!INE
+#+INDEX: Data!Population
+#+INDEX: Data!Gross Domestic Product
+#+INDEX: Subjects!Data processing and cleaning
+
 
 #+begin_src R
 ## Population of each province
@@ -303,6 +306,19 @@ GDPSpain2020$PROV <- substring(GDPSpain2020$Province, 1, 2)
 popGDPSpain2020 <- merge(popSpain2020, GDPSpain2020[, c("PROV", "GDP")])
 #+end_src
 
+#+INDEX: Packages!sf@\texttt{sf}
+
+The province boundaries are stored in the =spain_provinces_2.shp=
+file, retrieved from the webpage of the INE (Section
+ref:sec:administrative_boundaries).
+
+#+begin_src R
+library("sf")
+
+sfProv <- st_read("data/Spatial/spain_provinces_2.shp", crs = 25830,
+                 stringsAsFactors = TRUE)
+#+end_src
+Finally, the data frame and the provinces boundaries are merged together:
 #+begin_src R
 ## Merge data with the polygons
 sfPopGDPSpain <- merge(sfProv, popGDPSpain2020,
@@ -417,6 +433,11 @@ landClass <- raster("data/Spatial/241243rgb-167772161.0.TIFF")
 
 
 * Footnotes
+[fn:12] https://www.ine.es/jaxi/Tabla.htm?tpx=67284&L=0 
+
+[fn:8] https://www.ine.es/jaxiT3/Tabla.htm?t=2852&L=0
+
+ 
 [fn:11] The Open Data portal is https://datos.madrid.es/. The information of the measuring stations is available at https://datos.madrid.es/egob/catalogo/212629-1-estaciones-control-aire.csv. 
 
 [fn:7] http://www.ine.es/ > Products and services > Publications > Download the PC-Axis program > Municipal maps

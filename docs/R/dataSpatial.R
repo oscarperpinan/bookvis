@@ -145,10 +145,9 @@ sfMapVotes <- rbind(peninsula, island)
 ## Save the result
 st_write(sfMapVotes, "data/Spatial/sfMapVotes.shp", append = FALSE)
 
-library("sf")
-
-sfProv <- st_read("data/Spatial/spain_provinces_2.shp", crs = 25830,
-                 stringsAsFactors = TRUE)
+##################################################################
+##   GDP and Population
+##################################################################
 
 ## Population of each province
 popSpain <- read.csv("data/SpatioTime/PopSpain.csv")
@@ -160,6 +159,11 @@ GDPSpain2020 <- read.csv("data/Spatial/GDPSpain2020.csv")
 GDPSpain2020$PROV <- substring(GDPSpain2020$Province, 1, 2)
 
 popGDPSpain2020 <- merge(popSpain2020, GDPSpain2020[, c("PROV", "GDP")])
+
+library("sf")
+
+sfProv <- st_read("data/Spatial/spain_provinces_2.shp", crs = 25830,
+                 stringsAsFactors = TRUE)
 
 ## Merge data with the polygons
 sfPopGDPSpain <- merge(sfProv, popGDPSpain2020,
