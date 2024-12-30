@@ -215,9 +215,7 @@ I have been using \textsf{R} to simulate the performance of photovoltaic energy 
 *** Acknowledgments
  label:sec:acknow
 
- Writing a book is often described as a solitary activity. It is certainly difficult to write when you are with friends or spending time with your family,... although with three little children at home I have learned to write prose and code while my baby wants to learn typing and my daughters need help to share a family of dinosaurs. 
-
- Seriously speaking, solitude is the best partner of a writer. But when I am writing or coding I feel I am immersed in a huge collaborative network of past and present contributors. Piotr Kropotkin described it with the following words cite:Kropotkin1906:
+ Writing a book is often described as a solitary activity, but while writing or coding I feel immersed in a huge collaborative network of past and present contributors. Piotr Kropotkin described it with the following words cite:Kropotkin1906:
 
  #+BEGIN_QUOTE
    Thousands of writers, of poets, of scholars, have laboured to increase knowledge, to dissipate error, and to create that atmosphere of scientific thought, without which the marvels of our century could never have appeared. And these thousands of philosophers, of poets, of scholars, of inventors, have themselves been supported by the labour of past centuries. They have been upheld and nourished through life, both physically and mentally, by legions of workers and craftsmen of all sorts.
@@ -231,10 +229,9 @@ I have been using \textsf{R} to simulate the performance of photovoltaic energy 
 
  I want to express my deepest gratitude and respect to all those women and men who have contributed and contribute to strengthening the communities of free software, open data, and open science. My special thanks go to the people of the \textsf{R} community: users, members of the \textsf{R} Core Development Team, and package developers.
 
- With regard to this book in particular, I would like to thank John Kimmel for his constant support, guidance, and patience.
+ With regard to this book in particular, I would like to thank John Kimmel and Lara Spieker for the constant support, guidance, and patience.
 
- Last, and most importantly, thanks to Candela, Marina, and Javi, my crazy little shorties, my permanent source of happiness, imagination, and love. Thanks to María, /mi amor, mi cómplice y todo/.
-
+ Last, and most importantly, thanks to Candela, Marina, and Javi, my permanent source of happiness, imagination, and love. Thanks to María, /mi amor, mi cómplice y todo/.
 
 
 * Time Series

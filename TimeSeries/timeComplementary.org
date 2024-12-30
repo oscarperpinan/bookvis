@@ -33,7 +33,7 @@ source('configLattice.R')
 #+end_src
 
 #+INDEX: Packages!zoo@\texttt{zoo}
-#+INDEX: Data!CO2@$CO_2$
+#+INDEX: Data!CO2 emissions@$CO_2$ emissions
 #+INDEX: Data!World Bank Open Data
 #+INDEX: Data!Gross National Income
 

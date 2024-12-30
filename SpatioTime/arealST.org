@@ -56,6 +56,8 @@ Data of COVID-19 infections have been adapted from the tables
 available on the website of the Institute of Health Carlos III[fn:1]
 (Chapter ref:sec:dataCartogram):
 
+#+INDEX: Data!COVID-19
+
 #+begin_src R
 covidSpain <- read.csv("data/SpatioTime/covid.csv",
                        na.strings = NULL)
